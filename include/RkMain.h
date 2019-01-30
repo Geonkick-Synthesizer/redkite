@@ -2,7 +2,7 @@
 
 class RkMain {
   public:
-          RkMain()
+          RkMain();
           RkMain(int argc, char **argv);
           ~RkMain();
           int exec();
