@@ -1,4 +1,7 @@
 #ifndef RK_WIDGET_H
+#define RK_WIDGET_H
+
+#include <Rk.h>
 
 #include <string>
 

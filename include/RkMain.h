@@ -1,4 +1,7 @@
 #ifndef RK_MAIN_H
+#define RK_MAIN_H
+
+#include <Rk.h>
 
 class RkMain {
   public:
