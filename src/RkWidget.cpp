@@ -1,15 +1,17 @@
 #include "RkWidget.h"
+#include "RkLog.h"
 
 RkWidget::RkWidget(RkWidget *parent = nullptr)
 {
        RK_UNUSED(parent);
+       RK_LOG_INFO("called");
 }
 
-virtual ~RkWidget()
+RkWidget::~RkWidget()
 {
 }
 
-int RkWidget::setTitle(const std::string &title)
+void RkWidget::setTitle(const std::string &title)
 {
     widgetTitle = title;
 }
@@ -22,4 +24,5 @@ std::string& RkWidget::title() const
 
 void RkWidget::show()
 {
+        RK_LOG_INFO("called");
 }

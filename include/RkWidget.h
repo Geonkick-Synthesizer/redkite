@@ -7,7 +7,7 @@ class RkWidget {
           RkWidget(RkWidget *parent = nullptr);
           virtual ~RkWidget();
 	  void show();
-          int setTitle(const std::string &title);
+          void setTitle(const std::string &title);
 	  const std::string& title() const;
 
   private:
