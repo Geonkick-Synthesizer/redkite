@@ -1,3 +1,4 @@
 # Redkite
 
-Small GUI toolkit for Quamplex projects.
+A small GUI toolkit for Quamplex projects.
+License GPLv3
