@@ -14,7 +14,21 @@ class RkWidget {
 	  const std::string& title() const;
 
   private:
-	  std::string widgetTitle;
+/**
+ * Private implementations for platforms.
+ * Not to be exposed to users.
+ *,This also offers ABI compatibility.
+ */
+#ifdef RK_OS_WIN
+	  class RkWidgetXWin;
+	  std::unique_ptr<RkWidgetWin> privateWidget;
+#elif RK_OS_MAC
+	  class RkWidgetMac;
+	  std::unique_ptr<RkWidgetMac> privateWidget;
+#else
+          class RkWidgetXWin;
+	  std::unique_ptr<RkWidgetXWin> privateWidget;
+#endif
 };
 
 #endif // RK_WIDGET_H
