@@ -7,17 +7,27 @@
 
 class RkWidget {
   public:
+#ifdef RK_OS_WIN
+          using RkNativeWindow = HWND;
+#elif RK_OS_MAC
+          using RkNativeWindow = NSWindow;
+#else
+          using RkNativeWindow = Window;
+#endif
+
           RkWidget(RkWidget *parent = nullptr);
           virtual ~RkWidget();
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
+          RkNativeWindow nativeWindows();
 
   private:
+
 /**
  * Private implementations for platforms.
  * Not to be exposed to users.
- *,This also offers ABI compatibility.
+ * This also provides ABI compatibility.
  */
 #ifdef RK_OS_WIN
 	  class RkWidgetXWin;
