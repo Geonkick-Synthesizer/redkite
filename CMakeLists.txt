@@ -24,14 +24,18 @@ endif()
 
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkLog.h
+  ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkMain.h
-  ${RK_INCLUDE_PATH}/RkWidget.h)
+  ${RK_INCLUDE_PATH}/private/platforms/xwin/RkWidgetXWin.h)
+
 
 set(RK_SOURCES
+  ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkMain.cpp
-  ${RK_SRC_PATH}/RkWidget.cpp)
+  ${RK_SRC_PATH}/platforms/xwin/RkWidgetXWin.cpp)
 
 include_directories(${RK_INCLUDE_PATH})
+include_directories(${RK_INCLUDE_PATH}/private/platforms/xwin)
 add_library(redkite STATIC
   ${RK_HEADERS}
   ${RK_SOURCES})
