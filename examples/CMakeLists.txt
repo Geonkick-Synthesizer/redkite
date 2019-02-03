@@ -9,7 +9,6 @@ add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
 target_link_libraries(hello "-lX11 -lrt -lm -ldl")
 
-
 add_executable(hello_multi
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES_MULTI})

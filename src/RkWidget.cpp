@@ -44,7 +44,7 @@ void RkWidget::show()
         privateWidget->show();
 }
 
-RkWidget::RkNativeWindow RkWidget::nativeWindow()
+RkWidget::RkNativeWindow* RkWidget::nativeWindow()
 {
         return privateWidget->getWindow();
 }

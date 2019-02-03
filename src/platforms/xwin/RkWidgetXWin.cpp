@@ -40,7 +40,7 @@ RkWidget::RkWidgetXWin::~RkWidgetXWin()
 bool RkWidget::RkWidgetXWin::init()
 {
         if (parentWidget) {
-                xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(parentWidget->nativeWindow()),
+                xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(*parentWidget->nativeWindow()),
                                               10, 10, 200, 200, 1,
                                               BlackPixel(xDisplay, screenNumber),
                                               WhitePixel(xDisplay, screenNumber));
@@ -52,9 +52,10 @@ bool RkWidget::RkWidgetXWin::init()
                 }
                 screenNumber = DefaultScreen(xDisplay);
                 xWindow = XCreateSimpleWindow(xDisplay, RootWindow(xDisplay, screenNumber),
-                                              10, 10, 200, 200, 1,
+                                              10, 10, 1500, 1500, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              WhitePixel(xDisplay, screenNumber));
+                                              12345);
+                std::cout << __PRETTY_FUNCTION__ << "xWindow created" << std::endl;
         }
 
         XSelectInput(xDisplay, xWindow, ExposureMask | KeyPressMask);
@@ -67,9 +68,9 @@ void RkWidget::RkWidgetXWin::show()
                 XMapWindow(xDisplay, xWindow);
 }
 
-RkWidget::RkNativeWindow RkWidget::RkWidgetXWin::getWindow()
+RkWidget::RkNativeWindow* RkWidget::RkWidgetXWin::getWindow()
 {
-        return static_cast<Window>(xWindow);
+        return static_cast<Window*>(&xWindow);
 }
 
 void RkWidget::RkWidgetXWin::setTitle(const std::string &title)

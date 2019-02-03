@@ -24,7 +24,7 @@
 #ifndef RK_WIDGET_H
 #define RK_WIDGET_H
 
-#include <Rk.h>
+#include "Rk.h"
 
 #ifdef RK_OS_WIN
 #include <windows.h>
@@ -51,7 +51,7 @@ class RkWidget {
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
-          RkNativeWindow nativeWindow();
+          RkNativeWindow* nativeWindow();
           Display* display();
 
   private:

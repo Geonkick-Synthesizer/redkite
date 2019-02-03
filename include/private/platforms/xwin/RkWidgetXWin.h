@@ -32,7 +32,7 @@ class RkWidget::RkWidgetXWin {
         ~RkWidgetXWin();
         bool init();
         void show();
-        RkWidget::RkNativeWindow getWindow();
+        RkWidget::RkNativeWindow* getWindow();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
 
