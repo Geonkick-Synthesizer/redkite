@@ -15,6 +15,20 @@ RkWidget::RkWidget(RkWidget *parent)
 #elif RK_MAC_OS
   : privateWidget(std::make_unique<RkWidgetMac>(parent))
 #else
+    : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindow()) : std::make_unique<RkWidgetXWin>())
+#endif
+{
+        if (!privateWidget->init()) {
+                RK_LOG_ERROR("can't init private widget");
+        }
+}
+
+RkWidget::RkWidget(RkNativeWindow parent)
+#ifdef RK_WIN_OS
+  : privateWidget(std::make_unique<RkWidgetWin>(parent))
+#elif RK_MAC_OS
+  : privateWidget(std::make_unique<RkWidgetMac>(parent))
+#else
   : privateWidget(std::make_unique<RkWidgetXWin>(parent))
 #endif
 {
@@ -44,7 +58,7 @@ void RkWidget::show()
         privateWidget->show();
 }
 
-RkWidget::RkNativeWindow* RkWidget::nativeWindow()
+RkWidget::RkNativeWindow RkWidget::nativeWindow()
 {
         return privateWidget->getWindow();
 }

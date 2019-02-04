@@ -28,16 +28,16 @@
 
 class RkWidget::RkWidgetXWin {
  public:
-        RkWidgetXWin(RkWidget *parent = nullptr);
+        explicit RkWidgetXWin(RkNativeWindow parent = 0);
         ~RkWidgetXWin();
         bool init();
         void show();
-        RkWidget::RkNativeWindow* getWindow();
+        RkWidget::RkNativeWindow getWindow();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
 
  private:
-        RkWidget *parentWidget;
+        RkNativeWindow xParent;
         Display *xDisplay;
         int screenNumber;
         Window xWindow;

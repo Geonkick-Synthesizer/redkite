@@ -7,8 +7,8 @@ set(RK_SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 
 if (NOT CMAKE_BUILD_TYPE)
-  message(STATUS "no build type selected, default to Release")
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type Release" FORCE)
+  message(STATUS "no build type selected, default to Debug")
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type Debug" FORCE)
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
@@ -22,6 +22,7 @@ endif()
 option(ENABLE_EXAMPLES    "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  message(STATUS "enable logging")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_LOG_DEBUG_LEVEL")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_LOG_DEBUG_LEVEL")
 endif()

@@ -24,38 +24,40 @@
 #include "RkWidgetXWin.h"
 #include "RkLog.h"
 
-RkWidget::RkWidgetXWin::RkWidgetXWin(RkWidget *parent)
-        : parentWidget(parent),
-          xDisplay(nullptr),
+RkWidget::RkWidgetXWin::RkWidgetXWin(RkNativeWindow parent)
+        : xParent(parent),
+          xDisplay(XOpenDisplay(nullptr)),
           screenNumber(0)
 {
 }
 
 RkWidget::RkWidgetXWin::~RkWidgetXWin()
 {
-        if (!parentWidget && xDisplay)
+        if (!xParent && xDisplay)
                 XCloseDisplay(xDisplay);
 }
 
 bool RkWidget::RkWidgetXWin::init()
 {
-        if (parentWidget) {
-                xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(*parentWidget->nativeWindow()),
-                                              10, 10, 200, 200, 1,
+        screenNumber = DefaultScreen(xDisplay);
+        if (xParent) {
+                /*                XWindowAttributes attributes;
+                XGetWindowAttributes(xDisplay, *xParent, &attributes);
+                screenNumber = XScreenCount(xDisplay);*/
+                RK_LOG_ERROR("create with parent...");
+                xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(xParent),
+                                              10, 10, 250, 250, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              WhitePixel(xDisplay, screenNumber));
+                                              997799);
         } else {
-                xDisplay = XOpenDisplay(nullptr);
                 if (!xDisplay) {
-                                RK_LOG_ERROR("can't open screen");
+                                RK_LOG_ERROR("screen is not defined");
                                 return false;
                 }
-                screenNumber = DefaultScreen(xDisplay);
                 xWindow = XCreateSimpleWindow(xDisplay, RootWindow(xDisplay, screenNumber),
-                                              10, 10, 1500, 1500, 1,
+                                              10, 10, 250, 250, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              12345);
-                std::cout << __PRETTY_FUNCTION__ << "xWindow created" << std::endl;
+                                              997799);
         }
 
         XSelectInput(xDisplay, xWindow, ExposureMask | KeyPressMask);
@@ -65,12 +67,12 @@ bool RkWidget::RkWidgetXWin::init()
 void RkWidget::RkWidgetXWin::show()
 {
         if (xDisplay)
-                XMapWindow(xDisplay, xWindow);
+                XMapRaised(xDisplay, xWindow);
 }
 
-RkWidget::RkNativeWindow* RkWidget::RkWidgetXWin::getWindow()
+RkWidget::RkNativeWindow RkWidget::RkWidgetXWin::getWindow()
 {
-        return static_cast<Window*>(&xWindow);
+        return static_cast<RkWidget::RkNativeWindow>(xWindow);
 }
 
 void RkWidget::RkWidgetXWin::setTitle(const std::string &title)

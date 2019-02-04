@@ -43,15 +43,16 @@ class RkWidget {
 #elif RK_OS_MAC
           using RkNativeWindow = NSWindow;
 #else
-          using RkNativeWindow = Window;
+          using RkNativeWindow = uintptr_t;
 #endif
 
-          RkWidget(RkWidget *parent = nullptr);
+          explicit RkWidget(RkWidget *parent = nullptr);
+          explicit RkWidget(RkNativeWindow parent);
           virtual ~RkWidget();
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
-          RkNativeWindow* nativeWindow();
+          RkNativeWindow nativeWindow();
           Display* display();
 
   private:
