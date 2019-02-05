@@ -52,7 +52,7 @@ class RkWidget {
           RkWidget(const RkWidget &other) = delete;
           RkWidget& operator=(const RkWidget &other) = delete;
           RkWidget(RkWidget &&other) = delete;
-          RkWidget& operator=(const RkWidget &&other) = delete;
+          RkWidget& operator=(RkWidget &&other) = delete;
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;

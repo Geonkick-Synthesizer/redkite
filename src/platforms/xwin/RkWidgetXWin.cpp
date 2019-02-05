@@ -1,5 +1,5 @@
 /**
- * File name: RkWidget.cpp
+ * File name: RkWidgetXWin.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)

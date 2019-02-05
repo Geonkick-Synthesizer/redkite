@@ -1,5 +1,5 @@
 /**
- * File name: RkWidget.h
+ * File name: RkWidgetXWin.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -33,7 +33,7 @@ class RkWidget::RkWidgetXWin {
         RkWidgetXWin(const RkWidgetXWin &other) = delete;
         RkWidgetXWin& operator=(const RkWidgetXWin &other) = delete;
         RkWidgetXWin(RkWidgetXWin &&other) = delete;
-        RkWidgetXWin& operator=(const RkWidgetXWin &&other) = delete;
+        RkWidgetXWin& operator=(RkWidgetXWin &&other) = delete;
         bool init();
         void show();
         RkWidget::RkNativeWindow getWindow();
