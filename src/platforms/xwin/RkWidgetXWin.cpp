@@ -85,3 +85,22 @@ void RkWidget::RkWidgetXWin::setTitle(const std::string &title)
         if (xDisplay && !title.empty())
                 XStoreName(xDisplay, xWindow, title.c_str());
 }
+
+std::list<std::shared<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
+{
+        XEvent e;
+        while (XPending(xDisplay) > 0) {
+                XNextEvent(e);
+                switch (e.type)
+                {
+                case Expose:
+                        break;
+                case KeyPress:
+                        break;
+                default:
+                        break;
+                }
+        }
+}
+
+

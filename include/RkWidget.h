@@ -49,6 +49,10 @@ class RkWidget {
           explicit RkWidget(RkWidget *parent = nullptr);
           explicit RkWidget(RkNativeWindow parent);
           virtual ~RkWidget();
+          RkWidget(const RkWidget &other) = delete;
+          RkWidget& operator=(const RkWidget &other) = delete;
+          RkWidget(RkWidget &&other) = delete;
+          RkWidget& operator=(const RkWidget &&other) = delete;
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
@@ -70,7 +74,7 @@ class RkWidget {
 	  virtual void hideEvent(std::shared_ptr<RkHideEvent> &event);
 
   private:
-	  std::list<std::shared_ptr<RkWidget>> childWidgets;
+          void processChildEvents();
 
 /**
  * Private implementations for platforms.
@@ -86,6 +90,7 @@ class RkWidget {
 #endif
 
 	  std::string widgetTitle;
+          std::list<std::shared_ptr<RkWidget>> childWidgets;
 };
 
 #endif // RK_WIDGET_H

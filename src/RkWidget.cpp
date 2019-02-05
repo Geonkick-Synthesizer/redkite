@@ -65,7 +65,29 @@ RkWidget::RkNativeWindow RkWidget::nativeWindow()
 
 void RkWidget::pocessEvents()
 {
-        privateWidget->processEvents();
+        std::list<std::shared_ptr<RkEvent>> events = privateWidget->getEvents();
+        for (auto &event: events) {
+           switch (event->type())
+           {
+           case RkEvent::Type::Paint:
+                   paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
+                   break;
+           case RkEvent::Type::KeyPressEvent:
+                   keyPressEvent(std::dynamic_pointer_cast<RkKeyPressEvent>(event));
+                   break;
+           case RkEvent::Type::KeyReleaseEvent:
+                   keyReleaseEvent(std::dynamic_pointer_cast<RkKeyReleaseEvent>(event));
+                   break;
+           default:
+                   break;
+           }
+        }
+        processChildEvents();
+}
+
+void RkWidget::processChildEvents()
+{
+        // TODO: implement.
 }
 
 void RkWidget::closeEvent(std::shared_ptr<RkCloseEvent> &event)

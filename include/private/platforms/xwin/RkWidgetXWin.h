@@ -30,11 +30,16 @@ class RkWidget::RkWidgetXWin {
  public:
         explicit RkWidgetXWin(RkNativeWindow parent = 0);
         ~RkWidgetXWin();
+        RkWidgetXWin(const RkWidgetXWin &other) = delete;
+        RkWidgetXWin& operator=(const RkWidgetXWin &other) = delete;
+        RkWidgetXWin(RkWidgetXWin &&other) = delete;
+        RkWidgetXWin& operator=(const RkWidgetXWin &&other) = delete;
         bool init();
         void show();
         RkWidget::RkNativeWindow getWindow();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
+        void pocessEvents();
 
  private:
         RkNativeWindow xParent;
