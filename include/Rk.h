@@ -6,4 +6,8 @@
 
 #define RK_UNUSED(expr) (void)expr
 
+#define RK_PRIVATE_IMPL(Class, Name) \
+  class Class; \
+  std::unique_ptr<Class> name;
+
 #endif // RK_GLOBAL_H

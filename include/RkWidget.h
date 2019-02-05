@@ -53,9 +53,24 @@ class RkWidget {
           void setTitle(const std::string &title);
 	  const std::string& title() const;
           RkNativeWindow nativeWindow();
-          Display* display();
+	  void pocessEvents();
+
+	  virtual void closeEvent(std::shared_ptr<RkCloseEvent> &event)
+	  virtual void keyPressEvent(std::shared_ptr<RkKeyEvent> &event);
+     	  virtual void keyReleaseEvent(std::shared_ptr<RkKeyEvent> &event);
+ 	  virtual void paintEvent(std::shared_ptr<RkPainEvent> &event);
+	  virtual void mousePressEvent(std::shared_ptr<RkMouseEvent> &event);
+  	  virtual void mouseReleaseEvent(std::shared_ptr<RkMouseEvent> &event);
+	  virtual void mouseDoubleClickEvent(std::shared_ptr<RkMouseEvent> &event);
+ 	  virtual void mouseMoveEvent(std::shared_ptr<RkMouseEvent> &event);
+ 	  virtual void paintEvent(std::shared_ptr<RkPainEvent> &event);
+	  virtual void wheelEvent(std::shared_ptr<RkPainEvent> &event);
+	  virtual void resizeEvent(std::shared_ptr<RkResizeEvent> &event);
+	  virtual void showEvent(std::shared_ptr<RkShowEvent> &event);
+	  virtual void hideEvent(std::shared_ptr<RkHideEvent> &event);
 
   private:
+	  std::list<std::shared_ptr<RkWidget>> childWidgets;
 
 /**
  * Private implementations for platforms.
@@ -63,17 +78,14 @@ class RkWidget {
  * This also provides ABI compatibility.
  */
 #ifdef RK_OS_WIN
-	  class RkWidgetXWin;
-	  std::unique_ptr<RkWidgetWin> privateWidget;
+	  RK_PRIVATE_IMPL(RkWidgetXWin, privateWidget)
 #elif RK_OS_MAC
-	  class RkWidgetMac;
-	  std::unique_ptr<RkWidgetMac> privateWidget;
+	  RK_PRIVATE_IMPL(RkWidgetMac, privateWidget)
 #else
-          class RkWidgetXWin;
-	  std::unique_ptr<RkWidgetXWin> privateWidget;
+	  RK_PRIVATE_IMPL(RkWidgetXWin, privateWidget)
 #endif
 
-          std::string widgetTitle;
+	  std::string widgetTitle;
 };
 
 #endif // RK_WIDGET_H

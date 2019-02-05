@@ -63,7 +63,72 @@ RkWidget::RkNativeWindow RkWidget::nativeWindow()
         return privateWidget->getWindow();
 }
 
-Display* RkWidget::display()
+void RkWidget::pocessEvents()
 {
-        return privateWidget->display();
+        privateWidget->processEvents();
+}
+
+void RkWidget::closeEvent(std::shared_ptr<RkCloseEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::keyPressEvent(std::shared_ptr<RkKeyEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::keyReleaseEvent(std::shared_ptr<RkKeyEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::paintEvent(std::shared_ptr<RkPainEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::mousePressEvent(std::shared_ptr<RkMouseEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::mouseReleaseEvent(std::shared_ptr<RkMouseEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::mouseDoubleClickEvent(std::shared_ptr<RkMouseEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::mouseMoveEvent(std::shared_ptr<RkMouseEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::paintEvent(std::shared_ptr<RkPainEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::wheelEvent(std::shared_ptr<RkPainEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::resizeEvent(std::shared_ptr<RkResizeEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::showEvent(std::shared_ptr<RkShowEvent> &event)
+{
+        RK_UNUSED(event);
+}
+
+void RkWidget::hideEvent(std::shared_ptr<RkHideEvent> &event)
+{
+        RK_UNUSED(event);
 }

@@ -3,7 +3,14 @@
 #include "RkWidget.h"
 
 RkMain::RkMain()
-        : topLevelWindow(nullptr)
+#ifdef RK_WIN_OS
+  : privateMain(std::make_unique<RkMainWin>())
+#elif RK_MAC_OS
+  : privateMain(std::make_unique<RkMainMac>())
+#else
+  : privateMain(std::make_unique<RkMainXWin>())
+#endif
+  , topLevelWindow(nullptr)
 {
         RK_LOG_INFO("called");
 }
@@ -26,7 +33,7 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
                 RK_LOG_ERROR("top level window is already set");
                 return false;
         }
-        topLevelWindow = widget;
+	privateMain->setTopLevelWindow(topLevelWindow);
         return true;
 }
 
@@ -37,13 +44,5 @@ int RkMain::exec()
                 return 1;
         }
 
-        // Move this to platfroms impl.
-        Display* d = topLevelWindow->display();
-        XEvent event;
-        for (;;) {
-                XNextEvent(d, &event);
-                if (event.type == KeyPress)
-                        break;
-        }
-        return 0;
+	return privateMain->exec();
 }

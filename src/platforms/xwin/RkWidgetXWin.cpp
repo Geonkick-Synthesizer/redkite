@@ -26,7 +26,7 @@
 
 RkWidget::RkWidgetXWin::RkWidgetXWin(RkNativeWindow parent)
         : xParent(parent),
-          xDisplay(XOpenDisplay(nullptr)),
+          xDisplay(nullptr),
           screenNumber(0)
 {
 }
@@ -39,16 +39,21 @@ RkWidget::RkWidgetXWin::~RkWidgetXWin()
 
 bool RkWidget::RkWidgetXWin::init()
 {
+        xDisplay = XOpenDisplay(nullptr);
+	if (!xDisplay) {
+	        RK_LOG_ERROR("can't open display");
+		return false;
+	}
+
         screenNumber = DefaultScreen(xDisplay);
         if (xParent) {
-                /*                XWindowAttributes attributes;
-                XGetWindowAttributes(xDisplay, *xParent, &attributes);
-                screenNumber = XScreenCount(xDisplay);*/
-                RK_LOG_ERROR("create with parent...");
+                XWindowAttributes attributes;
+                XGetWindowAttributes(xDisplay, static_cast<Window>(xParent), &attributes);
+                screenNumber = XScreenCount(xDisplay);
                 xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(xParent),
                                               10, 10, 250, 250, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              997799);
+                                              WhitePixel(xDisplay, screenNumber));
         } else {
                 if (!xDisplay) {
                                 RK_LOG_ERROR("screen is not defined");
@@ -57,7 +62,7 @@ bool RkWidget::RkWidgetXWin::init()
                 xWindow = XCreateSimpleWindow(xDisplay, RootWindow(xDisplay, screenNumber),
                                               10, 10, 250, 250, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              997799);
+                                              WhitePixel(xDisplay, screenNumber));
         }
 
         XSelectInput(xDisplay, xWindow, ExposureMask | KeyPressMask);
