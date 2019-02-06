@@ -26,6 +26,16 @@
 
 #include "RkWidget.h"
 
+#ifdef RK_OS_WIN
+#include <windows.h>
+#elif RK_OS_MAC
+ // to be defined
+#else
+#include <X11/Xlib.h>
+#endif
+
+class RkEvent;
+
 class RkWidget::RkWidgetXWin {
  public:
         explicit RkWidgetXWin(RkNativeWindow parent = 0);
@@ -39,7 +49,7 @@ class RkWidget::RkWidgetXWin {
         RkWidget::RkNativeWindow getWindow();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
-        void pocessEvents();
+        std::list<std::shared_ptr<RkEvent>> getEvents();
 
  private:
         RkNativeWindow xParent;

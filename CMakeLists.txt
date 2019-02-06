@@ -30,6 +30,7 @@ endif()
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkLog.h
+  ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkMain.h)
 

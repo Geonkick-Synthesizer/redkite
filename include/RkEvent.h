@@ -21,27 +21,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#ifndef RK_EVENT_H
+#define RK_EVENT_H
+
+#include "Rk.h"
+
 class RkEvent {
  public:
-        enum Class Type:int {
+        enum class Type: int {
 	   None,
-	   Close,
-	   Hide,
-	   Show,
+           Close,
 	   KeyPress,
 	   KeyRelease,
 	   MouseMove,
 	   MouseButtonPress,
 	   MouseButtonRelease,
+           MouseDoubleClick,
 	   Wheel,
 	   Move,
-	   Paint
+           Resize,
+           Paint,
+           Show,
+           Hide
       };
 
-      RkEvent();
-      virtual ~Rkevent();
-      Type type();
+      RkEvent() {}
+      virtual ~RkEvent() {}
+      Type type() { return Type::None; }
 
-  private:
-      RK_PRIVATE_IMPL(RkEvent, privateEvent)
+      //  private:
+      //      RK_PRIVATE_IMPL(RkEventPrivate, privateEvent)
 };
+
+class RkCloseEvent: public RkEvent {};
+class RkKeyEvent: public RkEvent {};
+class RkMouseEvent: public RkEvent {};
+class RkWheelEvent: public RkEvent {};
+class RkMoveEvent: public RkEvent {};
+class RkResizeEvent: public RkEvent {};
+class RkPaintEvent: public RkEvent {};
+class RkShowEvent: public RkEvent {};
+class RkHideEvent: public RkEvent {};
+
+#endif // RK_EVENT_H
+

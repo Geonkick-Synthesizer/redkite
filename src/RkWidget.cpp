@@ -23,6 +23,7 @@
 
 #include "RkLog.h"
 #include "RkWidget.h"
+#include "RkEvent.h"
 
 #ifdef RK_WIN_OS
 #include "RkWidgetWin.h"
@@ -31,6 +32,10 @@
 #else
 #include "RkWidgetXWin.h"
 #endif
+
+#undef KeyPress;
+#undef KeyRelease;
+#undef Paint;
 
 RkWidget::RkWidget(RkWidget *parent)
 #ifdef RK_WIN_OS
@@ -95,11 +100,11 @@ void RkWidget::pocessEvents()
            case RkEvent::Type::Paint:
                    paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                    break;
-           case RkEvent::Type::KeyPressEvent:
-                   keyPressEvent(std::dynamic_pointer_cast<RkKeyPressEvent>(event));
+           case RkEvent::Type::KeyPress:
+                   keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                    break;
-           case RkEvent::Type::KeyReleaseEvent:
-                   keyReleaseEvent(std::dynamic_pointer_cast<RkKeyReleaseEvent>(event));
+           case RkEvent::Type::KeyRelease:
+                   keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                    break;
            default:
                    break;
@@ -113,67 +118,67 @@ void RkWidget::processChildEvents()
         // TODO: implement.
 }
 
-void RkWidget::closeEvent(std::shared_ptr<RkCloseEvent> &event)
+void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::keyPressEvent(std::shared_ptr<RkKeyEvent> &event)
+void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::keyReleaseEvent(std::shared_ptr<RkKeyEvent> &event)
+void RkWidget::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::paintEvent(std::shared_ptr<RkPainEvent> &event)
+void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mousePressEvent(std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseReleaseEvent(std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseDoubleClickEvent(std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseMoveEvent(std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::paintEvent(std::shared_ptr<RkPainEvent> &event)
+void RkWidget::moveEvent(const std::shared_ptr<RkMoveEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::wheelEvent(std::shared_ptr<RkPainEvent> &event)
+void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::resizeEvent(std::shared_ptr<RkResizeEvent> &event)
+void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::showEvent(std::shared_ptr<RkShowEvent> &event)
+void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::hideEvent(std::shared_ptr<RkHideEvent> &event)
+void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 {
         RK_UNUSED(event);
 }

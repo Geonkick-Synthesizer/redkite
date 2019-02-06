@@ -32,17 +32,17 @@ RkMain::RkMainWin::~RkMainXWin()
 {
 }
 
-void RkMain::setTopLevelWindow(RkWidget* widget)
+void RkMain::RkMainWin::setTopLevelWindow(RkWidget* widget)
 {
       topLevelWindow = widget;
 }
 
-RkWidget* RkMain::topLevelWindow(void)
+RkWidget* RkMain::RkMainWin::topLevelWindow(void)
 {
       return topLevelWindow;
 }
 
-int RkMain::RkMainWin::exec()
+/*int RkMain::RkMainWin::exec()
 {
         if (!topLevelWindow) {
                 RK_LOG_ERROR("top window not defined");
@@ -52,4 +52,4 @@ int RkMain::RkMainWin::exec()
         for (; !isQuit(); )
 	        topLevelWindow->processEvents();
         return exitStatus();
-}
+        }*/

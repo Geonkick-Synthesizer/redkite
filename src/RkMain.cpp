@@ -25,6 +25,14 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 
+#ifdef RK_WIN_OS
+#include "RkMainWin.h"
+#elif RK_MAC_OS
+#include "RkMainMac.h"
+#else
+#include "RkMainXWin.h"
+#endif
+
 RkMain::RkMain()
 #ifdef RK_WIN_OS
   : privateMain(std::make_unique<RkMainWin>())
@@ -56,7 +64,8 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
                 RK_LOG_ERROR("top level window is already set");
                 return false;
         }
-	privateMain->setTopLevelWindow(topLevelWindow);
+        topLevelWindow = widget;
+        //	privateMain->setTopLevelWindow(topLevelWindow);
         return true;
 }
 

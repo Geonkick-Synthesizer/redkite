@@ -21,8 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkWidgetXWin.h"
 #include "RkLog.h"
+#include "RkEvent.h"
+#include "RkWidgetXWin.h"
 
 RkWidget::RkWidgetXWin::RkWidgetXWin(RkNativeWindow parent)
         : xParent(parent),
@@ -86,11 +87,12 @@ void RkWidget::RkWidgetXWin::setTitle(const std::string &title)
                 XStoreName(xDisplay, xWindow, title.c_str());
 }
 
-std::list<std::shared<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
+std::list<std::shared_ptr<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
 {
+        std::list<std::shared_ptr<RkEvent>> events;
         XEvent e;
         while (XPending(xDisplay) > 0) {
-                XNextEvent(e);
+                XNextEvent(xDisplay, &e);
                 switch (e.type)
                 {
                 case Expose:
@@ -101,6 +103,7 @@ std::list<std::shared<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
                         break;
                 }
         }
+        return std::move(events);
 }
 
 

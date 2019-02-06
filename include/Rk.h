@@ -26,11 +26,13 @@
 
 #include <memory>
 #include <string>
+#include <list>
+#include <memory>
 
 #define RK_UNUSED(expr) (void)expr
 
 #define RK_PRIVATE_IMPL(Class, Name) \
   class Class; \
-  std::unique_ptr<Class> name;
+  std::unique_ptr<Class> Name;
 
 #endif // RK_GLOBAL_H

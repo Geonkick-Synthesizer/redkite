@@ -26,15 +26,17 @@
 
 #include "Rk.h"
 
-#ifdef RK_OS_WIN
-#include <windows.h>
-#elif RK_OS_MAC
- // to be defined
-#else
-#include <X11/Xlib.h>
-#endif
-
 #include <string>
+
+class RkCloseEvent;
+class RkKeyEvent;
+class RkMouseEvent;
+class RkWheelEvent;
+class RkMoveEvent;
+class RkResizeEvent;
+class RkPaintEvent;
+class RkShowEvent;
+class RkHideEvent;
 
 class RkWidget {
   public:
@@ -59,19 +61,19 @@ class RkWidget {
           RkNativeWindow nativeWindow();
 	  void pocessEvents();
 
-	  virtual void closeEvent(std::shared_ptr<RkCloseEvent> &event)
-	  virtual void keyPressEvent(std::shared_ptr<RkKeyEvent> &event);
-     	  virtual void keyReleaseEvent(std::shared_ptr<RkKeyEvent> &event);
- 	  virtual void paintEvent(std::shared_ptr<RkPainEvent> &event);
-	  virtual void mousePressEvent(std::shared_ptr<RkMouseEvent> &event);
-  	  virtual void mouseReleaseEvent(std::shared_ptr<RkMouseEvent> &event);
-	  virtual void mouseDoubleClickEvent(std::shared_ptr<RkMouseEvent> &event);
- 	  virtual void mouseMoveEvent(std::shared_ptr<RkMouseEvent> &event);
- 	  virtual void paintEvent(std::shared_ptr<RkPainEvent> &event);
-	  virtual void wheelEvent(std::shared_ptr<RkPainEvent> &event);
-	  virtual void resizeEvent(std::shared_ptr<RkResizeEvent> &event);
-	  virtual void showEvent(std::shared_ptr<RkShowEvent> &event);
-	  virtual void hideEvent(std::shared_ptr<RkHideEvent> &event);
+          virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
+          virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);
+          virtual void keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event);
+          virtual void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event);
+          virtual void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event);
+          virtual void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event);
+          virtual void mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event);
+          virtual void wheelEvent(const std::shared_ptr<RkWheelEvent> &event);
+          virtual void moveEvent(const std::shared_ptr<RkMoveEvent> &event);
+          virtual void resizeEvent(const std::shared_ptr<RkResizeEvent> &event);
+          virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
+          virtual void showEvent(const std::shared_ptr<RkShowEvent> &event);
+          virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
 
   private:
           void processChildEvents();

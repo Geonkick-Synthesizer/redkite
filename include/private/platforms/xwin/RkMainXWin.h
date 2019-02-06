@@ -21,18 +21,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#ifdef RK_OS_WIN
+#include <windows.h>
+#elif RK_OS_MAC
+ // to be defined
+#else
+#include <X11/Xlib.h>
+#endif
+
 class RkMain::RkMainXWin
 {
  public:
 
-        RkMainXWin();
-	~RkMainXWin();
+        RkMainXWin() {};
+	~RkMainXWin() {};
         RkMainXWin(const RkMainXWin &other) = delete;
         RkMainXWin& operator=(const RkMainXWin &other) = delete;
         RkMainXWin(RkMainXWin &&other) = delete;
         RkMainXWin& operator=(RkMainXWin &&other) = delete;
-	int exec();
+	int exec() { return 0; }
  private:
-	Window topLevelWindow;
+        //	RkWidget *topLevelWindow;
 };
 
