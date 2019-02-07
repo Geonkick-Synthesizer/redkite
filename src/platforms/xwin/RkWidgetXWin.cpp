@@ -96,9 +96,17 @@ std::list<std::shared_ptr<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
                 switch (e.type)
                 {
                 case Expose:
+		        events.push_back(RkEvent::paintEvent());
                         break;
                 case KeyPress:
+		        events.push_back(RkEvent::keyPressEvent());
                         break;
+                case KeyRelease:
+		        events.push_back(RkEvent::keyReleaseEvent());
+                        break;
+		case DestroyNotify:
+		        events.push_back(RkEvent::closeEvent());
+		     break;
                 default:
                         break;
                 }

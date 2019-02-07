@@ -41,13 +41,18 @@ RkMain::RkMain()
 #else
   : privateMain(std::make_unique<RkMainXWin>())
 #endif
-  , topLevelWindow(nullptr)
 {
-        RK_LOG_INFO("called");
+       RK_LOG_INFO("called");
 }
 
 RkMain::RkMain(int argc, char **argv)
-        : topLevelWindow(nullptr)
+ #ifdef RK_WIN_OS
+  : privateMain(std::make_unique<RkMainWin>())
+#elif RK_MAC_OS
+  : privateMain(std::make_unique<RkMainMac>())
+#else
+  : privateMain(std::make_unique<RkMainXWin>())
+#endif
 {
        RK_UNUSED(argc);
        RK_UNUSED(argv);
@@ -60,18 +65,16 @@ RkMain::~RkMain()
 
 bool RkMain::setTopLevelWindow(RkWidget *widget)
 {
-        if (topLevelWindow) {
+        if (privateMain->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is already set");
-                return false;
-        }
-        topLevelWindow = widget;
-        //	privateMain->setTopLevelWindow(topLevelWindow);
-        return true;
+		return false;
+        }	
+        return privateMain->setTopLevelWindow(widget);
 }
 
 int RkMain::exec()
 {
-        if (!topLevelWindow) {
+        if (!privateMain->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is not set");
                 return 1;
         }

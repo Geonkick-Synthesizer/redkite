@@ -37,8 +37,9 @@ class RkMain {
           RkMain& operator=(const RkMain &other) = delete;
           RkMain(RkMain &&other) = delete;
           RkMain& operator=(RkMain &&other) = delete;
+	  bool setTopLevelWindow(RkWidget *widget);
           int exec();
-          bool setTopLevelWindow(RkWidget *widget);
+	  
   private:
 
 /**
@@ -53,8 +54,6 @@ class RkMain {
 #else
 	  RK_PRIVATE_IMPL(RkMainXWin, privateMain);
 #endif
-
-          RkWidget *topLevelWindow;
 };
 
 #endif // RK_MAIN_H

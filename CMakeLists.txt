@@ -35,12 +35,14 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkMain.h)
 
 set(RK_HEADERS_PRIVATE
-  ${RK_INCLUDE_PATH}/private/platforms/xwin/RkWidgetXWin.h)
+  ${RK_INCLUDE_PATH}/private/platforms/xwin/RkWidgetXWin.h
+  ${RK_INCLUDE_PATH}/private/platforms/xwin/RkMainXWin.h)
 
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkMain.cpp
-  ${RK_SRC_PATH}/platforms/xwin/RkWidgetXWin.cpp)
+  ${RK_SRC_PATH}/platforms/xwin/RkWidgetXWin.cpp
+  ${RK_SRC_PATH}/platforms/xwin/RkMainXWin.cpp)
 
 add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH})

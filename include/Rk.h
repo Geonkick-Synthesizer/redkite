@@ -28,6 +28,8 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <thread>
+#include <chrono>
 
 #define RK_UNUSED(expr) (void)expr
 

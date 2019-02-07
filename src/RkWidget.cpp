@@ -33,9 +33,9 @@
 #include "RkWidgetXWin.h"
 #endif
 
-#undef KeyPress;
-#undef KeyRelease;
-#undef Paint;
+#undef KeyPress
+#undef KeyRelease
+#undef Paint
 
 RkWidget::RkWidget(RkWidget *parent)
 #ifdef RK_WIN_OS
@@ -45,6 +45,7 @@ RkWidget::RkWidget(RkWidget *parent)
 #else
     : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindow()) : std::make_unique<RkWidgetXWin>())
 #endif
+  , closeWidget(false)
 {
         if (!privateWidget->init()) {
                 RK_LOG_ERROR("can't init private widget");
@@ -86,12 +87,17 @@ void RkWidget::show()
         privateWidget->show();
 }
 
-RkWidget::RkNativeWindow RkWidget::nativeWindow()
+RkWidget::RkNativeWindow RkWidget::nativeWindow() const
 {
         return privateWidget->getWindow();
 }
 
-void RkWidget::pocessEvents()
+bool RkWidget::isClose() const
+{
+        return closeWidget;
+}
+
+void RkWidget::processEvents()
 {
         std::list<std::shared_ptr<RkEvent>> events = privateWidget->getEvents();
         for (auto &event: events) {
@@ -105,6 +111,10 @@ void RkWidget::pocessEvents()
                    break;
            case RkEvent::Type::KeyRelease:
                    keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                   break;
+	   case RkEvent::Type::Close:
+	           closeWidget = true;
+                   closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
                    break;
            default:
                    break;
@@ -121,26 +131,31 @@ void RkWidget::processChildEvents()
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
         RK_UNUSED(event);
+	RK_LOG_INFO("called");
 }
 
 void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
+	RK_LOG_INFO("called");
 }
 
 void RkWidget::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
+	RK_LOG_INFO("called");
 }
 
 void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
+	RK_LOG_INFO("called");
 }
 
 void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
+	RK_LOG_INFO("called");
 }
 
 void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)

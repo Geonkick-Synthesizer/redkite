@@ -22,34 +22,46 @@
  */
 
 #include "RkMainXWin.h"
+#include "RkLog.h"
+#include "RkWidget.h"
 
-RkMain::RkMainWin::RkMainXWin()
+RkMain::RkMainXWin::RkMainXWin()
+  : topWindow(nullptr)
 {
-
+        RK_LOG_INFO("called");
 }
 
-RkMain::RkMainWin::~RkMainXWin()
+RkMain::RkMainXWin::~RkMainXWin()
 {
 }
 
-void RkMain::RkMainWin::setTopLevelWindow(RkWidget* widget)
+bool RkMain::RkMainXWin::setTopLevelWindow(RkWidget* widget)
 {
-      topLevelWindow = widget;
+      if (topWindow)
+              return false;
+
+      topWindow = widget;
+      return true;
 }
 
-RkWidget* RkMain::RkMainWin::topLevelWindow(void)
+RkWidget* RkMain::RkMainXWin::topLevelWindow(void)
 {
-      return topLevelWindow;
+      return topWindow;
 }
 
-/*int RkMain::RkMainWin::exec()
+int RkMain::RkMainXWin::exec()
 {
-        if (!topLevelWindow) {
+        if (!topLevelWindow()) {
                 RK_LOG_ERROR("top window not defined");
 		return 1;
 	}
 
-        for (; !isQuit(); )
-	        topLevelWindow->processEvents();
-        return exitStatus();
-        }*/
+        for (;;) {
+                topLevelWindow()->processEvents();
+		if (topLevelWindow()->isClose())
+	                break;
+		std::this_thread::sleep_for(std::chrono::milliseconds(15));
+	}
+	
+        return 0;
+}

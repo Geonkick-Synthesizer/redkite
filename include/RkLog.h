@@ -54,3 +54,4 @@
 #endif // RK_LOG_ERROR_LEVEL
 
 #endif // RK_LOGGING_H
+

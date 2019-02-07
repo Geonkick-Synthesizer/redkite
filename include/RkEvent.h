@@ -26,6 +26,16 @@
 
 #include "Rk.h"
 
+class RkCloseEvent;
+class RkKeyEvent;
+class RkMouseEvent;
+class RkWheelEvent;
+class RkMoveEvent;
+class RkResizeEvent;
+class RkPaintEvent;
+class RkShowEvent;
+class RkHideEvent;
+
 class RkEvent {
  public:
         enum class Type: int {
@@ -45,23 +55,58 @@ class RkEvent {
            Hide
       };
 
-      RkEvent() {}
+      RkEvent(Type type = Type::None) : eventType(type) {}
       virtual ~RkEvent() {}
-      Type type() { return Type::None; }
 
-      //  private:
+      void setType(Type type) { eventType = type; }
+      Type type() const { return eventType; }
+
+      static std::shared_ptr<RkPaintEvent> paintEvent() { return std::move(std::make_shared<RkPaintEvent>()) ;}
+      static std::shared_ptr<RkKeyEvent> keyPressEvent() { return std::move(std::make_shared<RkKeyEvent>()) ;}
+      static std::shared_ptr<RkKeyEvent> keyReleaseEvent() { return std::move(std::make_shared<RkKeyEvent>(Type::KeyRelease)) ;}
+      static std::shared_ptr<RkCloseEvent> closeEvent() { return std::move(std::make_shared<RkCloseEvent>()) ;}
+
+  private:
       //      RK_PRIVATE_IMPL(RkEventPrivate, privateEvent)
+      Type eventType;
 };
 
-class RkCloseEvent: public RkEvent {};
-class RkKeyEvent: public RkEvent {};
-class RkMouseEvent: public RkEvent {};
-class RkWheelEvent: public RkEvent {};
-class RkMoveEvent: public RkEvent {};
-class RkResizeEvent: public RkEvent {};
-class RkPaintEvent: public RkEvent {};
-class RkShowEvent: public RkEvent {};
-class RkHideEvent: public RkEvent {};
+class RkCloseEvent: public RkEvent {
+ public:
+        RkCloseEvent() : RkEvent(Type::Close) {
+	}
+};
+
+class RkKeyEvent: public RkEvent {
+   public:
+        RkKeyEvent(Type type = Type::KeyPress)
+	    : RkEvent(type  == Type::KeyPress ? Type::KeyPress : Type::KeyRelease) {
+	}
+};
+
+class RkMouseEvent: public RkEvent {
+};
+
+class RkWheelEvent: public RkEvent {
+};
+
+class RkMoveEvent: public RkEvent {
+};
+
+class RkResizeEvent: public RkEvent {
+};
+
+class RkPaintEvent: public RkEvent {
+ public:
+       RkPaintEvent() : RkEvent(Type::Paint) {
+       }
+};
+
+class RkShowEvent: public RkEvent {
+};
+
+class RkHideEvent: public RkEvent {
+};
 
 #endif // RK_EVENT_H
 

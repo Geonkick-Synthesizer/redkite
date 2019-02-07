@@ -58,8 +58,9 @@ class RkWidget {
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
-          RkNativeWindow nativeWindow();
-	  void pocessEvents();
+          RkNativeWindow nativeWindow() const;
+	  bool isClose() const;
+	  void processEvents();
 
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
           virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);
@@ -93,6 +94,7 @@ class RkWidget {
 
 	  std::string widgetTitle;
           std::list<std::shared_ptr<RkWidget>> childWidgets;
+	  bool closeWidget;
 };
 
 #endif // RK_WIDGET_H
