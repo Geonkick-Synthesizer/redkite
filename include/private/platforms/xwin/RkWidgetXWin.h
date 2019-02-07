@@ -56,6 +56,7 @@ class RkWidget::RkWidgetXWin {
         Display *xDisplay;
         int screenNumber;
         Window xWindow;
+        Atom deleteWindowAtom;
 };
 
 #endif // RK_WIDGET_XWIN_H

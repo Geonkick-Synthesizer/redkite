@@ -28,14 +28,18 @@
 RkWidget::RkWidgetXWin::RkWidgetXWin(RkNativeWindow parent)
         : xParent(parent),
           xDisplay(nullptr),
-          screenNumber(0)
+          screenNumber(0),
+          xWindow(0)
 {
 }
 
 RkWidget::RkWidgetXWin::~RkWidgetXWin()
 {
-        if (!xParent && xDisplay)
+        RK_LOG_INFO("called");
+        if (!xParent && xDisplay) {
+                RK_LOG_INFO("XCloseDisplay(xDisplay)");
                 XCloseDisplay(xDisplay);
+        }
 }
 
 bool RkWidget::RkWidgetXWin::init()
@@ -48,13 +52,13 @@ bool RkWidget::RkWidgetXWin::init()
 
         screenNumber = DefaultScreen(xDisplay);
         if (xParent) {
-                XWindowAttributes attributes;
+                /*                XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, static_cast<Window>(xParent), &attributes);
                 screenNumber = XScreenCount(xDisplay);
                 xWindow = XCreateSimpleWindow(xDisplay, static_cast<Window>(xParent),
                                               10, 10, 250, 250, 1,
                                               BlackPixel(xDisplay, screenNumber),
-                                              WhitePixel(xDisplay, screenNumber));
+                                              WhitePixel(xDisplay, screenNumber));*/
         } else {
                 if (!xDisplay) {
                                 RK_LOG_ERROR("screen is not defined");
@@ -66,7 +70,21 @@ bool RkWidget::RkWidgetXWin::init()
                                               WhitePixel(xDisplay, screenNumber));
         }
 
-        XSelectInput(xDisplay, xWindow, ExposureMask | KeyPressMask);
+        if (!xWindow) {
+                RK_LOG_ERROR("can't create window");
+                return false;
+        }
+
+        XSelectInput(xDisplay, xWindow, ExposureMask
+                                        | KeyPressMask | KeyReleaseMask
+                                        | ButtonPressMask | ButtonReleaseMask
+                                        | StructureNotifyMask);
+
+        if (!xParent) {
+                deleteWindowAtom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
+                XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
+        }
+
         return true;
 }
 
@@ -104,8 +122,29 @@ std::list<std::shared_ptr<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
                 case KeyRelease:
 		        events.push_back(RkEvent::keyReleaseEvent());
                         break;
-		case DestroyNotify:
-		        events.push_back(RkEvent::closeEvent());
+                case ButtonPress:
+		        events.push_back(RkEvent::buttonPressEvent());
+                        break;
+                case ButtonRelease:
+		        events.push_back(RkEvent::buttonReleaseEvent());
+                        break;
+                case ConfigureNotify:
+                        //                        if (x() != e.x || y() != e.y) {
+                        //        setX(e.x);
+                        //        setY(e.y);
+                        //        events.push_back(RkEvent::moveEvent());
+                        //}
+
+                        //if (with() != e.with || height() != e.height()) {
+                        //        setSize(e.with, e.height);
+                                events.push_back(RkEvent::resizeEvent());
+                                //}
+                        break;
+		case ClientMessage:
+                        if (!xParent && (Atom)e.xclient.data.l[0] == deleteWindowAtom) {
+                                RK_LOG_INFO("DestroyNotify");
+                                events.push_back(RkEvent::closeEvent());
+                        }
 		     break;
                 default:
                         break;

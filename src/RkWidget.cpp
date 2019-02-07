@@ -112,6 +112,16 @@ void RkWidget::processEvents()
            case RkEvent::Type::KeyRelease:
                    keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                    break;
+           case RkEvent::Type::MouseButtonPress:
+                   mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                   break;
+           case RkEvent::Type::MouseButtonRelease:
+                   mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                   break;
+
+           case RkEvent::Type::Resize:
+                   resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                   break;
 	   case RkEvent::Type::Close:
 	           closeWidget = true;
                    closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
@@ -161,31 +171,37 @@ void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::moveEvent(const std::shared_ptr<RkMoveEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
 
 void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
@@ -196,4 +212,5 @@ void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
 void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
 }
