@@ -25,14 +25,6 @@
 #include "RkWidget.h"
 #include "RkEvent.h"
 
-#ifdef RK_WIN_OS
-#include "RkWidgetWin.h"
-#elif RK_MAC_OS
-#include "RkWidgetMac.h"
-#else
-#include "RkWidgetXWin.h"
-#endif
-
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
@@ -43,7 +35,7 @@ RkWidget::RkWidget(RkWidget *parent)
 #elif RK_MAC_OS
   : privateWidget(std::make_unique<RkWidgetMac>(parent))
 #else
-    : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindow()) : std::make_unique<RkWidgetXWin>())
+    : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindowInfo()) : std::make_unique<RkWidgetXWin>())
 #endif
   , closeWidget(false)
 {
@@ -61,6 +53,7 @@ RkWidget::RkWidget(RkNativeWindow parent)
   : privateWidget(std::make_unique<RkWidgetXWin>(parent))
 #endif
 {
+        privateWidget->setSize({});
         if (!privateWidget->init()) {
                 RK_LOG_ERROR("can't init private widget");
         }
@@ -87,9 +80,9 @@ void RkWidget::show()
         privateWidget->show();
 }
 
-RkWidget::RkNativeWindow RkWidget::nativeWindow() const
+std::shared_ptr<RkWidget::RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 {
-        return privateWidget->getWindow();
+        return std::move(privateWidget->nativeWindowInfo());
 }
 
 bool RkWidget::isClose() const
@@ -136,6 +129,61 @@ void RkWidget::processEvents()
 void RkWidget::processChildEvents()
 {
         // TODO: implement.
+}
+
+void RkWidget::setSize(int x, int y)
+{
+        privateWidget->setSize({x, y});
+}
+
+void RkWidget::setSize(std::pair<int, int> &size)
+{
+        privateWidget->setSize(size);
+}
+
+std::pair<int, int> RkWidget::size() const
+{
+        return std::move(privateWidget->size());
+}
+
+void RkWidget::setWidth(int w)
+{
+        privateWidget->setSize(w, privateWidget->size().second);
+}
+
+int RkWidget::width() const
+{
+        return privateWidget->size().first;
+}
+
+void RkWidget::setHeight(int h)
+{
+        privateWidget->setSize(privateWidget->size().frist, w);
+}
+
+int RkWidget::height() const
+{
+        return privateWidget->size().second;
+}
+
+int RkWidget::x() const
+{
+        return privateWidget->x();
+}
+
+void RkWidget::setX(int x)
+{
+        privateWidget->setX(x);
+}
+
+int RkWidget::y() const
+{
+        return privateWidget->y();
+}
+
+void RkWidget::setY(int y)
+{
+        return privateWidget->setY(y);
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)

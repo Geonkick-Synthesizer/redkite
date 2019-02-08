@@ -37,17 +37,10 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
+class NativeWindowInfo;
 
 class RkWidget {
   public:
-#ifdef RK_OS_WIN
-          using RkNativeWindow = HWND;
-#elif RK_OS_MAC
-          using RkNativeWindow = NSWindow;
-#else
-          using RkNativeWindow = uintptr_t;
-#endif
-
           explicit RkWidget(RkWidget *parent = nullptr);
           explicit RkWidget(RkNativeWindow parent);
           virtual ~RkWidget();
@@ -58,9 +51,20 @@ class RkWidget {
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
-          RkNativeWindow nativeWindow() const;
+          std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
 	  bool isClose() const;
 	  void processEvents();
+	  void setSize(int x, int y);
+	  void setSize(std::pair<int, int> &size);
+	  std::pair<int, int> size() const;
+	  void setWidth(int w);
+	  int width() const;
+	  void setHeight(int h);
+	  int height() const;
+          int x() const;
+          void setX(int x);
+          int y() const;
+          void setY(int y);
 
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
           virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);

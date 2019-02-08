@@ -26,19 +26,11 @@
 
 #include "RkWidget.h"
 
-#ifdef RK_OS_WIN
-#include <windows.h>
-#elif RK_OS_MAC
- // to be defined
-#else
-#include <X11/Xlib.h>
-#endif
-
 class RkEvent;
 
 class RkWidget::RkWidgetXWin {
  public:
-        explicit RkWidgetXWin(RkNativeWindow parent = 0);
+        explicit RkWidgetXWin(std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
         ~RkWidgetXWin();
         RkWidgetXWin(const RkWidgetXWin &other) = delete;
         RkWidgetXWin& operator=(const RkWidgetXWin &other) = delete;
@@ -46,17 +38,30 @@ class RkWidget::RkWidgetXWin {
         RkWidgetXWin& operator=(RkWidgetXWin &&other) = delete;
         bool init();
         void show();
-        RkWidget::RkNativeWindow getWindow();
+        std::shared_ptr<RkWidget::RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
+        bool hasParent() const;
         std::list<std::shared_ptr<RkEvent>> getEvents();
+        std::pair<int, int> size() const;
+        std::pair<int, int> setSize();
+        int x() const;
+        int y() const;
+        void setX(int x);
+        void setY(int y);
+
+ protected:
+        bool isWindowCreated() const;
 
  private:
-        RkNativeWindow xParent;
+        std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
         Display *xDisplay;
         int screenNumber;
         Window xWindow;
         Atom deleteWindowAtom;
+        int widgetX;
+        int widgetY;
+        std::pair<int, int> widgetSize;
 };
 
 #endif // RK_WIDGET_XWIN_H

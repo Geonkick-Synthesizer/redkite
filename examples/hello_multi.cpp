@@ -15,6 +15,9 @@ static int func1()
 
     RkWidget widget;
     widget.setTitle("Hello First!");
+    widget.setSize(250, 250);
+    widget.setX(10);
+    widget.setY(10);
     widget.show();
 
     if (!app.setTopLevelWindow(&widget)) {
@@ -31,6 +34,9 @@ static int func2()
 
     RkWidget widget;
     widget.setTitle("Hello Second!");
+    widget.setSize(300, 400);
+    widget.setX(100);
+    widget.setY(100);    
     widget.show();
 
     if (!app.setTopLevelWindow(&widget)) {

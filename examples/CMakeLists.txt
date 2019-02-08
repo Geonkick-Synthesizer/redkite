@@ -1,5 +1,6 @@
 set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
 set(RK_EXAMPLES_SOURCES_MULTI ${RK_EXAMPLES_PATH}/hello_multi.cpp)
+set(RK_EXAMPLES_SOURCES_MULTI ${RK_EXAMPLES_PATH}/child.cpp)
 
 add_executable(hello
   ${RK_HEADERS}
