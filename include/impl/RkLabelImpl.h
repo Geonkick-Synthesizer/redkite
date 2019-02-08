@@ -1,8 +1,8 @@
 /**
- * File name: Rk.h
+ * File name: RkLabelImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
  *
  * This file is part of Redkite.
  *
@@ -21,29 +21,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_GLOBAL_H
-#define RK_GLOBAL_H
+#define RK_LABEL_IMPL_H
+#define RK_LABEL_IMPL_H
 
-#include <memory>
-#include <string>
-#include <list>
-#include <memory>
-#include <thread>
-#include <chrono>
+#include "RKWidgetImpl.h"
 
-#define RK_UNUSED(expr) (void)expr
+class RkLabelImpl : public RkWidget::RkWidgetImpl {
+ public:
+    RkLabelImpl(RkLabel *interface, const std::string &text = std::string());
+    ~RkLabelImpl();
+    void setText(std:string &text);
+    std::string text() const;
 
-#define RK_DECLARE_IMPL(Class) \
-  class Class##Impl; \
-  Class##Impl *o_ptr; \
-  Class(<Class##Impl>& impl);
+ private:
+    RK_DECALRE_INTERFACE_PTR(RkLabel)
+    RK_DELCATE_IMPL_PTR(RkLabelImpl)
+    std::string labelText;
+};
 
-#define RK_DELCATE_IMPL_PTR(Class) Class##Impl *impl_ptr;
-#define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr;
-
-#define RK_DECLARE_IMPL
-
-#define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
-#define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }
-
-#endif // RK_GLOBAL_H
+#endif // RK_LABEL_H

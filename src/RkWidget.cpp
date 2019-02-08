@@ -26,15 +26,22 @@
 #include "RkEvent.h"
 
 RkWidget::RkWidget(RkWidget *parent)
-    : widgetImpl{std::make_unique<RkWidgetImpl>(parent)}
+    : o_ptr{std::make_unique<RkWidgetImpl>(this, parent)}
 {
         if (parent)
                 parent->addChild(this);
 }
 
 RkWidget::RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent)
-        : widgetImpl{std::make_unique<RkWidgetImpl>(parent)}
+    : o_ptr{std::make_unique<RkWidgetImpl>(this, parent)}
 {
+}
+
+RkWidget::RkWidget(RkWidget *parent, RkWidgetImpl &impl)
+    : o_ptr{&impl}
+{
+        if (parent)
+                parent->addChild(this);
 }
 
 RkWidget::~RkWidget()
@@ -43,33 +50,33 @@ RkWidget::~RkWidget()
 
 void RkWidget::setTitle(const std::string &title)
 {
-        RK_IMPL(RkWidget)->setTitle(title);
+        o_ptr->setTitle(title);
 }
 
 const std::string& RkWidget::title() const
 {
-        return RK_IMPL(RkWidget)->title();
+        return o_ptr->title();
 }
 
 
 void RkWidget::show()
 {
-        RK_IMPL(RkWidget)->show();
+        o_ptr->show();
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 {
-        return RK_IMPL(RkWidget)->nativeWindowInfo();
+        return o_ptr->nativeWindowInfo();
 }
 
 RkWindowId RkWidget::id() const
 {
-        return RK_IMPL(RkWidget)->id();
+        return o_ptr->id();
 }
 
 bool RkWidget::isClose() const
 {
-        return RK_IMPL(RkWidget)->isClose();
+        return o_ptr->isClose();
 }
 
 void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
@@ -78,78 +85,78 @@ void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 
 void RkWidget::setSize(int x, int y)
 {
-        RK_IMPL(RkWidget)->setSize({x, y});
+        o_ptr->setSize({x, y});
 }
 
 void RkWidget::setSize(const std::pair<int, int> &size)
 {
-        widgetImpl->setSize(size);
+        o_ptr->setSize(size);
 }
 
 std::pair<int, int> RkWidget::size() const
 {
-        return std::move(RK_IMPL(RkWidget)->size());
+        return std::move(o_ptr->size());
 }
 
 void RkWidget::setWidth(int w)
 {
-        widgetImpl->setSize({w, RK_IMPL(RkWidget)->size().second});
+        o_ptr->setSize({w, o_ptr->size().second});
 }
 
 int RkWidget::width() const
 {
-        return widgetImpl->size().first;
+        return o_ptr->size().first;
 }
 
 void RkWidget::setHeight(int h)
 {
-        widgetImpl->setSize({RK_IMPL(RkWidget)->size().first, h});
+        o_ptr->setSize({o_ptr->size().first, h});
 }
 
 int RkWidget::height() const
 {
-        return RK_IMPL(RkWidget)->size().second;
+        return o_ptr->size().second;
 }
 
 int RkWidget::x() const
 {
-        return RK_IMPL(RkWidget)->x();
+        return o_ptr->x();
 }
 
 void RkWidget::setX(int x)
 {
-        RK_IMPL(RkWidget)->setX(x);
+        o_ptr->setX(x);
 }
 
 int RkWidget::y() const
 {
-        return RK_IMPL(RkWidget)->y();
+        return o_ptr->y();
 }
 
 void RkWidget::setY(int y)
 {
-        return RK_IMPL(RkWidget)->setY(y);
+        return o_ptr->setY(y);
 }
 
 void RkWidget::setBackgroundColor(int r, int g, int b)
 {
-        RK_IMPL(RkWidget)->setBackgroundColor(r, g, b);
+        o_ptr->setBackgroundColor(r, g, b);
 }
 
 RkWidget* RkWidget::child(const RkWindowId &id) const
 {
-        return RK_IMPL(RkWidget)->child(id);
+        return o_ptr->child(id);
 }
 
 void RkWidget::addChild(RkWidget* child)
 {
         if (child)
-               RK_IMPL(RkWidget)->addChild(child);
+               o_ptr->addChild(child);
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
-        RK_UNUSED(event);
+    RK_UNUSED(event);
 	RK_LOG_INFO(title() + ":called");
 }
 

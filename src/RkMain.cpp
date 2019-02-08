@@ -25,31 +25,36 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 
-RkMain::RkMain() : implMain(std::make_unique<RkMainImpl>())
+RkMain::RkMain() : implPtr{std::make_unique<RkMainImpl>()}
 {
 }
 
-RkMain::RkMain(int argc, char **argv) : implMain(std::make_unique<RkMainImpl>(argc, argv))
+RkMain::RkMain(int argc, char **argv) : implPtr(RkMain){std::make_unique<RkMainImpl>(argc, argv)}
+{
+}
+
+RkMain::RkMain(RkMainImpl &impl) :
+    implPtr{&impl}
 {
 }
 
 RkMain::~RkMain()
 {
-        if (mainImpl->topLevelWindow())
-                delete mainImpl->topLevelWindow();
+        if (implPtr->topLevelWindow())
+            delete implPtr->topLevelWindow();
 }
 
 bool RkMain::setTopLevelWindow(RkWidget *widget)
 {
-        return mainImpl->setTopLevelWindow(widget);
+        return implPtr->setTopLevelWindow(widget);
 }
 
 int RkMain::exec(bool block)
 {
-        if (!mainImpl->topLevelWindow()) {
+        if (!implPtr->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is not set");
                 return 1;
         }
 
-	return mainImpl->exec(block);
+	return implPtr->exec(block);
 }

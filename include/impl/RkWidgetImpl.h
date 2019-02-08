@@ -8,7 +8,7 @@ class RkWidgetXWin;
 
 class RkWidget::RkWidgetImpl {
  public:
-        explicit RkWidgetImpl(RkWidget* inteface, RkWidget *parent = nullptr);
+        explicit RkWidgetImpl(RkWidget* interface, RkWidget *parent = nullptr);
         explicit RkWidgetImpl(const std::shared_ptr<RkNativeWindowInfo> &parent);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
@@ -44,7 +44,8 @@ class RkWidget::RkWidgetImpl {
         //        std::tuple<int, int, int, int> backgroundColor() const;
 
  private:
-        RkWidget *interfaceWidget;
+        // Declare pointer to the interface class RkWidget.
+        RK_DECALRE_INTERFACE_PTR(RkLabel)
         RkWidget *parentWidget;
 #ifdef RK_WIN_OS
         std::unique_ptr<RkWidgetWin> platformWindow;

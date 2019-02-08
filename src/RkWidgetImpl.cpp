@@ -34,14 +34,14 @@
 #endif
 
 RkWidget::RkWidgetImpl(RkWidget* interface, RkWidget* RkWidget *parent = nullptr)
-        : interfaceWidget(interface)
+        : inf_ptr{interface}
         , parentWidget{parent}
         , platformWindow{parent ? parent->nativeWindowInfo() : nullptr}
 {
 }
 
 RkWidget::RkWidgetImpl(RkWidget* interface, const std::shared_ptr<RkNativeWindowInfo> &parent)
-        : interfaceWidget{interface}
+        inf_ptr{interface}
         , parentWidget{nullptr}
         , platformWindow{parent}
 {

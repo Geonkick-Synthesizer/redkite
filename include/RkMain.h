@@ -39,8 +39,8 @@ class RkMain {
           RkMain& operator=(RkMain &&other) = delete;
           bool setTopLevelWindow(RkWidget* widget);
           int exec(bool block = true);
-  private:
-       	  RK_DECLARE_IMPL(RkWidget)
+  protected:
+       	  RK_DECLARE_IMPL(RkMain)
 };
 
 #endif // RK_MAIN_H

@@ -98,9 +98,11 @@ class RkWidget {
           virtual void showEvent(const std::shared_ptr<RkShowEvent> &event);
           virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
 
-  private:
+ protected:
+          RK_DECLARE_IMPL(RkWidget)
+
+ private:
           void addChild(RkWidget* child);
-	  RK_DECLARE_IMPL(RkWidget)
 };
 
 #endif // RK_WIDGET_H
