@@ -105,19 +105,23 @@ void RkMain::RkMainXWin::processEvents()
         }
 }
 
-int RkMain::RkMainXWin::exec()
+int RkMain::RkMainXWin::exec(bool block)
 {
         if (!topLevelWindow()) {
                 RK_LOG_ERROR("top window not defined");
 		return 1;
 	}
 
-        for (;;) {
+        if (!block) {
                 processEvents();
-                if (topLevelWindow()->isClose())
-                        break;
-                std::this_thread::sleep_for(std::chrono::milliseconds(15));
-	}
+        } else {
+                for (; block ;) {
+                        processEvents();
+                        if (topLevelWindow()->isClose())
+                                break;
+                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                }
+        }
 
         return 0;
 }

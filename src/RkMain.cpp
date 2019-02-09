@@ -61,6 +61,8 @@ RkMain::RkMain(int argc, char **argv)
 
 RkMain::~RkMain()
 {
+        if (privateMain->topLevelWindow())
+                delete privateMain->topLevelWindow();
 }
 
 bool RkMain::setTopLevelWindow(RkWidget *widget)
@@ -72,12 +74,12 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
         return privateMain->setTopLevelWindow(widget);
 }
 
-int RkMain::exec()
+int RkMain::exec(bool block)
 {
         if (!privateMain->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is not set");
                 return 1;
         }
 
-	return privateMain->exec();
+	return privateMain->exec(block);
 }

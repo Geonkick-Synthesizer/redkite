@@ -9,16 +9,16 @@ int main(int arc, char **argv)
     RkMain app(arc, argv);
 
     // Create main window.
-    RkWidget mainWindow;
-    mainWindow.setTitle("Main Window");
-    mainWindow.setSize(750, 600);
+    auto mainWindow = new RkWidget;
+    mainWindow->setTitle("Main Window");
+    mainWindow->setSize(750, 600);
 
     int x = 10;
     int y = 10;
     RK_LOG_DEBUG("create childs");
     for (auto i = 0; i < 99; i++) {
             RK_LOG_DEBUG("create child " << i);
-            auto child = new RkWidget(&mainWindow);
+            auto child = new RkWidget(mainWindow);
             child->setTitle("Child-" + std::to_string(i) + " - level0");
             child->setX(x);
             child->setY(y);
@@ -39,12 +39,12 @@ int main(int arc, char **argv)
             }
     }
 
-    if (!app.setTopLevelWindow(&mainWindow)) {
+    if (!app.setTopLevelWindow(mainWindow)) {
             RK_LOG_ERROR("can't set top level window");
             exit(1);
     }
 
-    mainWindow.show();
+    mainWindow->show();
     int res = app.exec();
     return res;
 }

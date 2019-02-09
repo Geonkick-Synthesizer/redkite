@@ -38,7 +38,7 @@ class RkMain {
           RkMain(RkMain &&other) = delete;
           RkMain& operator=(RkMain &&other) = delete;
           bool setTopLevelWindow(RkWidget* widget);
-          int exec();
+          int exec(bool block = true);
   private:
 
 /**

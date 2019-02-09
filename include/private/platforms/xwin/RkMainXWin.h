@@ -45,7 +45,7 @@ class RkMain::RkMainXWin
 	bool setTopLevelWindow(RkWidget* widget);
         RkWidget* topLevelWindow(void);
         void processEvents();
-	int exec();
+	int exec(bool block = true);
 
  private:
         RkWidget* topWindow;
