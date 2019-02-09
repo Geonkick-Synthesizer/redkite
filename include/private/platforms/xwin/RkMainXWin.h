@@ -25,16 +25,12 @@
 #define RK_MAIN_XWIN_H
 
 #include "RkMain.h"
+#include "RkPlatform.h"
 
-#ifdef RK_OS_WIN
-#include <windows.h>
-#elif RK_OS_MAC
- // to be defined
-#else
-#include <X11/Xlib.h>
-#endif
+#include <vector>
 
 class RkWidget;
+class RkEvent;
 
 class RkMain::RkMainXWin
 {
@@ -47,11 +43,12 @@ class RkMain::RkMainXWin
         RkMainXWin(RkMainXWin &&other) = delete;
         RkMainXWin& operator=(RkMainXWin &&other) = delete;
 	bool setTopLevelWindow(RkWidget* widget);
-	RkWidget* topLevelWindow(void);
+        RkWidget* topLevelWindow(void);
+        void processEvents();
 	int exec();
 
  private:
-        RkWidget *topWindow;
+        RkWidget* topWindow;
 };
 
 #endif // RK_MAIN_XWIN_H

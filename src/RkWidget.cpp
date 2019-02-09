@@ -25,9 +25,15 @@
 #include "RkWidget.h"
 #include "RkEvent.h"
 
+#ifdef RK_WIN_OS
+#elif RK_MAC_OS
+#else
+#include <RkWidgetXWin.h>
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
+#endif
+
 
 RkWidget::RkWidget(RkWidget *parent)
 #ifdef RK_WIN_OS
@@ -35,16 +41,20 @@ RkWidget::RkWidget(RkWidget *parent)
 #elif RK_MAC_OS
   : privateWidget(std::make_unique<RkWidgetMac>(parent))
 #else
-    : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindowInfo()) : std::make_unique<RkWidgetXWin>())
+  : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindowInfo()) : std::make_unique<RkWidgetXWin>())
 #endif
+  , parentWidget(parent)
   , closeWidget(false)
 {
         if (!privateWidget->init()) {
                 RK_LOG_ERROR("can't init private widget");
         }
+
+        if (parentWidget)
+                parentWidget->addChild(this);
 }
 
-RkWidget::RkWidget(RkNativeWindow parent)
+RkWidget::RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent)
 #ifdef RK_WIN_OS
   : privateWidget(std::make_unique<RkWidgetWin>(parent))
 #elif RK_MAC_OS
@@ -53,7 +63,6 @@ RkWidget::RkWidget(RkNativeWindow parent)
   : privateWidget(std::make_unique<RkWidgetXWin>(parent))
 #endif
 {
-        privateWidget->setSize({});
         if (!privateWidget->init()) {
                 RK_LOG_ERROR("can't init private widget");
         }
@@ -80,9 +89,14 @@ void RkWidget::show()
         privateWidget->show();
 }
 
-std::shared_ptr<RkWidget::RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
+std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 {
         return std::move(privateWidget->nativeWindowInfo());
+}
+
+RkWindowId RkWidget::id() const
+{
+        return privateWidget->id();
 }
 
 bool RkWidget::isClose() const
@@ -90,10 +104,8 @@ bool RkWidget::isClose() const
         return closeWidget;
 }
 
-void RkWidget::processEvents()
+void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 {
-        std::list<std::shared_ptr<RkEvent>> events = privateWidget->getEvents();
-        for (auto &event: events) {
            switch (event->type())
            {
            case RkEvent::Type::Paint:
@@ -122,13 +134,6 @@ void RkWidget::processEvents()
            default:
                    break;
            }
-        }
-        processChildEvents();
-}
-
-void RkWidget::processChildEvents()
-{
-        // TODO: implement.
 }
 
 void RkWidget::setSize(int x, int y)
@@ -136,7 +141,7 @@ void RkWidget::setSize(int x, int y)
         privateWidget->setSize({x, y});
 }
 
-void RkWidget::setSize(std::pair<int, int> &size)
+void RkWidget::setSize(const std::pair<int, int> &size)
 {
         privateWidget->setSize(size);
 }
@@ -148,7 +153,7 @@ std::pair<int, int> RkWidget::size() const
 
 void RkWidget::setWidth(int w)
 {
-        privateWidget->setSize(w, privateWidget->size().second);
+        privateWidget->setSize({w, privateWidget->size().second});
 }
 
 int RkWidget::width() const
@@ -158,7 +163,7 @@ int RkWidget::width() const
 
 void RkWidget::setHeight(int h)
 {
-        privateWidget->setSize(privateWidget->size().frist, w);
+        privateWidget->setSize({privateWidget->size().first, h});
 }
 
 int RkWidget::height() const
@@ -186,70 +191,81 @@ void RkWidget::setY(int y)
         return privateWidget->setY(y);
 }
 
+RkWidget* RkWidget::child(const RkWindowId &id) const
+{
+        return privateWidget->child(id);
+}
+
+void RkWidget::addChild(RkWidget* child)
+{
+        if (child)
+                privateWidget->addChild(child);
+}
+
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO("called");
+	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO("called");
+	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO("called");
+	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO("called");
+	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO("called");
+	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::moveEvent(const std::shared_ptr<RkMoveEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)

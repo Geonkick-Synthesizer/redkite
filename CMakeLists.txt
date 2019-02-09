@@ -30,6 +30,7 @@ endif()
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkLog.h
+  ${RK_INCLUDE_PATH}/RkPlatform.h
   ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkMain.h)
@@ -41,6 +42,7 @@ set(RK_HEADERS_PRIVATE
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkMain.cpp
+  ${RK_SRC_PATH}/platforms/xwin/RkPlatform.cpp
   ${RK_SRC_PATH}/platforms/xwin/RkWidgetXWin.cpp
   ${RK_SRC_PATH}/platforms/xwin/RkMainXWin.cpp)
 

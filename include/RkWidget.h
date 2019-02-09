@@ -27,7 +27,9 @@
 #include "Rk.h"
 
 #include <string>
+#include <unordered_map>
 
+class RkEvent;
 class RkCloseEvent;
 class RkKeyEvent;
 class RkMouseEvent;
@@ -37,12 +39,13 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
-class NativeWindowInfo;
+struct RkWindowId;
+struct RkNativeWindowInfo;
 
 class RkWidget {
   public:
           explicit RkWidget(RkWidget *parent = nullptr);
-          explicit RkWidget(RkNativeWindow parent);
+          explicit RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent);
           virtual ~RkWidget();
           RkWidget(const RkWidget &other) = delete;
           RkWidget& operator=(const RkWidget &other) = delete;
@@ -55,7 +58,7 @@ class RkWidget {
 	  bool isClose() const;
 	  void processEvents();
 	  void setSize(int x, int y);
-	  void setSize(std::pair<int, int> &size);
+	  void setSize(const std::pair<int, int> &size);
 	  std::pair<int, int> size() const;
 	  void setWidth(int w);
 	  int width() const;
@@ -65,7 +68,11 @@ class RkWidget {
           void setX(int x);
           int y() const;
           void setY(int y);
+          RkWidget* child(const RkWindowId &id) const;
+          void processEvent(const std::shared_ptr<RkEvent> &event);
+          RkWindowId id() const;
 
+  protected:
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
           virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);
           virtual void keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event);
@@ -81,7 +88,7 @@ class RkWidget {
           virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
 
   private:
-          void processChildEvents();
+          void addChild(RkWidget* child);
 
 /**
  * Private implementations for platforms.
@@ -97,7 +104,7 @@ class RkWidget {
 #endif
 
 	  std::string widgetTitle;
-          std::list<std::shared_ptr<RkWidget>> childWidgets;
+          RkWidget *parentWidget;
 	  bool closeWidget;
 };
 

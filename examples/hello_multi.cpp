@@ -15,9 +15,9 @@ static int func1()
 
     RkWidget widget;
     widget.setTitle("Hello First!");
-    widget.setSize(250, 250);
     widget.setX(10);
     widget.setY(10);
+    widget.setSize(250, 250);
     widget.show();
 
     if (!app.setTopLevelWindow(&widget)) {
@@ -34,9 +34,9 @@ static int func2()
 
     RkWidget widget;
     widget.setTitle("Hello Second!");
-    widget.setSize(300, 400);
     widget.setX(100);
-    widget.setY(100);    
+    widget.setY(100);
+    widget.setSize(300, 400);
     widget.show();
 
     if (!app.setTopLevelWindow(&widget)) {
@@ -53,11 +53,6 @@ int main(int arc, char **argv)
     std::thread first (func1);
     std::thread second (func2);
 
-    std::cout << "\n NOTE: Widgets are put one over another\n "
-              << "because there is a need to set different origins. \n"
-              << "Just drag and you'll see the second one. \n"
-              << "Press any key on active window to close it.\n"
-              << "Close button still not work correctly." << std::endl;
     first.join();
     second.join();
 

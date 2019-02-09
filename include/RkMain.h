@@ -37,9 +37,8 @@ class RkMain {
           RkMain& operator=(const RkMain &other) = delete;
           RkMain(RkMain &&other) = delete;
           RkMain& operator=(RkMain &&other) = delete;
-	  bool setTopLevelWindow(RkWidget *widget);
+          bool setTopLevelWindow(RkWidget* widget);
           int exec();
-	  
   private:
 
 /**

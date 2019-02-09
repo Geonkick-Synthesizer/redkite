@@ -25,19 +25,25 @@
 #include "RkEvent.h"
 #include "RkWidgetXWin.h"
 
-RkWidget::RkWidgetXWin::RkWidgetXWin(std::shared_ptr<RkWidget::RkNativeWindowInfo> &parent)
+RkWidget::RkWidgetXWin::RkWidgetXWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent),
           xDisplay(parentWindowInfo ? parent->display : nullptr),
           screenNumber(parentWindowInfo ? parent->screenNumber : 0),
           xWindow(0),
           widgetX(10),
-          widgetY(10)
+          widgetY(10),
           widgetSize{250, 250}
 {
 }
 
 RkWidget::RkWidgetXWin::~RkWidgetXWin()
 {
+        RK_LOG_DEBUG("delete children " << widgetChildren.size());
+        for (auto child : widgetChildren) {
+                RK_LOG_DEBUG("delete child " << child->title());
+                delete child;
+        }
+
         if (!hasParent() && xDisplay) {
                 RK_LOG_INFO("XCloseDisplay(xDisplay)");
                 XCloseDisplay(xDisplay);
@@ -65,12 +71,13 @@ bool RkWidget::RkWidgetXWin::init()
                 }
 	}
 
+        RK_LOG_DEBUG("has parent: " << hasParent());
         Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(display(), screenNumber);
         std::pair<int, int> winSize = size();
         xWindow = XCreateSimpleWindow(display(), parent,
                                       x(), y(), winSize.first, winSize.second, 1,
-                                      BlackPixel(display(), screenNumber),
-                                      WhitePixel(display(), screenNumber));
+                                      parentWindowInfo ? 123456 : BlackPixel(display(), screenNumber),
+                                      parentWindowInfo ? 324567 : WhitePixel(display(), screenNumber));
 
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
@@ -96,10 +103,10 @@ void RkWidget::RkWidgetXWin::show()
                 XMapRaised(display(), xWindow);
 }
 
-std::shared_ptr<RkWidget::RkNativeWindowInfo> RkWidget::RkWidgetXWin::nativeWindowInfo()
+std::shared_ptr<RkNativeWindowInfo> RkWidget::RkWidgetXWin::nativeWindowInfo()
 {
         if (isWindowCreated()) {
-                audo info = std::make_shared<RkWidget::NativeWindowInfo>();
+                auto info = std::make_shared<RkNativeWindowInfo>();
                 info->display = display();
                 info->screenNumber = screenNumber;
                 info->window = xWindow;
@@ -115,57 +122,9 @@ void RkWidget::RkWidgetXWin::setTitle(const std::string &title)
                 XStoreName(xDisplay, xWindow, title.c_str());
 }
 
-std::list<std::shared_ptr<RkEvent>> RkWidget::RkWidgetXWin::getEvents()
-{
-        std::list<std::shared_ptr<RkEvent>> events;
-        XEvent e;
-        while (XPending(xDisplay) > 0) {
-                XNextEvent(xDisplay, &e);
-                switch (e.type)
-                {
-                case Expose:
-		        events.push_back(RkEvent::paintEvent());
-                        break;
-                case KeyPress:
-		        events.push_back(RkEvent::keyPressEvent());
-                        break;
-                case KeyRelease:
-		        events.push_back(RkEvent::keyReleaseEvent());
-                        break;
-                case ButtonPress:
-		        events.push_back(RkEvent::buttonPressEvent());
-                        break;
-                case ButtonRelease:
-		        events.push_back(RkEvent::buttonReleaseEvent());
-                        break;
-                case ConfigureNotify:
-                        //                        if (x() != e.x || y() != e.y) {
-                        //        setX(e.x);
-                        //        setY(e.y);
-                        //        events.push_back(RkEvent::moveEvent());
-                        //}
-
-                        //if (with() != e.with || height() != e.height()) {
-                        //        setSize(e.with, e.height);
-                                events.push_back(RkEvent::resizeEvent());
-                                //}
-                        break;
-		case ClientMessage:
-                        if (!xParent && (Atom)e.xclient.data.l[0] == deleteWindowAtom) {
-                                RK_LOG_INFO("DestroyNotify");
-                                events.push_back(RkEvent::closeEvent());
-                        }
-		     break;
-                default:
-                        break;
-                }
-        }
-        return std::move(events);
-}
-
 bool RkWidget::RkWidgetXWin::isWindowCreated() const
 {
-        return display() && xWindow;
+        return xDisplay != nullptr && xWindow;
 }
 
 std::pair<int, int> RkWidget::RkWidgetXWin::size() const
@@ -173,7 +132,7 @@ std::pair<int, int> RkWidget::RkWidgetXWin::size() const
         return widgetSize;
 }
 
-std::pair<int, int> RkWidget::RkWidgetXWin::setSize(std::pair<int, int> &size)
+void RkWidget::RkWidgetXWin::setSize(const std::pair<int, int> &size)
 {
         if (size.first > 0 && size.second > 0) {
                 widgetSize = size;
@@ -208,4 +167,32 @@ void RkWidget::RkWidgetXWin::setY(int y)
                 if (isWindowCreated())
                         XMoveWindow(display(), xWindow, widgetX, widgetY);
         }
+}
+
+void RkWidget::RkWidgetXWin::addChild(RkWidget* child)
+{
+        RK_LOG_DEBUG("add child: " << child->id().id);
+        widgetChildren.push_back(child);
+}
+
+RkWidget* RkWidget::RkWidgetXWin::child(const RkWindowId &id) const
+{
+        for (const auto &child : widgetChildren) {
+                if (child->id().id == id.id) {
+                        return child;
+                } else {
+                        auto ch = child->child(id);
+                        if (ch)
+                                return ch;
+                }
+        }
+
+        return nullptr;
+}
+
+RkWindowId RkWidget::RkWidgetXWin::id() const
+{
+        RkWindowId id;
+        id.id = xWindow;
+        return id;
 }

@@ -68,7 +68,7 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
         if (privateMain->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is already set");
 		return false;
-        }	
+        }
         return privateMain->setTopLevelWindow(widget);
 }
 

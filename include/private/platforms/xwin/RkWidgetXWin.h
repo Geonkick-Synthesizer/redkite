@@ -25,12 +25,13 @@
 #define RK_WIDGET_XWIN_H
 
 #include "RkWidget.h"
+#include "RkPlatform.h"
 
 class RkEvent;
 
 class RkWidget::RkWidgetXWin {
  public:
-        explicit RkWidgetXWin(std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
+        explicit RkWidgetXWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
         ~RkWidgetXWin();
         RkWidgetXWin(const RkWidgetXWin &other) = delete;
         RkWidgetXWin& operator=(const RkWidgetXWin &other) = delete;
@@ -38,19 +39,22 @@ class RkWidget::RkWidgetXWin {
         RkWidgetXWin& operator=(RkWidgetXWin &&other) = delete;
         bool init();
         void show();
-        std::shared_ptr<RkWidget::RkNativeWindowInfo> nativeWindowInfo();
+        std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
         bool hasParent() const;
-        std::list<std::shared_ptr<RkEvent>> getEvents();
         std::pair<int, int> size() const;
-        std::pair<int, int> setSize();
+        void setSize(const std::pair<int, int> &size);
         int x() const;
         int y() const;
         void setX(int x);
         void setY(int y);
+        void addChild(RkWidget *child);
+        RkWidget* child(const RkWindowId &id) const;
+        RkWindowId id() const;
 
  protected:
+        bool openDisplay();
         bool isWindowCreated() const;
 
  private:
@@ -62,6 +66,7 @@ class RkWidget::RkWidgetXWin {
         int widgetX;
         int widgetY;
         std::pair<int, int> widgetSize;
+        std::list<RkWidget*> widgetChildren;
 };
 
 #endif // RK_WIDGET_XWIN_H

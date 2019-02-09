@@ -21,6 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include "RkEvent.h"
 #include "RkMainXWin.h"
 #include "RkLog.h"
 #include "RkWidget.h"
@@ -49,6 +50,61 @@ RkWidget* RkMain::RkMainXWin::topLevelWindow(void)
       return topWindow;
 }
 
+void RkMain::RkMainXWin::processEvents()
+{
+        XEvent e;
+        Display* display = topLevelWindow()->nativeWindowInfo()->display;
+        while (XPending(display) > 0) {
+                XNextEvent(display, &e);
+                auto id = reinterpret_cast<XAnyEvent*>(&e)->window;
+                RkWidget* widget = nullptr;
+                if (topLevelWindow()->id().id == id)
+                        widget = topLevelWindow();
+                else
+                        widget = topLevelWindow()->child(rk_id_from_x11(id));
+                if (!widget) {
+                        RK_LOG_ERROR("can't find widget with ID: " << id);
+                        continue;
+                }
+
+                std::shared_ptr<RkEvent> event = nullptr;
+                switch (e.type)
+                {
+                case Expose:
+                        event = RkEvent::paintEvent();
+                        break;
+                case KeyPress:
+                        event = RkEvent::keyPressEvent();
+                        break;
+                case KeyRelease:
+                        event = RkEvent::keyReleaseEvent();
+                        break;
+                case ButtonPress:
+                        event = RkEvent::buttonPressEvent();
+                        break;
+                case ButtonRelease:
+                        event = RkEvent::buttonReleaseEvent();
+                        break;
+                case ConfigureNotify:
+                        event = RkEvent::resizeEvent();
+                        break;
+                case ClientMessage:
+                {
+                        auto atom = XInternAtom(display, "WM_DELETE_WINDOW", True);
+                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom) {
+                                event = RkEvent::closeEvent();
+                        }
+                        break;
+                }
+                default:
+                        break;
+                }
+
+                if (event && widget)
+                        widget->processEvent(event);
+        }
+}
+
 int RkMain::RkMainXWin::exec()
 {
         if (!topLevelWindow()) {
@@ -57,11 +113,11 @@ int RkMain::RkMainXWin::exec()
 	}
 
         for (;;) {
-                topLevelWindow()->processEvents();
-		if (topLevelWindow()->isClose())
-	                break;
-		std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                processEvents();
+                if (topLevelWindow()->isClose())
+                        break;
+                std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
-	
+
         return 0;
 }
