@@ -44,6 +44,10 @@ struct RkNativeWindowInfo;
 
 class RkWidget {
   public:
+          RK_CLASS_INFO(style_element, "RkWidget")
+          RK_CLASS_INFO(style_class, "")
+          RK_CLASS_INFO(style_id, "")
+
           explicit RkWidget(RkWidget *parent = nullptr);
           explicit RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent);
           virtual ~RkWidget();

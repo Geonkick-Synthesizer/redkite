@@ -37,4 +37,7 @@
   class Class; \
   std::unique_ptr<Class> Name;
 
+#define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
+#define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }
+
 #endif // RK_GLOBAL_H

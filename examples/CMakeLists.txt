@@ -1,6 +1,7 @@
 set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
 set(RK_EXAMPLES_SOURCES_MULTI ${RK_EXAMPLES_PATH}/hello_multi.cpp)
 set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
+set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 
 add_executable(hello
   ${RK_HEADERS}
@@ -26,5 +27,10 @@ add_dependencies(child redkite)
 target_link_libraries(child redkite)
 target_link_libraries(child "-lX11 -lrt -lm -ldl")
 
+add_executable(property
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_PROPERTY})
 
-
+add_dependencies(property redkite)
+target_link_libraries(property redkite)
+target_link_libraries(property "-lX11 -lrt -lm -ldl")
