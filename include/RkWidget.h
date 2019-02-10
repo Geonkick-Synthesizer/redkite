@@ -81,7 +81,7 @@ class RkWidget {
           void setBackgroundColor(int r, int g, int b);
           //void setBackgroundColor(std::tuple<int, int, int, int> &color);
           //RkColor backgroundColor() const;
-          std::tuple<int, int, int, int> backgroundColor() const;
+          // std::tuple<int, int, int, int> backgroundColor() const;
 
   protected:
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
@@ -100,19 +100,7 @@ class RkWidget {
 
   private:
           void addChild(RkWidget* child);
-
-/**
- * Private implementations for platforms.
- * Not to be exposed to users.
- * This also provides ABI compatibility.
- */
-#ifdef RK_OS_WIN
-	  RK_PRIVATE_IMPL(RkWidgetXWin, privateWidget)
-#elif RK_OS_MAC
-	  RK_PRIVATE_IMPL(RkWidgetMac, privateWidget)
-#else
-	  RK_PRIVATE_IMPL(RkWidgetXWin, privateWidget)
-#endif
+	  RK_DECLARE_IMPL(RkWidget)
 };
 
 #endif // RK_WIDGET_H

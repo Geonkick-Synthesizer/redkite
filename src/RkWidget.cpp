@@ -2,7 +2,7 @@
  * File name: RkWidget.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
  *
  * This file is part of Redkite.
  *
@@ -25,15 +25,6 @@
 #include "RkWidget.h"
 #include "RkEvent.h"
 
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
-#else
-#include <RkWidgetXWin.h>
-#undef KeyPress
-#undef KeyRelease
-#undef Paint
-#endif
-
 RkWidget::RkWidget(RkWidget *parent)
     : widgetImpl{std::make_unique<RkWidgetImpl>(parent)}
 {
@@ -52,70 +43,42 @@ RkWidget::~RkWidget()
 
 void RkWidget::setTitle(const std::string &title)
 {
-        widgetImpl->setTitle(title);
+        RK_IMPL(RkWidget)->setTitle(title);
 }
 
 const std::string& RkWidget::title() const
 {
-        return widgetImpl->title();
+        return RK_IMPL(RkWidget)->title();
 }
 
 
 void RkWidget::show()
 {
-        widgetImpl->show();
+        RK_IMPL(RkWidget)->show();
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 {
-        return std::move(widgetImpl->nativeWindowInfo());
+        return RK_IMPL(RkWidget)->nativeWindowInfo();
 }
 
 RkWindowId RkWidget::id() const
 {
-        return widgetImpl->id();
+        return RK_IMPL(RkWidget)->id();
 }
 
 bool RkWidget::isClose() const
 {
-        return widgetImpl->isClose();
+        return RK_IMPL(RkWidget)->isClose();
 }
 
 void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 {
-           switch (event->type())
-           {
-           case RkEvent::Type::Paint:
-                   paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
-                   break;
-           case RkEvent::Type::KeyPress:
-                   keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
-                   break;
-           case RkEvent::Type::KeyRelease:
-                   keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
-                   break;
-           case RkEvent::Type::MouseButtonPress:
-                   mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
-                   break;
-           case RkEvent::Type::MouseButtonRelease:
-                   mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
-                   break;
-
-           case RkEvent::Type::Resize:
-                   resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
-                   break;
-	   case RkEvent::Type::Close:
-	           closeWidget = true;
-                   closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
-                   break;
-           default:
-                   break;
-           }
 }
 
 void RkWidget::setSize(int x, int y)
 {
-        widgetImpl->setSize({x, y});
+        RK_IMPL(RkWidget)->setSize({x, y});
 }
 
 void RkWidget::setSize(const std::pair<int, int> &size)
@@ -125,12 +88,12 @@ void RkWidget::setSize(const std::pair<int, int> &size)
 
 std::pair<int, int> RkWidget::size() const
 {
-        return std::move(widgetImpl->size());
+        return std::move(RK_IMPL(RkWidget)->size());
 }
 
 void RkWidget::setWidth(int w)
 {
-        widgetImpl->setSize({w, widgetImpl->size().second});
+        widgetImpl->setSize({w, RK_IMPL(RkWidget)->size().second});
 }
 
 int RkWidget::width() const
@@ -140,48 +103,48 @@ int RkWidget::width() const
 
 void RkWidget::setHeight(int h)
 {
-        widgetImpl->setSize({widgetImpl->size().first, h});
+        widgetImpl->setSize({RK_IMPL(RkWidget)->size().first, h});
 }
 
 int RkWidget::height() const
 {
-        return widgetImpl->size().second;
+        return RK_IMPL(RkWidget)->size().second;
 }
 
 int RkWidget::x() const
 {
-        return widgetImpl->x();
+        return RK_IMPL(RkWidget)->x();
 }
 
 void RkWidget::setX(int x)
 {
-        widgetImpl->setX(x);
+        RK_IMPL(RkWidget)->setX(x);
 }
 
 int RkWidget::y() const
 {
-        return widgetImpl->y();
+        return RK_IMPL(RkWidget)->y();
 }
 
 void RkWidget::setY(int y)
 {
-        return widgetImpl->setY(y);
+        return RK_IMPL(RkWidget)->setY(y);
 }
 
 void RkWidget::setBackgroundColor(int r, int g, int b)
 {
-        widgetImpl->setBackgroundColor(r, g, b);
+        RK_IMPL(RkWidget)->setBackgroundColor(r, g, b);
 }
 
 RkWidget* RkWidget::child(const RkWindowId &id) const
 {
-        return widgetImpl->child(id);
+        return RK_IMPL(RkWidget)->child(id);
 }
 
 void RkWidget::addChild(RkWidget* child)
 {
         if (child)
-                widgetImpl->addChild(child);
+               RK_IMPL(RkWidget)->addChild(child);
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)

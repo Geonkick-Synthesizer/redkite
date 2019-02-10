@@ -40,19 +40,7 @@ class RkMain {
           bool setTopLevelWindow(RkWidget* widget);
           int exec(bool block = true);
   private:
-
-/**
- * Private implementations for platforms.
- * Not to be exposed to users.
- * This also provides ABI compatibility.
- */
-#ifdef RK_OS_WIN
-	  RK_PRIVATE_IMPL(RkMainWin, privateMain);
-#elif RK_OS_MAC
-	  RK_PRIVATE_IMPL(RkMainMac, privateMain);
-#else
-	  RK_PRIVATE_IMPL(RkMainXWin, privateMain);
-#endif
+       	  RK_DECLARE_IMPL(RkWidget)
 };
 
 #endif // RK_MAIN_H

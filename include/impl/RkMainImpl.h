@@ -1,5 +1,5 @@
 /**
- * File name: Rk.h
+ * File name: RkMainXWin.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,26 +21,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_GLOBAL_H
-#define RK_GLOBAL_H
+#ifndef RK_MAIN_XWIN_H
+#define RK_MAIN_XWIN_H
 
-#include <memory>
-#include <string>
-#include <list>
-#include <memory>
-#include <thread>
-#include <chrono>
+#include "RkMain.h"
+#include "RkPlatform.h"
 
-#define RK_UNUSED(expr) (void)expr
+#include <vector>
 
-#define RK_DECLARE_IMPL(name) \
-  class name##Impl; \
-  std::unique_ptr<name##Impl> impl##name; \
-  name(impl##name &impl);
+class RkWidget;
+class RkEvent;
 
-#define RK_IMPL(name) (impl##name)
+class RkMain::RkMainImpl
+{
+ public:
 
-#define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
-#define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }
+        RkMainImpl(RkMain *interface);
+	virtual ~RkMainImpl();
+        RkMainImpl(const RkMainImpl &other) = delete;
+        RkMainImpl& operator=(const RkMainImpl &other) = delete;
+        RkMainImpl(RkMainImpl &&other) = delete;
+        RkMainImpl& operator=(RkMainImpl &&other) = delete;
+	bool setTopLevelWindow(RkWidget* widget);
+        RkWidget* topLevelWindow(void);
+        void processEvents();
+	int exec(bool block = true);
 
-#endif // RK_GLOBAL_H
+ private:
+        RkMain *interfaceMain;
+        RkWidget* topWindow;
+};
+
+#endif // RK_MAIN_XWIN_H

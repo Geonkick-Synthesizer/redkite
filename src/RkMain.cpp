@@ -2,7 +2,7 @@
  * File name: RkMain.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
  *
  * This file is part of Redkite.
  *
@@ -25,61 +25,31 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 
-#ifdef RK_WIN_OS
-#include "RkMainWin.h"
-#elif RK_MAC_OS
-#include "RkMainMac.h"
-#else
-#include "RkMainXWin.h"
-#endif
-
-RkMain::RkMain()
-#ifdef RK_WIN_OS
-  : privateMain(std::make_unique<RkMainWin>())
-#elif RK_MAC_OS
-  : privateMain(std::make_unique<RkMainMac>())
-#else
-  : privateMain(std::make_unique<RkMainXWin>())
-#endif
+RkMain::RkMain() : implMain(std::make_unique<RkMainImpl>())
 {
-       RK_LOG_INFO("called");
 }
 
-RkMain::RkMain(int argc, char **argv)
- #ifdef RK_WIN_OS
-  : privateMain(std::make_unique<RkMainWin>())
-#elif RK_MAC_OS
-  : privateMain(std::make_unique<RkMainMac>())
-#else
-  : privateMain(std::make_unique<RkMainXWin>())
-#endif
+RkMain::RkMain(int argc, char **argv) : implMain(std::make_unique<RkMainImpl>(argc, argv))
 {
-       RK_UNUSED(argc);
-       RK_UNUSED(argv);
-       RK_LOG_INFO("called");
 }
 
 RkMain::~RkMain()
 {
-        if (privateMain->topLevelWindow())
-                delete privateMain->topLevelWindow();
+        if (mainImpl->topLevelWindow())
+                delete mainImpl->topLevelWindow();
 }
 
 bool RkMain::setTopLevelWindow(RkWidget *widget)
 {
-        if (privateMain->topLevelWindow()) {
-                RK_LOG_ERROR("top level window is already set");
-		return false;
-        }
-        return privateMain->setTopLevelWindow(widget);
+        return mainImpl->setTopLevelWindow(widget);
 }
 
 int RkMain::exec(bool block)
 {
-        if (!privateMain->topLevelWindow()) {
+        if (!mainImpl->topLevelWindow()) {
                 RK_LOG_ERROR("top level window is not set");
                 return 1;
         }
 
-	return privateMain->exec(block);
+	return mainImpl->exec(block);
 }
