@@ -55,12 +55,17 @@ class RkWidget {
           RkWidget& operator=(const RkWidget &other) = delete;
           RkWidget(RkWidget &&other) = delete;
           RkWidget& operator=(RkWidget &&other) = delete;
+
 	  void show();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
           std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
 	  bool isClose() const;
 	  void processEvents();
+          RkWidget* child(const RkWindowId &id) const;
+          void processEvent(const std::shared_ptr<RkEvent> &event);
+          RkWindowId id() const;
+
 	  void setSize(int x, int y);
 	  void setSize(const std::pair<int, int> &size);
 	  std::pair<int, int> size() const;
@@ -72,9 +77,11 @@ class RkWidget {
           void setX(int x);
           int y() const;
           void setY(int y);
-          RkWidget* child(const RkWindowId &id) const;
-          void processEvent(const std::shared_ptr<RkEvent> &event);
-          RkWindowId id() const;
+          //          void setBackgroundColor(const RkColor &color);
+          void setBackgroundColor(int r, int g, int b);
+          //void setBackgroundColor(std::tuple<int, int, int, int> &color);
+          //RkColor backgroundColor() const;
+          std::tuple<int, int, int, int> backgroundColor() const;
 
   protected:
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
@@ -106,10 +113,6 @@ class RkWidget {
 #else
 	  RK_PRIVATE_IMPL(RkWidgetXWin, privateWidget)
 #endif
-
-	  std::string widgetTitle;
-          RkWidget *parentWidget;
-	  bool closeWidget;
 };
 
 #endif // RK_WIDGET_H

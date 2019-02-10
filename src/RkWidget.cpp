@@ -34,38 +34,16 @@
 #undef Paint
 #endif
 
-
 RkWidget::RkWidget(RkWidget *parent)
-#ifdef RK_WIN_OS
-  : privateWidget(std::make_unique<RkWidgetWin>(parent))
-#elif RK_MAC_OS
-  : privateWidget(std::make_unique<RkWidgetMac>(parent))
-#else
-  : privateWidget(parent ? std::make_unique<RkWidgetXWin>(parent->nativeWindowInfo()) : std::make_unique<RkWidgetXWin>())
-#endif
-  , parentWidget(parent)
-  , closeWidget(false)
+    : widgetImpl{std::make_unique<RkWidgetImpl>(parent)}
 {
-        if (!privateWidget->init()) {
-                RK_LOG_ERROR("can't init private widget");
-        }
-
-        if (parentWidget)
-                parentWidget->addChild(this);
+        if (parent)
+                parent->addChild(this);
 }
 
 RkWidget::RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent)
-#ifdef RK_WIN_OS
-  : privateWidget(std::make_unique<RkWidgetWin>(parent))
-#elif RK_MAC_OS
-  : privateWidget(std::make_unique<RkWidgetMac>(parent))
-#else
-  : privateWidget(std::make_unique<RkWidgetXWin>(parent))
-#endif
+        : widgetImpl{std::make_unique<RkWidgetImpl>(parent)}
 {
-        if (!privateWidget->init()) {
-                RK_LOG_ERROR("can't init private widget");
-        }
 }
 
 RkWidget::~RkWidget()
@@ -74,34 +52,33 @@ RkWidget::~RkWidget()
 
 void RkWidget::setTitle(const std::string &title)
 {
-        privateWidget->setTitle(title);
-        widgetTitle = title;
+        widgetImpl->setTitle(title);
 }
 
 const std::string& RkWidget::title() const
 {
-        return widgetTitle;
+        return widgetImpl->title();
 }
 
 
 void RkWidget::show()
 {
-        privateWidget->show();
+        widgetImpl->show();
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 {
-        return std::move(privateWidget->nativeWindowInfo());
+        return std::move(widgetImpl->nativeWindowInfo());
 }
 
 RkWindowId RkWidget::id() const
 {
-        return privateWidget->id();
+        return widgetImpl->id();
 }
 
 bool RkWidget::isClose() const
 {
-        return closeWidget;
+        return widgetImpl->isClose();
 }
 
 void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
@@ -138,68 +115,73 @@ void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 
 void RkWidget::setSize(int x, int y)
 {
-        privateWidget->setSize({x, y});
+        widgetImpl->setSize({x, y});
 }
 
 void RkWidget::setSize(const std::pair<int, int> &size)
 {
-        privateWidget->setSize(size);
+        widgetImpl->setSize(size);
 }
 
 std::pair<int, int> RkWidget::size() const
 {
-        return std::move(privateWidget->size());
+        return std::move(widgetImpl->size());
 }
 
 void RkWidget::setWidth(int w)
 {
-        privateWidget->setSize({w, privateWidget->size().second});
+        widgetImpl->setSize({w, widgetImpl->size().second});
 }
 
 int RkWidget::width() const
 {
-        return privateWidget->size().first;
+        return widgetImpl->size().first;
 }
 
 void RkWidget::setHeight(int h)
 {
-        privateWidget->setSize({privateWidget->size().first, h});
+        widgetImpl->setSize({widgetImpl->size().first, h});
 }
 
 int RkWidget::height() const
 {
-        return privateWidget->size().second;
+        return widgetImpl->size().second;
 }
 
 int RkWidget::x() const
 {
-        return privateWidget->x();
+        return widgetImpl->x();
 }
 
 void RkWidget::setX(int x)
 {
-        privateWidget->setX(x);
+        widgetImpl->setX(x);
 }
 
 int RkWidget::y() const
 {
-        return privateWidget->y();
+        return widgetImpl->y();
 }
 
 void RkWidget::setY(int y)
 {
-        return privateWidget->setY(y);
+        return widgetImpl->setY(y);
+}
+
+void RkWidget::setBackgroundColor(int r, int g, int b)
+{
+        widgetImpl->setBackgroundColor(r, g, b);
 }
 
 RkWidget* RkWidget::child(const RkWindowId &id) const
 {
-        return privateWidget->child(id);
+        return widgetImpl->child(id);
 }
 
 void RkWidget::addChild(RkWidget* child)
 {
         if (child)
-                privateWidget->addChild(child);
+                widgetImpl->addChild(child);
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)

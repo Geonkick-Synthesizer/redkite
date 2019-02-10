@@ -29,7 +29,7 @@
 
 class RkEvent;
 
-class RkWidget::RkWidgetXWin {
+class RkWidgetXWin {
  public:
         explicit RkWidgetXWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
         ~RkWidgetXWin();
@@ -42,15 +42,12 @@ class RkWidget::RkWidgetXWin {
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
         Display* display() { return xDisplay; }
-        bool hasParent() const;
         std::pair<int, int> size() const;
         void setSize(const std::pair<int, int> &size);
         int x() const;
         int y() const;
         void setX(int x);
         void setY(int y);
-        void addChild(RkWidget *child);
-        RkWidget* child(const RkWindowId &id) const;
         RkWindowId id() const;
 
  protected:
@@ -66,7 +63,6 @@ class RkWidget::RkWidgetXWin {
         int widgetX;
         int widgetY;
         std::pair<int, int> widgetSize;
-        std::list<RkWidget*> widgetChildren;
 };
 
 #endif // RK_WIDGET_XWIN_H
