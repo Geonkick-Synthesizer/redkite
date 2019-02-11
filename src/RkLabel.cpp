@@ -22,26 +22,28 @@
  */
 
 #include "RkLabel.h"
+#include "RkLabelImpl.h"
 
-RkLabel::RkLabel(RkWidget *parent = nullptr)
-    : RkWidget(parent, *static_cast<RkLabelImpl*>(new RkLabelImpl(this)))
-    , impl_ptr{static_cast<RkLabelImpl*>(o_ptr)}
+RkLabel::RkLabel(RkWidget *parent)
+        : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, std::string(), parent)))
+        , impl_ptr{std::static_pointer_cast<RkLabel::RkLabelImpl>(o_ptr)}
 {
 }
 
-RkLabel::RkLable(const std::string &text, Rkwidget *parent = nullptr)
-    : RkWidget(parent, *static_cast<RkLabelImpl*>(new RkLabelImpl(this, text)))
-    , impl_ptr{static_cast<RkLabelImpl*>(o_ptr)}
+RkLabel::RkLabel(const std::string &text, RkWidget *parent)
+        : RkWidget(parent, std::static_pointer_cast<RkLabel::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, text, parent)))
+        , impl_ptr{std::static_pointer_cast<RkLabel::RkLabelImpl>(o_ptr)}
 {
 }
 
-RkLabel::RkLabel(RkLabelImpl &impl)
-    : RkWidget(impl)
-    , impl_ptr{static_cast<RkLabelImpl*>(o_ptr)}
-{
-}
 
-void RkLabel::setText() const
+//RkLabel::RkLabel(RkLabelImpl &impl)
+//    : RkWidget(impl)
+//    , impl_ptr{static_cast<RkLabelImpl*>(o_ptr)}
+//{
+//}
+
+void RkLabel::setText(const std::string &text)
 {
      impl_ptr->setText(text);
 }

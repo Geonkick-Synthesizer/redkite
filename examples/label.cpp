@@ -1,5 +1,5 @@
 /**
- * File name: RkLabelImpl.h
+ * File name: label.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
@@ -21,22 +21,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_LABEL_IMPL_H
-#define RK_LABEL_IMPL_H
-
-#include "RkWidgetImpl.h"
+#include "RkMain.h"
 #include "RkLabel.h"
+#include "RkLog.h"
 
-class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
- public:
-        RkLabelImpl(RkLabel *interface, const std::string &text = std::string(), RkWidget *parent = nullptr);
-    virtual ~RkLabelImpl();
-    void setText(const std::string &text);
-    std::string text() const;
+int main(int arc, char **argv)
+{
+    RkMain app(arc, argv);
 
- private:
-    RK_DECALRE_INTERFACE_PTR(RkLabel)
-    std::string labelText;
-};
+    // Create main window.
+    auto widget = new RkWidget;
+    widget->setTitle("Label Example");
+    widget->setSize(250, 250);
 
-#endif // RK_LABEL_H
+    auto label = new RkLabel(widget);
+    label->setText("Helolo!");
+    label->setX(10);
+    label->setY(10);
+    label->setSize(50, 20);
+    label->show();
+
+    if (!app.setTopLevelWindow(widget)) {
+            RK_LOG_ERROR("can't set top level window");
+            exit(1);
+    }
+
+    widget->show();
+
+    RK_LOG_DEBUG("text: " << label->text());
+
+    int res = app.exec();
+    return res;
+}
+

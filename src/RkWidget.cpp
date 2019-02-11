@@ -24,22 +24,25 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 #include "RkEvent.h"
+#include "RkWidgetImpl.h"
+#include "RkPlatform.h"
 
 RkWidget::RkWidget(RkWidget *parent)
-    : o_ptr{std::make_unique<RkWidgetImpl>(this, parent)}
+    : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
 {
         if (parent)
                 parent->addChild(this);
 }
 
-RkWidget::RkWidget(const std::shared_ptr<RkNativeWindowInfo> &parent)
-    : o_ptr{std::make_unique<RkWidgetImpl>(this, parent)}
+RkWidget::RkWidget(const RkNativeWindowInfo &parent)
+    : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
 {
 }
 
-RkWidget::RkWidget(RkWidget *parent, RkWidgetImpl &impl)
-    : o_ptr{&impl}
+RkWidget::RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl)
+        : o_ptr{impl}
 {
+        RK_LOG_INFO("called");
         if (parent)
                 parent->addChild(this);
 }
@@ -141,6 +144,11 @@ void RkWidget::setY(int y)
 void RkWidget::setBackgroundColor(int r, int g, int b)
 {
         o_ptr->setBackgroundColor(r, g, b);
+}
+
+RkWidget* RkWidget::parent() const
+{
+        return o_ptr->parent();
 }
 
 RkWidget* RkWidget::child(const RkWindowId &id) const

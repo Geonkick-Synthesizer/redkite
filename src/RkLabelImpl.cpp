@@ -23,23 +23,23 @@
 
 #include "RkLabelImpl.h"
 
-RkLabelImpl::RkLabelImpl(RkLabel *interface, const std::string &text = std::string())
-    : RkWidgetImpl(static_cast<RkWidget*>interface, interface->parent())
+RkLabel::RkLabelImpl::RkLabelImpl(RkLabel *interface, const std::string &text, RkWidget *parent)
+    : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
     , labelText{text}
 {
 }
 
-RkLabelImpl::~RkLabelImpl()
+RkLabel::RkLabelImpl::~RkLabelImpl()
 {
 }
 
-void RkLabelImpl::setText(std:string &text);
+void RkLabel::RkLabelImpl::setText(const std::string &text)
 {
         labelText = text;
 }
 
-std::string RkLabelImpl::text() const
+std::string RkLabel::RkLabelImpl::text() const
 {
         return labelText;
 }

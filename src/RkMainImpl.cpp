@@ -22,22 +22,33 @@
  */
 
 #include "RkEvent.h"
-#include "RkMainXWin.h"
+//#include "RkMainXWin.h"
 #include "RkLog.h"
 #include "RkWidget.h"
+#include "RkMainImpl.h"
 
 #ifdef RK_WIN_OS
 #include "RkMainWin.h"
 #elif RK_MAC_OS
 #include "RkMainMac.h"
 #else
-#include "RkMainXWin.h"
+//#include "RkMainXWin.h"
 #endif
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interface)
-        : interfaceMain{interface}
+        : inf_ptr{interface}
         , topWindow(nullptr)
 {
+        RK_LOG_INFO("called");
+}
+
+RkMain::RkMainImpl::RkMainImpl(RkMain *interface, int argc, char **argv)
+        : inf_ptr{interface}
+        , topWindow(nullptr)
+
+{
+        RK_UNUSED(argc);
+        RK_UNUSED(argv);
         RK_LOG_INFO("called");
 }
 
@@ -61,7 +72,7 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
 
 void RkMain::RkMainImpl::processEvents()
 {
-        XEvent e;
+        /*        XEvent e;
         Display* display = topLevelWindow()->nativeWindowInfo()->display;
         while (XPending(display) > 0) {
                 XNextEvent(display, &e);
@@ -111,7 +122,7 @@ void RkMain::RkMainImpl::processEvents()
 
                 if (event && widget)
                         widget->processEvent(event);
-        }
+                        }*/
 }
 
 int RkMain::RkMainImpl::exec(bool block)

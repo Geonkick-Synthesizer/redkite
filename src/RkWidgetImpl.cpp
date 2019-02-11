@@ -21,41 +21,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkWidget.h"
 #include "RkWidgetImpl.h"
+#include "RkEvent.h"
+#include "RkPlatform.h"
 
 #ifdef RK_WIN_OS
 #elif RK_MAC_OS
 #else
-#include <RkWidgetXWin.h>
+//#include <RkWidgetXWin.h>
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
-#endif
+#endif // RK_WIN_OS
 
-RkWidget::RkWidgetImpl(RkWidget* interface, RkWidget* RkWidget *parent = nullptr)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
         : inf_ptr{interface}
         , parentWidget{parent}
-        , platformWindow{parent ? parent->nativeWindowInfo() : nullptr}
+        , widgetClosed{false}
 {
 }
 
-RkWidget::RkWidgetImpl(RkWidget* interface, const std::shared_ptr<RkNativeWindowInfo> &parent)
-        inf_ptr{interface}
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent)
+        : inf_ptr{interface}
         , parentWidget{nullptr}
-        , platformWindow{parent}
+        , widgetClosed{false}
 {
 }
 
 void RkWidget::RkWidgetImpl::show()
 {
-        platformWindow->show();
+        //        platformWindow->show();
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
 {
         widgetTitle = title;
-        platformWindow->setTitle(widgetTitle);
+        //        platformWindow->setTitle(widgetTitle);
 }
 
 const std::string& RkWidget::RkWidgetImpl::title() const
@@ -65,7 +66,7 @@ const std::string& RkWidget::RkWidgetImpl::title() const
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::RkWidgetImpl::nativeWindowInfo() const
 {
-        return platformWindow->nativeWindowInfo();
+        //        return platformWindow->nativeWindowInfo();
 }
 
 bool RkWidget::RkWidgetImpl::isClose() const
@@ -75,7 +76,7 @@ bool RkWidget::RkWidgetImpl::isClose() const
 
 RkWindowId RkWidget::RkWidgetImpl::id() const
 {
-        return platformWindow->id();
+        //        return platformWindow->id();
 }
 
 void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
@@ -83,37 +84,42 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
         switch (event->type())
         {
         case RkEvent::Type::Paint:
-                interfaceWidget->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
+                inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                 break;
         case RkEvent::Type::KeyPress:
-                interfaceWidget->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::KeyRelease:
-                interfaceWidget->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                interfaceWidget->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
-                interfaceWidget->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::Resize:
-                interfaceWidget->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
                 break;
         case RkEvent::Type::Close:
-                closeWidget = true;
-                interfaceWidget->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
+                widgetClosed = true;
+                inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
                 break;
         default:
                 break;
         }
 }
 
-RkWidget* RkWidget::RkWidgetImpl::parent()
+RkWidget* RkWidget::RkWidgetImpl::parent() const
 {
+        return parentWidget;
 }
 
 RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
+{
+}
+
+void RkWidget::RkWidgetImpl::addChild(const RkWidget* child)
 {
 }
 

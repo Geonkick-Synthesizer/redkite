@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_MAIN_XWIN_H
-#define RK_MAIN_XWIN_H
+#ifndef RK_MAIN_IMPL_H
+#define RK_MAIN_IMPL_H
 
 #include "RkMain.h"
 #include "RkPlatform.h"
@@ -37,6 +37,7 @@ class RkMain::RkMainImpl
  public:
 
         RkMainImpl(RkMain *interface);
+        RkMainImpl(RkMain *interface, int argc, char **argv);
 	virtual ~RkMainImpl();
         RkMainImpl(const RkMainImpl &other) = delete;
         RkMainImpl& operator=(const RkMainImpl &other) = delete;
@@ -48,7 +49,7 @@ class RkMain::RkMainImpl
 	int exec(bool block = true);
 
  private:
-        RkMain *interfaceMain;
+        RK_DECALRE_INTERFACE_PTR(RkMain)
         RkWidget* topWindow;
 };
 

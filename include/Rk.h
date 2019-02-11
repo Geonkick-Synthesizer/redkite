@@ -35,13 +35,13 @@
 
 #define RK_DECLARE_IMPL(Class) \
   class Class##Impl; \
-  Class##Impl *o_ptr; \
-  Class(<Class##Impl>& impl);
+  std::shared_ptr<Class##Impl> o_ptr;
 
-#define RK_DELCATE_IMPL_PTR(Class) Class##Impl *impl_ptr;
+#define RK_DELCATE_IMPL_PTR(Class) \
+        class Class##Impl; \
+        std::shared_ptr<Class##Impl> impl_ptr;
+
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr;
-
-#define RK_DECLARE_IMPL
 
 #define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
 #define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }

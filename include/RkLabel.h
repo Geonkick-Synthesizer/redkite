@@ -24,21 +24,20 @@
 #ifndef RK_LABEL_H
 #define RK_LABEL_H
 
-class RkLabelImpl;
+#include "RkWidget.h"
 
 class RkLabel : public RkWidget {
  public:
     RkLabel(RkWidget *parent = nullptr);
-    RkLabel(const std::string &text, Rkwidget *parent = nullptr);
-    virtual ~RkLabel();
-    void setText(std:string &text);
+    RkLabel(const std::string &text, RkWidget *parent = nullptr);
+    virtual ~RkLabel() = default;
+    void setText(const std::string &text);
     std::string text() const;
 
  protected:
-    RkLabel(RkLabelImpl &impl);
-
- private:
+    class RkLabelImpl;
     RK_DELCATE_IMPL_PTR(RkLabel)
+    //    RkLabel(RkLabelImpl &impl);
 };
 
 #endif // RK_LABEL_H
