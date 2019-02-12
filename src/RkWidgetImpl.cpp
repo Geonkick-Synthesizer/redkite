@@ -50,6 +50,15 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowIn
 {
 }
 
+RkWidget::~RkWidgetImpl()
+{
+        RK_LOG_DEBUG("delete children " << widgetChildren.size());
+        for (auto child : widgetChildren) {
+                RK_LOG_DEBUG("delete child " << child->title());
+                delete child;
+        }
+}
+
 void RkWidget::RkWidgetImpl::show()
 {
         platformWindow->show();

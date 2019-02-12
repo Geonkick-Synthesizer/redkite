@@ -40,8 +40,8 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h)
-#  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkWidgetXWin.h
-#  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkMainXWin.h)
+  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkWindowX.h
+  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkQueue.h)
 
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
@@ -50,9 +50,9 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
-  ${RK_SRC_PATH}/platforms/xwin/RkPlatform.cpp)
-#  ${RK_SRC_PATH}/platforms/xwin/RkWidgetXWin.cpp
-#  ${RK_SRC_PATH}/platforms/xwin/RkMainXWin.cpp)
+  ${RK_SRC_PATH}/platforms/RkPlatform.cpp)
+  ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
+  ${RK_SRC_PATH}/platforms/xwin/RkQueueX.cpp)
 
 add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH})

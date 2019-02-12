@@ -21,29 +21,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkEvent.h"
-//#include "RkMainXWin.h"
 #include "RkLog.h"
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 
 #ifdef RK_WIN_OS
-#include "RkMainWin.h"
+#include "RkEventQueueWin.h"
 #elif RK_MAC_OS
-#include "RkMainMac.h"
+#include "RkEventQueueMac.h"
 #else
-//#include "RkMainXWin.h"
+#include "RkEventQueueX.h"
 #endif
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interface)
         : inf_ptr{interface}
         , topWindow(nullptr)
+        , eventQueue{nullptr}
 {
         RK_LOG_INFO("called");
 }
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interface, int argc, char **argv)
         : inf_ptr{interface}
+        , platformMain{nullptr}
         , topWindow(nullptr)
 
 {
@@ -54,14 +54,21 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interface, int argc, char **argv)
 
 RkMain::RkMainImpl::~RkMainImpl()
 {
+        if (topWindow)
+                delete topWindow;
 }
 
 bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
 {
-      if (topWindow)
+      if (topWindow || !widget)
               return false;
 
       topWindow = widget;
+#ifdef RK_WIN_OS
+#elif RK_MAC_OS
+#else
+      eventQueue = std::make_unique<RkEventQueueX>(topWindow->display());
+#endif // RK_WIN_OS
       return true;
 }
 
@@ -72,57 +79,21 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
 
 void RkMain::RkMainImpl::processEvents()
 {
-        /*        XEvent e;
-        Display* display = topLevelWindow()->nativeWindowInfo()->display;
-        while (XPending(display) > 0) {
-                XNextEvent(display, &e);
-                auto id = reinterpret_cast<XAnyEvent*>(&e)->window;
-                RkWidget* widget = nullptr;
-                if (topLevelWindow()->id().id == id)
+        while (eventQueue->pending()) {
+                auto res = eventQueue.nextEvent();
+                if (!res.second)
+                        continue;
+
+                RkWidget *widget;
+                if (res->first == topLevelWindow()->id())
                         widget = topLevelWindow();
                 else
-                        widget = topLevelWindow()->child(rk_id_from_x11(id));
-                if (!widget) {
-                        RK_LOG_ERROR("can't find widget with ID: " << id);
-                        continue;
-                }
+                        widget = topLevelWindow()->child(res->first);
 
-                std::shared_ptr<RkEvent> event = nullptr;
-                switch (e.type)
-                {
-                case Expose:
-                        event = RkEvent::paintEvent();
-                        break;
-                case KeyPress:
-                        event = RkEvent::keyPressEvent();
-                        break;
-                case KeyRelease:
-                        event = RkEvent::keyReleaseEvent();
-                        break;
-                case ButtonPress:
-                        event = RkEvent::buttonPressEvent();
-                        break;
-                case ButtonRelease:
-                        event = RkEvent::buttonReleaseEvent();
-                        break;
-                case ConfigureNotify:
-                        event = RkEvent::resizeEvent();
-                        break;
-                case ClientMessage:
-                {
-                        auto atom = XInternAtom(display, "WM_DELETE_WINDOW", True);
-                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom) {
-                                event = RkEvent::closeEvent();
-                        }
-                        break;
-                }
-                default:
-                        break;
-                }
+                if (widget)
+                        topLevelWindow()->processEvent(res.second);
+        }
 
-                if (event && widget)
-                        widget->processEvent(event);
-                        }*/
 }
 
 int RkMain::RkMainImpl::exec(bool block)

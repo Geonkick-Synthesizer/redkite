@@ -1,5 +1,5 @@
 /**
- * File name: RkMainXWin.h
+ * File name: RkQueueX.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,34 +21,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_MAIN_XWIN_H
-#define RK_MAIN_XWIN_H
+#ifndef RK_EVENT_QUEUE_X_H
+#define RK_EVENT_QUEUE_X_H
 
-#include "RkMain.h"
+#include "RkEvent.h"
 #include "RkPlatform.h"
 
-#include <vector>
-
-class RkWidget;
-class RkEvent;
-
-class RkMain::RkMainXWin
+class RkQueueX
 {
  public:
 
-        RkMainXWin();
-	~RkMainXWin();
-        RkMainXWin(const RkMainXWin &other) = delete;
-        RkMainXWin& operator=(const RkMainXWin &other) = delete;
-        RkMainXWin(RkMainXWin &&other) = delete;
-        RkMainXWin& operator=(RkMainXWin &&other) = delete;
-	bool setTopLevelWindow(RkWidget* widget);
-        RkWidget* topLevelWindow(void);
-        void processEvents();
-	int exec(bool block = true);
+        RkQueueX(Display* display);
+	~RkQueueX();
+        RkQueueX(const RkQueueX &other) = delete;
+        RkQueueX& operator=(const RkQueueX &other) = delete;
+        RkQueueX(RkQueueX &&other) = delete;
+        RkQueueX& operator=(RkQueueX &&other) = delete;
+        bool pending();
+        std::pair<RkWindowId, std::shared_ptr<RkEvent>> nextEvent();
 
  private:
-        RkWidget* topWindow;
+       Display* xDisplay;
 };
 
-#endif // RK_MAIN_XWIN_H
+#endif // RK_EVENT_QUEUE_X_H

@@ -1,5 +1,5 @@
 /**
- * File name: RkWidgetXWin.h
+ * File name: RkWindowX.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,22 +21,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_WIDGET_XWIN_H
-#define RK_WIDGET_XWIN_H
+#ifndef RK_WINDOW_X_H
+#define RK_WINDOW_X_H
 
-#include "RkWidget.h"
-#include "RkPlatform.h"
+struct RkWindowId;
+struct RkNativeWindowInfo;
 
-class RkEvent;
-
-class RkWidgetXWin {
+class RkWindowX {
  public:
-        explicit RkWidgetXWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
-        ~RkWidgetXWin();
-        RkWidgetXWin(const RkWidgetXWin &other) = delete;
-        RkWidgetXWin& operator=(const RkWidgetXWin &other) = delete;
-        RkWidgetXWin(RkWidgetXWin &&other) = delete;
-        RkWidgetXWin& operator=(RkWidgetXWin &&other) = delete;
+        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
+        ~RkWindowX();
+        RkWindowX(const RkWindowX &other) = delete;
+        RkWindowX& operator=(const RkWindowX &other) = delete;
+        RkWindowX(RkWindowX &&other) = delete;
+        RkWindowX& operator=(RkWindowX &&other) = delete;
         bool init();
         void show();
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
@@ -44,10 +42,8 @@ class RkWidgetXWin {
         Display* display() { return xDisplay; }
         std::pair<int, int> size() const;
         void setSize(const std::pair<int, int> &size);
-        int x() const;
-        int y() const;
-        void setX(int x);
-        void setY(int y);
+        std::pair<int, int> position() const;
+        setPosition(const std::pair<int, int> &position);
         RkWindowId id() const;
 
  protected:
@@ -60,9 +56,8 @@ class RkWidgetXWin {
         int screenNumber;
         Window xWindow;
         Atom deleteWindowAtom;
-        int widgetX;
-        int widgetY;
-        std::pair<int, int> widgetSize;
+        std::pair<int, int> windowPosition;
+        std::pair<int, int> windowSize;
 };
 
 #endif // RK_WIDGET_XWIN_H

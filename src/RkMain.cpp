@@ -36,8 +36,6 @@ RkMain::RkMain(int argc, char **argv) : o_ptr{std::make_unique<RkMainImpl>(this,
 
 RkMain::~RkMain()
 {
-        if (o_ptr->topLevelWindow())
-            delete o_ptr->topLevelWindow();
 }
 
 bool RkMain::setTopLevelWindow(RkWidget *widget)
@@ -47,10 +45,5 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
 
 int RkMain::exec(bool block)
 {
-        if (!o_ptr->topLevelWindow()) {
-                RK_LOG_ERROR("top level window is not set");
-                return 1;
-        }
-
 	return o_ptr->exec(block);
 }

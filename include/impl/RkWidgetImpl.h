@@ -40,7 +40,7 @@ class RkWidget::RkWidgetImpl {
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
-        virtual ~RkWidgetImpl() = default;
+        virtual ~RkWidgetImpl();
 
         void show();
         void setTitle(const std::string &title);
