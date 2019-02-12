@@ -28,7 +28,7 @@
 #ifdef RK_WIN_OS
 #elif RK_MAC_OS
 #else
-//#include <RkWidgetXWin.h>
+#include <RkWindowX.h>
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
@@ -37,6 +37,7 @@
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
         : inf_ptr{interface}
         , parentWidget{parent}
+        , platformWindow{!parent ? std::make_unique<RkWindowX>() : std::make_unique<RkWindowX>(parent->nativeWindowInfo())}
         , widgetClosed{false}
 {
 }
@@ -44,19 +45,20 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent)
         : inf_ptr{interface}
         , parentWidget{nullptr}
+        , platformWindow{std::make_unique<RkWindowX>(parent)}
         , widgetClosed{false}
 {
 }
 
 void RkWidget::RkWidgetImpl::show()
 {
-        //        platformWindow->show();
+        platformWindow->show();
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
 {
         widgetTitle = title;
-        //        platformWindow->setTitle(widgetTitle);
+        platformWindow->setTitle(widgetTitle);
 }
 
 const std::string& RkWidget::RkWidgetImpl::title() const
@@ -66,7 +68,7 @@ const std::string& RkWidget::RkWidgetImpl::title() const
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::RkWidgetImpl::nativeWindowInfo() const
 {
-        //        return platformWindow->nativeWindowInfo();
+        return platformWindow->nativeWindowInfo();
 }
 
 bool RkWidget::RkWidgetImpl::isClose() const
@@ -76,7 +78,7 @@ bool RkWidget::RkWidgetImpl::isClose() const
 
 RkWindowId RkWidget::RkWidgetImpl::id() const
 {
-        //        return platformWindow->id();
+        return platformWindow->id();
 }
 
 void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
@@ -121,52 +123,31 @@ RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
 
 void RkWidget::RkWidgetImpl::addChild(const RkWidget* child)
 {
-}
-
-void RkWidget::RkWidgetImpl::setSize(int x, int y)
-{
+        if (child)
+                widgetChildren->push_back(child);
 }
 
 void RkWidget::RkWidgetImpl::setSize(const std::pair<int, int> &size)
 {
+        if (size.first > 1 && size.second > 1)
+                platformWIndow->setSize(widgetSize);
 }
 
 std::pair<int, int> RkWidget::RkWidgetImpl::size() const
 {
+        return  platformWIndow->size();
 }
 
-void RkWidget::RkWidgetImpl::setWidth(int w)
+void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)
 {
+        platformWindow->setPosition(position);
 }
 
-int RkWidget::RkWidgetImpl::width() const
+std::pair<int, int> RkWidget::RkWidgetImpl::position() const
 {
+        return platformWindow->position();
 }
 
-void RkWidget::RkWidgetImpl::setHeight(int h)
-{
-}
-
-int RkWidget::RkWidgetImpl::height() const
-{
-}
-
-int RkWidget::RkWidgetImpl::x() const
-{
-}
-
-void RkWidget::RkWidgetImpl::setX(int x)
-{
-}
-
-int RkWidget::RkWidgetImpl::y() const
-{
-}
-
-void RkWidget::RkWidgetImpl::setY(int y)
-{
-}
-//          void setBackgroundColor(const RkColor &color);
 void RkWidget::RkWidgetImpl::setBackgroundColor(int r, int g, int b)
 {
 }

@@ -67,7 +67,7 @@ class RkWidget {
           void processEvent(const std::shared_ptr<RkEvent> &event);
           RkWindowId id() const;
 
-	  void setSize(int x, int y);
+	  void setSize(int w, int h);
 	  void setSize(const std::pair<int, int> &size);
 	  std::pair<int, int> size() const;
 	  void setWidth(int w);
@@ -78,6 +78,8 @@ class RkWidget {
           void setX(int x);
           int y() const;
           void setY(int y);
+          void setPosition(const std::pair<int, int> &position);
+          std::pair<int, int> position() const;
           //          void setBackgroundColor(const RkColor &color);
           void setBackgroundColor(int r, int g, int b);
           //void setBackgroundColor(std::tuple<int, int, int, int> &color);

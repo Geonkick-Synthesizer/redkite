@@ -26,11 +26,11 @@
 
 #include "RkWidget.h"
 
-//#ifdef RK_WIN_OS
-//#elif RK_MAC_OS
-//#else
-//class RkWidgetXWin;
-//#endif
+#ifdef RK_WIN_OS
+#elif RK_MAC_OS
+#else
+class RkWindiowX;
+#endif // RK_WIN_OS
 
 class RkWidget::RkWidgetImpl {
  public:
@@ -54,17 +54,11 @@ class RkWidget::RkWidgetImpl {
         RkWidget* child(const RkWindowId &id) const;
         void addChild(const RkWidget* child);
 
-        void setSize(int x, int y);
         void setSize(const std::pair<int, int> &size);
         std::pair<int, int> size() const;
-        void setWidth(int w);
-        int width() const;
-        void setHeight(int h);
-        int height() const;
-        int x() const;
-        void setX(int x);
-        int y() const;
-        void setY(int y);
+        void setPosition(const std::pair<int, int> &position);
+        std::pair<int, int> position() const;
+        
         //          void setBackgroundColor(const RkColor &color);
         void setBackgroundColor(int r, int g, int b);
         //void setBackgroundColor(std::tuple<int, int, int, int> &color);
@@ -72,16 +66,13 @@ class RkWidget::RkWidgetImpl {
         //        std::tuple<int, int, int, int> backgroundColor() const;
 
  private:
-        // Declare pointer to the interface class RkWidget.
         RK_DECALRE_INTERFACE_PTR(RkWidget)
         RkWidget *parentWidget;
-        //#ifdef RK_WIN_OS
-        //std::unique_ptr<RkWidgetWin> platformWindow;
-        //#elif
-        //std::unique_ptr<RkWidgetMac> platformWindow;
-        //#else
-        //        std::unique_ptr<RkWidgetXWin> platformWindow;
-        //#endif
+#ifdef RK_WIN_OS
+#elif RK_MAC_OS
+#else
+        std::unique_ptr<RkWindowX> platformWindow;
+#endif // RK_WIN_OS
         std::string widgetTitle;
         std::list<RkWidget*> widgetChildren;
         bool widgetClosed;

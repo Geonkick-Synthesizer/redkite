@@ -86,9 +86,9 @@ void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 {
 }
 
-void RkWidget::setSize(int x, int y)
+void RkWidget::setSize(int w, int h)
 {
-        o_ptr->setSize({x, y});
+        o_ptr->setSize({w, h});
 }
 
 void RkWidget::setSize(const std::pair<int, int> &size)
@@ -98,7 +98,7 @@ void RkWidget::setSize(const std::pair<int, int> &size)
 
 std::pair<int, int> RkWidget::size() const
 {
-        return std::move(o_ptr->size());
+        return o_ptr->size();
 }
 
 void RkWidget::setWidth(int w)
@@ -123,22 +123,22 @@ int RkWidget::height() const
 
 int RkWidget::x() const
 {
-        return o_ptr->x();
+        return o_ptr->position().first;
 }
 
 void RkWidget::setX(int x)
 {
-        o_ptr->setX(x);
+        o_ptr->setPosition({x, o_ptr.position().second});
 }
 
 int RkWidget::y() const
 {
-        return o_ptr->y();
+        return o_ptr->position().second;
 }
 
 void RkWidget::setY(int y)
 {
-        return o_ptr->setY(y);
+        return o_ptr->setPosition({o_ptr.position().frist, y});
 }
 
 void RkWidget::setBackgroundColor(int r, int g, int b)
