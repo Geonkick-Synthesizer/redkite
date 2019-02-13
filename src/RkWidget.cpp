@@ -84,6 +84,7 @@ bool RkWidget::isClose() const
 
 void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 {
+        o_ptr->processEvent(event);
 }
 
 void RkWidget::setSize(int w, int h)

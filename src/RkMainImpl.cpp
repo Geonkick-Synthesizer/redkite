@@ -97,7 +97,7 @@ void RkMain::RkMainImpl::processEvents()
                         widget = topLevelWindow()->child(res.first);
 
                 if (widget)
-                        topLevelWindow()->processEvent(res.second);
+                        widget->processEvent(res.second);
         }
 
 }

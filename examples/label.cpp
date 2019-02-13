@@ -35,6 +35,7 @@ int main(int arc, char **argv)
     widget->setSize(250, 250);
 
     auto label = new RkLabel(widget);
+    label->setTitle("Lbele as child");
     label->setText("Helolo!");
     label->setX(10);
     label->setY(10);

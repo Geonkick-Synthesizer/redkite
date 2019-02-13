@@ -38,7 +38,6 @@ RkEventQueueX::~RkEventQueueX()
 bool RkEventQueueX::pending()
 {
         if (xDisplay) {
-                RK_LOG_INFO("is pending...");
                 return XPending(xDisplay) > 0;
         }
         return false;
@@ -85,6 +84,5 @@ std::pair<RkWindowId, std::shared_ptr<RkEvent>> RkEventQueueX::nextEvent()
         if (event)
                 return std::make_pair(id, event);
 
-        RK_LOG_INFO("HHHEHEHEHEHEH");
         return {};
 }
