@@ -23,16 +23,21 @@
 
 #include "RkLog.h"
 #include "RkWindowX.h"
-#include "Platform.h"
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
-        , xDisplay(parentWindowInfo ? parent->display : nullptr),
+        , xDisplay(parent ? parent->display : nullptr)
         , screenNumber(parentWindowInfo ? parent->screenNumber : 0)
         , xWindow(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
 {
+}
+
+RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
+        : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
+{
+        *parentWindowInfo.get() = parent;
 }
 
 RkWindowX::~RkWindowX()
@@ -58,16 +63,17 @@ bool RkWindowX::openDisplay()
 bool RkWindowX::init()
 {
         if (!hasParent()) {
+                RK_LOG_INFO("open display");
                 if (!openDisplay()) {
                         RK_LOG_ERROR("can't open display");
                         return false;
                 }
 	}
 
-        Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(display(), screenNumber);
-        xWindow = XCreateSimpleWindow(display(), parent,
+        Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
+        xWindow = XCreateSimpleWindow(xDisplay, parent,
                                       windowPosition.first, windowPosition.second,
-                                      windowSize.first, windowPosition.second, 1,
+                                      windowSize.first, windowSize.second, 1,
                                       parentWindowInfo ? 123456 : BlackPixel(display(), screenNumber),
                                       parentWindowInfo ? 324567 : WhitePixel(display(), screenNumber));
 
@@ -76,16 +82,16 @@ bool RkWindowX::init()
                 return false;
         }
 
-        XSelectInput(display(), xWindow, ExposureMask
+        XSelectInput(xDisplay, xWindow, ExposureMask
                                         | KeyPressMask | KeyReleaseMask
                                         | ButtonPressMask | ButtonReleaseMask
                                         | StructureNotifyMask);
 
         if (!hasParent()) {
                 deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
-                XSetWMProtocols(display(), xWindow, &deleteWindowAtom, 1);
+                XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         }
-
+        RK_LOG_INFO("here6");
         return true;
 }
 
@@ -93,6 +99,11 @@ void RkWindowX::show()
 {
         if (display())
                 XMapRaised(display(), xWindow);
+}
+
+Display* RkWindowX::display()
+{
+        return xDisplay;
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWindowX::nativeWindowInfo()
@@ -126,7 +137,7 @@ std::pair<int, int> RkWindowX::size() const
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
                 return {attributes.width, attributes.height};
         }
-        return widgetSize;
+        return windowSize;
 }
 
 void RkWindowX::setSize(const std::pair<int, int> &size)
@@ -138,19 +149,19 @@ void RkWindowX::setSize(const std::pair<int, int> &size)
         }
 }
 
-std:pair<int, int> RkWindowX::position() const
+std::pair<int, int> RkWindowX::position() const
 {
         if (isWindowCreated()) {
                 XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                auto winSize = std::make_pair(attributes.width, attributes.height);
-                if (winSize != windowSize)
-                        windowPosition = winSize;
+                auto pos = std::make_pair(attributes.x, attributes.y);
+                if (pos != windowPosition)
+                        windowPosition = pos;
         }
         return windowPosition;
 }
 
-void RkWindowX::setPosition(std::pair<int, int> &position)
+void RkWindowX::setPosition(const std::pair<int, int> &position)
 {
                 windowPosition = position;
                 if (isWindowCreated())

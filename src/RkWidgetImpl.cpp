@@ -40,6 +40,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
         , platformWindow{!parent ? std::make_unique<RkWindowX>() : std::make_unique<RkWindowX>(parent->nativeWindowInfo())}
         , widgetClosed{false}
 {
+        platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent)
@@ -48,9 +49,10 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowIn
         , platformWindow{std::make_unique<RkWindowX>(parent)}
         , widgetClosed{false}
 {
+        platformWindow->init();
 }
 
-RkWidget::~RkWidgetImpl()
+RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
         RK_LOG_DEBUG("delete children " << widgetChildren.size());
         for (auto child : widgetChildren) {
@@ -128,23 +130,34 @@ RkWidget* RkWidget::RkWidgetImpl::parent() const
 
 RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
 {
+        for (const auto &child : widgetChildren) {
+                if (child->id().id == id.id) {
+                        return child;
+                } else {
+                        auto ch = child->child(id);
+                        if (ch)
+                                return ch;
+                }
+        }
+
+        return nullptr;
 }
 
-void RkWidget::RkWidgetImpl::addChild(const RkWidget* child)
+void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
 {
         if (child)
-                widgetChildren->push_back(child);
+                widgetChildren.push_back(child);
 }
 
 void RkWidget::RkWidgetImpl::setSize(const std::pair<int, int> &size)
 {
         if (size.first > 1 && size.second > 1)
-                platformWIndow->setSize(widgetSize);
+                platformWindow->setSize(size);
 }
 
 std::pair<int, int> RkWidget::RkWidgetImpl::size() const
 {
-        return  platformWIndow->size();
+        return  platformWindow->size();
 }
 
 void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)

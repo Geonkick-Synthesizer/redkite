@@ -47,7 +47,6 @@ struct RkNativeWindowInfo
 
 std::shared_ptr<RkNativeWindowInfo>
 rk_from_native_x11(Display* display, int screenNumber, Window window);
-
 RkWindowId rk_id_from_x11(Window window);
 
 #endif

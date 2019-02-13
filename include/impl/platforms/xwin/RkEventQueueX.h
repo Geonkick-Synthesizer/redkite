@@ -27,16 +27,15 @@
 #include "RkEvent.h"
 #include "RkPlatform.h"
 
-class RkQueueX
+class RkEventQueueX
 {
  public:
-
-        RkQueueX(Display* display);
-	~RkQueueX();
-        RkQueueX(const RkQueueX &other) = delete;
-        RkQueueX& operator=(const RkQueueX &other) = delete;
-        RkQueueX(RkQueueX &&other) = delete;
-        RkQueueX& operator=(RkQueueX &&other) = delete;
+        RkEventQueueX(Display* display);
+	~RkEventQueueX();
+        RkEventQueueX(const RkEventQueueX &other) = delete;
+        RkEventQueueX& operator=(const RkEventQueueX &other) = delete;
+        RkEventQueueX(RkEventQueueX &&other) = delete;
+        RkEventQueueX& operator=(RkEventQueueX &&other) = delete;
         bool pending();
         std::pair<RkWindowId, std::shared_ptr<RkEvent>> nextEvent();
 

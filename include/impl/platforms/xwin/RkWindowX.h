@@ -24,12 +24,16 @@
 #ifndef RK_WINDOW_X_H
 #define RK_WINDOW_X_H
 
+#include "Rk.h"
+#include "RkPlatform.h"
+
 struct RkWindowId;
 struct RkNativeWindowInfo;
 
 class RkWindowX {
  public:
         explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
+        explicit RkWindowX(const RkNativeWindowInfo &parent);
         ~RkWindowX();
         RkWindowX(const RkWindowX &other) = delete;
         RkWindowX& operator=(const RkWindowX &other) = delete;
@@ -39,16 +43,17 @@ class RkWindowX {
         void show();
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        Display* display() { return xDisplay; }
+        Display* display();
         std::pair<int, int> size() const;
         void setSize(const std::pair<int, int> &size);
         std::pair<int, int> position() const;
-        setPosition(const std::pair<int, int> &position);
+        void setPosition(const std::pair<int, int> &position);
         RkWindowId id() const;
 
  protected:
         bool openDisplay();
         bool isWindowCreated() const;
+        bool hasParent() const;
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
@@ -56,7 +61,7 @@ class RkWindowX {
         int screenNumber;
         Window xWindow;
         Atom deleteWindowAtom;
-        std::pair<int, int> windowPosition;
+        mutable std::pair<int, int> windowPosition;
         std::pair<int, int> windowSize;
 };
 

@@ -128,7 +128,7 @@ int RkWidget::x() const
 
 void RkWidget::setX(int x)
 {
-        o_ptr->setPosition({x, o_ptr.position().second});
+        o_ptr->setPosition({x, o_ptr->position().second});
 }
 
 int RkWidget::y() const
@@ -138,7 +138,7 @@ int RkWidget::y() const
 
 void RkWidget::setY(int y)
 {
-        return o_ptr->setPosition({o_ptr.position().frist, y});
+        return o_ptr->setPosition({o_ptr->position().first, y});
 }
 
 void RkWidget::setBackgroundColor(int r, int g, int b)

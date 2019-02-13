@@ -51,9 +51,8 @@ class RkMain::RkMainImpl
 #ifdef RK_WIN_OS
 #elif RK_MAC_OS
 #else
-        std::make_unique<RkEventQueueX> eventQueue;
+        std::unique_ptr<RkEventQueueX> eventQueue;
 #endif // RK_WIN_OS
-
 };
 
 #endif // RK_MAIN_XWIN_H

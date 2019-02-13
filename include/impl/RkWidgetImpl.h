@@ -29,7 +29,7 @@
 #ifdef RK_WIN_OS
 #elif RK_MAC_OS
 #else
-class RkWindiowX;
+class RkWindowX;
 #endif // RK_WIN_OS
 
 class RkWidget::RkWidgetImpl {
@@ -52,7 +52,7 @@ class RkWidget::RkWidgetImpl {
         void processEvent(const std::shared_ptr<RkEvent> &event);
         RkWidget* parent() const;
         RkWidget* child(const RkWindowId &id) const;
-        void addChild(const RkWidget* child);
+        void addChild(RkWidget* child);
 
         void setSize(const std::pair<int, int> &size);
         std::pair<int, int> size() const;

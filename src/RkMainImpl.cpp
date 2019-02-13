@@ -43,9 +43,8 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interface)
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interface, int argc, char **argv)
         : inf_ptr{interface}
-        , platformMain{nullptr}
         , topWindow(nullptr)
-
+        , eventQueue{nullptr}
 {
         RK_UNUSED(argc);
         RK_UNUSED(argv);
@@ -67,7 +66,14 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
 #ifdef RK_WIN_OS
 #elif RK_MAC_OS
 #else
-      eventQueue = std::make_unique<RkEventQueueX>(topWindow->display());
+      RK_LOG_INFO("create queue");
+      auto info = topWindow->nativeWindowInfo();
+      if (!info) {
+              RK_LOG_ERROR("wring info");
+              return false;
+      }
+      eventQueue = std::make_unique<RkEventQueueX>(info->display);
+      RK_LOG_INFO("queue created");
 #endif // RK_WIN_OS
       return true;
 }
@@ -80,15 +86,15 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
 void RkMain::RkMainImpl::processEvents()
 {
         while (eventQueue->pending()) {
-                auto res = eventQueue.nextEvent();
+                auto res = eventQueue->nextEvent();
                 if (!res.second)
                         continue;
 
                 RkWidget *widget;
-                if (res->first == topLevelWindow()->id())
+                if (res.first.id == topLevelWindow()->id().id)
                         widget = topLevelWindow();
                 else
-                        widget = topLevelWindow()->child(res->first);
+                        widget = topLevelWindow()->child(res.first);
 
                 if (widget)
                         topLevelWindow()->processEvent(res.second);

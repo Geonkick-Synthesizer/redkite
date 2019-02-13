@@ -2,6 +2,16 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.0.1)
 
+if (APPLE)
+  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
+elseif(WIN32)
+  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
+elseif (UNIX)
+  message(STATUS "Build Redkite for OS ${CMAKE_SYSTEM_NAME}")
+else()
+  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
+endif()  
+
 set(RK_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(RK_SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
@@ -40,8 +50,16 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h)
+
+if(APPLE)
+# not implemented yet 
+elseif (WIN32)
+# not implemented yet 
+else(UNIX) # defaut UNIX
+set(RK_HEADERS_PLATFORM
   ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkWindowX.h
-  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkQueue.h)
+  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkEventQueueX.h)
+endif()
 
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
@@ -49,19 +67,36 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkMain.cpp
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
-  ${RK_SRC_PATH}/RkLabelImpl.cpp
-  ${RK_SRC_PATH}/platforms/RkPlatform.cpp)
+  ${RK_SRC_PATH}/RkLabelImpl.cpp)
+
+if (APPLE)
+# not implemented yet
+elseif (WIN32)
+# not implemented yet
+else(UNIX) # defaut UNIX
+set(RK_SOURCES_PLATFORM
+  ${RK_SRC_PATH}/platforms/xwin/RkPlatformX.cpp
   ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
-  ${RK_SRC_PATH}/platforms/xwin/RkQueueX.cpp)
+  ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
+endif()
 
 add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
+if (APPLE)
+# not implemented yet
+elseif (WIN32)
+# not implemented yet
+else(UNIX) # defualt UNIX
 include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
+endif()
+
 add_library(redkite STATIC
   ${RK_HEADERS}
   ${RK_HEADERS_IMPL}
-  ${RK_SOURCES})
+  ${RK_HEADERS_PLATFORM}
+  ${RK_SOURCES}
+  ${RK_SOURCES_PLATFORM})
 
 install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
