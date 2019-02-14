@@ -26,8 +26,8 @@
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
-        , xDisplay(parent ? parent->display : nullptr)
-        , screenNumber(parentWindowInfo ? parent->screenNumber : 0)
+        , xDisplay{parent ? parent->display : nullptr}
+        , screenNumber{parent ? parent->screenNumber : 0}
         , xWindow(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
@@ -36,6 +36,11 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
+        , xDisplay{parent.display}
+        , screenNumber{parent.screenNumber}
+        , xWindow(0)
+        , windowPosition{0, 0}
+        , windowSize{250, 250}
 {
         *parentWindowInfo.get() = parent;
 }
@@ -43,7 +48,6 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
 RkWindowX::~RkWindowX()
 {
         if (!hasParent() && xDisplay) {
-                RK_LOG_INFO("XCloseDisplay(xDisplay)");
                 XCloseDisplay(xDisplay);
         }
 }
@@ -63,7 +67,6 @@ bool RkWindowX::openDisplay()
 bool RkWindowX::init()
 {
         if (!hasParent()) {
-                RK_LOG_INFO("open display");
                 if (!openDisplay()) {
                         RK_LOG_ERROR("can't open display");
                         return false;
@@ -74,8 +77,8 @@ bool RkWindowX::init()
         xWindow = XCreateSimpleWindow(xDisplay, parent,
                                       windowPosition.first, windowPosition.second,
                                       windowSize.first, windowSize.second, 1,
-                                      parentWindowInfo ? 123456 : BlackPixel(display(), screenNumber),
-                                      parentWindowInfo ? 324567 : WhitePixel(display(), screenNumber));
+                                      BlackPixel(display(), screenNumber),
+                                      WhitePixel(display(), screenNumber));
 
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
@@ -91,7 +94,6 @@ bool RkWindowX::init()
                 deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
                 XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         }
-        RK_LOG_INFO("here6");
         return true;
 }
 
@@ -177,12 +179,12 @@ void RkWindowX::setBackgroundColor(const std::tuple<int, int, int, int> &backgro
                 color.red   = (65535 / 255) * std::get<0>(background);
                 color.green = (65535 / 255) * std::get<1>(background);
                 color.blue  = (65535 / 255) * std::get<2>(background);
+
                 auto res = XAllocColor(display(), colorMap, &color);
                 if (!res) {
                         RK_LOG_ERROR("can't allocate color");
                         return;
-                }
-                else {
+                } else {
                         XSetWindowBackground(display(), xWindow, color.pixel);
                 }
         }

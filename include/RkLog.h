@@ -27,28 +27,28 @@
 #include <iostream>
 
 #ifdef RK_LOG_DEBUG_LEVEL
-#define RK_LOG_DEBUG(msg) std::cout << "[DEBUG] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl;
+#define RK_LOG_DEBUG(msg) std::cout << "[DEBUG] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl
 #define RK_LOG_INFO_LEVEL
 #else
 #define RK_LOG_DEBUG(msg)
 #endif // RK_LOG_DEBUG_LEVEL
 
 #ifdef RK_LOG_INFO_LEVEL
-#define RK_LOG_INFO(msg) std::cout << "[INFO] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl;
+#define RK_LOG_INFO(msg) std::cout << "[INFO] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl
 #define RK_LOG_WARN_LEVEL
 #else
 #define RK_LOG_INFO(msg)
 #endif // RK_LOG_INFO_LEVEL
 
 #ifdef RK_LOG_WARN_LEVEL
-#define RK_LOG_WARN(msg) std::cout << "[WARN] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl;
+#define RK_LOG_WARN(msg) std::cout << "[WARN] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl
 #define RK_LOG_ERROR_LEVEL
 #else
 #define RK_LOG_WARN(msg)
 #endif // RK_LOG_WARN_LEVEL
 
 #ifdef RK_LOG_ERROR_LEVEL
-#define RK_LOG_ERROR(msg) std::cout << "[ERROR] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl;
+#define RK_LOG_ERROR(msg) std::cout << "[ERROR] " << __PRETTY_FUNCTION__ << ": " << msg << std::endl
 #else
 #define RK_LOG_ERROR(msg)
 #endif // RK_LOG_ERROR_LEVEL
