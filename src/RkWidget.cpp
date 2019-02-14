@@ -142,9 +142,24 @@ void RkWidget::setY(int y)
         return o_ptr->setPosition({o_ptr->position().first, y});
 }
 
-void RkWidget::setBackgroundColor(int r, int g, int b)
+void RkWidget::setBackgroundColor(int red, int green, int blue, int alpha)
 {
-        o_ptr->setBackgroundColor(r, g, b);
+        if (red > 255)
+                red = 255;
+        if (red < 0)
+                red = 0;
+
+        if (green > 255)
+                green = 255;
+        if (green < 0)
+                green = 0;
+
+        if (blue > 255)
+                blue = 255;
+        if (blue < 0)
+                blue = 0;
+
+        o_ptr->setBackgroundColor({red, green, blue, alpha});
 }
 
 RkWidget* RkWidget::parent() const

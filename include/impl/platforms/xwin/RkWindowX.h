@@ -50,6 +50,8 @@ class RkWindowX {
         void setPosition(const std::pair<int, int> &position);
         RkWindowId id() const;
 
+        void setBackgroundColor(const std::tuple<int, int, int, int> &background);
+
  protected:
         bool openDisplay();
         bool isWindowCreated() const;

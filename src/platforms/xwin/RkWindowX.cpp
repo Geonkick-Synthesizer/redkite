@@ -168,6 +168,26 @@ void RkWindowX::setPosition(const std::pair<int, int> &position)
                          XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
 }
 
+void RkWindowX::setBackgroundColor(const std::tuple<int, int, int, int> &background)
+{
+        if (isWindowCreated()) {
+                auto colorMap = XDefaultColormap(display(), screenNumber);
+                XColor color;
+                color.flags = DoRed | DoGreen | DoBlue;
+                color.red   = (65535 / 255) * std::get<0>(background);
+                color.green = (65535 / 255) * std::get<1>(background);
+                color.blue  = (65535 / 255) * std::get<2>(background);
+                auto res = XAllocColor(display(), colorMap, &color);
+                if (!res) {
+                        RK_LOG_ERROR("can't allocate color");
+                        return;
+                }
+                else {
+                        XSetWindowBackground(display(), xWindow, color.pixel);
+                }
+        }
+}
+
 RkWindowId RkWindowX::id() const
 {
         RkWindowId id;
