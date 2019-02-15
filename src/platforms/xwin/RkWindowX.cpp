@@ -180,12 +180,12 @@ void RkWindowX::setPosition(const std::pair<int, int> &position)
 
 void RkWindowX::setBorderWidth(int width)
 {
-                borderWidth = width;
-                if (isWindowCreated())
-                        XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
+        borderWidth = width;
+        if (isWindowCreated())
+                XSetWindowBorderWidth(display(), xWindow, borderWidth);
 }
 
-unsigned short RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
+unsigned long RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
 {
         if (!display())
                 return 0;
@@ -193,9 +193,10 @@ unsigned short RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
         auto colorMap = XDefaultColormap(display(), screenNumber);
         XColor pixelColor;
         pixelColor.flags = DoRed | DoGreen | DoBlue;
-        pixelColor.red   = (65535 / 255) * std::get<0>(color);
-        pixelColor.green = (65535 / 255) * std::get<1>(color);
-        pixelColor.blue  = (65535 / 255) * std::get<2>(color);
+        constexpr const unsigned short k = 65535 / 255;
+        pixelColor.red   = k * std::get<0>(color);
+        pixelColor.green = k * std::get<1>(color);
+        pixelColor.blue  = k * std::get<2>(color);
 
         auto res = XAllocColor(display(), colorMap, &pixelColor);
         if (!res) {

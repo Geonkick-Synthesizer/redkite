@@ -58,7 +58,7 @@ class RkWindowX {
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
-        unsigned short pixelValue(const std::tuple<int, int, int> &color);
+        unsigned long pixelValue(const std::tuple<int, int, int> &color);
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;

@@ -78,7 +78,7 @@ class RkWidget {
           void setX(int x);
           int y() const;
           void setY(int y);
-          void setPosition(const std::pair<int, int> &position);
+          void setPosition(int x, int y);
           std::pair<int, int> position() const;
           void setBorderWidth(int width);
           void setBackgroundColor(int red, int green, int blue);

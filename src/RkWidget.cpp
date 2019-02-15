@@ -142,6 +142,11 @@ void RkWidget::setY(int y)
         return o_ptr->setPosition({o_ptr->position().first, y});
 }
 
+void RkWidget::setPosition(int x, int y)
+{
+        o_ptr->setPosition({x, y});
+}
+
 void RkWidget::setBorderWidth(int width)
 {
         o_ptr->setBorderWidth(width);
