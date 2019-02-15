@@ -80,11 +80,9 @@ class RkWidget {
           void setY(int y);
           void setPosition(const std::pair<int, int> &position);
           std::pair<int, int> position() const;
-          //          void setBackgroundColor(const RkColor &color);
-          void setBackgroundColor(int red, int green, int blue, int alpha = 255);
-          //void setBackgroundColor(std::tuple<int, int, int, int> &color);
-          //RkColor backgroundColor() const;
-          // std::tuple<int, int, int, int> backgroundColor() const;
+          void setBorderWidth(int width);
+          void setBackgroundColor(int red, int green, int blue);
+          void setBorderColor(int red, int green, int blue);
 
   protected:
           RK_DECLARE_IMPL(RkWidget)

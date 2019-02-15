@@ -50,12 +50,15 @@ class RkWindowX {
         void setPosition(const std::pair<int, int> &position);
         RkWindowId id() const;
 
-        void setBackgroundColor(const std::tuple<int, int, int, int> &background);
+        void setBorderWidth(int width);
+        void setBorderColor(const std::tuple<int, int, int> &color);
+        void setBackgroundColor(const std::tuple<int, int, int> &background);
 
  protected:
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
+        unsigned short pixelValue(const std::tuple<int, int, int> &color);
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
@@ -65,6 +68,9 @@ class RkWindowX {
         Atom deleteWindowAtom;
         mutable std::pair<int, int> windowPosition;
         std::pair<int, int> windowSize;
+        int borderWidth;
+        std::tuple<int, int, int> borderColor;
+        std::tuple<int, int, int> backgroundColor;
 };
 
 #endif // RK_WIDGET_XWIN_H

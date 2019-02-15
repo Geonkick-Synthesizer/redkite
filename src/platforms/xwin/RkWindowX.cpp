@@ -31,6 +31,9 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , xWindow(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
+        , borderWidth{1}
+        , borderColor{255, 255, 255}
+        , backgroundColor{255, 255, 255}
 {
 }
 
@@ -41,6 +44,10 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         , xWindow(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
+        , borderWidth{1}
+        , borderColor{255, 255, 255}
+        , backgroundColor{255, 255, 255}
+
 {
         *parentWindowInfo.get() = parent;
 }
@@ -76,9 +83,10 @@ bool RkWindowX::init()
         Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
         xWindow = XCreateSimpleWindow(xDisplay, parent,
                                       windowPosition.first, windowPosition.second,
-                                      windowSize.first, windowSize.second, 1,
-                                      BlackPixel(display(), screenNumber),
-                                      WhitePixel(display(), screenNumber));
+                                      windowSize.first, windowSize.second, borderWidth,
+                                      pixelValue(borderColor),
+                                      pixelValue(backgroundColor));
+
 
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
@@ -170,24 +178,46 @@ void RkWindowX::setPosition(const std::pair<int, int> &position)
                          XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
 }
 
-void RkWindowX::setBackgroundColor(const std::tuple<int, int, int, int> &background)
+void RkWindowX::setBorderWidth(int width)
 {
-        if (isWindowCreated()) {
-                auto colorMap = XDefaultColormap(display(), screenNumber);
-                XColor color;
-                color.flags = DoRed | DoGreen | DoBlue;
-                color.red   = (65535 / 255) * std::get<0>(background);
-                color.green = (65535 / 255) * std::get<1>(background);
-                color.blue  = (65535 / 255) * std::get<2>(background);
+                borderWidth = width;
+                if (isWindowCreated())
+                        XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
+}
 
-                auto res = XAllocColor(display(), colorMap, &color);
-                if (!res) {
-                        RK_LOG_ERROR("can't allocate color");
-                        return;
-                } else {
-                        XSetWindowBackground(display(), xWindow, color.pixel);
-                }
+unsigned short RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
+{
+        if (!display())
+                return 0;
+
+        auto colorMap = XDefaultColormap(display(), screenNumber);
+        XColor pixelColor;
+        pixelColor.flags = DoRed | DoGreen | DoBlue;
+        pixelColor.red   = (65535 / 255) * std::get<0>(color);
+        pixelColor.green = (65535 / 255) * std::get<1>(color);
+        pixelColor.blue  = (65535 / 255) * std::get<2>(color);
+
+        auto res = XAllocColor(display(), colorMap, &pixelColor);
+        if (!res) {
+                RK_LOG_ERROR("can't allocate color");
+                return 0 ;
         }
+
+        return pixelColor.pixel;
+}
+
+void RkWindowX::setBorderColor(const std::tuple<int, int, int> &color)
+{
+        borderColor = color;
+        if (isWindowCreated())
+                XSetWindowBorder(display(), xWindow, pixelValue(borderColor));
+}
+
+void RkWindowX::setBackgroundColor(const std::tuple<int, int, int> &background)
+{
+        backgroundColor = background;
+        if (isWindowCreated())
+                XSetWindowBackground(display(), xWindow, pixelValue(background));
 }
 
 RkWindowId RkWindowX::id() const

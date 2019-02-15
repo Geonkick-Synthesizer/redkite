@@ -58,7 +58,9 @@ class RkWidget::RkWidgetImpl {
         std::pair<int, int> size() const;
         void setPosition(const std::pair<int, int> &position);
         std::pair<int, int> position() const;
-        void setBackgroundColor(const std::tuple<int, int, int, int> &background);
+        void setBorderWidth(int width);
+        void setBorderColor(const std::tuple<int, int, int> &color);
+        void setBackgroundColor(const std::tuple<int, int, int> &background);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)

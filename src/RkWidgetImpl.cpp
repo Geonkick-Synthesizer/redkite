@@ -170,7 +170,17 @@ std::pair<int, int> RkWidget::RkWidgetImpl::position() const
         return platformWindow->position();
 }
 
-void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int, int> &background)
+void RkWidget::RkWidgetImpl::setBorderWidth(int width)
+{
+        platformWindow->setBorderWidth(width);
+}
+
+void RkWidget::RkWidgetImpl::setBorderColor(const std::tuple<int, int, int> &color)
+{
+        platformWindow->setBorderColor(color);
+}
+
+void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int> &background)
 {
         platformWindow->setBackgroundColor(background);
 }
