@@ -2,14 +2,22 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.0.1)
 
-if (APPLE)
-  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
-elseif(WIN32)
-  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
-elseif (UNIX)
-  message(STATUS "Build Redkite for OS ${CMAKE_SYSTEM_NAME}")
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_VERSION 1)
+
+# specify the cross compiler
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+  message(STATUS "Build Redkite for Windows")
+  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-g++)
+  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-gcc)
+  add_compile_options(-DRK_OS_WIN)
+elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
+  message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
+#    add_compile_definitions(RK_OS_MAC)
+elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
+  message(STATUS " Build Redkite for GNU/Linux")
 else()
-  message(FATA_ERROR "Redkite not implemented yet for OS ${CMAKE_SYSTEM_NAME}")
+  message(FATAL_ERROR "Redkite not implemented yet for ${CMAKE_SYSTEM_NAME}")
 endif()  
 
 set(RK_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -51,11 +59,15 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h)
 
-if(APPLE)
-# not implemented yet 
-elseif (WIN32)
-# not implemented yet 
-else(UNIX) # defaut UNIX
+if(CMAKE_SYSTEM_NAME MATCHES Windows)
+set(RK_HEADERS_PLATFORM
+  ${RK_INCLUDE_PATH}/impl/platforms/win/RkWindowWin.h
+  ${RK_INCLUDE_PATH}/impl/platforms/win/RkEventQueueWin.h)
+elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
+set(RK_HEADERS_PLATFORM
+  ${RK_INCLUDE_PATH}/impl/platforms/mac/RkWindowMac.h
+  ${RK_INCLUDE_PATH}/impl/platforms/mac/RkEventQueueMac.h)
+else() # defaut GNU/Linux
 set(RK_HEADERS_PLATFORM
   ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkWindowX.h
   ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkEventQueueX.h)
@@ -69,11 +81,17 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp)
 
-if (APPLE)
-# not implemented yet
-elseif (WIN32)
-# not implemented yet
-else(UNIX) # defaut UNIX
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+set(RK_SOURCES_PLATFORM
+  ${RK_SRC_PATH}/platforms/win/RkPlatformWin.cpp
+  ${RK_SRC_PATH}/platforms/win/RkWindowWin.cpp
+  ${RK_SRC_PATH}/platforms/win/RkEventQueueWin.cpp)
+elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
+set(RK_SOURCES_PLATFORM
+  ${RK_SRC_PATH}/platforms/mac/RkPlatformMac.cpp
+  ${RK_SRC_PATH}/platforms/mac/RkWindowMac.cpp
+  ${RK_SRC_PATH}/platforms/mac/RkEventQueueMac.cpp)
+else() # defaut GNU/Linux
 set(RK_SOURCES_PLATFORM
   ${RK_SRC_PATH}/platforms/xwin/RkPlatformX.cpp
   ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
@@ -83,11 +101,13 @@ endif()
 add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
-if (APPLE)
+
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+  include_directories(${RK_INCLUDE_PATH}/impl/platforms/win)
+elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
+  include_directories(${RK_INCLUDE_PATH}/impl/platforms/mac)
 # not implemented yet
-elseif (WIN32)
-# not implemented yet
-else(UNIX) # defualt UNIX
+else() # defualt GNU/Linux
 include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
 endif()
 

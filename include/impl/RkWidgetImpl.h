@@ -26,8 +26,9 @@
 
 #include "RkWidget.h"
 
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
+#ifdef RK_OS_WIN
+class RkWindowWin;
+#elif RK_OS_MAC
 #else
 class RkWindowX;
 #endif // RK_WIN_OS
@@ -65,8 +66,9 @@ class RkWidget::RkWidgetImpl {
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
         RkWidget *parentWidget;
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
+#ifdef RK_OS_WIN
+        std::unique_ptr<RkWindowWin> platformWindow;
+#elif RK_OS_MAC
 #else
         std::unique_ptr<RkWindowX> platformWindow;
 #endif // RK_WIN_OS

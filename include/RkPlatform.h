@@ -29,6 +29,15 @@
 
 #ifdef RK_OS_WIN
 #include <windows.h>
+
+struct RkWindowId {
+        HWND id;
+};
+
+struct RkNativeWindowInfo {
+        HWND window;
+};
+
 #elif RK_OS_MAC
 // to be defined
 #else

@@ -25,14 +25,15 @@
 #include "RkEvent.h"
 #include "RkPlatform.h"
 
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
+#ifdef RK_OS_WIN
+#include "RkWindowWin.h"
+#elif RK_OS_MAC
 #else
-#include <RkWindowX.h>
+#include "RkWindowX.h"
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
-#endif // RK_WIN_OS
+#endif
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
         : inf_ptr{interface}
