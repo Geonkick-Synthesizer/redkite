@@ -25,8 +25,8 @@
 #include "RkWindowWin.h"
 
 RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
-        : parentWindowInfo(parent)
-        , windowHandle(0)
+        : parentWindowInfo{parent}
+        , windowHandle{{nullptr}}
         , windowPosition{0, 0}
         , windowSize{250, 250}
         , borderWidth{1}
@@ -36,8 +36,8 @@ RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
 }
 
 RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
-        : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
-        , windowHandle(0)
+        : parentWindowInfo{std::make_shared<RkNativeWindowInfo>()}
+        , windowHandle{{nullptr}}
         , windowPosition{0, 0}
         , windowSize{250, 250}
         , borderWidth{1}
@@ -50,8 +50,6 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
 
 RkWindowWin::~RkWindowWin()
 {
-        if (!hasParent()) {
-        }
 }
 
 bool RkWindowWin::hasParent() const
@@ -61,19 +59,37 @@ bool RkWindowWin::hasParent() const
 
 bool RkWindowWin::init()
 {
+        windowHandle.id = CreateWindowEx(0,
+                                      parentWindowInfo->className.c_str(),
+                                      "Widget",
+                                      !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD,
+                                      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                      !hasParent() ? nullptr : parentWindowInfo->window,
+                                      nullptr,
+                                      parentWindowInfo->instance,
+                                      nullptr);
+
+        if (!windowHandle.id) {
+                RK_LOG_ERROR("can't create window");
+                return false;
+        }
+
         return true;
 }
 
 void RkWindowWin::show()
 {
-
+        if (isWindowCreated())
+                ShowWindow(windowHandle.id, SW_SHOW);
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 {
         if (isWindowCreated()) {
                 auto info = std::make_shared<RkNativeWindowInfo>();
-                info->window = windowHandle.id;
+                info->className = parentWindowInfo->className;
+                info->window    = windowHandle.id;
+                info->instance  = parentWindowInfo->instance;
                 return info;
         }
 
@@ -82,19 +98,22 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 
 void RkWindowWin::setTitle(const std::string &title)
 {
-        //        if (!title.empty())
+        if (isWindowCreated() && !title.empty())
+                SetWindowTextA(windowHandle.id, title.c_str());
 }
 
 bool RkWindowWin::isWindowCreated() const
 {
-        return false;
+        return windowHandle.id != nullptr;
 }
 
 std::pair<int, int> RkWindowWin::size() const
 {
-        //        if (isWindowCreated()) {
-                //                return {attributes.width, attributes.height};
-        //}
+        if (isWindowCreated()) {
+                RECT rect;
+                GetWindowRect(windowHandle.id, &rect);
+                return {rect.right - rect.left, rect.bottom - rect.top};
+        }
         return windowSize;
 }
 
@@ -102,19 +121,20 @@ void RkWindowWin::setSize(const std::pair<int, int> &size)
 {
         if (size.first > 0 && size.second > 0) {
                 windowSize = size;
-                //                if (isWindowCreated())
-                //        XResizeWindow(display(), windowHandle, windowSize.first, windowSize.second);
+                if (isWindowCreated()) {
+                        auto pos = position();
+                        MoveWindow(windowHandle.id, pos.first, pos.second,
+                                   size.first, size.second, TRUE);
+                }
         }
 }
 
 std::pair<int, int> RkWindowWin::position() const
 {
         if (isWindowCreated()) {
-                //                XWindowAttributes attributes;
-                // XGetWindowAttributes(xDisplay, windowHandle, &attributes);
-                //auto pos = std::make_pair(attributes.x, attributes.y);
-                //if (pos != windowPosition)
-                //        windowPosition = pos;
+                RECT rect;
+                GetWindowRect(windowHandle.id, &rect);
+                return {rect.left, rect.top};
         }
         return windowPosition;
 }
@@ -122,8 +142,11 @@ std::pair<int, int> RkWindowWin::position() const
 void RkWindowWin::setPosition(const std::pair<int, int> &position)
 {
                 windowPosition = position;
-                //                if (isWindowCreated())
-                //         XMoveWindow(display(), windowHandle, windowPosition.first, windowPosition.second);
+                if (isWindowCreated()) {
+                        auto s = size();
+                        MoveWindow(windowHandle.id, position.first, position.second,
+                                   s.first, s.second, TRUE);
+                }
 }
 
 void RkWindowWin::setBorderWidth(int width)

@@ -30,9 +30,9 @@
 #ifdef RK_OS_WIN
 #define WINVER 0x0501
 
-#ifndef UNICODE
-#define UNICODE
-#endif
+//#ifndef UNICODE
+//#define UNICODE
+//#endif
 
 #include <windows.h>
 
@@ -43,6 +43,8 @@ struct RkWindowId {
 
 struct RkNativeWindowInfo {
         RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {}
+        HINSTANCE instance;
+        std::string className;
         HWND window;
 };
 

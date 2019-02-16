@@ -107,7 +107,7 @@ bool RkWindowX::init()
 
 void RkWindowX::show()
 {
-        if (display())
+        if (isWindowCreated())
                 XMapRaised(display(), xWindow);
 }
 
@@ -131,7 +131,7 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowX::nativeWindowInfo()
 
 void RkWindowX::setTitle(const std::string &title)
 {
-        if (xDisplay && !title.empty())
+        if (isWindowCreated() && !title.empty())
                 XStoreName(xDisplay, xWindow, title.c_str());
 }
 
