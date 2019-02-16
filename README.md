@@ -2,13 +2,13 @@
 
 #### Description
 
-A small GUI toolkit for Quamplex projects.
+A small GUI toolkit.
 
 License: GPLv3
 
 Status: development, no release yet.
 
-### Some requirements
+### Some requirements & gloas
 
 Here are some requirements ideas that makes this
 toolkit to differ from common ones. Also, these requirements
@@ -30,4 +30,6 @@ common usage.
   toolkit instances and versions.
 
 * Can be linked statically.
+
+* Platforms: GNU/Linux (XWindow System backend), Windows (Win API backend), MacOS (no plans yet)
 
