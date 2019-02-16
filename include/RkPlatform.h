@@ -48,8 +48,8 @@ struct RkNativeWindowInfo {
         HWND window;
 };
 
-//RkNativeWindowInfo rk_from_native_win(HWND window);
-//RkWindowId rk_id_from_win(HWND window);
+RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
+RkWindowId rk_id_from_win(HWND window);
 
 #elif RK_OS_MAC
 // to be defined

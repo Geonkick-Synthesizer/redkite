@@ -25,8 +25,7 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 
-RkEventQueueWin::RkEventQueueWin(/*Display* display*/)
-//        : xDisplay(display)
+RkEventQueueWin::RkEventQueueWin()
 {
         RK_LOG_INFO("called");
 }
@@ -37,52 +36,52 @@ RkEventQueueWin::~RkEventQueueWin()
 
 bool RkEventQueueWin::pending()
 {
-        // if (xDisplay) {
-        //         return XPending(xDisplay) > 0;
-        // }
-        // return false;
+
+        return GetQueueStatus(QS_KEY | QS_HOTKEY
+                              | QS_MOUSE | QS_MOUSEBUTTON
+                              | QS_MOUSEMOVE | QS_PAINT) != 0;
 }
 
 std::pair<RkWindowId, std::shared_ptr<RkEvent>> RkEventQueueWin::nextEvent()
 {
-        // XEvent e;
-        // XNextEvent(xDisplay, &e);
-        // RkWindowId id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
-        // std::shared_ptr<RkEvent> event = nullptr;
-        // switch (e.type)
-        // {
-        // case Expose:
-        //         event = RkEvent::paintEvent();
-        //         break;
-        // case KeyPress:
-        //         event = RkEvent::keyPressEvent();
-        //         break;
-        // case KeyRelease:
-        //         event = RkEvent::keyReleaseEvent();
-        //         break;
-        // case ButtonPress:
-        //         event = RkEvent::buttonPressEvent();
-        //         break;
-        // case ButtonRelease:
-        //         event = RkEvent::buttonReleaseEvent();
-        //         break;
-        // case ConfigureNotify:
-        //         event = RkEvent::resizeEvent();
-        //         break;
-        // case ClientMessage:
-        //         {
-        //                 auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
-        //                 if (static_cast<Atom>(e.xclient.data.l[0]) == atom) {
-        //                         event = RkEvent::closeEvent();
-        //                 }
-        //                 break;
-        //         }
-        // default:
-        //         break;
-        // }
+        MSG msg;
+        if (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE)) {
+                std::shared_ptr<RkEvent> event = nullptr;
+                RkWindowId id = rk_id_from_win(msg.hwnd);
+                switch (msg.message)
+                {
+                case WM_PAINT:
+                        event = RkEvent::paintEvent();
+                        break;
+                case WM_KEYDOWN:
+                        event = RkEvent::keyPressEvent();
+                        break;
+                case WM_KEYUP:
+                        event = RkEvent::keyReleaseEvent();
+                        break;
+                case WM_LBUTTONUP:
+                case WM_RBUTTONUP:
+                case WM_MBUTTONUP:
+                        event = RkEvent::buttonPressEvent();
+                        break;
+                case WM_LBUTTONDOWN:
+                case WM_RBUTTONDOWN:
+                case WM_MBUTTONDOWN:
+                        event = RkEvent::buttonReleaseEvent();
+                        break;
+                case WM_SIZE:
+                        event = RkEvent::resizeEvent();
+                        break;
+                case WM_QUIT:
+                        event = RkEvent::closeEvent();
+                        break;
+                default:
+                        break;
+                }
 
-        // if (event)
-        //         return std::make_pair(id, event);
+                if (event)
+                        return std::make_pair(id, event);
+        }
 
-        // return {};
+        return {};
 }
