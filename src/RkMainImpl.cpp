@@ -25,24 +25,27 @@
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 
-#ifdef RK_WIN_OS
+#ifdef RK_OS_WIN
 #include "RkEventQueueWin.h"
-#elif RK_MAC_OS
+#elif RK_OS_MAC
 #include "RkEventQueueMac.h"
 #else
 #include "RkEventQueueX.h"
 #endif
 
-RkMain::RkMainImpl::RkMainImpl(RkMain *interface)
-        : inf_ptr{interface}
+#include <chrono>
+#include <thread>
+
+RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
+        : inf_ptr{interfaceMain}
         , topWindow(nullptr)
         , eventQueue{nullptr}
 {
         RK_LOG_INFO("called");
 }
 
-RkMain::RkMainImpl::RkMainImpl(RkMain *interface, int argc, char **argv)
-        : inf_ptr{interface}
+RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
+        : inf_ptr{interfaceMain}
         , topWindow(nullptr)
         , eventQueue{nullptr}
 {
@@ -63,17 +66,17 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
               return false;
 
       topWindow = widget;
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
-#else
-      RK_LOG_INFO("create queue");
       auto info = topWindow->nativeWindowInfo();
       if (!info) {
               RK_LOG_ERROR("wring info");
               return false;
       }
+
+#ifdef RK_OS_WIN
+      eventQueue = std::make_unique<RkEventQueueWin>();
+#elif RK_OS_MAC
+#else
       eventQueue = std::make_unique<RkEventQueueX>(info->display);
-      RK_LOG_INFO("queue created");
 #endif // RK_WIN_OS
       return true;
 }
@@ -116,7 +119,7 @@ int RkMain::RkMainImpl::exec(bool block)
                         processEvents();
                         if (topLevelWindow()->isClose())
                                 break;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                        //                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
                 }
         }
 

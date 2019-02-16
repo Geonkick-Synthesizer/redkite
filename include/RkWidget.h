@@ -26,9 +26,6 @@
 
 #include "Rk.h"
 
-#include <string>
-#include <unordered_map>
-
 class RkEvent;
 class RkCloseEvent;
 class RkKeyEvent;

@@ -24,6 +24,9 @@
 #ifndef RK_GLOBAL_H
 #define RK_GLOBAL_H
 
+//#include <winsock2.h>
+//#include <windows.h>
+
 #include <memory>
 #include <string>
 #include <list>

@@ -23,7 +23,6 @@
 
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
-#include "RkPlatform.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
@@ -35,19 +34,19 @@
 #undef Paint
 #endif
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, RkWidget* parent)
-        : inf_ptr{interface}
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent)
+        : inf_ptr{widgetInterface}
         , parentWidget{parent}
-        , platformWindow{!parent ? std::make_unique<RkWindowX>() : std::make_unique<RkWindowX>(parent->nativeWindowInfo())}
+        , platformWindow{!parent ? std::make_unique<RkWindowWin>() : std::make_unique<RkWindowWin>(parent->nativeWindowInfo())}
         , widgetClosed{false}
 {
         platformWindow->init();
 }
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent)
-        : inf_ptr{interface}
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWindowInfo &parent)
+        : inf_ptr{widgetInterface}
         , parentWidget{nullptr}
-        , platformWindow{std::make_unique<RkWindowX>(parent)}
+        , platformWindow{std::make_unique<RkWindowWin>(parent)}
         , widgetClosed{false}
 {
         platformWindow->init();

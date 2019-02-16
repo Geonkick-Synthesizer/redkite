@@ -26,9 +26,7 @@
 
 RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
-        , xDisplay{parent ? parent->display : nullptr}
-        , screenNumber{parent ? parent->screenNumber : 0}
-        , xWindow(0)
+        , windowHandle(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
         , borderWidth{1}
@@ -39,9 +37,7 @@ RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
 
 RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
         : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
-        , xDisplay{parent.display}
-        , screenNumber{parent.screenNumber}
-        , xWindow(0)
+        , windowHandle(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
         , borderWidth{1}
@@ -54,8 +50,7 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
 
 RkWindowWin::~RkWindowWin()
 {
-        if (!hasParent() && xDisplay) {
-                XCloseDisplay(xDisplay);
+        if (!hasParent()) {
         }
 }
 
@@ -64,66 +59,22 @@ bool RkWindowWin::hasParent() const
         return parentWindowInfo != nullptr;
 }
 
-bool RkWindowWin::openDisplay()
-{
-        xDisplay = XOpenDisplay(nullptr);
-        screenNumber = DefaultScreen(xDisplay);
-        return xDisplay != 0;
-}
-
 bool RkWindowWin::init()
 {
-        if (!hasParent()) {
-                if (!openDisplay()) {
-                        RK_LOG_ERROR("can't open display");
-                        return false;
-                }
-	}
-
-        Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
-        xWindow = XCreateSimpleWindow(xDisplay, parent,
-                                      windowPosition.first, windowPosition.second,
-                                      windowSize.first, windowSize.second, borderWidth,
-                                      pixelValue(borderColor),
-                                      pixelValue(backgroundColor));
-
-
-        if (!xWindow) {
-                RK_LOG_ERROR("can't create window");
-                return false;
-        }
-
-        XSelectInput(xDisplay, xWindow, ExposureMask
-                                        | KeyPressMask | KeyReleaseMask
-                                        | ButtonPressMask | ButtonReleaseMask
-                                        | StructureNotifyMask);
-
-        if (!hasParent()) {
-                deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
-                XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
-        }
         return true;
 }
 
 void RkWindowWin::show()
 {
-        if (display())
-                XMapRaised(display(), xWindow);
-}
 
-Display* RkWindowWin::display()
-{
-        return xDisplay;
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 {
         if (isWindowCreated()) {
                 auto info = std::make_shared<RkNativeWindowInfo>();
-                info->display = display();
-                info->screenNumber = screenNumber;
-                info->window = xWindow;
-                return std::move(info);
+                info->window = windowHandle.id;
+                return info;
         }
 
         return nullptr;
@@ -131,22 +82,19 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 
 void RkWindowWin::setTitle(const std::string &title)
 {
-        if (xDisplay && !title.empty())
-                XStoreName(xDisplay, xWindow, title.c_str());
+        //        if (!title.empty())
 }
 
 bool RkWindowWin::isWindowCreated() const
 {
-        return xDisplay != nullptr && xWindow;
+        return false;
 }
 
 std::pair<int, int> RkWindowWin::size() const
 {
-        if (isWindowCreated()) {
-                XWindowAttributes attributes;
-                XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                return {attributes.width, attributes.height};
-        }
+        //        if (isWindowCreated()) {
+                //                return {attributes.width, attributes.height};
+        //}
         return windowSize;
 }
 
@@ -154,19 +102,19 @@ void RkWindowWin::setSize(const std::pair<int, int> &size)
 {
         if (size.first > 0 && size.second > 0) {
                 windowSize = size;
-                if (isWindowCreated())
-                        XResizeWindow(display(), xWindow, windowSize.first, windowSize.second);
+                //                if (isWindowCreated())
+                //        XResizeWindow(display(), windowHandle, windowSize.first, windowSize.second);
         }
 }
 
 std::pair<int, int> RkWindowWin::position() const
 {
         if (isWindowCreated()) {
-                XWindowAttributes attributes;
-                XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                auto pos = std::make_pair(attributes.x, attributes.y);
-                if (pos != windowPosition)
-                        windowPosition = pos;
+                //                XWindowAttributes attributes;
+                // XGetWindowAttributes(xDisplay, windowHandle, &attributes);
+                //auto pos = std::make_pair(attributes.x, attributes.y);
+                //if (pos != windowPosition)
+                //        windowPosition = pos;
         }
         return windowPosition;
 }
@@ -174,56 +122,34 @@ std::pair<int, int> RkWindowWin::position() const
 void RkWindowWin::setPosition(const std::pair<int, int> &position)
 {
                 windowPosition = position;
-                if (isWindowCreated())
-                         XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
+                //                if (isWindowCreated())
+                //         XMoveWindow(display(), windowHandle, windowPosition.first, windowPosition.second);
 }
 
 void RkWindowWin::setBorderWidth(int width)
 {
         borderWidth = width;
-        if (isWindowCreated())
-                XSetWindowBorderWidth(display(), xWindow, borderWidth);
-}
-
-unsigned long RkWindowWin::pixelValue(const std::tuple<int, int, int> &color)
-{
-        if (!display())
-                return 0;
-
-        auto colorMap = XDefaultColormap(display(), screenNumber);
-        XColor pixelColor;
-        pixelColor.flags = DoRed | DoGreen | DoBlue;
-        constexpr const unsigned short k = 65535 / 255;
-        pixelColor.red   = k * std::get<0>(color);
-        pixelColor.green = k * std::get<1>(color);
-        pixelColor.blue  = k * std::get<2>(color);
-
-        auto res = XAllocColor(display(), colorMap, &pixelColor);
-        if (!res) {
-                RK_LOG_ERROR("can't allocate color");
-                return 0 ;
-        }
-
-        return pixelColor.pixel;
+        //        if (isWindowCreated())
+        //        XSetWindowBorderWidth(display(), windowHandle, borderWidth);
 }
 
 void RkWindowWin::setBorderColor(const std::tuple<int, int, int> &color)
 {
         borderColor = color;
-        if (isWindowCreated())
-                XSetWindowBorder(display(), xWindow, pixelValue(borderColor));
+        //        if (isWindowCreated())
+        //        XSetWindowBorder(display(), windowHandle, pixelValue(borderColor));
 }
 
 void RkWindowWin::setBackgroundColor(const std::tuple<int, int, int> &background)
 {
         backgroundColor = background;
-        if (isWindowCreated())
-                XSetWindowBackground(display(), xWindow, pixelValue(background));
+        //        if (isWindowCreated())
+        //        XSetWindowBackground(display(), windowHandle, pixelValue(background));
 }
 
 RkWindowId RkWindowWin::id() const
 {
         RkWindowId id;
-        id.id = xWindow;
+        id.id = windowHandle.id;
         return id;
 }

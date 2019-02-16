@@ -28,15 +28,26 @@
 #include "RkLog.h"
 
 #ifdef RK_OS_WIN
+#define WINVER 0x0501
+
+#ifndef UNICODE
+#define UNICODE
+#endif
+
 #include <windows.h>
 
 struct RkWindowId {
-        HWND id;
+    RkWindowId(HWND arg = nullptr) : id(arg) {}
+    HWND id;
 };
 
 struct RkNativeWindowInfo {
+        RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {}
         HWND window;
 };
+
+//RkNativeWindowInfo rk_from_native_win(HWND window);
+//RkWindowId rk_id_from_win(HWND window);
 
 #elif RK_OS_MAC
 // to be defined

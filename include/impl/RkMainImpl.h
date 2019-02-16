@@ -27,7 +27,13 @@
 #include "RkMain.h"
 
 class RkWidget;
+
+#ifdef RK_OS_WIN
+class RkEventQueueWin;
+#elif RK_OS_MAC
+#else
 class RkEventQueueX;
+#endif // RK_WIN_OS
 
 class RkMain::RkMainImpl
 {
@@ -48,8 +54,9 @@ class RkMain::RkMainImpl
  private:
         RK_DECALRE_INTERFACE_PTR(RkMain)
         RkWidget* topWindow;
-#ifdef RK_WIN_OS
-#elif RK_MAC_OS
+#ifdef RK_OS_WIN
+        std::unique_ptr<RkEventQueueWin> eventQueue;
+#elif RK_OS_MAC
 #else
         std::unique_ptr<RkEventQueueX> eventQueue;
 #endif // RK_WIN_OS

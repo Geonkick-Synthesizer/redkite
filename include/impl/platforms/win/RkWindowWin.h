@@ -21,14 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_WINDOW_X_H
-#define RK_WINDOW_X_H
+#ifndef RK_WINDOW_WIN_H
+#define RK_WINDOW_WIN_H
 
 #include "Rk.h"
 #include "RkPlatform.h"
-
-struct RkWindowId;
-struct RkNativeWindowInfo;
 
 class RkWindowWin {
  public:
@@ -43,7 +40,6 @@ class RkWindowWin {
         void show();
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        Display* display();
         std::pair<int, int> size() const;
         void setSize(const std::pair<int, int> &size);
         std::pair<int, int> position() const;
@@ -55,17 +51,13 @@ class RkWindowWin {
         void setBackgroundColor(const std::tuple<int, int, int> &background);
 
  protected:
-        bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
-        unsigned long pixelValue(const std::tuple<int, int, int> &color);
+        //        unsigned long pixelValue(const std::tuple<int, int, int> &color);
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
-        Display *xDisplay;
-        int screenNumber;
-        Window xWindow;
-        Atom deleteWindowAtom;
+        RkWindowId windowHandle;
         mutable std::pair<int, int> windowPosition;
         std::pair<int, int> windowSize;
         int borderWidth;
@@ -73,4 +65,4 @@ class RkWindowWin {
         std::tuple<int, int, int> backgroundColor;
 };
 
-#endif // RK_WIDGET_XWIN_H
+#endif // RK_WIDGET_WIN_H

@@ -123,7 +123,7 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowX::nativeWindowInfo()
                 info->display = display();
                 info->screenNumber = screenNumber;
                 info->window = xWindow;
-                return std::move(info);
+                return info;
         }
 
         return nullptr;

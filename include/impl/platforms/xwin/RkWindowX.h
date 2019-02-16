@@ -27,9 +27,6 @@
 #include "Rk.h"
 #include "RkPlatform.h"
 
-struct RkWindowId;
-struct RkNativeWindowInfo;
-
 class RkWindowX {
  public:
         explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
