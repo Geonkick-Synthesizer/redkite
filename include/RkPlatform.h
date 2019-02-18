@@ -54,8 +54,13 @@ RkWindowId rk_id_from_win(HWND window);
 #ifdef RK_WIN_MAIN_FUNC
 #define RK_WIN_MAIN_FUNC
 HINSTANCE winApiInstance = nullptr;
+
+#ifdef RK_FOR_SHARED
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID    lpvReserved);
+#else //RK_FOR_SHARED 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow);
+#endif // RK_FOR_SHARED
 #endif // RK_WIN_MAIN_FUNC
 
 #elif RK_OS_MAC
