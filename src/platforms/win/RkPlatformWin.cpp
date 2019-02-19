@@ -2,6 +2,9 @@
 
 #include <random>
 
+std::string rk_winApiClassName = "";
+HINSTANCE rk_winApiInstance = nullptr;
+
 RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window)
 {
         RkNativeWindowInfo info;
@@ -23,6 +26,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                     DWORD fdwReason,
                     LPVOID lpvReserved)
 {
+        winApiInstance = hInstance;
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -39,7 +43,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
         std::default_random_engine e1(r());
         std::uniform_int_distribution<int> uniform_dist(1, 1000000);
         int mean = uniform_dist(e1);
-        wc.lpszClassName = ("Redkite_" + std::to_string(mean)).c_str();
+        rk_winApiClassName = ("Redkite_" + std::to_string(mean)).c_str();
+        wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
         if (!RegisterClassEx(&wc)) {
@@ -57,12 +62,12 @@ static inline char *wideToMulti(int codePage, const wchar_t *aw)
         return result;
 }
 
-extern "C" int main(int argc, char **argv);
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine,
                    int nCmdShow)
 {
+        rk_winApiInstance = hInstance;
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -80,6 +85,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
         std::uniform_int_distribution<int> uniform_dist(1, 1000000);
         int mean = uniform_dist(e1);
         wc.lpszClassName = ("Redkite_" + std::to_string(mean)).c_str();
+        rk_winApiClassName = wc.lpszClassName;
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
         if (!RegisterClassEx(&wc)) {

@@ -29,11 +29,6 @@
 
 #ifdef RK_OS_WIN
 #define WINVER 0x0501
-
-//#ifndef UNICODE
-//#define UNICODE
-//#endif
-
 #include <windows.h>
 
 struct RkWindowId {
@@ -49,23 +44,16 @@ struct RkNativeWindowInfo {
 };
 
 RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
+
 RkWindowId rk_id_from_win(HWND window);
 
-#ifdef RK_WIN_MAIN_FUNC
-#define RK_WIN_MAIN_FUNC
-HINSTANCE winApiInstance = nullptr;
+extern std::string rk_winApiClassName;
 
-#ifdef RK_FOR_SHARED
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID    lpvReserved);
-#else //RK_FOR_SHARED 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                   LPSTR lpCmdLine, int nCmdShow);
-#endif // RK_FOR_SHARED
-#endif // RK_WIN_MAIN_FUNC
+extern HINSTANCE rk_winApiInstance;
 
 #elif RK_OS_MAC
 // to be defined
-#else
+#else // X11
 #include <X11/Xlib.h>
 
 struct RkWindowId {
@@ -82,6 +70,6 @@ struct RkNativeWindowInfo
 RkNativeWindowInfo rk_from_native_x11(Display* display, int screenNumber, Window window);
 RkWindowId rk_id_from_x11(Window window);
 
-#endif
+#endif // X11
 
 #endif // RK_PLATFORM_H
