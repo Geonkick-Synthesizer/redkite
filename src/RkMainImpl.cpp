@@ -24,6 +24,7 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 #include "RkMainImpl.h"
+#include "RkPlatform.h"
 
 #ifdef RK_OS_WIN
 #include "RkEventQueueWin.h"
@@ -40,6 +41,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
         , eventQueue{nullptr}
+		, isMainQuit{false}
 {
         RK_LOG_INFO("called");
 }
@@ -48,6 +50,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
         , eventQueue{nullptr}
+		, isMainQuit{false}
 {
         RK_UNUSED(argc);
         RK_UNUSED(argv);
@@ -86,12 +89,28 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
       return topWindow;
 }
 
+void RkMain::RkMainImpl::setQuit()
+{
+	isMainQuit = true;
+}
+
+bool RkMain::RkMainImpl::isQuit() const
+{
+	return isMainQuit;
+}
+
 void RkMain::RkMainImpl::processEvents()
 {
-        while (eventQueue->pending()) {
                 auto res = eventQueue->nextEvent();
                 if (!res.second)
-                        continue;
+                        return;
+
+#ifdef RK_OS_WIN				
+		        if (!res.first.id && res.second->type() == RkEvent::Type::Close) {
+					    setQuit();
+				        return;
+                }
+#endif // RK_OS_WIN
 
                 RkWidget *widget;
                 if (res.first.id == topLevelWindow()->id().id)
@@ -101,8 +120,10 @@ void RkMain::RkMainImpl::processEvents()
 
                 if (widget)
                         widget->processEvent(res.second);
-        }
-
+					
+			    if (topLevelWindow()->isClose())
+				        setQuit();
+        //}
 }
 
 int RkMain::RkMainImpl::exec(bool block)
@@ -117,9 +138,9 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         processEvents();
-                        if (topLevelWindow()->isClose())
+		                if (isQuit())
                                 break;
-                        //                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
                 }
         }
 

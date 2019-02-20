@@ -51,6 +51,10 @@ class RkMain::RkMainImpl
         void processEvents();
 	int exec(bool block = true);
 
+ protected:
+    void setQuit();
+	bool isQuit() const;
+
  private:
         RK_DECALRE_INTERFACE_PTR(RkMain)
         RkWidget* topWindow;
@@ -60,6 +64,7 @@ class RkMain::RkMainImpl
 #else
         std::unique_ptr<RkEventQueueX> eventQueue;
 #endif // RK_WIN_OS
+        bool isMainQuit;
 };
 
 #endif // RK_MAIN_XWIN_H

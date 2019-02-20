@@ -100,12 +100,15 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                 break;
         case RkEvent::Type::KeyPress:
+		        OutputDebugString("[REDKITE]Event:RkEvent::Type::KeyPress");
                 inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::KeyRelease:
+		        OutputDebugString("[REDKITE]RkEvent::Type::KeyPress");
                 inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
+		        OutputDebugString("[REDKITE]RkEvent::Type::Button");
                 inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
@@ -115,6 +118,7 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
                 break;
         case RkEvent::Type::Close:
+		        OutputDebugString("[REDKITE]RkEvent::Type::Close");
                 widgetClosed = true;
                 inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
                 break;

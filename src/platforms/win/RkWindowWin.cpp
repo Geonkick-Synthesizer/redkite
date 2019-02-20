@@ -60,14 +60,14 @@ bool RkWindowWin::hasParent() const
 bool RkWindowWin::init()
 {
         windowHandle.id = CreateWindowEx(0,
-                                      parentWindowInfo->className.c_str(),
-                                      "Widget",
-                                      !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD,
-                                      CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                                      !hasParent() ? nullptr : parentWindowInfo->window,
-                                      nullptr,
-                                      parentWindowInfo->instance,
-                                      nullptr);
+                                         hasParent() ? parentWindowInfo->className.c_str() : rk_winApiClassName.c_str(),
+                                         "RkWidget",
+                                         !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD,
+                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                         !hasParent() ? nullptr : parentWindowInfo->window,
+                                         nullptr,
+                                         hasParent() ? parentWindowInfo->instance : rk_winApiInstance,
+                                         nullptr);
 
         if (!windowHandle.id) {
                 RK_LOG_ERROR("can't create window");
@@ -87,9 +87,9 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 {
         if (isWindowCreated()) {
                 auto info = std::make_shared<RkNativeWindowInfo>();
-                info->className = parentWindowInfo->className;
+                info->className = hasParent() ? parentWindowInfo->className : rk_winApiClassName;
                 info->window    = windowHandle.id;
-                info->instance  = parentWindowInfo->instance;
+                info->instance  = hasParent() ? parentWindowInfo->instance : rk_winApiInstance;
                 return info;
         }
 

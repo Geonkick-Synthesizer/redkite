@@ -11,7 +11,8 @@ add_executable(hello
 
 add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
-target_link_libraries(hello "-lstdc++ -lm")
+target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
+
 
 #add_executable(hello_multi
 #  ${RK_HEADERS}

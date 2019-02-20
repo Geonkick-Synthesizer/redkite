@@ -39,48 +39,71 @@ bool RkEventQueueWin::pending()
 
         return GetQueueStatus(QS_KEY | QS_HOTKEY
                               | QS_MOUSE | QS_MOUSEBUTTON
-                              | QS_MOUSEMOVE | QS_PAINT) != 0;
+                              | QS_MOUSEMOVE | QS_PAINT | QS_ALLPOSTMESSAGE | QS_ALLINPUT) != 0;
 }
 
 std::pair<RkWindowId, std::shared_ptr<RkEvent>> RkEventQueueWin::nextEvent()
 {
         MSG msg;
-        if (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        if (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) > 0) {
                 std::shared_ptr<RkEvent> event = nullptr;
                 RkWindowId id = rk_id_from_win(msg.hwnd);
+				
                 switch (msg.message)
                 {
+				case RK_WIN_MESSAGE_PAINT:
+				        OutputDebugString("RK_WIN_MESSAGE_PAINT");
+						event = RkEvent::paintEvent();
+						//return std::make_pair(id, event);;
+						break;
                 case WM_PAINT:
+				        OutputDebugString("[REDKITE]Event:paint");
                         event = RkEvent::paintEvent();
                         break;
                 case WM_KEYDOWN:
+				        //OutputDebugString("[REDKITE]Event:keydownn");
                         event = RkEvent::keyPressEvent();
                         break;
                 case WM_KEYUP:
+					    //OutputDebugString("[REDKITE]Event:keydup");
                         event = RkEvent::keyReleaseEvent();
                         break;
                 case WM_LBUTTONUP:
                 case WM_RBUTTONUP:
                 case WM_MBUTTONUP:
+						//OutputDebugString("[REDKITE]Event:button");
                         event = RkEvent::buttonPressEvent();
                         break;
                 case WM_LBUTTONDOWN:
                 case WM_RBUTTONDOWN:
                 case WM_MBUTTONDOWN:
+				        PostQuitMessage(0); 
+				        //OutputDebugString("[REDKITE]Event:button");
                         event = RkEvent::buttonReleaseEvent();
                         break;
                 case WM_SIZE:
+				        //OutputDebugString("[REDKITE]Event:szie");
                         event = RkEvent::resizeEvent();
                         break;
                 case WM_QUIT:
+				case WM_CLOSE:
+                case WM_DESTROY:
+				        OutputDebugString("[REDKITE]Event:close`");
                         event = RkEvent::closeEvent();
+						if (!msg.hwnd)
+							OutputDebugString("NO ID");
                         break;
                 default:
+				        //OutputDebugString("[REDKITE]Event:NONE`");
                         break;
                 }
 
+				TranslateMessage (&msg);
+                DispatchMessage (&msg);
+				
                 if (event)
                         return std::make_pair(id, event);
+					
         }
 
         return {};
