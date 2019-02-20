@@ -31,12 +31,10 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 	case WM_PAINT:
 	      OutputDebugString("RkWindowProc");
 	      PostMessageA(hWnd, RK_WIN_MESSAGE_PAINT, wParam, lParam);
-		  //msg = RK_WIN_MESSAGE_PAINT;
-		  //break;	
 	default:
 		    break;
 	}
-	
+
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 

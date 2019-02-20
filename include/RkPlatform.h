@@ -53,7 +53,6 @@ extern HINSTANCE rk_winApiInstance;
 
 #define RK_WIN_MESSAGE_PAINT (WM_USER + 0x0001)
 
-
 #elif RK_OS_MAC
 // to be defined
 #else // X11
