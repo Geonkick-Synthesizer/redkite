@@ -102,19 +102,15 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                 break;
         case RkEvent::Type::KeyPress:
-		        OutputDebugString("[REDKITE]Event:RkEvent::Type::KeyPress");
                 inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::KeyRelease:
-		        OutputDebugString("[REDKITE]RkEvent::Type::KeyPress");
                 inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-		        OutputDebugString("[REDKITE]RkEvent::Type::Button");
                 inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
-                inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::Resize:
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
@@ -153,7 +149,8 @@ void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
 {
         if (child) {
                 widgetChildren.push_back(child);
-                eventQueue->addWidget(child);
+                if (eventQueue)
+                        eventQueue->addWidget(child);
         }
 }
 
@@ -195,8 +192,12 @@ void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int> 
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 {
-        eventQueue = queue;
-        platformWindow->setEventQueue(eventQueue);
+        if (!eventQueue) {
+                eventQueue = queue;
+                platformWindow->setEventQueue(eventQueue);
+                for (const auto &child : widgetChildren)
+                        eventQueue->addWidget(child);
+        }
 }
 
 RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()

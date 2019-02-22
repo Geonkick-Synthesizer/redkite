@@ -61,15 +61,18 @@ bool RkWindowWin::hasParent() const
 
 bool RkWindowWin::init()
 {
-        windowHandle.id = CreateWindowEx(0,
-                                         hasParent() ? parentWindowInfo->className.c_str() : rk_winApiClassName.c_str(),
-                                         "RkWidget",
-                                         !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD,
-                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-                                         !hasParent() ? nullptr : parentWindowInfo->window,
-                                         nullptr,
-                                         hasParent() ? parentWindowInfo->instance : rk_winApiInstance,
-                                         nullptr);
+        windowHandle.id = CreateWindowExA(0,
+                                          hasParent() ? parentWindowInfo->className.c_str() : rk_winApiClassName.c_str(),
+                                          "RkWidget",
+                                          !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_BORDER,
+                                          windowPosition.first,
+                                          windowPosition.second,
+                                          windowSize.first,
+                                          windowSize.second,
+                                          !hasParent() ? nullptr : parentWindowInfo->window,
+                                          nullptr,
+                                          hasParent() ? parentWindowInfo->instance : rk_winApiInstance,
+                                          nullptr);
 
         if (!windowHandle.id) {
                 RK_LOG_ERROR("can't create window");
@@ -84,8 +87,10 @@ bool RkWindowWin::init()
 
 void RkWindowWin::show()
 {
-        if (isWindowCreated())
+        if (isWindowCreated()) {
                 ShowWindow(windowHandle.id, SW_SHOW);
+                UpdateWindow(windowHandle.id);
+        }
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
@@ -117,7 +122,8 @@ std::pair<int, int> RkWindowWin::size() const
         if (isWindowCreated()) {
                 RECT rect;
                 GetWindowRect(windowHandle.id, &rect);
-                return {rect.right - rect.left, rect.bottom - rect.top};
+                if (hasParent())
+                        return {rect.right - rect.left, rect.bottom - rect.top};
         }
         return windowSize;
 }
@@ -126,11 +132,8 @@ void RkWindowWin::setSize(const std::pair<int, int> &size)
 {
         if (size.first > 0 && size.second > 0) {
                 windowSize = size;
-                if (isWindowCreated()) {
-                        auto pos = position();
-                        MoveWindow(windowHandle.id, pos.first, pos.second,
-                                   size.first, size.second, TRUE);
-                }
+                if (isWindowCreated())
+                        SetWindowPos(windowHandle.id, 0, 0, 0, size.first, size.second, SWP_NOMOVE | SWP_NOZORDER);
         }
 }
 
@@ -139,6 +142,8 @@ std::pair<int, int> RkWindowWin::position() const
         if (isWindowCreated()) {
                 RECT rect;
                 GetWindowRect(windowHandle.id, &rect);
+				if (hasParent())
+					MapWindowPoints(windowHandle.id, GetParent(windowHandle.id), reinterpret_cast<LPPOINT>(&rect), 2);
                 return {rect.left, rect.top};
         }
         return windowPosition;
@@ -146,12 +151,9 @@ std::pair<int, int> RkWindowWin::position() const
 
 void RkWindowWin::setPosition(const std::pair<int, int> &position)
 {
-                windowPosition = position;
-                if (isWindowCreated()) {
-                        auto s = size();
-                        MoveWindow(windowHandle.id, position.first, position.second,
-                                   s.first, s.second, TRUE);
-                }
+        windowPosition = position;
+        if (isWindowCreated())
+                SetWindowPos(windowHandle.id,0, position.first, position.second, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 }
 
 void RkWindowWin::setBorderWidth(int width)
@@ -186,4 +188,6 @@ void RkWindowWin::setEventQueue(RkEventQueue *queue)
 {
         eventQueue = queue;
         SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
+        InvalidateRect(windowHandle.id, nullptr, FALSE);
+        UpdateWindow(windowHandle.id);
 }

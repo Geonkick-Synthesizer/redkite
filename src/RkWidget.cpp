@@ -30,8 +30,10 @@
 RkWidget::RkWidget(RkWidget *parent)
     : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
 {
-        if (parent)
+        if (parent) {
+                OutputDebugString((std::string("add to parent") + parent->title()).c_str());
                 parent->addChild(this);
+        }
 }
 
 RkWidget::RkWidget(const RkNativeWindowInfo &parent)

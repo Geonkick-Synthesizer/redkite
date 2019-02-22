@@ -50,8 +50,18 @@ RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
 }
 
+bool RkEventQueue::RkEventQueueImpl::widgetExists(RkWidget *widget)
+{
+	for (const auto &w : widgetList)
+                if (w == widget)
+                        return true;
+    return false;
+}
+
 void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
 {
+	if (!widget || widgetExists(widget))
+		return;
 #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
         // Set the display from the top window.
         if (!widget->parent() && !platformEventQueue->display())

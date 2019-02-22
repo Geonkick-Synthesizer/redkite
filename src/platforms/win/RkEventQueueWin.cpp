@@ -45,42 +45,35 @@ void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr
                 case RK_WIN_MESSAGE_PAINT:
                         event = RkEvent::paintEvent();
                         break;
-                case WM_PAINT:
-                        OutputDebugString("[REDKITE]Event:paint");
-                        event = RkEvent::paintEvent();
-                        break;
+                //case WM_PAINT:
+                //        OutputDebugString("getEvents [REDKITE]Event:paint");
+                //        event = RkEvent::paintEvent();
+                //        break;
                 case WM_KEYDOWN:
-                        //OutputDebugString("[REDKITE]Event:keydownn");
                         event = RkEvent::keyPressEvent();
                         break;
                 case WM_KEYUP:
-                        //OutputDebugString("[REDKITE]Event:keydup");
                         event = RkEvent::keyReleaseEvent();
                         break;
                 case WM_LBUTTONUP:
                 case WM_RBUTTONUP:
                 case WM_MBUTTONUP:
-                        //OutputDebugString("[REDKITE]Event:button");
                         event = RkEvent::buttonPressEvent();
                         break;
                 case WM_LBUTTONDOWN:
                 case WM_RBUTTONDOWN:
                 case WM_MBUTTONDOWN:
-                        //OutputDebugString("[REDKITE]Event:button");
                         event = RkEvent::buttonReleaseEvent();
                         break;
                 case WM_SIZE:
-                        //OutputDebugString("[REDKITE]Event:szie");
                         event = RkEvent::resizeEvent();
                         break;
                 case WM_QUIT:
                 case WM_CLOSE:
                 case WM_DESTROY:
-                        OutputDebugString("[REDKITE]Event:close`");
                         event = RkEvent::closeEvent();
                         break;
                 default:
-                        //OutputDebugString("[REDKITE]Event:NONE`");
                         break;
                 }
 

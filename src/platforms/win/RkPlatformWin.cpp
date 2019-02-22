@@ -34,14 +34,14 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         case WM_DESTROY:
         {
                 auto event = RkEvent::closeEvent();
-                eventQueue->postEvent(rk_id_from_win(hWnd), event);
+                eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 return 0;
         }
         case WM_PAINT:
         {
                 auto event = RkEvent::paintEvent();
-                eventQueue->postEvent(rk_id_from_win(hWnd), event);
-                return 0;
+                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                break;
         }
         default:
                 break;

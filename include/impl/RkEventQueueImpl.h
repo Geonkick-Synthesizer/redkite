@@ -48,6 +48,7 @@ class RkEventQueue::RkEventQueueImpl {
         RkEventQueueImpl& operator=(RkEventQueueImpl &&other) = delete;
         virtual ~RkEventQueueImpl();
 
+        bool widgetExists(RkWidget *widget);
         void addWidget(RkWidget *widget);
         void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
         void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);

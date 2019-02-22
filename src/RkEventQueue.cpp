@@ -60,7 +60,17 @@ void RkEventQueue::postEvent(const RkNativeWindowInfo &info, const std::shared_p
 
 void RkEventQueue::processEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
 {
-        o_ptr->processEvent(widget, event);
+	o_ptr->processEvent(widget, event);
+}
+
+void RkEventQueue::processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
+{
+	o_ptr->processEvent(id, event);
+}
+
+void RkEventQueue::processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
+{
+	o_ptr->processEvent(info, event);
 }
 
 void RkEventQueue::processEvents()

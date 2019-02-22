@@ -22,13 +22,16 @@ target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
 #target_link_libraries(hello_multi redkite)
 #target_link_libraries(hello_multi "-lX11 -lpthread -lrt -lm -ldl")
 
-#add_executable(child
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_CHILD})
+# ------------ Child Example -------
 
-#add_dependencies(child redkite)
-#target_link_libraries(child redkite)
-#target_link_libraries(child "-lX11 -lrt -lm -ldl")
+add_executable(child
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_CHILD})
+add_dependencies(child redkite)
+target_link_libraries(child redkite)
+target_link_libraries(child "-mwindows -lstdc++ -lm -lmingw32")
+
+# ------------ Property -------
 
 #add_executable(property
 #  ${RK_HEADERS}

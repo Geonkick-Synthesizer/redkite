@@ -36,13 +36,6 @@ RkLabel::RkLabel(const std::string &text, RkWidget *parent)
 {
 }
 
-
-//RkLabel::RkLabel(RkLabelImpl &impl)
-//    : RkWidget(impl)
-//    , impl_ptr{static_cast<RkLabelImpl*>(o_ptr)}
-//{
-//}
-
 void RkLabel::setText(const std::string &text)
 {
      impl_ptr->setText(text);
