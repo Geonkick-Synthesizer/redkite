@@ -8,7 +8,7 @@ License: GPLv3
 
 Status: development, no release yet.
 
-### Some requirements & gloas
+### Requirements & goals
 
 Here are some requirements ideas that makes this
 toolkit to differ from common ones. Also, these requirements
@@ -19,8 +19,7 @@ common usage.
 
 * Must not have a global state. Many instances
   of the sample toolkit version or different must be able to run without problems
-  in the sample process address a space. No static global variables
-  or other interference.
+  in the sample process address a space.
 
 * Can be linked statically into a shred library that uses the tookit
   and that shared library to be loaded dynamically.
