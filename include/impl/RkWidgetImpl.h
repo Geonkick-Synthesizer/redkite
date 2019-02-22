@@ -26,6 +26,8 @@
 
 #include "RkWidget.h"
 
+class RkEventQueue;
+
 #ifdef RK_OS_WIN
 class RkWindowWin;
 #elif RK_OS_MAC
@@ -62,6 +64,8 @@ class RkWidget::RkWidgetImpl {
         void setBorderWidth(int width);
         void setBorderColor(const std::tuple<int, int, int> &color);
         void setBackgroundColor(const std::tuple<int, int, int> &background);
+        void setEventQueue(const std::shared_ptr<RkEventQueue> &queue);
+        std::shared_ptr<RkEventQueue> getEventQueue();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -75,6 +79,7 @@ class RkWidget::RkWidgetImpl {
         std::string widgetTitle;
         std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
+        std::shared_ptr<RkEventQueue> eventQueue;
 };
 
 #endif // RK_WIDGET_IMPL_H

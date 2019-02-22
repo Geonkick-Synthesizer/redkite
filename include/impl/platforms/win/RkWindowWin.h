@@ -27,6 +27,8 @@
 #include "Rk.h"
 #include "RkPlatform.h"
 
+class RkEventQueue;
+
 class RkWindowWin {
  public:
         explicit RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
@@ -49,6 +51,7 @@ class RkWindowWin {
         void setBorderWidth(int width);
         void setBorderColor(const std::tuple<int, int, int> &color);
         void setBackgroundColor(const std::tuple<int, int, int> &background);
+        void setEventQueue(const std::shared_ptr<RkEventQueue> &queue);
 
  protected:
         bool isWindowCreated() const;
@@ -63,6 +66,7 @@ class RkWindowWin {
         int borderWidth;
         std::tuple<int, int, int> borderColor;
         std::tuple<int, int, int> backgroundColor;
+        std::shared_ptr<RkEventQueue> eventQueue;
 };
 
 #endif // RK_WIDGET_WIN_H

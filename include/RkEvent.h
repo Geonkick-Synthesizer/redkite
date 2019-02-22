@@ -61,13 +61,13 @@ class RkEvent {
       void setType(Type type) { eventType = type; }
       Type type() const { return eventType; }
 
-      static std::shared_ptr<RkPaintEvent> paintEvent() { return std::move(std::make_shared<RkPaintEvent>()) ;}
-      static std::shared_ptr<RkKeyEvent> keyPressEvent() { return std::move(std::make_shared<RkKeyEvent>()) ;}
-      static std::shared_ptr<RkKeyEvent> keyReleaseEvent() { return std::move(std::make_shared<RkKeyEvent>(Type::KeyRelease)) ;}
-      static std::shared_ptr<RkMouseEvent> buttonPressEvent() { return std::move(std::make_shared<RkMouseEvent>()) ;}
-      static std::shared_ptr<RkMouseEvent> buttonReleaseEvent() { return std::move(std::make_shared<RkMouseEvent>(Type::MouseButtonRelease)) ;}
-      static std::shared_ptr<RkCloseEvent> closeEvent() { return std::move(std::make_shared<RkCloseEvent>()) ;}
-      static std::shared_ptr<RkResizeEvent> resizeEvent() { return std::move(std::make_shared<RkResizeEvent>()) ;}
+      static std::shared_ptr<RkPaintEvent> paintEvent() { return std::make_shared<RkPaintEvent>(); }
+      static std::shared_ptr<RkKeyEvent> keyPressEvent() { return std::make_shared<RkKeyEvent>(); }
+      static std::shared_ptr<RkKeyEvent> keyReleaseEvent() { return std::make_shared<RkKeyEvent>(Type::KeyRelease);}
+      static std::shared_ptr<RkMouseEvent> buttonPressEvent() { return std::make_shared<RkMouseEvent>();}
+      static std::shared_ptr<RkMouseEvent> buttonReleaseEvent() { return std::make_shared<RkMouseEvent>(Type::MouseButtonRelease);}
+      static std::shared_ptr<RkCloseEvent> closeEvent() { return std::make_shared<RkCloseEvent>();}
+      static std::shared_ptr<RkResizeEvent> resizeEvent() { return std::make_shared<RkResizeEvent>();}
 
   private:
       //      RK_PRIVATE_IMPL(RkEventPrivate, privateEvent)

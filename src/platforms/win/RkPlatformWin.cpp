@@ -1,4 +1,6 @@
 #include "RkPlatform.h"
+#include "RkEventQueue.h"
+#include "RkEvent.h"
 
 #include <random>
 
@@ -23,19 +25,29 @@ RkWindowId rk_id_from_win(HWND window)
 
 static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    switch(msg)
-	{
-    case WM_DESTROY:
-			PostQuitMessage(0);
-		    return 0;
-	case WM_PAINT:
-	      OutputDebugString("RkWindowProc");
-	      PostMessageA(hWnd, RK_WIN_MESSAGE_PAINT, wParam, lParam);
-	default:
-		    break;
-	}
+        auto eventQueue = (RkEventQueue*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        if (!eventQueue)
+                return DefWindowProc(hWnd, msg, wParam, lParam);
 
-    return DefWindowProc(hWnd, msg, wParam, lParam);
+        switch(msg)
+        {
+        case WM_DESTROY:
+        {
+                auto event = RkEvent::closeEvent();
+                eventQueue->postEvent(rk_id_from_win(hWnd), event);
+                return 0;
+        }
+        case WM_PAINT:
+        {
+                auto event = RkEvent::paintEvent();
+                eventQueue->postEvent(rk_id_from_win(hWnd), event);
+                return 0;
+        }
+        default:
+                break;
+        }
+
+        return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 #ifdef RK_FOR_SHARED

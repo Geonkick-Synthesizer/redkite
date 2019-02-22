@@ -9,6 +9,8 @@ set(CMAKE_SYSTEM_VERSION 1)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
+  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
+  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 #    add_compile_definitions(RK_OS_MAC)
@@ -48,12 +50,14 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkLog.h
   ${RK_INCLUDE_PATH}/RkPlatform.h
   ${RK_INCLUDE_PATH}/RkEvent.h
+  ${RK_INCLUDE_PATH}/RkEventQueue.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkMain.h)
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h)
 
@@ -75,6 +79,8 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp
+  ${RK_SRC_PATH}/RkEventQueue.cpp
+  ${RK_SRC_PATH}/RkEventQueueImpl.cpp
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp)

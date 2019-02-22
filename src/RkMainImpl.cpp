@@ -25,14 +25,7 @@
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 #include "RkPlatform.h"
-
-#ifdef RK_OS_WIN
-#include "RkEventQueueWin.h"
-#elif RK_OS_MAC
-#include "RkEventQueueMac.h"
-#else
-#include "RkEventQueueX.h"
-#endif
+#include "RkEventQueue.h"
 
 #include <chrono>
 #include <thread>
@@ -40,8 +33,7 @@
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
-        , eventQueue{nullptr}
-		, isMainQuit{false}
+        , eventQueue{std::make_shared<RkEventQueue>()}
 {
         RK_LOG_INFO("called");
 }
@@ -49,8 +41,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
-        , eventQueue{nullptr}
-		, isMainQuit{false}
+        , eventQueue{std::make_shared<RkEventQueue>()}
 {
         RK_UNUSED(argc);
         RK_UNUSED(argv);
@@ -69,61 +60,13 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
               return false;
 
       topWindow = widget;
-      auto info = topWindow->nativeWindowInfo();
-      if (!info) {
-              RK_LOG_ERROR("wring info");
-              return false;
-      }
-
-#ifdef RK_OS_WIN
-      eventQueue = std::make_unique<RkEventQueueWin>();
-#elif RK_OS_MAC
-#else
-      eventQueue = std::make_unique<RkEventQueueX>(info->display);
-#endif // RK_WIN_OS
+      eventQueue->addWidget(topWindow);
       return true;
 }
 
 RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
 {
       return topWindow;
-}
-
-void RkMain::RkMainImpl::setQuit()
-{
-	isMainQuit = true;
-}
-
-bool RkMain::RkMainImpl::isQuit() const
-{
-	return isMainQuit;
-}
-
-void RkMain::RkMainImpl::processEvents()
-{
-                auto res = eventQueue->nextEvent();
-                if (!res.second)
-                        return;
-
-#ifdef RK_OS_WIN				
-		        if (!res.first.id && res.second->type() == RkEvent::Type::Close) {
-					    setQuit();
-				        return;
-                }
-#endif // RK_OS_WIN
-
-                RkWidget *widget;
-                if (res.first.id == topLevelWindow()->id().id)
-                        widget = topLevelWindow();
-                else
-                        widget = topLevelWindow()->child(res.first);
-
-                if (widget)
-                        widget->processEvent(res.second);
-					
-			    if (topLevelWindow()->isClose())
-				        setQuit();
-        //}
 }
 
 int RkMain::RkMainImpl::exec(bool block)
@@ -134,13 +77,13 @@ int RkMain::RkMainImpl::exec(bool block)
 	}
 
         if (!block) {
-                processEvents();
+                eventQueue->processEvents();
         } else {
                 for (; block ;) {
-                        processEvents();
-		                if (isQuit())
+                        eventQueue->processEvents();
+                        if (topWindow->isClose())
                                 break;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                        //                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
                 }
         }
 

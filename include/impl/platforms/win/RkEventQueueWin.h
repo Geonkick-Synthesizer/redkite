@@ -24,23 +24,22 @@
 #ifndef RK_EVENT_QUEUE_WIN_H
 #define RK_EVENT_QUEUE_WIN_H
 
-#include "RkEvent.h"
 #include "RkPlatform.h"
+
+#include <queue>
+
+class RkEvent;
 
 class RkEventQueueWin
 {
  public:
-        RkEventQueueWin(/*Display* display*/);
+        RkEventQueueWin();
 	~RkEventQueueWin();
         RkEventQueueWin(const RkEventQueueWin &other) = delete;
         RkEventQueueWin& operator=(const RkEventQueueWin &other) = delete;
         RkEventQueueWin(RkEventQueueWin &&other) = delete;
         RkEventQueueWin& operator=(RkEventQueueWin &&other) = delete;
-        bool pending();
-        std::pair<RkWindowId, std::shared_ptr<RkEvent>> nextEvent();
-
- private:
-        //       Display* xDisplay;
+        void getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
 };
 
 #endif // RK_EVENT_QUEUE_X_H

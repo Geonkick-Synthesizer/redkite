@@ -48,23 +48,12 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
 	bool setTopLevelWindow(RkWidget* widget);
         RkWidget* topLevelWindow(void);
-        void processEvents();
 	int exec(bool block = true);
-
- protected:
-    void setQuit();
-	bool isQuit() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkMain)
         RkWidget* topWindow;
-#ifdef RK_OS_WIN
-        std::unique_ptr<RkEventQueueWin> eventQueue;
-#elif RK_OS_MAC
-#else
-        std::unique_ptr<RkEventQueueX> eventQueue;
-#endif // RK_WIN_OS
-        bool isMainQuit;
+        std::shared_ptr<RkEventQueue> eventQueue;
 };
 
 #endif // RK_MAIN_XWIN_H

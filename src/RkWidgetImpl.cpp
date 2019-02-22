@@ -39,6 +39,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , parentWidget{parent}
         , platformWindow{!parent ? std::make_unique<RkWindowWin>() : std::make_unique<RkWindowWin>(parent->nativeWindowInfo())}
         , widgetClosed{false}
+        , eventQueue{nullptr}
 {
         platformWindow->init();
 }
@@ -48,6 +49,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
         , parentWidget{nullptr}
         , platformWindow{std::make_unique<RkWindowWin>(parent)}
         , widgetClosed{false}
+        , eventQueue{nullptr}
 {
         platformWindow->init();
 }
@@ -149,8 +151,10 @@ RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
 
 void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
 {
-        if (child)
+        if (child) {
                 widgetChildren.push_back(child);
+                eventQueue->addWidget(child);
+        }
 }
 
 void RkWidget::RkWidgetImpl::setSize(const std::pair<int, int> &size)
@@ -187,4 +191,15 @@ void RkWidget::RkWidgetImpl::setBorderColor(const std::tuple<int, int, int> &col
 void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int> &background)
 {
         platformWindow->setBackgroundColor(background);
+}
+
+void RkWidget::RkWidgetImpl::setEventQueue(const std::shared_ptr<RkEventQueue> &queue)
+{
+        eventQueue = queue;
+        platformWindow->setEventQueue(eventQueue);
+}
+
+std::shared_ptr<RkEventQueue> RkWidget::RkWidgetImpl::getEventQueue()
+{
+        return eventQueue;
 }

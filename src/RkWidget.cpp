@@ -42,7 +42,6 @@ RkWidget::RkWidget(const RkNativeWindowInfo &parent)
 RkWidget::RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl)
         : o_ptr{impl}
 {
-        RK_LOG_INFO("called");
         if (parent)
                 parent->addChild(this);
 }
@@ -282,4 +281,9 @@ void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 {
         RK_UNUSED(event);
         RK_LOG_INFO("called");
+}
+
+void RkWidget::setEventQueue(const std::shared_ptr<RkEventQueue> &eventQueue)
+{
+        o_ptr->setEventQueue(eventQueue);
 }

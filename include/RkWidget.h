@@ -25,6 +25,7 @@
 #define RK_WIDGET_H
 
 #include "Rk.h"
+#include "RkEventQueue.h"
 
 class RkEvent;
 class RkCloseEvent;
@@ -101,6 +102,8 @@ class RkWidget {
 
  private:
           void addChild(RkWidget* child);
+          friend class RkEventQueue;
+          void setEventQueue(const std::shared_ptr<RkEventQueue> &eventQueue);
 };
 
 #endif // RK_WIDGET_H

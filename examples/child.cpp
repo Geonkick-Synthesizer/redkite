@@ -10,6 +10,11 @@ int main(int arc, char **argv)
 
     // Create main window.
     auto mainWindow = new RkWidget;
+    if (!app.setTopLevelWindow(mainWindow)) {
+            RK_LOG_ERROR("can't set top level window");
+            exit(1);
+    }
+
     mainWindow->setTitle("Main Window");
     mainWindow->setSize(750, 600);
 
@@ -37,11 +42,6 @@ int main(int arc, char **argv)
                     y += 60;
                     x = 10;
             }
-    }
-
-    if (!app.setTopLevelWindow(mainWindow)) {
-            RK_LOG_ERROR("can't set top level window");
-            exit(1);
     }
 
     mainWindow->show();

@@ -32,6 +32,7 @@ RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , borderWidth{1}
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
+        , eventQueue{nullptr}
 {
 }
 
@@ -43,6 +44,7 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
         , borderWidth{1}
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
+        , eventQueue{nullptr}
 
 {
         *parentWindowInfo.get() = parent;
@@ -73,6 +75,9 @@ bool RkWindowWin::init()
                 RK_LOG_ERROR("can't create window");
                 return false;
         }
+
+        if (eventQueue)
+                SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue.get()));
 
         return true;
 }
@@ -175,4 +180,10 @@ RkWindowId RkWindowWin::id() const
         RkWindowId id;
         id.id = windowHandle.id;
         return id;
+}
+
+void RkWindowWin::setEventQueue(const std::shared_ptr<RkEventQueue> &queue)
+{
+        eventQueue = queue;
+        SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue.get()));
 }
