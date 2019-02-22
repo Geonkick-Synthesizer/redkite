@@ -63,17 +63,17 @@ void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
 
 void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push_back({widget->id(), event});
+        eventsQueue.push({widget->id(), event});
 }
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push_back({id, event});
+        eventsQueue.push({id, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push_back({info.window, event});
+        eventsQueue.push({info.window, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)
@@ -84,7 +84,7 @@ void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::s
 void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
 {
         for(auto widget : widgetList) {
-                if (widget.id().id == id.id) {
+                if (widget->id().id == id.id) {
                         widget->processEvent(event);
                         break;
                 }
@@ -94,7 +94,7 @@ void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id, const st
 void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
         for(auto widget : widgetList) {
-                if (widget.id().id == info.window) {
+                if (widget->id().id == info.window) {
                         widget->processEvent(event);
                         break;
                 }
@@ -104,6 +104,9 @@ void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
         platformEventQueue->getEvents(eventsQueue);
-        for (const auto &event: eventsQueue)
-                processEvent(event.fist, event.second)
+        while (!eventsQueue.empty()) {
+                auto res = eventsQueue.front();
+                processEvent(res.first, res.second);
+                eventsQueue.pop();
+        }
 }

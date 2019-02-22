@@ -103,7 +103,7 @@ class RkWidget {
  private:
           void addChild(RkWidget* child);
           friend class RkEventQueue;
-          void setEventQueue(const std::shared_ptr<RkEventQueue> &eventQueue);
+          void setEventQueue(RkEventQueue *eventQueue);
 };
 
 #endif // RK_WIDGET_H

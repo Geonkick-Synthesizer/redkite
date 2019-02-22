@@ -283,7 +283,7 @@ void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
         RK_LOG_INFO("called");
 }
 
-void RkWidget::setEventQueue(const std::shared_ptr<RkEventQueue> &eventQueue)
+void RkWidget::setEventQueue(RkEventQueue *eventQueue)
 {
         o_ptr->setEventQueue(eventQueue);
 }

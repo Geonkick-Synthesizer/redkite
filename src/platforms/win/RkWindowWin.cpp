@@ -77,7 +77,7 @@ bool RkWindowWin::init()
         }
 
         if (eventQueue)
-                SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue.get()));
+                SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
 
         return true;
 }
@@ -182,8 +182,8 @@ RkWindowId RkWindowWin::id() const
         return id;
 }
 
-void RkWindowWin::setEventQueue(const std::shared_ptr<RkEventQueue> &queue)
+void RkWindowWin::setEventQueue(RkEventQueue *queue)
 {
         eventQueue = queue;
-        SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue.get()));
+        SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
 }

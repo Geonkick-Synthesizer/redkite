@@ -193,13 +193,13 @@ void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int> 
         platformWindow->setBackgroundColor(background);
 }
 
-void RkWidget::RkWidgetImpl::setEventQueue(const std::shared_ptr<RkEventQueue> &queue)
+void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 {
         eventQueue = queue;
         platformWindow->setEventQueue(eventQueue);
 }
 
-std::shared_ptr<RkEventQueue> RkWidget::RkWidgetImpl::getEventQueue()
+RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
 {
         return eventQueue;
 }
