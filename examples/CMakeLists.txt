@@ -11,7 +11,11 @@ add_executable(hello
 
 add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
-target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+  target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
+else()
+  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
+endif()
 
 
 #add_executable(hello_multi
@@ -29,7 +33,12 @@ add_executable(child
   ${RK_EXAMPLES_SOURCES_CHILD})
 add_dependencies(child redkite)
 target_link_libraries(child redkite)
-target_link_libraries(child "-mwindows -lstdc++ -lm -lmingw32")
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+  target_link_libraries(child "-mwindows -lstdc++ -lm -lmingw32")
+else()
+  target_link_libraries(child "-lX11 -lpthread -lrt -lm -ldl")
+endif()
+
 
 # ------------ Property -------
 

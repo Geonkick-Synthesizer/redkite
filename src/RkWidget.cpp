@@ -30,10 +30,8 @@
 RkWidget::RkWidget(RkWidget *parent)
     : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
 {
-        if (parent) {
-                OutputDebugString((std::string("add to parent") + parent->title()).c_str());
+        if (parent)
                 parent->addChild(this);
-        }
 }
 
 RkWidget::RkWidget(const RkNativeWindowInfo &parent)
@@ -210,8 +208,8 @@ void RkWidget::addChild(RkWidget* child)
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
-    RK_UNUSED(event);
-	RK_LOG_INFO(title() + ":called");
+        RK_UNUSED(event);
+        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)

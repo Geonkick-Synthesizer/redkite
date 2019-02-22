@@ -21,16 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkEventQueueImpl.h"
 #include "RkEvent.h"
 #include "RkWidget.h"
+#include "RkEventQueueImpl.h"
 
 #ifdef RK_OS_WIN
 #include "RkEventQueueWin.h"
 #elif RK_OS_MAC
 #include "RkEventQueueMac.h"
 #else // X11
-#incldue "RkEventQueueX.h"
+#include "RkEventQueueX.h"
 #endif
 
 
@@ -65,7 +65,7 @@ void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
 #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
         // Set the display from the top window.
         if (!widget->parent() && !platformEventQueue->display())
-                platformEventQueue->setDisplay(widget->getNativeWindowInfo()->display);
+                platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
 #endif //!defined(Rk_OS_WIN) && !defined(Rk_OS_MAC)
         widgetList.push_back(widget);
         widget->setEventQueue(inf_ptr);
@@ -83,7 +83,7 @@ void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push({info.window, event});
+        //        eventsQueue.push({info.window, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)

@@ -23,6 +23,7 @@
 
 #include "RkLog.h"
 #include "RkWindowX.h"
+#include "RkEventQueue.h"
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
@@ -34,6 +35,7 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , borderWidth{1}
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
+        , eventQueue{nullptr}
 {
 }
 
@@ -47,6 +49,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         , borderWidth{1}
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
+        , eventQueue{nullptr}
 
 {
         *parentWindowInfo.get() = parent;
@@ -226,4 +229,9 @@ RkWindowId RkWindowX::id() const
         RkWindowId id;
         id.id = xWindow;
         return id;
+}
+
+void RkWindowX::setEventQueue(RkEventQueue *queue)
+{
+        eventQueue = queue;
 }

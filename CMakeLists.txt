@@ -2,8 +2,7 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.0.1)
 
-set(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_SYSTEM_VERSION 1)
+#set(CMAKE_SYSTEM_NAME Windows)
 
 # specify the cross compiler
 if (CMAKE_SYSTEM_NAME MATCHES Windows)

@@ -23,12 +23,14 @@ int main(int arc, char **argv)
                 child->setTitle("Child[" + std::to_string(i) + "] - LEVEL 1");
                 child->setPosition(x, y);
                 child->setSize(60, 60);
+                child->setBorderColor(0, 255, 0);
                 child->show();
 
                 auto child_l = new RkWidget(child);
                 child_l->setTitle("Child[" + std::to_string(i) + "] - LEVEL 2");
                 child_l->setPosition(10, 10);
                 child_l->setSize(30, 30);
+                child_l->setBorderColor(0, 0, 255);
                 child_l->show();
 
                 x += 65;

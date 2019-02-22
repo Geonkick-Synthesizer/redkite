@@ -26,7 +26,7 @@
 #include "RkWidget.h"
 
 RkEventQueueX::RkEventQueueX()
-        : xDisplay(nullptr
+        : xDisplay(nullptr)
 {
         RK_LOG_INFO("called");
 }
@@ -37,9 +37,8 @@ RkEventQueueX::~RkEventQueueX()
 
 bool RkEventQueueX::pending()
 {
-        if (xDisplay) {
+        if (xDisplay)
                 return XPending(xDisplay) > 0;
-        }
         return false;
 }
 
@@ -53,7 +52,7 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
+void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
 {
         while (pending()) {
                 XEvent e;
@@ -61,39 +60,37 @@ void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr
                 RkWindowId id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
                 std::shared_ptr<RkEvent> event = nullptr;
                 switch (e.type)
-                        {
-                        case Expose:
-                                event = RkEvent::paintEvent();
-                                break;
-                        case KeyPress:
-                                event = RkEvent::keyPressEvent();
-                                break;
-                        case KeyRelease:
-                                event = RkEvent::keyReleaseEvent();
-                                break;
-                        case ButtonPress:
-                                event = RkEvent::buttonPressEvent();
-                                break;
-                        case ButtonRelease:
-                                event = RkEvent::buttonReleaseEvent();
-                                break;
-                        case ConfigureNotify:
-                                event = RkEvent::resizeEvent();
-                                break;
-                        case ClientMessage:
-                                {
-                                        auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
-                                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom) {
-                                                event = RkEvent::closeEvent();
-                                        }
-                                        break;
-                                }
-                        default:
-                                break;
-                        }
+                {
+                case Expose:
+                        event = RkEvent::paintEvent();
+                        break;
+                case KeyPress:
+                        event = RkEvent::keyPressEvent();
+                        break;
+                case KeyRelease:
+                        event = RkEvent::keyReleaseEvent();
+                        break;
+                case ButtonPress:
+                        event = RkEvent::buttonPressEvent();
+                        break;
+                case ButtonRelease:
+                        event = RkEvent::buttonReleaseEvent();
+                        break;
+                case ConfigureNotify:
+                        event = RkEvent::resizeEvent();
+                        break;
+                case ClientMessage:
+                {
+                        auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
+                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
+                                event = RkEvent::closeEvent();
+                        break;
+                }
+                default:
+                        break;
+                }
 
                 if (event)
-                        return std::make_pair(id, event);
-
+                        eventsQueue.push({id, event});
         }
 }

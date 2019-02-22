@@ -27,7 +27,8 @@
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
 #elif RK_OS_MAC
-#else
+#include "RkWindowMac.h"
+#else // X11
 #include "RkWindowX.h"
 #undef KeyPress
 #undef KeyRelease
@@ -37,7 +38,13 @@
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent)
         : inf_ptr{widgetInterface}
         , parentWidget{parent}
+#ifdef RK_OS_WIN
         , platformWindow{!parent ? std::make_unique<RkWindowWin>() : std::make_unique<RkWindowWin>(parent->nativeWindowInfo())}
+#elif RK_OS_MAC
+        , platformWindow{!parent ? std::make_unique<RkWindowMac>() : std::make_unique<RkWindowMac>(parent->nativeWindowInfo())}
+#else // X11
+        , platformWindow{!parent ? std::make_unique<RkWindowX>() : std::make_unique<RkWindowX>(parent->nativeWindowInfo())}
+#endif
         , widgetClosed{false}
         , eventQueue{nullptr}
 {
@@ -47,7 +54,13 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWindowInfo &parent)
         : inf_ptr{widgetInterface}
         , parentWidget{nullptr}
+#ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent)}
+#elif RK_OS_MAC
+        , platformWindow{std::make_unique<RkWindowMac>(parent)}
+#else // X11
+        , platformWindow{std::make_unique<RkWindowX>(parent)}
+#endif
         , widgetClosed{false}
         , eventQueue{nullptr}
 {
@@ -116,7 +129,6 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
                 break;
         case RkEvent::Type::Close:
-		        OutputDebugString("[REDKITE]RkEvent::Type::Close");
                 widgetClosed = true;
                 inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
                 break;

@@ -27,6 +27,8 @@
 #include "RkEvent.h"
 #include "RkPlatform.h"
 
+#include <queue>
+
 class RkEvent;
 
 class RkEventQueueX
