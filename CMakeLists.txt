@@ -2,14 +2,16 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.0.1)
 
-#set(CMAKE_SYSTEM_NAME Windows)
+# Temporary. For windows.
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_INSTALL_PREFIX "./install/redkite")
 
 # specify the cross compiler
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
-  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
-  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
+#  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
+#  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 #    add_compile_definitions(RK_OS_MAC)
@@ -121,8 +123,16 @@ add_library(redkite STATIC
   ${RK_SOURCES}
   ${RK_SOURCES_PLATFORM})
 
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
+# Not implemented
+else()
 install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
+endif()
+
 
 if (ENABLE_EXAMPLES)
   add_subdirectory(examples)

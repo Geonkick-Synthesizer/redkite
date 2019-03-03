@@ -5,7 +5,7 @@ set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 
-add_executable(hello
+add_executable(hello WIN32
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES})
 
@@ -28,7 +28,7 @@ endif()
 
 # ------------ Child Example -------
 
-add_executable(child
+add_executable(child WIN32
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES_CHILD})
 add_dependencies(child redkite)
