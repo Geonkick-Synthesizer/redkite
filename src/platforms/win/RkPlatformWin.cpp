@@ -106,15 +106,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
         wc.hInstance     = hInstance;
         wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
         wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+        wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
         wc.lpszMenuName  = NULL;
 
         std::random_device r;
         std::default_random_engine e1(r());
         std::uniform_int_distribution<int> uniform_dist(1, 1000000);
         int mean = uniform_dist(e1);
-        wc.lpszClassName = ("Redkite_" + std::to_string(mean)).c_str();
-        rk_winApiClassName = wc.lpszClassName;
+        rk_winApiClassName = "Redkite_" + std::to_string(mean);
+        wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
         if (!RegisterClassEx(&wc)) {
