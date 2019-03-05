@@ -4,7 +4,6 @@ project(redkite VERSION 0.0.1)
 
 #set(CMAKE_SYSTEM_NAME Windows)
 
-# specify the cross compiler
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
@@ -85,20 +84,22 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkLabelImpl.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-set(RK_SOURCES_PLATFORM
-  ${RK_SRC_PATH}/platforms/win/RkPlatformWin.cpp
-  ${RK_SRC_PATH}/platforms/win/RkWindowWin.cpp
-  ${RK_SRC_PATH}/platforms/win/RkEventQueueWin.cpp)
+  set(RK_SOURCES_PLATFORM
+    ${RK_SRC_PATH}/platforms/win/RkLogWin.cpp
+    ${RK_SRC_PATH}/platforms/win/RkPlatformWin.cpp
+    ${RK_SRC_PATH}/platforms/win/RkWindowWin.cpp
+    ${RK_SRC_PATH}/platforms/win/RkEventQueueWin.cpp)
 elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
-set(RK_SOURCES_PLATFORM
-  ${RK_SRC_PATH}/platforms/mac/RkPlatformMac.cpp
-  ${RK_SRC_PATH}/platforms/mac/RkWindowMac.cpp
-  ${RK_SRC_PATH}/platforms/mac/RkEventQueueMac.cpp)
+  set(RK_SOURCES_PLATFORM
+    ${RK_SRC_PATH}/platforms/mac/RkPlatformMac.cpp
+    ${RK_SRC_PATH}/platforms/mac/RkWindowMac.cpp
+    ${RK_SRC_PATH}/platforms/mac/RkEventQueueMac.cpp)
 else() # defaut GNU/Linux
-set(RK_SOURCES_PLATFORM
-  ${RK_SRC_PATH}/platforms/xwin/RkPlatformX.cpp
-  ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
-  ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
+  set(RK_SOURCES_PLATFORM
+    ${RK_SRC_PATH}/platforms/xwin/RkLogX.cpp
+    ${RK_SRC_PATH}/platforms/xwin/RkPlatformX.cpp
+    ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
+    ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
 endif()
 
 add_definitions(-fPIC)
