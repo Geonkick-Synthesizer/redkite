@@ -44,14 +44,6 @@ void rkLogMessage(RkLogLevel level, const std::string &func_name, const std::str
 	#define RK_LOG_FUNC_NAME __PRETTY_FUNCTION__
 #endif
 
-#ifdef RK_OS_WIN
-#define RK_PRETTY_FUNCTION __FUNCDNAME__
-#elif RK_OS_MAC
-#error "not implemented for MAC"
-#else
-#define RK_PRETTY_FUNCTION __PRETTY_FUNCTION__
-#endif
-
 #ifdef RK_LOG_DEBUG_LEVEL
 #define RK_LOG_DEBUG(msg) do { \
         std::ostringstream rk_stream; \
