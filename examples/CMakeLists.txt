@@ -12,8 +12,8 @@ else()
 endif()
 
 add_executable(hello ${RK_EXEC_OPTION}
-  ${RK_HEADERS}
-  ${RK_EXAMPLES_SOURCES})
+	${RK_HEADERS}
+	${RK_EXAMPLES_SOURCES})
 
 add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
