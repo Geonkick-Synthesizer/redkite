@@ -39,7 +39,7 @@ void rkLogMessage(RkLogLevel level, const std::string &func_name, const std::str
 #if defined(__GNUC__) || defined(__MINGW32__)
 #define RK_LOG_FUNC_NAME __PRETTY_FUNCTION__
 #elif defined(_MSC_VER)
-#define RK_LOG_FUNC_NAME __FUNCDNAME__
+#define RK_LOG_FUNC_NAME __FUNCTION__
 #else
 	#define RK_LOG_FUNC_NAME __PRETTY_FUNCTION__
 #endif
