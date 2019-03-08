@@ -10,8 +10,8 @@ HINSTANCE rk_winApiInstance = nullptr;
 RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window)
 {
         RkNativeWindowInfo info;
-        info.instance = instance;
-        info.className = className;
+        info.instance = instance ? instance : rk_winApiInstance;
+        info.className = className ? className : rk_winApiClassName;
         info.window = window;
         return info;
 }
