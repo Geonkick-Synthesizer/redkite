@@ -55,7 +55,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                     DWORD fdwReason,
                     LPVOID lpvReserved)
 {
-        winApiInstance = hInstance;
+        rk_winApiInstance = hInstance;
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;

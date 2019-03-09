@@ -9,6 +9,7 @@ set(CMAKE_INSTALL_PREFIX "./install/redkite")
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
+  add_compile_options(-DRK_FOR_SHARED)
 # For build with mingw on GNU/Linux. To be removed.
 #  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
 #  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
@@ -37,7 +38,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
 endif()
 
-option(ENABLE_EXAMPLES    "Build examples" ON)
+option(ENABLE_EXAMPLES    "Build examples" OFF)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")
@@ -136,5 +137,5 @@ endif()
 
 
 if (ENABLE_EXAMPLES)
-  add_subdirectory(examples)
+#  add_subdirectory(examples)
 endif (ENABLE_EXAMPLES)
