@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 3.7)
 project(redkite VERSION 0.0.1)
 
 # Temporary. For Windows. To be removed.
-set(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_INSTALL_PREFIX "./install/redkite")
+#set(CMAKE_SYSTEM_NAME Windows)
+#set(CMAKE_INSTALL_PREFIX "./install/redkite")
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
@@ -38,7 +38,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
 endif()
 
-option(ENABLE_EXAMPLES    "Build examples" OFF)
+option(ENABLE_EXAMPLES    "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")
@@ -137,5 +137,5 @@ endif()
 
 
 if (ENABLE_EXAMPLES)
-#  add_subdirectory(examples)
+  add_subdirectory(examples)
 endif (ENABLE_EXAMPLES)
