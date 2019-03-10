@@ -55,14 +55,14 @@ void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr
                 case WM_KEYUP:
                         event = RkEvent::keyReleaseEvent();
                         break;
-                case WM_LBUTTONUP:
-                case WM_RBUTTONUP:
-                case WM_MBUTTONUP:
-                        event = RkEvent::buttonPressEvent();
-                        break;
                 case WM_LBUTTONDOWN:
                 case WM_RBUTTONDOWN:
                 case WM_MBUTTONDOWN:
+                        event = RkEvent::buttonPressEvent();
+                        break;
+                case WM_LBUTTONUP:
+                case WM_RBUTTONUP:
+                case WM_MBUTTONUP:
                         event = RkEvent::buttonReleaseEvent();
                         break;
                 case WM_SIZE:

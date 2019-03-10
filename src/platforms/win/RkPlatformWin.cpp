@@ -37,6 +37,14 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 return 0;
         }
+        case WM_LBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_MBUTTONDOWN:
+		{
+                auto event = RkEvent::buttonPressEvent();
+                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                return 0;
+		}
         case WM_PAINT:
         {
                 auto event = RkEvent::paintEvent();
@@ -80,6 +88,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                 RK_LOG_ERROR("can't register window class");
                 return FALSE;
         }
+		RK_LOG_INFO("called: " << rk_winApiClassName);
         return TRUE;
 }
 #else // RK_FOR_SHARED
