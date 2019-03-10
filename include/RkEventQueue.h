@@ -35,10 +35,6 @@ class RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
-        RkEventQueue(const RkEventQueue &other) = delete;
-        RkEventQueue& operator=(const RkEventQueue &other) = delete;
-        RkEventQueue(RkEventQueue &&other) = delete;
-        RkEventQueue& operator=(RkEventQueue &&other) = delete;
 
         void addWidget(RkWidget *widget);
         void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
@@ -49,9 +45,13 @@ class RkEventQueue {
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
 
-        protected:
-                RK_DECLARE_IMPL(RkEventQueue)
-                RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl);
+ protected:
+        RK_DECLARE_IMPL(RkEventQueue)
+        RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl);
+
+ private:
+        RK_DISABLE_COPY(RkEventQueue)
+        RK_DISABLE_MOVE(RkEventQueue)
 };
 
 #endif // RK_EVENT_QUEUE_H

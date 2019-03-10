@@ -1,5 +1,5 @@
 /**
- * File name: RkMain.h
+ * File name: RkLayoutImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,26 +21,37 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_MAIN_H
-#define RK_MAIN_H
+#include "RkLayoutImpl.h"
 
-#include "Rk.h"
+RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
+        : inf_ptr{layoutInterface}
+        , parentWidget{parent}
+{
+}
 
-class RkWidget;
+RkLayout::RkLayoutImpl::~RkLayoutImpl()
+{
+}
 
-class RkMain {
-  public:
-          RkMain();
-          RkMain(int argc, char **argv);
-          ~RkMain();
-          bool setTopLevelWindow(RkWidget* widget);
-          int exec(bool block = true);
-  protected:
-       	  RK_DECLARE_IMPL(RkMain)
+void RkLayout::RkLayoutImpl::addWidget(RkWidget *widget)
+{
+        for (const auto &w : layoutWidgets) {
+                if (w == widget)
+                        return;
+        }
 
-  private:
-          RK_DISABLE_COPY(RkMain)
-          RK_DISABLE_MOVE(RkMain)
-};
+        
+        layoutWidget.push_back(widget);
+        update();
+}
 
-#endif // RK_MAIN_H
+void RkLayout::RkLayoutImpl::setPadding(int padding)
+{
+        RK_UNUSED(padding);
+}
+
+RkLayoutItem* RkLayout::RkLayoutImpl::createItem(RkWidget *widget)
+{
+        return new RkLayoutItem(RkLayoutItem::Type::Widget);
+}
+

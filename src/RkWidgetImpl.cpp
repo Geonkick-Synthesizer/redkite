@@ -47,6 +47,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
+        , widgetLayout{nullptr}
 {
         platformWindow->init();
 }
@@ -63,6 +64,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
+        , widgetLayout{nullptr}
 {
         platformWindow->init();
 }
@@ -215,4 +217,23 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
 {
         return eventQueue;
+}
+
+void RkWidget::RkWidgetImpl::setLayout(RkLayout *layout)
+{
+        if (!layout)
+                return;
+
+        if (widgetLayout) {
+                RK_LOG_ERROR("layout already set for this widget");
+                return;
+        } else {
+                widgetLayout = layout;
+                widgetLayout->update();
+        }
+}
+
+RkLayout* RkWidget::RkWidgetImpl::layout() const
+{
+        return widgetLayout;
 }

@@ -76,3 +76,14 @@ add_executable(widget_colors
 add_dependencies(widget_colors redkite)
 target_link_libraries(widget_colors redkite)
 target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
+
+#------------- Layout Example --------
+
+add_executable(layout
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_PATH}/layout.cpp))
+
+add_dependencies(layout redkite)
+target_link_libraries(layout redkite)
+target_link_libraries(layout "-lX11 -lrt -lm -ldl")
+

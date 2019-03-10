@@ -39,6 +39,7 @@ class RkShowEvent;
 class RkHideEvent;
 struct RkWindowId;
 struct RkNativeWindowInfo;
+class RkLayout;
 
 class RkWidget {
   public:
@@ -49,10 +50,6 @@ class RkWidget {
           explicit RkWidget(RkWidget *parent = nullptr);
           explicit RkWidget(const RkNativeWindowInfo &parent);
           virtual ~RkWidget();
-          RkWidget(const RkWidget &other) = delete;
-          RkWidget& operator=(const RkWidget &other) = delete;
-          RkWidget(RkWidget &&other) = delete;
-          RkWidget& operator=(RkWidget &&other) = delete;
 
 	  void show();
           void setTitle(const std::string &title);
@@ -82,6 +79,9 @@ class RkWidget {
           void setBackgroundColor(int red, int green, int blue);
           void setBorderColor(int red, int green, int blue);
 
+          void setLayout(RkLayout *layout);
+          RkLayout* layout() const;
+
   protected:
           RK_DECLARE_IMPL(RkWidget)
           RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
@@ -101,6 +101,9 @@ class RkWidget {
           virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
 
  private:
+          RK_DISABLE_COPY(RkWidget)
+          RK_DISABLE_MOVE(RkWidget)
+
           void addChild(RkWidget* child);
           friend class RkEventQueue;
           void setEventQueue(RkEventQueue *eventQueue);

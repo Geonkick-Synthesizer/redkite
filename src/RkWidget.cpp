@@ -190,6 +190,16 @@ void RkWidget::setBackgroundColor(int red, int green, int blue)
         o_ptr->setBackgroundColor({red, green, blue});
 }
 
+void RkWidget::setLayout(RkLayout *layout)
+{
+        o_ptr->setLayout(layout);
+}
+
+RkLayout* RkWidget::layout() const
+{
+        return o_ptr->layout();
+}
+
 RkWidget* RkWidget::parent() const
 {
         return o_ptr->parent();
