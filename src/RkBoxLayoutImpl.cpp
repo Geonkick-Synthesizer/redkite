@@ -36,3 +36,51 @@ RkBoxLayout::RkBoxLayoutImpl::~RkLayoutImpl()
 void RkBoxLayout::RkBoxLayoutImpl::addWItem(RkWidget *widget);
 {
 }
+
+std::vector<RkBoxLayoutItem*> RkBoxLayout::RkBoxLayoutImpl::strachables()
+{
+        std::vector<RkBoxLayoutItem*> v;
+        for (const auto &item: layoutItems)
+                if (item->isStrachable())
+                        v.push_back(item);
+
+        return v;
+}
+
+void RkBoxLayout::RkBoxLayoutImpl::update()
+{
+        int minWidth = minmumWidth();
+        if (minWidth >= layoutWidth()) {
+                setAllToMinmum();
+                arrangeItems();
+                return;
+        }
+
+        auto strachableItems = getStrachables();
+        if (strachableItems.size() > 0) {
+                setAllToMinmum();
+                setStrachablesSize(strachableItems, layoutWidth() - minwidth);
+                arrangeItems();
+                return;
+        }
+                setStachablesWidth();
+
+        auto freeItems = freeItems();
+        if (freeItems.size() > 0) {
+                int n = freeItems.size();
+                for (const auto &item : freeItems) {
+                        int dW = widthFree / n;
+                        if (item->maxWidth() - item->minWidth() >= dW) {
+                                item->setWidth(item->minWidth() + dW);
+                        } else {
+                           dW = item->maxWidth() - item->minWidth();
+                           item->setWidth(item->maxWidth());
+                        }
+                        widthFree -= dW;
+                        if (--n < 1)
+                                break;
+                }
+        }
+
+        arrangeItems();
+}

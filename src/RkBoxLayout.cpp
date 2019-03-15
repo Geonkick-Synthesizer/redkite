@@ -44,7 +44,14 @@ RkBoxLayout::~RkBoxLayout()
 
 int RkBoxLayout::addWidget(RkWidget * widget)
 {
-        addItem(static_cast<RkWidgetItem*>(new RkWidgetItem(widget)));
+        o_ptr->addItem(static_cast<RkBoxLayoutItem*>(new RkBoxLayoutItem(widget)));
         update();
 }
+
+int RkBoxLayout::addSpace(int space, bool stetchable)
+{
+        o_ptr->addItem(static_cast<RkBoxLayoutItem*>(new RkBoxLayoutItem(int space, bool stetchable)));
+        update();
+}
+
 
