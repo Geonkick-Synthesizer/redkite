@@ -3,12 +3,13 @@ cmake_minimum_required (VERSION 3.7)
 project(redkite VERSION 0.0.1)
 
 # Temporary. For Windows. To be removed.
-set(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_INSTALL_PREFIX "./install/redkite")
+#set(CMAKE_SYSTEM_NAME Windows)
+#set(CMAKE_INSTALL_PREFIX "./install/redkite")
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
+  add_compile_options(-DRK_FOR_SHARED)
 # For build with mingw on GNU/Linux. To be removed.
 #  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
 #  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)

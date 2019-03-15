@@ -23,14 +23,15 @@ else()
   target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
 endif()
 
+# ------------ Multithreading Example -------
 
-#add_executable(hello_multi
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_MULTI})
+add_executable(hello_multi
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_MULTI})
 
-#add_dependencies(hello_multi redkite)
-#target_link_libraries(hello_multi redkite)
-#target_link_libraries(hello_multi "-lX11 -lpthread -lrt -lm -ldl")
+add_dependencies(hello_multi redkite)
+target_link_libraries(hello_multi redkite)
+target_link_libraries(hello_multi "-lX11 -lpthread -lrt -lm -ldl")
 
 # ------------ Child Example -------
 
@@ -48,30 +49,41 @@ endif()
 
 # ------------ Property -------
 
-#add_executable(property
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_PROPERTY})
+add_executable(property
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_PROPERTY})
 
-#add_dependencies(property redkite)
-#target_link_libraries(property redkite)
-#target_link_libraries(property "-lX11 -lrt -lm -ldl")
+add_dependencies(property redkite)
+target_link_libraries(property redkite)
+target_link_libraries(property "-lX11 -lrt -lm -ldl")
 
 # ------------ Label Example -------
 
-#add_executable(label
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_LABEL})
+add_executable(label
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_LABEL})
 
-#add_dependencies(label redkite)
-#target_link_libraries(label redkite)
-#target_link_libraries(label "-lX11 -lrt -lm -ldl")
+add_dependencies(label redkite)
+target_link_libraries(label redkite)
+target_link_libraries(label "-lX11 -lrt -lm -ldl")
 
 #------------- Widget Colors --------
 
-#add_executable(widget_colors
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_WIDGET_COLORS})
+add_executable(widget_colors
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_WIDGET_COLORS})
 
-#add_dependencies(widget_colors redkite)
-#target_link_libraries(widget_colors redkite)
-#target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
+add_dependencies(widget_colors redkite)
+target_link_libraries(widget_colors redkite)
+target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
+
+#------------- Layout Example --------
+
+add_executable(layout
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_PATH}/layout.cpp))
+
+add_dependencies(layout redkite)
+target_link_libraries(layout redkite)
+target_link_libraries(layout "-lX11 -lrt -lm -ldl")
+

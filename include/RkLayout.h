@@ -1,5 +1,5 @@
 /**
- * File name: RkMain.h
+ * File name: RkLayout.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,26 +21,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_MAIN_H
-#define RK_MAIN_H
+#ifndef RK_LAYOUT_H
+#define RK_LAYOUT_H
 
 #include "Rk.h"
 
 class RkWidget;
 
-class RkMain {
-  public:
-          RkMain();
-          RkMain(int argc, char **argv);
-          ~RkMain();
-          bool setTopLevelWindow(RkWidget* widget);
-          int exec(bool block = true);
-  protected:
-       	  RK_DECLARE_IMPL(RkMain)
+class RkLayout {
+ public:
+          RkLayout(RkWidget *parent = nullptr);
+          virtual ~RkLayout();
+          void addWidget(RkWidget *widget);
+          void addElement(RkLayoutElement *element);
+          void setPadding(int padding);
+          virtual void update() = 0;
 
-  private:
-          RK_DISABLE_COPY(RkMain)
-          RK_DISABLE_MOVE(RkMain)
+ protected:
+          RK_DECLARE_IMPL(RkLayout)
+          RkLayout(RkLayout *parent, const std::shared_ptr<RkLayoutImpl> &impl);
+
+ private:
+          RK_DISABLE_COPY(RkLayout)
+          RK_DISABLE_MOVE(RkLayout)
 };
 
-#endif // RK_MAIN_H
+
+#endif // RK_LAYOUT_H

@@ -46,6 +46,14 @@
 #define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
 #define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }
 
+#define RK_DISABLE_COPY(Class) \
+          Class(const Class &other) = delete; \
+          Class& operator=(const Class &other) = delete;
+
+#define RK_DISABLE_MOVE(Class) \
+          Class(Class &&other) = delete; \
+          Class& operator=(Class &&other) = delete; \
+
 #if defined(RK_OS_WIN) && !defined(RK_FOR_SHARED)
 int rkMain(int, char **);
 #define main rkMain

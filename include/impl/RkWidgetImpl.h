@@ -67,6 +67,9 @@ class RkWidget::RkWidgetImpl {
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* getEventQueue();
 
+        void setLayout(RkLayout *layout);
+        RkLayout* layout() const;
+
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
         RkWidget *parentWidget;
@@ -80,6 +83,7 @@ class RkWidget::RkWidgetImpl {
         std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
         RkEventQueue* eventQueue;
+        RkLayout *widgetLayout;
 };
 
 #endif // RK_WIDGET_IMPL_H

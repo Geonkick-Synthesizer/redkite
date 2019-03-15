@@ -1,8 +1,8 @@
 /**
- * File name: RkMain.h
+ * File name: RkLayout.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
  *
  * This file is part of Redkite.
  *
@@ -21,26 +21,40 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_MAIN_H
-#define RK_MAIN_H
+#include "RkLog.h"
+#include "RkLayout.h"
+#include "RkLayoutImpl.h"
 
-#include "Rk.h"
+RkLayout::RkLayout(RkWidget *parent)
+    : o_ptr{std::make_shared<RkLayoutImpl>(this, parent)}
+{
+        if (parent)
+                parent->setLayout(this);
+}
 
-class RkWidget;
+RkLayout::RkLayout(RkWidget *parent, const std::shared_ptr<RkLayoutImpl> &impl)
+        : o_ptr{impl}
+{
+        if (parent)
+                parent->setLayout(this);
 
-class RkMain {
-  public:
-          RkMain();
-          RkMain(int argc, char **argv);
-          ~RkMain();
-          bool setTopLevelWindow(RkWidget* widget);
-          int exec(bool block = true);
-  protected:
-       	  RK_DECLARE_IMPL(RkMain)
+}
 
-  private:
-          RK_DISABLE_COPY(RkMain)
-          RK_DISABLE_MOVE(RkMain)
-};
+RkLayout::~RkLayout()
+{
+}
 
-#endif // RK_MAIN_H
+void RkLayout::addWidget(RkWidget *widget)
+{
+        o_ptr->addItem(RkLayoutImpl::createItem(widget));
+}
+
+void RkLayout::setPadding(int padding)
+{
+        o_ptr->setPadding(padding);
+}
+
+void RkLayout::update()
+{
+        o_ptr->update();
+}

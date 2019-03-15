@@ -10,8 +10,8 @@ HINSTANCE rk_winApiInstance = nullptr;
 RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window)
 {
         RkNativeWindowInfo info;
-        info.instance = instance;
-        info.className = className;
+        info.instance = instance ? instance : rk_winApiInstance;
+        info.className = className ? className : rk_winApiClassName;
         info.window = window;
         return info;
 }
@@ -37,6 +37,14 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 return 0;
         }
+        case WM_LBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_MBUTTONDOWN:
+		{
+                auto event = RkEvent::buttonPressEvent();
+                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                return 0;
+		}
         case WM_PAINT:
         {
                 auto event = RkEvent::paintEvent();
@@ -55,7 +63,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                     DWORD fdwReason,
                     LPVOID lpvReserved)
 {
-        winApiInstance = hInstance;
+        rk_winApiInstance = hInstance;
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -80,6 +88,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                 RK_LOG_ERROR("can't register window class");
                 return FALSE;
         }
+		RK_LOG_INFO("called: " << rk_winApiClassName);
         return TRUE;
 }
 #else // RK_FOR_SHARED

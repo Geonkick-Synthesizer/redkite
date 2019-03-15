@@ -43,13 +43,11 @@ struct RkNativeWindowInfo {
         HWND window;
 };
 
-RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
-
-RkWindowId rk_id_from_win(HWND window);
-
 extern std::string rk_winApiClassName;
-
 extern HINSTANCE rk_winApiInstance;
+
+RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
+RkWindowId rk_id_from_win(HWND window);
 
 #define RK_WIN_MESSAGE_PAINT (WM_USER + 0x0001)
 
