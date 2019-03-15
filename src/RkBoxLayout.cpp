@@ -1,8 +1,8 @@
 /**
- * File name: RkLayoutImpl.cpp
+ * File name: RkBoxLayout.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
  *
  * This file is part of Redkite.
  *
@@ -21,27 +21,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkLayoutImpl.h"
+#include "RkLog.h"
+#include "RkBoxLayout.h"
+#include "RkBoxLayoutImpl.h"
 
-RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
-        : inf_ptr{layoutInterface}
-        , parentWidget{parent}
-        , itemsPagging{0}
+RkBoxLayout::RkBoxLayout(RkWidget *parent, Ori)
+    : o_ptr{std::make_shared<RkBoxLayoutImpl>(this, parent)}
 {
 }
 
-RkLayout::RkLayoutImpl::~RkLayoutImpl()
+RkBoxLayout::RkBoxLayout(RkWidget *parent, const std::shared_ptr<RkBoxLayoutImpl> &impl)
+        : o_ptr{impl}
+{
+        if (parent)
+                parent->setLayout(this);
+
+}
+
+RkBoxLayout::~RkBoxLayout()
 {
 }
 
-void RkLayout::RkLayoutImpl::setPadding(int padding)
+int RkBoxLayout::addWidget(RkWidget * widget)
 {
-        RK_UNUSED(padding);
-        itemsPagging = padding;
-}
-
-int RkLayout::RkLayoutImpl::padding()
-{
-        return itemsPadding;
+        addItem(static_cast<RkWidgetItem*>(new RkWidgetItem(widget)));
+        update();
 }
 

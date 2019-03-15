@@ -1,5 +1,5 @@
 /**
- * File name: RkLayout.h
+ * File name: RkBoxLayout.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,33 +21,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_LAYOUT_H
-#define RK_LAYOUT_H
+#ifndef RK_BOX_LAYOUT_H
+#define RK_BOX_LAYOUT_H
 
-#include "Rk.h"
+#include "RkLayout.h"
 
 class RkWidget;
 
-class RkLayout {
+class RkBoxLayout: RkLayout {
  public:
-        enum class Type : int {
-                  UnknwonLayout,
-                  BoxLayout,
-                  GridLayout
+          enum class Orientation : int {
+                Vertical,
+                Horizontal
           };
-          RkLayout(RkWidget *parent = nullptr);
-          virtual ~RkLayout();
-          void setPadding(int padding);
-          int padding() const;
-          virtual Type type() const = 0;
+        
+          explicit RkBoxLayout(RkWidget *parent = nullptr, Orientation orientaiton = Orientation::Vertical);
+          ~RkBoxLayout();
+          Type type() const;
+          void setOrientation(Orientation orientation);
+          Orientation orientation() const;
+          void addWidget(RkWidget *widget);
+          void addSpace(int space);
+          void addLayout(RkLayout *layout);
 
  protected:
-          RK_DECLARE_IMPL(RkLayout)
-          RkLayout(RkLayout *parent, const std::shared_ptr<RkLayoutImpl> &impl);
+          RK_DECLARE_IMPL(RkBoxLayout)
+          RkBoxLayout(RkBoxLayout *parent, const std::shared_ptr<RkBoxLayoutImpl> &impl);
 
  private:
-          RK_DISABLE_COPY(RkLayout)
-          RK_DISABLE_MOVE(RkLayout)
+          RK_DISABLE_COPY(RkBoxLayout)
+          RK_DISABLE_MOVE(RkBoxLayout)
 };
 
-#endif // RK_LAYOUT_H
+#endif // RK_BOX_LAYOUT_H

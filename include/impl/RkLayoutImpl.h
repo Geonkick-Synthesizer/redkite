@@ -28,10 +28,10 @@
 
 class RkLayout::RkLayoutImpl {
  public:
-        explicit RkLayoutImpl(RkLayout* interface, RkLayout* parent = nullptr);
+        explicit RkLayoutImpl(RkLayout* interface, RkWidget* parent = nullptr);
         virtual ~RkLayoutImpl();
         void setPadding(int padding);
-        virtual void addElement(RkLayoutElement *element) = 0;
+        int padding();
         virtual void update() = 0;
 
  private:
@@ -40,6 +40,7 @@ class RkLayout::RkLayoutImpl {
         RK_DECALRE_INTERFACE_PTR(RkLayout)
         RkWidget *parentWidget;
         std::list<RkLayoutElement*> layoutWidgets;
+        int itemsPagging;
 };
 
 #endif // RK_LAYOUT_IMPL_H

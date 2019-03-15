@@ -23,25 +23,16 @@
 
 #include "RkLayoutImpl.h"
 
-RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
-        : inf_ptr{layoutInterface}
-        , parentWidget{parent}
-        , itemsPagging{0}
+RkBoxLayout::RkBoxLayoutImpl::RkBoxLayoutImpl(RkBoxLayout* interface, RkWidget* parent, RkBoxLayout::Orinetation orinetation)
+        : RkLayoutImpl(static_cast<RkLayout*>(interface), parent)
+          boxOrientation{orinetation}
 {
 }
 
-RkLayout::RkLayoutImpl::~RkLayoutImpl()
+RkBoxLayout::RkBoxLayoutImpl::~RkLayoutImpl()
 {
 }
 
-void RkLayout::RkLayoutImpl::setPadding(int padding)
+void RkBoxLayout::RkBoxLayoutImpl::addWItem(RkWidget *widget);
 {
-        RK_UNUSED(padding);
-        itemsPagging = padding;
 }
-
-int RkLayout::RkLayoutImpl::padding()
-{
-        return itemsPadding;
-}
-

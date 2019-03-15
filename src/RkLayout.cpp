@@ -44,17 +44,15 @@ RkLayout::~RkLayout()
 {
 }
 
-void RkLayout::addWidget(RkWidget *widget)
-{
-        o_ptr->addItem(RkLayoutImpl::createItem(widget));
-}
-
 void RkLayout::setPadding(int padding)
 {
         o_ptr->setPadding(padding);
-}
-
-void RkLayout::update()
-{
         o_ptr->update();
 }
+
+int RkLayout::padding() const
+{
+        return o_ptr->padding();
+}
+
+

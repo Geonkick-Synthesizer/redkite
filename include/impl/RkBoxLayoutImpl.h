@@ -1,5 +1,5 @@
 /**
- * File name: RkLayoutImpl.cpp
+ * File name: RkBoxLayoutImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,27 +21,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkLayoutImpl.h"
+#ifndef RK_BOX_LAYOUT_IMPL_H
+#define RK_BOX_LAYOUT_IMPL_H
 
-RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
-        : inf_ptr{layoutInterface}
-        , parentWidget{parent}
-        , itemsPagging{0}
-{
-}
+#include "RkBoxLayout.h"
 
-RkLayout::RkLayoutImpl::~RkLayoutImpl()
-{
-}
+class RkBoxLayout::RkBoxLayoutImpl: public RkLayout::RkLayoutImpl {
+ public:
+        explicit RkBoxLayoutImpl(RkBoxLayout* interface, RkWidget* parent = nullptr, Orientation orientation);
+        ~RkBoxLayoutImpl();
+        void update() final;
+        void addWidget(RkWidget *widget);
+        void addSpace(int space);
+        void addLayout(RkBoxLayout *layout);
+        Orientation orientation() const;
+        void setOrientation(Orientation orientation);
 
-void RkLayout::RkLayoutImpl::setPadding(int padding)
-{
-        RK_UNUSED(padding);
-        itemsPagging = padding;
-}
+ private:
+        RK_DISABLE_COPY(RkBoxLayoutImpl)
+        RK_DISABLE_MOVE(RkBoxLayoutImpl)
+        RK_DECALRE_INTERFACE_PTR(RkBoxLayout)
+        Orientation boxOrientation;
+};
 
-int RkLayout::RkLayoutImpl::padding()
-{
-        return itemsPadding;
-}
-
+#endif // RK_BOX_LAYOUT_IMPL_H
