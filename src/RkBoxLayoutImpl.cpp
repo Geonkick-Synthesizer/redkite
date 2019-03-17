@@ -23,9 +23,111 @@
 
 #include "RkLayoutImpl.h"
 
-RkBoxLayout::RkBoxLayoutImpl::RkBoxLayoutImpl(RkBoxLayout* interface, RkWidget* parent, RkBoxLayout::Orinetation orinetation)
+RkBoxLayoutWidgetElement::RkBoxLayoutWidgetElement(RkWidget* widget)
+        : elementWidget{widget}
+{
+}
+
+RkBoxLayoutWidgetElement::~RkBoxLayoutWidgetElement()
+{
+}
+
+RkBoxLayoutElement::Type type()
+{
+        return RkBoxLayoutElement::Type::BoxWidget;
+}
+
+std::pair<int, int> minSize() const
+{
+        return widget()->minSize();
+}
+
+std::pair<int, int> maxSize() const
+{
+        return widget()->maxSize();
+}
+
+void RkBoxLayoutElement::setSize(std::pair<int, int> &size)
+{
+        widget()->setSize(size);
+}
+
+RkWidget* RkBoxLayoutElement::widget()
+{
+        return elementWidget;
+}
+
+bool RkBoxLayoutElement::fixedWidth() const;
+{
+        return false;
+}
+
+bool RkBoxLayoutElement::fixedHeight() const
+{
+        return false;
+}
+
+RkBoxLayoutSpaceElement::RkBoxLayoutSpaceElement(int space)
+        : spaceValue{space}
+        , spaceMinSize{0}
+        , spaceMaxSize{1000000}
+{
+}
+
+RkBoxLayoutSpaceElement::~RkBoxLayoutSpaceElement()
+{
+}
+
+RkBoxLayoutElement::Type type()
+{
+        return RkBoxLayoutElement::Type::BoxSpace;
+}
+
+int RkBoxLayoutElement::minSize() const
+{
+        return spaceMinSize;
+}
+
+std::pair<int, int> maxSize() const
+{
+        return spaceMaxSize;
+}
+
+void RkBoxLayoutElement::setWidth(int width)
+{
+        elementSpace = width;
+}
+
+void RkBoxLayoutElement::setHeight(int height)
+{
+        elementSpace = width;
+}
+
+int RkBoxLayoutElement::width(int width)
+{
+        return spaceValue;
+}
+
+int RkBoxLayoutElement::height(int height)
+{
+        return spaceValue;
+}
+
+bool RkBoxLayoutElement::fixedWidth() const;
+{
+        return false;
+}
+
+bool RkBoxLayoutElement::fixedHeight() const
+{
+        return false;
+}
+
+RkBoxLayout::RkBoxLayoutImpl::RkBoxLayoutImpl(RkBoxLayout* interface,
+                                              RkWidget* parent,
+                                              RkBoxLayout::Orinetation orinetation)
         : RkLayoutImpl(static_cast<RkLayout*>(interface), parent)
-          boxOrientation{orinetation}
+        , boxOrientation{orinetation}
 {
 }
 
@@ -33,28 +135,44 @@ RkBoxLayout::RkBoxLayoutImpl::~RkLayoutImpl()
 {
 }
 
-void RkBoxLayout::RkBoxLayoutImpl::addWItem(RkWidget *widget);
+std::vector<RkBoxLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::strachables()
 {
-}
-
-std::vector<RkBoxLayoutItem*> RkBoxLayout::RkBoxLayoutImpl::strachables()
-{
-        std::vector<RkBoxLayoutItem*> v;
-        for (const auto &item: layoutItems())
-                if (item->isStrachable())
-                        v.push_back(item);
+        std::vector<RkBoxLayoutElement*> v;
+        for (const auto &element: layoutElements())
+                if (element->strachable())
+                        v.push_back(element);
 
         return v;
+}
+
+void RkBoxLayout::RkBoxLayoutImpl::addWidget(RkWidget *widget)
+{
+        addElement(static_cast<RkLayoutElement*>(new RkBoxLayoutWidgetElement(widget)));
+}
+
+void RkBoxLayout::RkBoxLayoutImpl::addSpace(int space, bool stretchable)
+{
+        addElement(static_cast<RkLayoutElement*>(new RkBoxLayoutSpaceElement(widget)));
+}
+
+void RkBoxLayout::RkBoxLayoutImpl::setOrientation(Orientation orientation)
+{
+        boxOrientation = orientation;
+}
+
+Orientation RkBoxLayout::RkBoxLayoutImpl::orientation()
+{
+        return boxOrientation;
 }
 
 int RkBoxLayout::RkBoxLayoutImpl::getMinimum()
 {
         int min = 0;
-        for (const auto &item: layoutItems()) {
+        for (const auto &element: layoutElements()) {
                 if (orientation() == RkBoxLayout::Type::Horizontal)
-                        min += item->minimumWidth();
+                        min += element->minimumWidth();
                 else
-                        min += item->minimumHeight();
+                        min += element->minimumHeight();
         }
 
         return min;
@@ -63,8 +181,8 @@ int RkBoxLayout::RkBoxLayoutImpl::getMinimum()
 int RkBoxLayout::RkBoxLayoutImpl::minmumHeight()
 {
         int minHeight = 0;
-        for (const auto &item: layoutItems())
-                mintWidth += item->minimumHeight();
+        for (const auto &element: layoutElements())
+                mintWidth += element->minimumHeight();
         return minHeight;
 }
 
@@ -73,37 +191,37 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
         int minLength = getMinimum();
         if (length >= boxLength()) {
                 setAllToMinmum();
-                arrangeItems();
+                arrangeElements();
                 return;
         }
 
-        auto strachableItems = getStrachables();
-        if (strachableItems.size() > 0) {
+        auto strachableElements = getStrachables();
+        if (strachableElements.size() > 0) {
                 setAllToMinmum();
-                setStrachablesSize(strachableItems, boxLength() - minLength);
-                arrangeItems();
+                setStrachablesSize(strachableElements, boxLength() - minLength);
+                arrangeElements();
                 return;
         }
 
-        auto freeItems = freeItems();
+        auto freeElements = freeElements();
         lengthFree = boxLength() - minLength;
-        if (freeItems.size() > 0) {
-                int n = freeItems.size();
-                for (const auto &item : freeItems) {
+        if (freeElements.size() > 0) {
+                int n = freeElements.size();
+                for (const auto &element : freeElements) {
                         int dL = lengthFree / n;
                         if (boxOrientation == RkBoxLayout::Type::Horizontal)
-                                if (item->maxWidth() - item->minWidth() >= dL) {
-                                item->setWidth(item->minWidth() + dL);
+                                if (element->maxWidth() - element->minWidth() >= dL) {
+                                element->setWidth(element->minWidth() + dL);
                                 } else {
-                                        dL = item->maxWidth() - item->minWidth();
-                                        item->setWidth(item->maxWidth());
+                                        dL = element->maxWidth() - element->minWidth();
+                                        element->setWidth(element->maxWidth());
                                 }
                         else {
-                                if (item->maxHeight() - item->minHeight() >= dL) {
-                                        item->setHeight(item->minHeight() + dL);
+                                if (element->maxHeight() - element->minHeight() >= dL) {
+                                        element->setHeight(element->minHeight() + dL);
                                 } else {
-                                        dL = item->maxHeight() - item->minHeight();
-                                        item->setHeight(item->maxHeight());
+                                        dL = element->maxHeight() - element->minHeight();
+                                        element->setHeight(element->maxHeight());
                                 }
                         }
                         lengthFree -= dL;
@@ -112,37 +230,45 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
                 }
         }
 
-        arrangeItems();
+        arrangeElements();
 }
 
-std::set<RkBoxLayoutItem*> RkBoxLayout::RkBoxLayoutImpl::freeItems()
+std::set<RkBoxLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::freeElements()
 {
-        std::vector<RkBoxLayoutItem*> items;
-        for (const auto &item: layoutItems())
-                if (!item->isFixed())
-                        items.push_back(item);
-        return items;
+        std::vector<RkBoxLayoutElement*> elements;
+        for (const auto &element: getLayoutElements())
+                if (!element->isFixed())
+                        elements.push_back(element);
+        return elements;
 }
 
 void RkBoxLayout::RkBoxLayoutImpl::setAllToMinmum()
 {
-        for (const auto &item: layoutItems()) {
+        for (const auto &element: getLayoutElements()) {
                 if (boxOrientation == RkBoxLayout::Type::Horizontal)
-                        item->setWidth(item->minimumWidth());
+                        element->setWidth(element->minimumWidth());
                 else
-                        item->setHeight(item->minimumHeight());
+                        element->setHeight(element->minimumHeight());
         }
 }
 
-void RkBoxLayout::RkBoxLayoutImpl::arrangeItems()
+void RkBoxLayout::RkBoxLayoutImpl::arrangeElements()
 {
         int pos = layoutPos();
-        for (const auto &item: layoutItems()) {
+        for (const auto &element: getLayoutElements()) {
         if (boxOrientation == RkBoxLayout::Type::Horizontal) {
-                item->setX(pos);
-                pos += item->width();
+                element->setX(pos);
+                pos += element->width();
         } else {
-                item->setY(pos);
-                pos += item->height();
+                element->setY(pos);
+                pos += element->height();
         }
+}
+
+int RkBoxLayout::RkBoxLayoutImpl::boxLength()
+{
+        if (boxOrientation == RkBoxLayout::Type::Horizontal)
+                return getParentWidget()->width();
+        else
+                return getParentWidget()->height();
 }

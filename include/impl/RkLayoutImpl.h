@@ -26,21 +26,64 @@
 
 #include "RkLayout.h"
 
+class RkLayoutElement {
+ public:
+        enum class Type : int {
+                BoxWidget,
+                BoxSpace,
+                BoxLayout,
+                GridWidget,
+                GridLayout,
+        };
+
+        enum  Alignment : int {
+                Unaligned,
+                AlignLeft,
+                AlignRight,
+        };
+
+        RkLayoutElement();
+        virtual ~RkLayoutElement();
+        virtual Type type() const = 0;
+        Alignemnt alignment() const;
+        void setAlignemnt(Alignment align);
+        virtual std::pair<int, int> minSize() const = 0;
+        virtual std::pair<int, int> maxSize() const = 0;
+        virtual void setSize(std::pair<int, int>) = 0;
+        virtual void setWidth(int width) = 0;
+        virtual void setHeight(int height) = 0;
+        virtual void width(int width) const = 0;
+        virtual void hight(int height) const = 0;
+        virtual bool fixedWidth() const = 0;
+        virtual bool fixedHeight() const = 0;
+        bool strachable() const;
+        void setStachable(bool strachable);
+
+ private:
+        Type elementType;
+        Alignment elementAlignemnt;
+        bool isStrachable;
+};
+
 class RkLayout::RkLayoutImpl {
  public:
         explicit RkLayoutImpl(RkLayout* interface, RkWidget* parent = nullptr);
         virtual ~RkLayoutImpl();
+        void addElement(std::unique_ptr<RkLayoutElement> elements);
         void setPadding(int padding);
         int padding();
         virtual void update() = 0;
+        std::list<RkLayoutElement*>& layoutElements();
+        RkWidget* getParentWidget();
+        std::list<RkLayoutElement*>& getLayoutElements();
 
  private:
         RK_DISABLE_COPY(RkLayoutImpl)
         RK_DISABLE_MOVE(RkLayoutImpl)
         RK_DECALRE_INTERFACE_PTR(RkLayout)
         RkWidget *parentWidget;
-        std::list<RkLayoutElement*> layoutWidgets;
-        int itemsPagging;
+        std::list<RkLayoutElement*> layoutElements;
+        int elementsPagging;
 };
 
 #endif // RK_LAYOUT_IMPL_H

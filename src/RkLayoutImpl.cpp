@@ -23,10 +23,37 @@
 
 #include "RkLayoutImpl.h"
 
+RkLayoutElement::RkLayoutElement() :
+        , elementType{Type::Unknwon}
+        , elementAlignemnt{Unalingned}
+        , isStrachable{false}
+
+~RkLayoutElement();
+
+RkLayoutElement::Alignemnt RkLayoutElement::alignment()
+{
+        return elementAlignemnt;
+}
+
+void RkLayoutElement::setAlignemnt(RkLayoutElement::Alignemnt alignment)
+{
+        elementAlignemnt = alignment;
+}
+
+bool RkLayoutElement::strachable() const
+{
+        return isStrachable;
+}
+
+void RkLayoutElement::setStrachable(bool strachable)
+{
+        isStrachable = strachable;
+}
+
 RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
         : inf_ptr{layoutInterface}
         , parentWidget{parent}
-        , itemsPagging{0}
+        , elementsPagging{0}
 {
 }
 
@@ -37,11 +64,20 @@ RkLayout::RkLayoutImpl::~RkLayoutImpl()
 void RkLayout::RkLayoutImpl::setPadding(int padding)
 {
         RK_UNUSED(padding);
-        itemsPagging = padding;
+        elementsPagging = padding;
 }
 
 int RkLayout::RkLayoutImpl::padding()
 {
-        return itemsPadding;
+        return elementsPadding;
 }
 
+RkWidget* RkLayout::RkLayoutImpl::getParentWidget()
+{
+        return parentWidget;
+}
+
+std::list<RkLayoutElement*>& RkLayout::RkLayoutImpl::getLayoutElements()
+{
+        return layoutElements;
+}

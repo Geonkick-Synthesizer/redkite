@@ -25,17 +25,40 @@
 #define RK_BOX_LAYOUT_IMPL_H
 
 #include "RkBoxLayout.h"
+#include "RkLayoutElement.h"
+
+class RkBoxLayoutWidgetElement: public RkLayoutElement {
+ public:
+        RkBoxLayoutWidgetElement(RkWidget* widget);
+        ~RkBoxLayoutWidgetElement();
+        Type type() const final;
+        std::pair<int, int> minSize() const final;
+        std::pair<int, int> maxSize() const final;
+        void setSize(std::pair<int, int>) final;
+        RkWidget *widget();
+
+ private:
+        RkWidget* elementWidget;
+};
+
 
 class RkBoxLayout::RkBoxLayoutImpl: public RkLayout::RkLayoutImpl {
  public:
-        explicit RkBoxLayoutImpl(RkBoxLayout* interface, RkWidget* parent = nullptr, Orientation orientation);
+        explicit RkBoxLayoutImpl(RkBoxLayout* interface,
+                                 RkWidget* parent = nullptr,
+                                 Orientation orientation);
         ~RkBoxLayoutImpl();
-        void update() final;
+        std::vector<RkBoxLayoutItem*> strachables();
         void addWidget(RkWidget *widget);
-        void addSpace(int space);
-        void addLayout(RkBoxLayout *layout);
-        Orientation orientation() const;
+        void addSpace(int space, bool stretchable);
         void setOrientation(Orientation orientation);
+        Orientation orientation();
+        int getMinimum();
+        void update() final;
+        std::set<RkBoxLayoutItem*> freeItems();
+        void setAllToMinmum();
+        void arrangeItems();
+        int boxLength();
 
  private:
         RK_DISABLE_COPY(RkBoxLayoutImpl)

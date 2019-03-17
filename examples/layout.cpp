@@ -29,7 +29,7 @@ class LayoutExample : public RkWidget {
   public:
         LayoutExample()
         {
-                auto layout = new RkLayout(this, RkLayout::Type::Vertical);
+                auto layout = new RkBoxLayout(this, RkLayout::Type::Vertical);
                 layout->setPadding(3);
                 for (auto i = 0; i < 4; i++) {
                         auto widget = new RkWidget(this);

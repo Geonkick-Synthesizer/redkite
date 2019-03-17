@@ -27,6 +27,7 @@
 #include "Rk.h"
 
 class RkWidget;
+class RkLayoutItem;
 
 class RkLayout {
  public:

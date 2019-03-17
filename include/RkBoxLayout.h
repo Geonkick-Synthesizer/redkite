@@ -34,15 +34,14 @@ class RkBoxLayout: RkLayout {
                 Vertical,
                 Horizontal
           };
-        
+
           explicit RkBoxLayout(RkWidget *parent = nullptr, Orientation orientaiton = Orientation::Vertical);
           ~RkBoxLayout();
           Type type() const;
-          void setOrientation(Orientation orientation);
-          Orientation orientation() const;
           void addWidget(RkWidget *widget);
-          void addSpace(int space);
-          void addLayout(RkLayout *layout);
+          void addSpace(int space, bool stretchable);
+          void setOrientation(Orientation orientation);
+          Orientation orientation();
 
  protected:
           RK_DECLARE_IMPL(RkBoxLayout)
