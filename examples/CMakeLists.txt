@@ -81,7 +81,7 @@ target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
 
 add_executable(layout
   ${RK_HEADERS}
-  ${RK_EXAMPLES_PATH}/layout.cpp))
+  ${RK_EXAMPLES_PATH}/layout.cpp)
 
 add_dependencies(layout redkite)
 target_link_libraries(layout redkite)

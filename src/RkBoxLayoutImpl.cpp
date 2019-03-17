@@ -74,7 +74,7 @@ RkBoxLayoutSpaceElement::RkBoxLayoutSpaceElement(int space)
 {
 }
 
-RkBoxLayoutSpaceElement::~RkBoxLayoutSpaceElement()
+/*RkBoxLayoutSpaceElement::~RkBoxLayoutSpaceElement()
 {
 }
 
@@ -122,6 +122,7 @@ bool RkBoxLayoutElement::fixedHeight() const
 {
         return false;
 }
+*/
 
 RkBoxLayout::RkBoxLayoutImpl::RkBoxLayoutImpl(RkBoxLayout* interface,
                                               RkWidget* parent,
@@ -236,9 +237,11 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
 std::set<RkBoxLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::freeElements()
 {
         std::vector<RkBoxLayoutElement*> elements;
-        for (const auto &element: getLayoutElements())
-                if (!element->isFixed())
+        for (const auto &element: getLayoutElements()) {
+                if (orientation() == RkBoxLayout::Orientation::Horizontal && element->fixedWith()
+                    || orientation() == RkBoxLayout::Orientation::Vertical && element->fixedHeight())
                         elements.push_back(element);
+        }
         return elements;
 }
 

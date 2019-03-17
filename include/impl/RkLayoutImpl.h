@@ -29,6 +29,7 @@
 class RkLayoutElement {
  public:
         enum class Type : int {
+                Unknown,
                 BoxWidget,
                 BoxSpace,
                 BoxLayout,
@@ -37,16 +38,16 @@ class RkLayoutElement {
         };
 
         enum  Alignment : int {
-                Unaligned,
+                Unalingned,
                 AlignLeft,
-                AlignRight,
+                AlignRight
         };
 
         RkLayoutElement();
         virtual ~RkLayoutElement();
         virtual Type type() const = 0;
-        Alignemnt alignment() const;
-        void setAlignemnt(Alignment align);
+        Alignment alignment() const;
+        void setAlignemnt(Alignment alignment);
         virtual std::pair<int, int> minSize() const = 0;
         virtual std::pair<int, int> maxSize() const = 0;
         virtual void setSize(std::pair<int, int>) = 0;
@@ -56,26 +57,25 @@ class RkLayoutElement {
         virtual void hight(int height) const = 0;
         virtual bool fixedWidth() const = 0;
         virtual bool fixedHeight() const = 0;
-        bool strachable() const;
-        void setStachable(bool strachable);
+        bool stretchable() const;
+        void setStretchable(bool stretchable);
 
  private:
         Type elementType;
-        Alignment elementAlignemnt;
-        bool isStrachable;
+        Alignment elementAlignment;
+        bool isStretchable;
 };
 
 class RkLayout::RkLayoutImpl {
  public:
         explicit RkLayoutImpl(RkLayout* interface, RkWidget* parent = nullptr);
         virtual ~RkLayoutImpl();
-        void addElement(std::unique_ptr<RkLayoutElement> elements);
+        void addElement(RkLayoutElement* element);
         void setPadding(int padding);
         int padding();
-        virtual void update() = 0;
-        std::list<RkLayoutElement*>& layoutElements();
         RkWidget* getParentWidget();
         std::list<RkLayoutElement*>& getLayoutElements();
+        virtual void update();
 
  private:
         RK_DISABLE_COPY(RkLayoutImpl)
@@ -83,7 +83,7 @@ class RkLayout::RkLayoutImpl {
         RK_DECALRE_INTERFACE_PTR(RkLayout)
         RkWidget *parentWidget;
         std::list<RkLayoutElement*> layoutElements;
-        int elementsPagging;
+        int elementsPadding;
 };
 
 #endif // RK_LAYOUT_IMPL_H

@@ -25,26 +25,19 @@
 #define RK_LAYOUT_H
 
 #include "Rk.h"
-
-class RkWidget;
-class RkLayoutItem;
+#include "RkWidget.h"
 
 class RkLayout {
  public:
-        enum class Type : int {
-                  UnknwonLayout,
-                  BoxLayout,
-                  GridLayout
-          };
           RkLayout(RkWidget *parent = nullptr);
           virtual ~RkLayout();
           void setPadding(int padding);
           int padding() const;
-          virtual Type type() const = 0;
+          virtual void update() = 0;
 
  protected:
           RK_DECLARE_IMPL(RkLayout)
-          RkLayout(RkLayout *parent, const std::shared_ptr<RkLayoutImpl> &impl);
+          RkLayout(RkWidget *parent, const std::shared_ptr<RkLayoutImpl> &impl);
 
  private:
           RK_DISABLE_COPY(RkLayout)

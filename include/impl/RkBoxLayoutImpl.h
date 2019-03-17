@@ -25,7 +25,9 @@
 #define RK_BOX_LAYOUT_IMPL_H
 
 #include "RkBoxLayout.h"
-#include "RkLayoutElement.h"
+#include "RkLayoutImpl.h"
+
+#include <vector>
 
 class RkBoxLayoutWidgetElement: public RkLayoutElement {
  public:
@@ -46,16 +48,17 @@ class RkBoxLayout::RkBoxLayoutImpl: public RkLayout::RkLayoutImpl {
  public:
         explicit RkBoxLayoutImpl(RkBoxLayout* interface,
                                  RkWidget* parent = nullptr,
-                                 Orientation orientation);
+                                 Orientation orientation = Orientation::Horizontal);
         ~RkBoxLayoutImpl();
-        std::vector<RkBoxLayoutItem*> strachables();
+        std::vector<RkLayoutElement*> strachables();
         void addWidget(RkWidget *widget);
         void addSpace(int space, bool stretchable);
         void setOrientation(Orientation orientation);
         Orientation orientation();
+
+ protected:
         int getMinimum();
         void update() final;
-        std::set<RkBoxLayoutItem*> freeItems();
         void setAllToMinmum();
         void arrangeItems();
         int boxLength();

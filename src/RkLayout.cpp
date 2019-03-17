@@ -43,11 +43,6 @@ RkLayout::~RkLayout()
 {
 }
 
-void RkLayout::addItem(std::unique_ptr<RkLayoutItem> item)
-{
-        o_ptr->addItem(std::move(item));
-}
-
 void RkLayout::setPadding(int padding)
 {
         o_ptr->setPadding(padding);

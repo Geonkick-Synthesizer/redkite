@@ -23,37 +23,41 @@
 
 #include "RkLayoutImpl.h"
 
-RkLayoutElement::RkLayoutElement() :
-        , elementType{Type::Unknwon}
-        , elementAlignemnt{Unalingned}
-        , isStrachable{false}
-
-~RkLayoutElement();
-
-RkLayoutElement::Alignemnt RkLayoutElement::alignment()
+RkLayoutElement::RkLayoutElement()
+        : elementType{Type::Unknown}
+        , elementAlignment{Alignment::Unalingned}
+        , isStretchable{false}
 {
-        return elementAlignemnt;
 }
 
-void RkLayoutElement::setAlignemnt(RkLayoutElement::Alignemnt alignment)
+RkLayoutElement::~RkLayoutElement()
 {
-        elementAlignemnt = alignment;
 }
 
-bool RkLayoutElement::strachable() const
+RkLayoutElement::Alignment RkLayoutElement::alignment() const
 {
-        return isStrachable;
+        return elementAlignment;
 }
 
-void RkLayoutElement::setStrachable(bool strachable)
+void RkLayoutElement::setAlignemnt(RkLayoutElement::Alignment alignment)
 {
-        isStrachable = strachable;
+        elementAlignment = alignment;
+}
+
+bool RkLayoutElement::stretchable() const
+{
+        return isStretchable;
+}
+
+void RkLayoutElement::setStretchable(bool stretchable)
+{
+        isStretchable = stretchable;
 }
 
 RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent)
         : inf_ptr{layoutInterface}
         , parentWidget{parent}
-        , elementsPagging{0}
+        , elementsPadding{0}
 {
 }
 
@@ -64,7 +68,7 @@ RkLayout::RkLayoutImpl::~RkLayoutImpl()
 void RkLayout::RkLayoutImpl::setPadding(int padding)
 {
         RK_UNUSED(padding);
-        elementsPagging = padding;
+        elementsPadding = padding;
 }
 
 int RkLayout::RkLayoutImpl::padding()

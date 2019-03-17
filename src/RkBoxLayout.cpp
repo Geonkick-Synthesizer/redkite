@@ -65,3 +65,9 @@ RkBoxLayout::Orientation RkBoxLayout::orientation()
 {
         o_ptr->orientation();
 }
+
+RkBoxLayout::Orientation RkBoxLayout::update()
+{
+        o_ptr->update();
+}
+

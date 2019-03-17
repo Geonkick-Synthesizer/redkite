@@ -23,6 +23,7 @@
 
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
+#include "RkLayout.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
