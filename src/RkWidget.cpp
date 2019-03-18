@@ -111,6 +111,16 @@ int RkWidget::width() const
         return o_ptr->size().first;
 }
 
+int RkWidget::minimumWidth() const
+{
+        return o_ptr->minimumWidth();
+}
+
+int RkWidget::maximumWidth() const
+{
+        return o_ptr->maximumWidth();
+}
+
 void RkWidget::setHeight(int h)
 {
         o_ptr->setSize({o_ptr->size().first, h});
@@ -119,6 +129,16 @@ void RkWidget::setHeight(int h)
 int RkWidget::height() const
 {
         return o_ptr->size().second;
+}
+
+int RkWidget::minimumHeight() const
+{
+        return o_ptr->minimumHeight();
+}
+
+int RkWidget::maximumHeight() const
+{
+        return o_ptr->maximumHeight();
 }
 
 int RkWidget::x() const

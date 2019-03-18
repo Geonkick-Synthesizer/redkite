@@ -34,10 +34,18 @@ class RkBoxLayoutWidgetElement: public RkLayoutElement {
         RkBoxLayoutWidgetElement(RkWidget* widget);
         ~RkBoxLayoutWidgetElement();
         Type type() const final;
-        std::pair<int, int> minSize() const final;
-        std::pair<int, int> maxSize() const final;
-        void setSize(std::pair<int, int>) final;
-        RkWidget *widget();
+        int minimumWidth() const final;
+        int maximumWidth() const final;
+        int minimumHeight() const final;
+        int maximumHeight() const final;
+        int width() const final;
+        int hight() const final;
+        void setWidth(int width) final;
+        void setHeight(int height) final;
+        bool fixedWidth() const final;
+        bool fixedHeight() const final;
+        void setSize(const std::pair<int, int> &size) final;
+        RkWidget* widget();
 
  private:
         RkWidget* elementWidget;
@@ -50,15 +58,15 @@ class RkBoxLayout::RkBoxLayoutImpl: public RkLayout::RkLayoutImpl {
                                  RkWidget* parent = nullptr,
                                  Orientation orientation = Orientation::Horizontal);
         ~RkBoxLayoutImpl();
-        std::vector<RkLayoutElement*> strachables();
+        std::vector<RkBoxLayoutWidgetElement*> stretchables() const;
         void addWidget(RkWidget *widget);
-        void addSpace(int space, bool stretchable);
         void setOrientation(Orientation orientation);
         Orientation orientation();
+        void update() final;
 
  protected:
+        std::vector<RkBoxLayoutWidgetElement*> strachables() const;
         int getMinimum();
-        void update() final;
         void setAllToMinmum();
         void arrangeItems();
         int boxLength();

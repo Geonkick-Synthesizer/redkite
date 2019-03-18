@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkLayoutImpl.h"
+#include "RkBoxLayoutImpl.h"
 
 RkBoxLayoutWidgetElement::RkBoxLayoutWidgetElement(RkWidget* widget)
         : elementWidget{widget}
@@ -32,116 +32,89 @@ RkBoxLayoutWidgetElement::~RkBoxLayoutWidgetElement()
 {
 }
 
-RkBoxLayoutElement::Type type()
+RkLayoutElement::Type RkBoxLayoutWidgetElement::type() const
 {
-        return RkBoxLayoutElement::Type::BoxWidget;
+        return RkLayoutElement::Type::BoxWidget;
 }
 
-std::pair<int, int> minSize() const
+int RkBoxLayoutWidgetElement::minimumWidth() const
 {
-        return widget()->minSize();
+        return elementWidget->minimumWidth();
 }
 
-std::pair<int, int> maxSize() const
+int RkBoxLayoutWidgetElement::maximumWidth() const
 {
-        return widget()->maxSize();
+        return elementWidget->maximumWidth();
 }
 
-void RkBoxLayoutElement::setSize(std::pair<int, int> &size)
+int RkBoxLayoutWidgetElement::minimumHeight() const
 {
-        widget()->setSize(size);
+        return elementWidget->minimumHeight();
 }
 
-RkWidget* RkBoxLayoutElement::widget()
+int RkBoxLayoutWidgetElement::maximumHeight() const
+{
+        return elementWidget->maximumHeight();
+}
+
+void RkBoxLayoutWidgetElement::setSize(const std::pair<int, int> &size)
+{
+        elementWidget->setSize(size);
+}
+
+int RkBoxLayoutWidgetElement::width() const
+{
+        return elementWidget->width();
+}
+
+int RkBoxLayoutWidgetElement::height() const
+{
+        return elementWidget->height();
+}
+
+void RkBoxLayoutWidgetElement::setWidth(int width)
+{
+        elementWidget->setWidth(width);
+}
+
+void RkBoxLayoutWidgetElement::setHeight(int height)
+{
+        elementWidget->setWidth(height);
+}
+
+RkWidget* RkBoxLayoutWidgetElement::widget()
 {
         return elementWidget;
 }
 
-bool RkBoxLayoutElement::fixedWidth() const;
+bool RkBoxLayoutWidgetElement::fixedWidth() const
 {
         return false;
 }
 
-bool RkBoxLayoutElement::fixedHeight() const
+bool RkBoxLayoutWidgetElement::fixedHeight() const
 {
         return false;
 }
-
-RkBoxLayoutSpaceElement::RkBoxLayoutSpaceElement(int space)
-        : spaceValue{space}
-        , spaceMinSize{0}
-        , spaceMaxSize{1000000}
-{
-}
-
-/*RkBoxLayoutSpaceElement::~RkBoxLayoutSpaceElement()
-{
-}
-
-RkBoxLayoutElement::Type type()
-{
-        return RkBoxLayoutElement::Type::BoxSpace;
-}
-
-int RkBoxLayoutElement::minSize() const
-{
-        return spaceMinSize;
-}
-
-std::pair<int, int> maxSize() const
-{
-        return spaceMaxSize;
-}
-
-void RkBoxLayoutElement::setWidth(int width)
-{
-        elementSpace = width;
-}
-
-void RkBoxLayoutElement::setHeight(int height)
-{
-        elementSpace = width;
-}
-
-int RkBoxLayoutElement::width(int width)
-{
-        return spaceValue;
-}
-
-int RkBoxLayoutElement::height(int height)
-{
-        return spaceValue;
-}
-
-bool RkBoxLayoutElement::fixedWidth() const;
-{
-        return false;
-}
-
-bool RkBoxLayoutElement::fixedHeight() const
-{
-        return false;
-}
-*/
 
 RkBoxLayout::RkBoxLayoutImpl::RkBoxLayoutImpl(RkBoxLayout* interface,
                                               RkWidget* parent,
-                                              RkBoxLayout::Orinetation orinetation)
+                                              RkBoxLayout::Orientation orientation)
         : RkLayoutImpl(static_cast<RkLayout*>(interface), parent)
-        , boxOrientation{orinetation}
+        , boxOrientation{orientation}
 {
 }
 
-RkBoxLayout::RkBoxLayoutImpl::~RkLayoutImpl()
+RkBoxLayout::RkBoxLayoutImpl::~RkBoxLayoutImpl()
 {
 }
 
-std::vector<RkBoxLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::strachables()
+std::vector<RkBoxLayoutWidgetElement*> RkBoxLayout::RkBoxLayoutImpl::stretchables() const
 {
-        std::vector<RkBoxLayoutElement*> v;
-        for (const auto &element: layoutElements())
-                if (element->strachable())
-                        v.push_back(element);
+        std::vector<RkBoxLayoutWidgetElement*> v;
+        for (const auto &element: getLayoutElements())
+                if (element->stretchable())
+                        v.push_back(dynamic_cast<RkBoxLayoutWidgetElement*>(element));
 
         return v;
 }
@@ -149,11 +122,6 @@ std::vector<RkBoxLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::strachables()
 void RkBoxLayout::RkBoxLayoutImpl::addWidget(RkWidget *widget)
 {
         addElement(static_cast<RkLayoutElement*>(new RkBoxLayoutWidgetElement(widget)));
-}
-
-void RkBoxLayout::RkBoxLayoutImpl::addSpace(int space, bool stretchable)
-{
-        addElement(static_cast<RkLayoutElement*>(new RkBoxLayoutSpaceElement(widget)));
 }
 
 void RkBoxLayout::RkBoxLayoutImpl::setOrientation(Orientation orientation)

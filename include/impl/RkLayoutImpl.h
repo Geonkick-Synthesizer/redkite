@@ -48,13 +48,15 @@ class RkLayoutElement {
         virtual Type type() const = 0;
         Alignment alignment() const;
         void setAlignemnt(Alignment alignment);
-        virtual std::pair<int, int> minSize() const = 0;
-        virtual std::pair<int, int> maxSize() const = 0;
-        virtual void setSize(std::pair<int, int>) = 0;
+        virtual int minimumWidth() const = 0;
+        virtual int minimumHeight() const = 0;
+        virtual int maximumWidth() const = 0;
+        virtual int maximumHeight() const = 0;
+        virtual void setSize(const std::pair<int, int> &size) = 0;
         virtual void setWidth(int width) = 0;
         virtual void setHeight(int height) = 0;
-        virtual void width(int width) const = 0;
-        virtual void hight(int height) const = 0;
+        virtual int width() const = 0;
+        virtual int hight() const = 0;
         virtual bool fixedWidth() const = 0;
         virtual bool fixedHeight() const = 0;
         bool stretchable() const;
@@ -71,10 +73,11 @@ class RkLayout::RkLayoutImpl {
         explicit RkLayoutImpl(RkLayout* interface, RkWidget* parent = nullptr);
         virtual ~RkLayoutImpl();
         void addElement(RkLayoutElement* element);
+        bool elementExists(const RkLayoutElement* element) const;
         void setPadding(int padding);
         int padding();
         RkWidget* getParentWidget();
-        std::list<RkLayoutElement*>& getLayoutElements();
+        const std::list<RkLayoutElement*>& getLayoutElements() const;
         virtual void update();
 
  private:

@@ -59,6 +59,11 @@ class RkWidget::RkWidgetImpl {
 
         void setSize(const std::pair<int, int> &size);
         std::pair<int, int> size() const;
+        int minimumWidth() const;
+        int maximumWidth() const;
+        int minimumHeight() const;
+        int maximumHeight() const;
+
         void setPosition(const std::pair<int, int> &position);
         std::pair<int, int> position() const;
         void setBorderWidth(int width);

@@ -180,6 +180,30 @@ std::pair<int, int> RkWidget::RkWidgetImpl::size() const
         return  platformWindow->size();
 }
 
+int RkWidget::RkWidgetImpl::minimumWidth() const
+{
+        // TODO: implement.
+        return 0;
+}
+
+int RkWidget::RkWidgetImpl::maximumWidth() const
+{
+        // TODO: implement.
+        return 0;
+}
+
+int RkWidget::RkWidgetImpl::minimumHeight() const
+{
+        // TODO: implement.
+        return 0;
+}
+
+int RkWidget::RkWidgetImpl::maximumHeight() const
+{
+        // TODO: implement.
+        return 1000000;
+}
+
 void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)
 {
         platformWindow->setPosition(position);

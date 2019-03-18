@@ -35,9 +35,7 @@ class RkLabel : public RkWidget {
     std::string text() const;
 
  protected:
-    class RkLabelImpl;
     RK_DELCATE_IMPL_PTR(RkLabel)
-    //    RkLabel(RkLabelImpl &impl);
 };
 
 #endif // RK_LABEL_H

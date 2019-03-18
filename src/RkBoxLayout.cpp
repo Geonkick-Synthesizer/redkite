@@ -25,13 +25,9 @@
 #include "RkBoxLayout.h"
 #include "RkBoxLayoutImpl.h"
 
-RkBoxLayout::RkBoxLayout(RkWidget *parent, Orientation *orientation)
-        : o_ptr{std::make_shared<RkBoxLayoutImpl>(this, parent, orientation)}
-{
-}
-
-RkBoxLayout::RkBoxLayout(RkWidget *parent, const std::shared_ptr<RkBoxLayoutImpl> &impl)
-        : o_ptr{impl}
+RkBoxLayout::RkBoxLayout(RkWidget *parent, Orientation orientation)
+        : RkLayout(parent, std::static_pointer_cast<RkLayout::RkLayoutImpl>(std::make_shared<RkBoxLayoutImpl>(this, parent, orientation)))
+        , impl_ptr{std::static_pointer_cast<RkBoxLayout::RkBoxLayoutImpl>(o_ptr)}
 {
 }
 
@@ -39,35 +35,24 @@ RkBoxLayout::~RkBoxLayout()
 {
 }
 
-RkBoxLayout::Type type() const
-{
-        return RkBoxLayout::Type::BoxLayout;
-}
-
 void RkBoxLayout::addWidget(RkWidget *widget)
 {
-        o_ptr->addWidget(widget);
-        update();
-}
-
-void RkBoxLayout::addSpace(int space, bool stretchable)
-{
-        o_ptr->addSpace(space, stretchable);
+        impl_ptr->addWidget(widget);
         update();
 }
 
 void RkBoxLayout::setOrientation(RkBoxLayout::Orientation orientation)
 {
-        o_ptr->setOrientation(orientation);
+        impl_ptr->setOrientation(orientation);
 }
 
 RkBoxLayout::Orientation RkBoxLayout::orientation()
 {
-        o_ptr->orientation();
+        return impl_ptr->orientation();
 }
 
-RkBoxLayout::Orientation RkBoxLayout::update()
+void RkBoxLayout::update()
 {
-        o_ptr->update();
+        impl_ptr->update();
 }
 

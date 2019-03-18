@@ -65,6 +65,20 @@ RkLayout::RkLayoutImpl::~RkLayoutImpl()
 {
 }
 
+void RkLayout::RkLayoutImpl::addElement(RkLayoutElement* element)
+{
+        if (element && !elementExists(element))
+                layoutElements.push_back(element);
+}
+
+bool RkLayout::RkLayoutImpl::elementExists(const RkLayoutElement* element) const
+{
+        for (const auto &e: layoutElements)
+                if (e == element)
+                        return true;
+        return false;
+}
+
 void RkLayout::RkLayoutImpl::setPadding(int padding)
 {
         RK_UNUSED(padding);
@@ -81,7 +95,7 @@ RkWidget* RkLayout::RkLayoutImpl::getParentWidget()
         return parentWidget;
 }
 
-std::list<RkLayoutElement*>& RkLayout::RkLayoutImpl::getLayoutElements()
+const std::list<RkLayoutElement*>& RkLayout::RkLayoutImpl::getLayoutElements() const
 {
         return layoutElements;
 }

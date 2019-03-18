@@ -39,14 +39,12 @@ class RkBoxLayout: RkLayout {
           ~RkBoxLayout();
           Orientation orientation() const;
           void addWidget(RkWidget *widget);
-          void addSpace(int space, bool stretchable);
           void setOrientation(Orientation orientation);
           Orientation orientation();
           void update() final;
 
  protected:
-          RK_DECLARE_IMPL(RkBoxLayout)
-          RkBoxLayout(RkBoxLayout *parent, const std::shared_ptr<RkBoxLayoutImpl> &impl);
+          RK_DELCATE_IMPL_PTR(RkBoxLayout)
 
  private:
           RK_DISABLE_COPY(RkBoxLayout)
