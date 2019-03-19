@@ -90,7 +90,7 @@ int RkLayout::RkLayoutImpl::padding()
         return elementsPadding;
 }
 
-RkWidget* RkLayout::RkLayoutImpl::getParentWidget()
+RkWidget* RkLayout::RkLayoutImpl::getParentWidget() const
 {
         return parentWidget;
 }
@@ -98,4 +98,8 @@ RkWidget* RkLayout::RkLayoutImpl::getParentWidget()
 const std::list<RkLayoutElement*>& RkLayout::RkLayoutImpl::getLayoutElements() const
 {
         return layoutElements;
+}
+
+void RkLayout::RkLayoutImpl::update()
+{
 }

@@ -34,11 +34,6 @@ RkLabel::RkLabelImpl::~RkLabelImpl()
 {
 }
 
-RkLabel::RkLabelImpl::addItem(std::unique_ptr<RkLayoutItem> item)
-{
-        layoutItemList.push_back(std::move(item));
-}
-
 void RkLabel::RkLabelImpl::setText(const std::string &text)
 {
         labelText = text;

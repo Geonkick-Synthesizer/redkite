@@ -23,14 +23,14 @@
 
 #include "RkMain.h"
 #include "RkWidget.h"
-#include "RkVLayout.h"
+#include "RkBoxLayout.h"
+#include "RkLog.h"
 
 class LayoutExample : public RkWidget {
   public:
         LayoutExample()
         {
-                auto layout = new RkBoxLayout(this, RkLayout::Type::Vertical);
-                layout->setPadding(3);
+                auto layout = new RkBoxLayout(this, RkBoxLayout::Orientation::Vertical);
                 for (auto i = 0; i < 4; i++) {
                         auto widget = new RkWidget(this);
                         widget->setTitle("Widget" + std::to_string(i + 1));

@@ -39,7 +39,11 @@ class RkBoxLayoutWidgetElement: public RkLayoutElement {
         int minimumHeight() const final;
         int maximumHeight() const final;
         int width() const final;
-        int hight() const final;
+        int height() const final;
+        void setX(int val) final;
+        void setY(int val) final;
+        int x() const final;
+        int y() const final;
         void setWidth(int width) final;
         void setHeight(int height) final;
         bool fixedWidth() const final;
@@ -58,18 +62,19 @@ class RkBoxLayout::RkBoxLayoutImpl: public RkLayout::RkLayoutImpl {
                                  RkWidget* parent = nullptr,
                                  Orientation orientation = Orientation::Horizontal);
         ~RkBoxLayoutImpl();
-        std::vector<RkBoxLayoutWidgetElement*> stretchables() const;
         void addWidget(RkWidget *widget);
         void setOrientation(Orientation orientation);
-        Orientation orientation();
+        Orientation orientation() const;
         void update() final;
 
  protected:
-        std::vector<RkBoxLayoutWidgetElement*> strachables() const;
-        int getMinimum();
+        std::vector<RkLayoutElement*> stretchables() const;
+        int getMinimum() const;
         void setAllToMinmum();
-        void arrangeItems();
-        int boxLength();
+        int boxLength() const;
+        void arrangeElements();
+        void setStretchablesSize(const std::vector<RkLayoutElement*> &stretchableElements, int size);
+        std::vector<RkLayoutElement*> getFreeElements();
 
  private:
         RK_DISABLE_COPY(RkBoxLayoutImpl)

@@ -53,10 +53,14 @@ class RkLayoutElement {
         virtual int maximumWidth() const = 0;
         virtual int maximumHeight() const = 0;
         virtual void setSize(const std::pair<int, int> &size) = 0;
-        virtual void setWidth(int width) = 0;
+        virtual void setX(int val) = 0;
+        virtual void setY(int val) = 0;
+        virtual int x() const = 0;
+        virtual int y() const = 0;
         virtual void setHeight(int height) = 0;
+        virtual void setWidth(int width) = 0;
         virtual int width() const = 0;
-        virtual int hight() const = 0;
+        virtual int height() const = 0;
         virtual bool fixedWidth() const = 0;
         virtual bool fixedHeight() const = 0;
         bool stretchable() const;
@@ -76,7 +80,7 @@ class RkLayout::RkLayoutImpl {
         bool elementExists(const RkLayoutElement* element) const;
         void setPadding(int padding);
         int padding();
-        RkWidget* getParentWidget();
+        RkWidget* getParentWidget() const;
         const std::list<RkLayoutElement*>& getLayoutElements() const;
         virtual void update();
 
