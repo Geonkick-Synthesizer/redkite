@@ -89,6 +89,8 @@ class RkWidget::RkWidgetImpl {
         bool widgetClosed;
         RkEventQueue* eventQueue;
         RkLayout *widgetLayout;
+        std::pair<int, int> widgetMinimumSize;
+        std::pair<int, int> widgetMaximumSize;
 };
 
 #endif // RK_WIDGET_IMPL_H

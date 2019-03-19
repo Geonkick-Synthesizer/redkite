@@ -49,6 +49,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetClosed{false}
         , eventQueue{nullptr}
         , widgetLayout{nullptr}
+        , widgetMinimumSize{0, 0}
+        , widgetMaximumSize{1000000, 1000000}
 {
         platformWindow->init();
 }
@@ -182,26 +184,22 @@ std::pair<int, int> RkWidget::RkWidgetImpl::size() const
 
 int RkWidget::RkWidgetImpl::minimumWidth() const
 {
-        // TODO: implement.
-        return 0;
+        return widgetMinimumSize.first;
 }
 
 int RkWidget::RkWidgetImpl::maximumWidth() const
 {
-        // TODO: implement.
-        return 0;
+        return widgetMaximumSize.first;
 }
 
 int RkWidget::RkWidgetImpl::minimumHeight() const
 {
-        // TODO: implement.
-        return 0;
+        return widgetMinimumSize.second;
 }
 
 int RkWidget::RkWidgetImpl::maximumHeight() const
 {
-        // TODO: implement.
-        return 1000000;
+        return widgetMaximumSize.second;
 }
 
 void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)

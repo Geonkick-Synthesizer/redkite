@@ -22,6 +22,7 @@
  */
 
 #include "RkBoxLayoutImpl.h"
+#include "RkLog.h"
 
 RkBoxLayoutWidgetElement::RkBoxLayoutWidgetElement(RkWidget* widget)
         : elementWidget{widget}
@@ -79,7 +80,7 @@ void RkBoxLayoutWidgetElement::setWidth(int width)
 
 void RkBoxLayoutWidgetElement::setHeight(int height)
 {
-        elementWidget->setWidth(height);
+        elementWidget->setHeight(height);
 }
 
 void RkBoxLayoutWidgetElement::setX(int val)
@@ -179,7 +180,9 @@ void RkBoxLayout::RkBoxLayoutImpl::setStretchablesSize(const std::vector<RkLayou
 
 void RkBoxLayout::RkBoxLayoutImpl::update()
 {
+        RK_LOG_INFO("called");
         int minLength = getMinimum();
+        RK_LOG_INFO("called, minLength: " << minLength);
         if (minLength >= boxLength()) {
                 setAllToMinmum();
                 arrangeElements();
@@ -194,23 +197,31 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
                 return;
         }
 
+        RK_LOG_INFO("called1");
+
         auto freeElements = getFreeElements();
         int lengthFree = boxLength() - minLength;
-        if (freeElements.size() > 0) {
+        RK_LOG_INFO("lengthFree: " << lengthFree);
+        if (!freeElements.empty()) {
                 int n = freeElements.size();
                 for (const auto &element : freeElements) {
                         int dL = lengthFree / n;
-                        if (boxOrientation == RkBoxLayout::Orientation::Horizontal)
+                        RK_LOG_INFO("called1 dL:" << dL);
+                        if (boxOrientation == RkBoxLayout::Orientation::Horizontal) {
+                                RK_LOG_INFO("RkBoxLayout::Orientation::Horizontal");
                                 if (element->maximumWidth() - element->minimumWidth() >= dL) {
-                                element->setWidth(element->minimumWidth() + dL);
+                                        element->setWidth(element->minimumWidth() + dL);
                                 } else {
                                         dL = element->maximumWidth() - element->minimumWidth();
                                         element->setWidth(element->maximumWidth());
                                 }
-                        else {
+                        } else {
+                                RK_LOG_INFO("RkBoxLayout::Orientation::Vertical");
                                 if (element->maximumHeight() - element->minimumHeight() >= dL) {
+                                        RK_LOG_INFO("element->minimumHeight() + dL:" << element->minimumHeight() + dL);
                                         element->setHeight(element->minimumHeight() + dL);
                                 } else {
+                                        RK_LOG_INFO("element->maximumHeight() - element->minimumHeight() >= dL: else");
                                         dL = element->maximumHeight() - element->minimumHeight();
                                         element->setHeight(element->maximumHeight());
                                 }
@@ -228,8 +239,8 @@ std::vector<RkLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::getFreeElements()
 {
         std::vector<RkLayoutElement*> elements;
         for (const auto &element: getLayoutElements()) {
-                if ((orientation() == RkBoxLayout::Orientation::Horizontal && element->fixedWidth())
-                    || (orientation() == RkBoxLayout::Orientation::Vertical && element->fixedHeight()))
+                if ((orientation() == RkBoxLayout::Orientation::Horizontal && !element->fixedWidth())
+                    || (orientation() == RkBoxLayout::Orientation::Vertical && !element->fixedHeight()))
                         elements.push_back(element);
         }
         return elements;

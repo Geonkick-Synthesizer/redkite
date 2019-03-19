@@ -26,6 +26,7 @@
 #include "RkEvent.h"
 #include "RkWidgetImpl.h"
 #include "RkPlatform.h"
+#include "RkLayout.h"
 
 RkWidget::RkWidget(RkWidget *parent)
     : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
@@ -98,6 +99,7 @@ void RkWidget::setSize(const std::pair<int, int> &size)
 
 std::pair<int, int> RkWidget::size() const
 {
+        RK_LOG_DEBUG("o_ptr->size().first:" << o_ptr->size().first);        
         return o_ptr->size();
 }
 
@@ -108,6 +110,7 @@ void RkWidget::setWidth(int w)
 
 int RkWidget::width() const
 {
+        RK_LOG_DEBUG("o_ptr->size().first:" << o_ptr->size().first);
         return o_ptr->size().first;
 }
 
@@ -294,6 +297,8 @@ void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
 {
         RK_UNUSED(event);
         RK_LOG_INFO(title() + ":called");
+        if (layout())
+                layout()->update();
 }
 
 void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
