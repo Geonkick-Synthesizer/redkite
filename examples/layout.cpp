@@ -30,11 +30,13 @@ class LayoutExample : public RkWidget {
   public:
         LayoutExample()
         {
+                setSize(300, 300);
                 auto layout = new RkBoxLayout(this, RkBoxLayout::Orientation::Vertical);
                 for (auto i = 0; i < 4; i++) {
                         auto widget = new RkWidget(this);
                         widget->setTitle("Widget" + std::to_string(i + 1));
-                        widget->setBackgroundColor(255, 255 - i * 25, 255);
+                        widget->setBackgroundColor(255 - (i + 4)* 25 / 2, 255 - (i + 4)* 25, 255);
+                        widget->setHeight(30);
                         widget->show();
                         layout->addWidget(widget);
                 }

@@ -254,7 +254,6 @@ void RkWidget::RkWidgetImpl::setLayout(RkLayout *layout)
                 return;
         } else {
                 widgetLayout = layout;
-                widgetLayout->update();
         }
 }
 

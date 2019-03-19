@@ -46,7 +46,6 @@ RkLayout::~RkLayout()
 void RkLayout::setPadding(int padding)
 {
         o_ptr->setPadding(padding);
-        o_ptr->update();
 }
 
 int RkLayout::padding() const
