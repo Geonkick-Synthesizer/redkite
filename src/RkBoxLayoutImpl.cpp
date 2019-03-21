@@ -182,7 +182,6 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
 {
         RK_LOG_INFO("called");
         int minLength = getMinimum();
-        RK_LOG_INFO("called, minLength: " << minLength);
         if (minLength >= boxLength()) {
                 setAllToMinmum();
                 arrangeElements();
@@ -197,18 +196,13 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
                 return;
         }
 
-        RK_LOG_INFO("called1");
-
         auto freeElements = getFreeElements();
         int lengthFree = boxLength() - minLength;
-        RK_LOG_INFO("lengthFree: " << lengthFree);
         if (!freeElements.empty()) {
                 int n = freeElements.size();
                 for (const auto &element : freeElements) {
                         int dL = lengthFree / n;
-                        RK_LOG_INFO("called1 dL:" << dL);
                         if (boxOrientation == RkBoxLayout::Orientation::Horizontal) {
-                                RK_LOG_INFO("RkBoxLayout::Orientation::Horizontal");
                                 if (element->maximumWidth() - element->minimumWidth() >= dL) {
                                         element->setWidth(element->minimumWidth() + dL);
                                 } else {
@@ -216,12 +210,9 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
                                         element->setWidth(element->maximumWidth());
                                 }
                         } else {
-                                RK_LOG_INFO("RkBoxLayout::Orientation::Vertical");
                                 if (element->maximumHeight() - element->minimumHeight() >= dL) {
-                                        RK_LOG_INFO("element->minimumHeight() + dL:" << element->minimumHeight() + dL);
                                         element->setHeight(element->minimumHeight() + dL);
                                 } else {
-                                        RK_LOG_INFO("element->maximumHeight() - element->minimumHeight() >= dL: else");
                                         dL = element->maximumHeight() - element->minimumHeight();
                                         element->setHeight(element->maximumHeight());
                                 }
