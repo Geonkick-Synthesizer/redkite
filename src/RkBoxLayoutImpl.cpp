@@ -180,7 +180,6 @@ void RkBoxLayout::RkBoxLayoutImpl::setStretchablesSize(const std::vector<RkLayou
 
 void RkBoxLayout::RkBoxLayoutImpl::update()
 {
-        RK_LOG_INFO("called");
         int minLength = getMinimum();
         if (minLength >= boxLength()) {
                 setAllToMinmum();
