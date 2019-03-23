@@ -83,6 +83,12 @@ class RkLayout::RkLayoutImpl {
         RkWidget* getParentWidget() const;
         const std::list<RkLayoutElement*>& getLayoutElements() const;
         virtual void update();
+        int x() const;
+        int y() const;
+        int width() const;
+        int height() const;
+        void setSize(const std::pair<int, int> &size);
+        std::pair<int, int> size(void) const;
 
  private:
         RK_DISABLE_COPY(RkLayoutImpl)
@@ -91,6 +97,8 @@ class RkLayout::RkLayoutImpl {
         RkWidget *parentWidget;
         std::list<RkLayoutElement*> layoutElements;
         int elementsPadding;
+        std::pair<int, int> layoutPosition;
+        std::pair<int, int> layoutSize;
 };
 
 #endif // RK_LAYOUT_IMPL_H

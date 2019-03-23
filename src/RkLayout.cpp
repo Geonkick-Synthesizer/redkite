@@ -53,4 +53,16 @@ int RkLayout::padding() const
         return o_ptr->padding();
 }
 
+void RkLayout::setSize(const std::pair<int, int> &size)
+{
+        o_ptr->setSize(size);
+}
+
+std::pair<int, int> RkLayout::size() const
+{
+        return o_ptr->size();
+}
+
+
+
 

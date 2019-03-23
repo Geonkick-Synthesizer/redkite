@@ -30,7 +30,7 @@ class LayoutExample : public RkWidget {
   public:
         LayoutExample()
         {
-                auto layout = new RkBoxLayout(this, RkBoxLayout::Orientation::Vertical);
+                auto layout = new RkBoxLayout(this, RkBoxLayout::Orientation::Horizontal);
                 for (auto i = 0; i < 4; i++) {
                         auto widget = new RkWidget(this);
                         widget->setTitle("Widget" + std::to_string(i + 1));

@@ -58,6 +58,9 @@ RkLayout::RkLayoutImpl::RkLayoutImpl(RkLayout* layoutInterface, RkWidget* parent
         : inf_ptr{layoutInterface}
         , parentWidget{parent}
         , elementsPadding{0}
+        , layoutPosition{0, 0}
+        , layoutSize{parent->size()}
+
 {
 }
 
@@ -102,4 +105,35 @@ const std::list<RkLayoutElement*>& RkLayout::RkLayoutImpl::getLayoutElements() c
 
 void RkLayout::RkLayoutImpl::update()
 {
+}
+
+int RkLayout::RkLayoutImpl::x() const
+{
+        return layoutPosition.first;
+}
+
+int RkLayout::RkLayoutImpl::y() const
+{
+        return layoutPosition.second;
+}
+
+int RkLayout::RkLayoutImpl::width() const
+{
+        return layoutSize.first;
+}
+
+int RkLayout::RkLayoutImpl::height() const
+{
+        return layoutSize.second;
+}
+
+void RkLayout::RkLayoutImpl::setSize(const std::pair<int, int> &size)
+{
+        layoutSize = size;
+        update();
+}
+
+std::pair<int, int> RkLayout::RkLayoutImpl::size(void) const
+{
+        return layoutSize;
 }

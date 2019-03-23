@@ -132,6 +132,8 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         case RkEvent::Type::Resize:
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                if (inf_ptr->layout())
+                        inf_ptr->layout()->setSize(size());
                 break;
         case RkEvent::Type::Close:
                 widgetClosed = true;

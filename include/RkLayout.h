@@ -33,6 +33,8 @@ class RkLayout {
           virtual ~RkLayout();
           void setPadding(int padding);
           int padding() const;
+          void setSize(const std::pair<int, int> &size);
+          std::pair<int, int> size() const;
           virtual void update() = 0;
 
  protected:

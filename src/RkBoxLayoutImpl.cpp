@@ -248,13 +248,15 @@ void RkBoxLayout::RkBoxLayoutImpl::setAllToMinmum()
 
 void RkBoxLayout::RkBoxLayoutImpl::arrangeElements()
 {
-        int pos = boxOrientation == RkBoxLayout::Orientation::Horizontal ? getParentWidget()->x() : getParentWidget()->y();
+        int pos = (boxOrientation == RkBoxLayout::Orientation::Horizontal) ? x() : y();
         for (const auto &element: getLayoutElements()) {
                 if (boxOrientation == RkBoxLayout::Orientation::Horizontal) {
                         element->setX(pos);
+                        element->setHeight(height());
                         pos += element->width();
                 } else {
                         element->setY(pos);
+                        element->setWidth(width());
                         pos += element->height();
                 }
         }
@@ -263,8 +265,8 @@ void RkBoxLayout::RkBoxLayoutImpl::arrangeElements()
 int RkBoxLayout::RkBoxLayoutImpl::boxLength() const
 {
         if (boxOrientation == RkBoxLayout::Orientation::Horizontal)
-                return getParentWidget()->width();
+                return width();
         else
-                return getParentWidget()->height();
+                return height();
 }
 
