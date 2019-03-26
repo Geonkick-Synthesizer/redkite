@@ -69,10 +69,17 @@ class RkWidget {
 	  int width() const;
           int minimumWidth() const;
           int maximumWidth() const;
+          void setMinimumWidth(int width);
+          void setMaximumWidth(int width);
 	  void setHeight(int h);
 	  int height() const;
           int minimumHeight() const;
           int maximumHeight() const;
+          void setMinimumHeight(int height);
+          void setMaximumHeight(int height);
+          void setFixedWidth(int width);
+          void setFixedHeight(int height);
+          void setFixedSize(std::pair<int, int> &size);
           int x() const;
           void setX(int x);
           int y() const;

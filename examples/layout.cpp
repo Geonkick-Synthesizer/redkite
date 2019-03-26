@@ -31,10 +31,19 @@ class LayoutExample : public RkWidget {
         LayoutExample()
         {
                 auto layout = new RkBoxLayout(this, RkBoxLayout::Orientation::Horizontal);
-                for (auto i = 0; i < 4; i++) {
+                for (auto i = 0; i < 6; i++) {
                         auto widget = new RkWidget(this);
+                        if (i % 2) {
+                                widget->setMinimumWidth(120);
+                                //                                widget->setMaximumWidth(160);
+                        }
+                        else
+                                widget->setMinimumWidth(30);
                         widget->setTitle("Widget" + std::to_string(i + 1));
-                        widget->setBackgroundColor(255 - (i + 4)* 25 / 2, 255 - (i + 4)* 25, 255);
+                        if (i == 2)
+                                widget->setBackgroundColor(0, 100, 0);
+                        else
+                                widget->setBackgroundColor(255 - (i + 4)* 25 / 2, 255 - (i + 4)* 25, 255);
                         widget->show();
                         layout->addWidget(widget);
                 }
@@ -48,7 +57,7 @@ int main(int arc, char **argv)
     // Create main window.
     auto layoutWidget = new LayoutExample;
     layoutWidget->setTitle("Layout Example");
-    layoutWidget->setSize(350, 250);
+    layoutWidget->setSize(800, 250);
     layoutWidget->show();
 
     if (!app.setTopLevelWindow(layoutWidget)) {

@@ -204,6 +204,26 @@ int RkWidget::RkWidgetImpl::maximumHeight() const
         return widgetMaximumSize.second;
 }
 
+void RkWidget::RkWidgetImpl::setMinimumWidth(int width)
+{
+        widgetMinimumSize.first = width;
+}
+
+void RkWidget::RkWidgetImpl::setMaximumWidth(int width)
+{
+        widgetMaximumSize.first = width;
+}
+
+void RkWidget::RkWidgetImpl::setMinimumHeight(int height)
+{
+        widgetMinimumSize.second = height;
+}
+
+void RkWidget::RkWidgetImpl::setMaximumHeight(int height)
+{
+        widgetMaximumSize.second = height;
+}
+
 void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)
 {
         platformWindow->setPosition(position);

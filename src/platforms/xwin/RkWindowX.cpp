@@ -32,7 +32,7 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , xWindow(0)
         , windowPosition{0, 0}
         , windowSize{250, 250}
-        , borderWidth{1}
+        , borderWidth{0}
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}

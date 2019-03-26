@@ -89,28 +89,42 @@ void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
 
 void RkWidget::setSize(int w, int h)
 {
+        if (w > maximumWidth())
+                w = maximumWidth();
+        else if (w < minimumWidth())
+                w = minimumWidth();
+
+        if (h > maximumHeight())
+                h = maximumHeight();
+        else if (h < minimumHeight())
+                h = minimumHeight();
+
         o_ptr->setSize({w, h});
 }
 
 void RkWidget::setSize(const std::pair<int, int> &size)
 {
-        o_ptr->setSize(size);
+        setSize(size.first, size.second);
 }
 
 std::pair<int, int> RkWidget::size() const
 {
-        RK_LOG_DEBUG("o_ptr->size().first:" << o_ptr->size().first);
         return o_ptr->size();
 }
 
 void RkWidget::setWidth(int w)
 {
-        o_ptr->setSize({w, o_ptr->size().second});
+        RK_LOG_DEBUG("max: " <<  minimumWidth() << ", w = " << w);
+        if (w > maximumWidth())
+                o_ptr->setSize({maximumWidth(), o_ptr->size().second});
+        else if (w < minimumWidth())
+                o_ptr->setSize({minimumWidth(), o_ptr->size().second});
+        else
+                o_ptr->setSize({w, o_ptr->size().second});
 }
 
 int RkWidget::width() const
 {
-        RK_LOG_DEBUG("o_ptr->size().first:" << o_ptr->size().first);
         return o_ptr->size().first;
 }
 
@@ -126,7 +140,12 @@ int RkWidget::maximumWidth() const
 
 void RkWidget::setHeight(int h)
 {
-        o_ptr->setSize({o_ptr->size().first, h});
+        if (h > maximumHeight())
+                o_ptr->setSize({o_ptr->size().first,  maximumHeight()});
+        else if (h < minimumHeight())
+                o_ptr->setSize({o_ptr->size().first,  minimumHeight()});
+        else
+                o_ptr->setSize({o_ptr->size().first,  h});
 }
 
 int RkWidget::height() const
@@ -142,6 +161,49 @@ int RkWidget::minimumHeight() const
 int RkWidget::maximumHeight() const
 {
         return o_ptr->maximumHeight();
+}
+
+void RkWidget::setMinimumWidth(int width)
+{
+        o_ptr->setMinimumWidth(width);
+}
+
+void RkWidget::setMinimumHeight(int height)
+{
+        o_ptr->setMinimumHeight(height);
+}
+
+void RkWidget::setMaximumWidth(int width)
+{
+        o_ptr->setMaximumWidth(width);
+}
+
+void RkWidget::setMaximumHeight(int height)
+{
+        o_ptr->setMaximumHeight(height);
+}
+
+void RkWidget::setFixedWidth(int width)
+{
+        setMinimumWidth(width);
+        setMaximumWidth(width);
+        setWidth(width);
+}
+
+void RkWidget::setFixedHeight(int height)
+{
+        setMinimumHeight(height);
+        setMaximumHeight(height);
+        setHeight(height);
+}
+
+void RkWidget::setFixedSize(std::pair<int, int> &size)
+{
+        setMinimumWidth(size.first);
+        setMaximumWidth(size.first);
+        setMinimumHeight(size.second);
+        setMaximumHeight(size.second);
+        setSize(size);
 }
 
 int RkWidget::x() const

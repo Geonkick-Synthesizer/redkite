@@ -24,6 +24,8 @@
 #include "RkBoxLayoutImpl.h"
 #include "RkLog.h"
 
+#include <algorithm>
+
 RkBoxLayoutWidgetElement::RkBoxLayoutWidgetElement(RkWidget* widget)
         : elementWidget{widget}
 {
@@ -180,7 +182,7 @@ void RkBoxLayout::RkBoxLayoutImpl::setStretchablesSize(const std::vector<RkLayou
 
 void RkBoxLayout::RkBoxLayoutImpl::update()
 {
-        int minLength = getMinimum();
+        /*        int minLength = getMinimum();
         if (minLength >= boxLength()) {
                 setAllToMinmum();
                 arrangeElements();
@@ -197,31 +199,58 @@ void RkBoxLayout::RkBoxLayoutImpl::update()
 
         auto freeElements = getFreeElements();
         int lengthFree = boxLength() - minLength;
-        if (!freeElements.empty()) {
-                int n = freeElements.size();
-                for (const auto &element : freeElements) {
-                        int dL = lengthFree / n;
-                        if (boxOrientation == RkBoxLayout::Orientation::Horizontal) {
-                                if (element->maximumWidth() - element->minimumWidth() >= dL) {
-                                        element->setWidth(element->minimumWidth() + dL);
-                                } else {
-                                        dL = element->maximumWidth() - element->minimumWidth();
-                                        element->setWidth(element->maximumWidth());
-                                }
-                        } else {
-                                if (element->maximumHeight() - element->minimumHeight() >= dL) {
-                                        element->setHeight(element->minimumHeight() + dL);
-                                } else {
-                                        dL = element->maximumHeight() - element->minimumHeight();
-                                        element->setHeight(element->maximumHeight());
-                                }
+
+        int indexMin = 0;
+        while (lengthFree) {
+                for (auto i = 0; i < freeElements.size(); i++) {
+                        if (freeElements[indexMin]->width() == freeElements[indexMin]->maximumWidth()) {
+                                indexMin++;
+                                i = indexMin;
+                                continue;
                         }
-                        lengthFree -= dL;
-                        if (--n < 1)
-                                break;
+                        if (freeElements[i] == freeElements[indexMin] && freeElements[i]->width() < freeElements[i]->maximumWidth()) {
+                                freeElements[i]->setWidth(freeElements[i]->width() + 1);
+                                if (i == indexMin) {
+                                        freeElements[indexMin]->setWidth(freeElements[i]->width() + 1);
+                                        lengthFree--;
+                                }
+                                lengthFree--;
+                        }
                 }
         }
+        */
+        
+        /*
+        
+        if (!freeElements.empty()) {
+                int dl = boxLength() / freeElements.size();
+                int n = freeElements.size();
+                for (int i = 0; i < freeElements; i++) {
+                        if (freeElements[i] + lengthFree > freeElements[i + 1])
+                }
 
+                
+                for (const auto &element : freeElements) {
+                        //int dL = lengthFree / n;
+                        if (boxOrientation == RkBoxLayout::Orientation::Horizontal) {
+                                if (element->minimumWidth() + lengthFree > element->maximumWidth()) {
+                                        element->setWidth(element->maximumWidth());
+                                        lengthFree = element->minimumWidth() + lengthFree - element->maximumWidth();
+                                } else {
+                                        element->setWidth(element->minimumWidth() + lengthFree / n);
+                                        break;
+                                }
+                        } else {
+                                                                if (element->minimumHeight() + dL > element->maximumHeight()) {
+                                        element->setHeight(element->maximumHeight());
+                                        dL = element->minimumHeight() + dL - element->maximumHeight();
+                                } else {
+                                        element->setHeight(element->minimumHeight() + dL);
+  //                                      }*/
+        //                        }
+//        }
+//      }
+//
         arrangeElements();
 }
 
@@ -233,6 +262,15 @@ std::vector<RkLayoutElement*> RkBoxLayout::RkBoxLayoutImpl::getFreeElements()
                     || (orientation() == RkBoxLayout::Orientation::Vertical && !element->fixedHeight()))
                         elements.push_back(element);
         }
+
+        std::sort(elements.begin(), elements.end(), [this](const RkLayoutElement* a, const RkLayoutElement* b) -> bool
+                  {
+                          if (orientation() == RkBoxLayout::Orientation::Horizontal)
+                                  return a->minimumWidth() < b->minimumWidth();
+                          else
+                                  return a->minimumHeight() < b->minimumHeight();
+                  });
+
         return elements;
 }
 
