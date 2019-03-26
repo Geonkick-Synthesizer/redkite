@@ -23,7 +23,6 @@
 
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
-#include "RkLayout.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
@@ -48,7 +47,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
-        , widgetLayout{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
 {
@@ -67,7 +65,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
-        , widgetLayout{nullptr}
 {
         platformWindow->init();
 }
@@ -132,8 +129,6 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         case RkEvent::Type::Resize:
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
-                if (inf_ptr->layout())
-                        inf_ptr->layout()->setSize(size());
                 break;
         case RkEvent::Type::Close:
                 widgetClosed = true;
@@ -262,22 +257,4 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
 {
         return eventQueue;
-}
-
-void RkWidget::RkWidgetImpl::setLayout(RkLayout *layout)
-{
-        if (!layout)
-                return;
-
-        if (widgetLayout) {
-                RK_LOG_ERROR("layout already set for this widget");
-                return;
-        } else {
-                widgetLayout = layout;
-        }
-}
-
-RkLayout* RkWidget::RkWidgetImpl::layout() const
-{
-        return widgetLayout;
 }

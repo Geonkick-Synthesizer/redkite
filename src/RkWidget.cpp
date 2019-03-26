@@ -26,7 +26,6 @@
 #include "RkEvent.h"
 #include "RkWidgetImpl.h"
 #include "RkPlatform.h"
-#include "RkLayout.h"
 
 RkWidget::RkWidget(RkWidget *parent)
     : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
@@ -273,16 +272,6 @@ void RkWidget::setBackgroundColor(int red, int green, int blue)
                 blue = 0;
 
         o_ptr->setBackgroundColor({red, green, blue});
-}
-
-void RkWidget::setLayout(RkLayout *layout)
-{
-        o_ptr->setLayout(layout);
-}
-
-RkLayout* RkWidget::layout() const
-{
-        return o_ptr->layout();
 }
 
 RkWidget* RkWidget::parent() const

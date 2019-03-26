@@ -53,14 +53,10 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkEventQueue.h
   ${RK_INCLUDE_PATH}/RkWidget.h
-  ${RK_INCLUDE_PATH}/RkLayout.h
-  ${RK_INCLUDE_PATH}/RkBoxLayout.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkMain.h)
 
 set(RK_HEADERS_IMPL
-  ${RK_INCLUDE_PATH}/impl/RkLayoutImpl.h
-  ${RK_INCLUDE_PATH}/impl/RkBoxLayoutImpl.h
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
@@ -83,10 +79,6 @@ endif()
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
-  ${RK_SRC_PATH}/RkLayout.cpp
-  ${RK_SRC_PATH}/RkLayoutImpl.cpp
-  ${RK_SRC_PATH}/RkBoxLayout.cpp
-  ${RK_SRC_PATH}/RkBoxLayoutImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp
   ${RK_SRC_PATH}/RkEventQueue.cpp
   ${RK_SRC_PATH}/RkEventQueueImpl.cpp
