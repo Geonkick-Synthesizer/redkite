@@ -45,3 +45,15 @@ std::string RkLabel::text() const
 {
      return impl_ptr->text();
 }
+
+void RkLabel::setImage(const RkImage &image)
+{
+        impl_ptr->setImage(image);
+        update();
+}
+
+void RkLabel::spaintEvent(const std::shared_ptr<RkPaintEvent> &event)
+{
+        RK_UNUSED(event);
+        impl_ptr->drawLabel();
+}

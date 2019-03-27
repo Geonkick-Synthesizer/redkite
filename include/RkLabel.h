@@ -25,6 +25,7 @@
 #define RK_LABEL_H
 
 #include "RkWidget.h"
+#include "RkImage.h"
 
 class RkLabel : public RkWidget {
  public:
@@ -33,9 +34,11 @@ class RkLabel : public RkWidget {
     virtual ~RkLabel() = default;
     void setText(const std::string &text);
     std::string text() const;
+    void setImage(const RkImage &image);
 
  protected:
     RK_DELCATE_IMPL_PTR(RkLabel)
+    virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
 };
 
 #endif // RK_LABEL_H
