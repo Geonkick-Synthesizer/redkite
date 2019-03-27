@@ -44,7 +44,7 @@ std::string RkLabel::RkLabelImpl::text() const
         return labelText;
 }
 
-void RkLabel::RkLabelImpl::setImage(const RkImage &image)
+/*void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 {
         labelImage = image;
 }
@@ -58,6 +58,6 @@ void RkLabel::RkLabelImpl::drawLabel()
                 int w = image.width() > inf_ptr.width() ? inf_ptr.width() : image.width();
                 int h = image.height() > inf_ptr.height() ? inf_ptr.height() : image.height();
                 painter->drawImage(image, 0, 0, w, h);
-        }
+                }
 }
-
+*/
