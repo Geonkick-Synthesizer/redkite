@@ -74,6 +74,7 @@ class RkWidget::RkWidgetImpl {
         void setBackgroundColor(const std::tuple<int, int, int> &background);
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* getEventQueue();
+        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)

@@ -28,6 +28,7 @@
 #include "RkPlatform.h"
 
 class RkEventQueue;
+struct RkCanvasInfo;
 
 class RkWindowX {
  public:
@@ -53,12 +54,16 @@ class RkWindowX {
         void setBorderWidth(int width);
         void setBorderColor(const std::tuple<int, int, int> &color);
         void setBackgroundColor(const std::tuple<int, int, int> &background);
+        void resizeCanvas();
+        std::shared_ptr<RkCanvasInfo> getCanvasInfo();
 
  protected:
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
         unsigned long pixelValue(const std::tuple<int, int, int> &color);
+        void createCanvasInfo();
+        void freeCanvasInfo();
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
@@ -72,6 +77,7 @@ class RkWindowX {
         std::tuple<int, int, int> borderColor;
         std::tuple<int, int, int> backgroundColor;
         RkEventQueue *eventQueue;
+        std::shared_ptr<RkCanvasInfo> canvasInfo;
 };
 
 #endif // RK_WIDGET_XWIN_H

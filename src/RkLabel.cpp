@@ -23,6 +23,7 @@
 
 #include "RkLabel.h"
 #include "RkLabelImpl.h"
+#include "RkLog.h"
 
 RkLabel::RkLabel(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, std::string(), parent)))
@@ -54,6 +55,7 @@ std::string RkLabel::text() const
 
 void RkLabel::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
+        RK_LOG_INFO("called");
         RK_UNUSED(event);
-        //        impl_ptr->drawLabel();
+        impl_ptr->drawLabel();
 }

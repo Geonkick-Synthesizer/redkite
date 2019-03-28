@@ -35,11 +35,12 @@ int main(int arc, char **argv)
     widget->setSize(250, 250);
 
     auto label = new RkLabel(widget);
-    label->setTitle("Lbele as child");
-    label->setText("Helolo!");
+    label->setTitle("Label as child");
+    label->setText("Hello!!");
     label->setX(10);
     label->setY(10);
     label->setSize(50, 20);
+    label->setBackgroundColor(200, 200, 200);
     label->show();
 
     if (!app.setTopLevelWindow(widget)) {

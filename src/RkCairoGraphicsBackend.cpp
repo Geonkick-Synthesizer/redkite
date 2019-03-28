@@ -22,21 +22,35 @@
  */
 
 #include "RkCairoGraphicsBackend.h"
+#include "RkCanvas.h"
 #include "RkCanvasInfo.h"
+#include "RkLog.h"
 
-RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas* canvas)
-        : cairoContext{cairo_create(canvas->getCanvasInfo().cairo_surface)}
+RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
+        : cairoContext{cairo_create(canvas->getCanvasInfo()->cairo_surface)}
+        , fontSize{12}
 {
+        cairo_set_font_size(cairoContext, getFontSize());
 }
 
-~RkCairoGraphicsBackend::RkCairoGraphicsBackend()
+RkCairoGraphicsBackend::~RkCairoGraphicsBackend()
 {
         cairo_destroy(cairoContext);
 }
 
 void RkCairoGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
-        cairo_move_to(x, y);
-        cairo_show_text (cairoContext, text.c_str());
+        cairo_move_to(cairoContext, x, y);
+        cairo_show_text(cairoContext, text.c_str());
+}
+
+int RkCairoGraphicsBackend::getFontSize() const
+{
+        return fontSize;
+}
+
+void RkCairoGraphicsBackend::setFontSize(int size)
+{
+        fontSize = size;
 }
 

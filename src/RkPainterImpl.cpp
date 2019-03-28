@@ -23,18 +23,28 @@
 
 #include "RkPainterImpl.h"
 #include "RkCairoGraphicsBackend.h"
+#include "RkLog.h"
 
 RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
         : inf_ptr{interface}
-#ifdef RK_GRAPHICS_BACKEND_CAIRO
-        , backendGraphics{std::unique_ptr<RkCairoGraphicsBackend>(canvas)}
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+        , backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
 #else
 #error No graphics backend defined
 #endif
 {
 }
 
-RkPainter::RkPainterImpl::drawText(const std::string &text, int x, int y)
+RkPainter::RkPainterImpl::~RkPainterImpl()
+{
+}
+
+void RkPainter::RkPainterImpl::drawText(const std::string &text, int x, int y)
 {
         backendGraphics->drawText(text, x, y);
+}
+
+int RkPainter::RkPainterImpl::fontSize() const
+{
+        return backendGraphics->getFontSize();
 }

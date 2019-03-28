@@ -260,7 +260,7 @@ RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
         return eventQueue;
 }
 
-std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo()
+std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
 {
         return platformWindow->getCanvasInfo();
 }

@@ -1,5 +1,5 @@
 /**
- * File name: RkCanvas.h
+ * File name: RkCanvasInfo.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,17 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_CANVAS_H
-#define RK_CANVAS_H
+#ifndef RK_CANVAS_INFO_H
+#define RK_CANVAS_INFO_H
 
 #include "Rk.h"
 
-class RkCanvas {
- public:
-        RkCanvas();
-        virtual ~RkCanvas();
-        virtual initCanvas() = 0;
- private:
-};
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
 
-#endif // RK_CANVAS_H
+#include <cairo/cairo.h>
+#include <cairo/cairo-xlib.h>
+
+struct RkCanvasInfo {
+        cairo_surface_t* cairo_surface;
+};
+#else
+#error No graphics backend defined
+#endif
+
+#endif // RK_CANVAS_INFO_H

@@ -22,6 +22,7 @@
  */
 
 #include "RkLabelImpl.h"
+#include "RkPainter.h"
 
 RkLabel::RkLabelImpl::RkLabelImpl(RkLabel *interface, const std::string &text, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -44,20 +45,21 @@ std::string RkLabel::RkLabelImpl::text() const
         return labelText;
 }
 
-void RkLabel::RkLabelImpl::setImage(const RkImage &image)
+/*void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 {
         labelImage = image;
 }
-
+*/
 void RkLabel::RkLabelImpl::drawLabel()
 {
-        RkPainter painter(this);
+        auto painter = std::make_unique<RkPainter>(inf_ptr);
         if (!labelText.empty()) {
-                painter->drawText(labelText, 0, 0);
-        } else if (!labelImage.isNull()) {
-                int w = image.width() > inf_ptr.width() ? inf_ptr.width() : image.width();
-                int h = image.height() > inf_ptr.height() ? inf_ptr.height() : image.height();
-                painter->drawImage(image, 0, 0, w, h);
-        }
+                // TODO: use font metrics to determinte the width of the text and center the text.
+                painter->drawText(labelText, 0, painter->fontSize() + (inf_ptr->height() - painter->fontSize()) / 2);
+        } //else if (!labelImage.isNull()) {
+                //                int w = image.width() > inf_ptr.width() ? inf_ptr.width() : image.width();
+                //int h = image.height() > inf_ptr.height() ? inf_ptr.height() : image.height();
+                //painter->drawImage(image, 0, 0, w, h);
+        //}
 }
 

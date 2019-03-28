@@ -46,6 +46,20 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_LOG_DEBUG_LEVEL")
 endif()
 
+#find_package(PgkConfig)
+
+if (NOT RK_GRAPHICS_BACKEND)
+  message(STATUS "use default Cairo graphics backend")
+  set(RK_GRAPHICS_BACKEND "Cairo")
+#  find_package(Cairo REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")  
+elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
+  find_package(Cairo REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")  
+endif()
+
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkLog.h
@@ -54,13 +68,24 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkEventQueue.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
+  ${RK_INCLUDE_PATH}/RkCanvas.h
+  ${RK_INCLUDE_PATH}/RkPainter.h
   ${RK_INCLUDE_PATH}/RkMain.h)
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
-  ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h)
+  ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
+  ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
+
+if (RK_GRAPHICS_BACKEND MATCHES Cairo)
+  set(RK_GRAPHICS_BACKEND_HEADRES
+    ${RK_INCLUDE_PATH}/impl/RkCairoGraphicsBackend.h)
+  set(RK_GRAPHICS_BACKEND_SOURCES
+    ${RK_SRC_PATH}/RkCairoGraphicsBackend.cpp)
+endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
 set(RK_HEADERS_PLATFORM
@@ -84,7 +109,9 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkEventQueueImpl.cpp
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
-  ${RK_SRC_PATH}/RkLabelImpl.cpp)
+  ${RK_SRC_PATH}/RkLabelImpl.cpp
+  ${RK_SRC_PATH}/RkPainter.cpp
+  ${RK_SRC_PATH}/RkPainterImpl.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   set(RK_SOURCES_PLATFORM
@@ -122,6 +149,8 @@ add_library(redkite STATIC
   ${RK_HEADERS}
   ${RK_HEADERS_IMPL}
   ${RK_HEADERS_PLATFORM}
+  ${RK_GRAPHICS_BACKEND_HEADRES}
+  ${RK_GRAPHICS_BACKEND_SOURCES}
   ${RK_SOURCES}
   ${RK_SOURCES_PLATFORM})
 

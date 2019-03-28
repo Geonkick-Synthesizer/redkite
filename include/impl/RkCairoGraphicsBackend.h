@@ -24,7 +24,9 @@
 #ifndef RK_CAIRO_GRAPHICS_BACKEND_H
 #define RK_CAIRO_GRAPHICS_BACKEND_H
 
-#include <cairo.h>
+#include "Rk.h"
+
+#include <cairo/cairo.h>
 
 class RkCanvas;
 
@@ -33,9 +35,12 @@ class RkCairoGraphicsBackend {
         RkCairoGraphicsBackend(RkCanvas* canvas);
         ~RkCairoGraphicsBackend();
         void drawText(const std::string &text, int x, int y);
+        int getFontSize() const;
+        void setFontSize(int size);
 
  private:
-        cario_t* cairoContext;
+        cairo_t* cairoContext;
+        int fontSize;
 };
 
 #endif // RK_CAIRO_GRAPHICS_BACKEND_H

@@ -26,18 +26,21 @@
 
 #include "Rk.h"
 
+class RkCanvas;
+
 class RkPainter {
  public:
-        explicit RkPainter(RkCanvas *canvas);
-        void drawText(const std::string &text, int x, int y);
+        RkPainter(RkCanvas *canvas);
         ~RkPainter();
+        void drawText(const std::string &text, int x, int y);
+        int fontSize() const;
 
  protected:
         RK_DECLARE_IMPL(RkPainter)
 
  private:
-        RK_DISABLE_COPY(RkWidget)
-        RK_DISABLE_MOVE(RkWidget)
+        RK_DISABLE_COPY(RkPainter)
+        RK_DISABLE_MOVE(RkPainter)
 };
 
 #endif // RK_PAINTER_H

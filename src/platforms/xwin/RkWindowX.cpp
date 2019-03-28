@@ -24,6 +24,7 @@
 #include "RkLog.h"
 #include "RkWindowX.h"
 #include "RkEventQueue.h"
+#include "RkCanvasInfo.h"
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
@@ -36,6 +37,7 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
+        , canvasInfo{nullptr}
 {
 }
 
@@ -50,7 +52,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
-        , canvasInfo{Rk}
+        , canvasInfo{nullptr}
 
 {
         *parentWindowInfo.get() = parent;
@@ -240,7 +242,7 @@ void RkWindowX::setEventQueue(RkEventQueue *queue)
         eventQueue = queue;
 }
 
-#ifdef RK_CAIRO_GRASPHICS_BACKEND
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
 void RkWindowX::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
@@ -256,7 +258,7 @@ void RkWindowX::resizeCanvas()
 
 std::shared_ptr<RkCanvasInfo> RkWindowX::getCanvasInfo()
 {
-        return canvaseInfo;
+        return canvasInfo;
 }
 
 void RkWindowX::freeCanvasInfo()
@@ -266,5 +268,5 @@ void RkWindowX::freeCanvasInfo()
 
 #else
 #error No graphics backend defined
-#endif // RK_CAIRO_GRASPHICS_BACKEND
+#endif // RK_GRAPHICS_CAIRO_BACKEND
 

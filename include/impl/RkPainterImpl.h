@@ -1,5 +1,5 @@
 /**
- * File name: RkPainter.cpp
+ * File name: RkPainterImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,24 +21,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#ifndef RK_PAINTER_IMPL_H
+#define RK_PAINTER_IMPL_H
+
 #include "RkPainter.h"
-#include "RkPainterImpl.h"
 
-RkPainter::RkPainter(RkCanvas *canvas)
-        : o_ptr{std::make_shared<RkPainterImpl>(this, canvas)}
-{
-}
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+class RkCairoGraphicsBackend;
+#else
+#error No graphics backend defined
+#endif
 
-RkPainter::~RkPainter()
-{
-}
+class RkPainter::RkPainterImpl {
+ public:
+        RkPainterImpl(RkPainter* interface, RkCanvas* canvas);
+        ~RkPainterImpl();
+        void drawText(const std::string &text, int x, int y);
+        int fontSize() const;
 
-void RkPainter::drawText(const std::string &text, int x, int y)
-{
-        o_ptr->drawText(text, x, y);
-}
+ private:
+        RK_DECALRE_INTERFACE_PTR(RkPainter)
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+        std::unique_ptr<RkCairoGraphicsBackend> backendGraphics;
+#else
+#error No graphics backend defined
+#endif
+};
 
-int RkPainter::fontSize() const
-{
-        return o_ptr->fontSize();
-}
+#endif // RK_PAINTER_IMPL_H

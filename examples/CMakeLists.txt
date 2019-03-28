@@ -11,6 +11,10 @@ else()
   set(RK_EXEC_OPTION "")
 endif()
 
+if (RK_GRAPHICS_BACKEND MATCHES Cairo)
+  set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
+endif()
+
 add_executable(hello ${RK_EXEC_OPTION}
 	${RK_HEADERS}
 	${RK_EXAMPLES_SOURCES})
@@ -19,8 +23,10 @@ add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
+  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
   target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
+  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 endif()
 
 # ------------ Multithreading Example -------
@@ -32,6 +38,7 @@ add_executable(hello_multi
 add_dependencies(hello_multi redkite)
 target_link_libraries(hello_multi redkite)
 target_link_libraries(hello_multi "-lX11 -lpthread -lrt -lm -ldl")
+target_link_libraries(hello_multi ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Child Example -------
 
@@ -42,8 +49,10 @@ add_dependencies(child redkite)
 target_link_libraries(child redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   target_link_libraries(child "-mwindows -lstdc++ -lm -lmingw32")
+  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
   target_link_libraries(child "-lX11 -lpthread -lrt -lm -ldl")
+  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 endif()
 
 
@@ -56,6 +65,7 @@ add_executable(property
 add_dependencies(property redkite)
 target_link_libraries(property redkite)
 target_link_libraries(property "-lX11 -lrt -lm -ldl")
+target_link_libraries(property ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Label Example -------
 
@@ -66,6 +76,7 @@ add_executable(label
 add_dependencies(label redkite)
 target_link_libraries(label redkite)
 target_link_libraries(label "-lX11 -lrt -lm -ldl")
+target_link_libraries(label ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 #------------- Widget Colors --------
 
@@ -76,4 +87,5 @@ add_executable(widget_colors
 add_dependencies(widget_colors redkite)
 target_link_libraries(widget_colors redkite)
 target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
+target_link_libraries(widget_colors ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 

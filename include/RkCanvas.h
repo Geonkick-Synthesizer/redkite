@@ -30,8 +30,8 @@ struct RkCanvasInfo;
 
 class RkCanvas {
  public:
-        RkCanvas();
-        virtual ~RkCanvas();
+        RkCanvas() = default;
+        virtual ~RkCanvas() = default;
         virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
 };
 
