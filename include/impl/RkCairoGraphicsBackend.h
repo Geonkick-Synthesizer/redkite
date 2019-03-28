@@ -36,6 +36,7 @@ class RkCairoGraphicsBackend {
         ~RkCairoGraphicsBackend();
         void drawText(const std::string &text, int x, int y);
         void drawImage(const std::string &file, int x, int y);
+        void drawImage(const RkImage &image, int x, int y);
         int getFontSize() const;
         void setFontSize(int size);
 

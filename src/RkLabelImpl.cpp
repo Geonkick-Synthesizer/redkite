@@ -45,9 +45,9 @@ std::string RkLabel::RkLabelImpl::text() const
         return labelText;
 }
 
-void RkLabel::RkLabelImpl::setImage(const std::string &file)
+void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 {
-        labelImage = file;
+        labelImage = image;
 }
 
 void RkLabel::RkLabelImpl::drawLabel()

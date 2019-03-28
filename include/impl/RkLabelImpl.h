@@ -26,11 +26,17 @@
 
 #include "RkWidgetImpl.h"
 #include "RkLabel.h"
-//#include "RkImage.h"
+#include "RkImage.h"
 
 class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
  public:
-        RkLabelImpl(RkLabel *interface, const std::string &text = std::string(), RkWidget *parent = nullptr);
+    RkLabelImpl(RkLabel *interface,
+                const std::string &text = std::string(),
+                RkWidget *parent = nullptr);
+    RkLabelImpl(RkLabel *interface,
+                const RkImage &image = RkImage(),
+                RkWidget *parent = nullptr);
+
     virtual ~RkLabelImpl();
     void setText(const std::string &text);
     std::string text() const;
@@ -40,7 +46,7 @@ class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
  private:
     RK_DECALRE_INTERFACE_PTR(RkLabel)
     std::string labelText;
-    std::string labelImage;
+    RkImage labelImage;
 };
 
 #endif // RK_LABEL_H

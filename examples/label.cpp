@@ -25,6 +25,8 @@
 #include "RkLabel.h"
 #include "RkLog.h"
 
+const unsigned char imageRc[] = {};
+
 int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
@@ -37,7 +39,7 @@ int main(int arc, char **argv)
     auto label = new RkLabel(widget);
     label->setTitle("Label as child");
     label->setText("Hello!!");
-    label->setImage("label.png");
+    label->setImage(RkImage(imageRc));
     label->setX(10);
     label->setY(10);
     label->setSize(100, 94);

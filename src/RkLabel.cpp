@@ -49,7 +49,12 @@ std::string RkLabel::text() const
 
 void RkLabel::setImage(const std::string &file)
 {
-        impl_ptr->setImage(file);
+        setImage(RkImage(file));
+}
+
+void RkLabel::setImage(const RkImage &image)
+{
+        impl_ptr->setImage(image);
 }
 
 void RkLabel::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
