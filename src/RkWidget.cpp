@@ -371,3 +371,8 @@ void RkWidget::setEventQueue(RkEventQueue *eventQueue)
 {
         o_ptr->setEventQueue(eventQueue);
 }
+
+std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
+{
+        return o_ptr->getCanvasInfo();
+}

@@ -129,6 +129,7 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         case RkEvent::Type::Resize:
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                platformWindow->resizeCanvas();
                 break;
         case RkEvent::Type::Close:
                 widgetClosed = true;
@@ -257,4 +258,9 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
 {
         return eventQueue;
+}
+
+std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo()
+{
+        return platformWindow->getCanvasInfo();
 }

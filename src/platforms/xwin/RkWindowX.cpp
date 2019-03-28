@@ -50,6 +50,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
+        , canvasInfo{Rk}
 
 {
         *parentWindowInfo.get() = parent;
@@ -58,6 +59,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
 RkWindowX::~RkWindowX()
 {
         if (!hasParent() && xDisplay) {
+                freeCanvasInfo();
                 XCloseDisplay(xDisplay);
         }
 }
@@ -105,6 +107,8 @@ bool RkWindowX::init()
                 deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
                 XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         }
+
+        createCanvasInfo();
         return true;
 }
 
@@ -235,3 +239,32 @@ void RkWindowX::setEventQueue(RkEventQueue *queue)
 {
         eventQueue = queue;
 }
+
+#ifdef RK_CAIRO_GRASPHICS_BACKEND
+void RkWindowX::createCanvasInfo()
+{
+        canvasInfo = std::make_shared<RkCanvasInfo>();
+        canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
+                                                              DefaultVisual(display(), screenNumber),
+                                                              size().first, size().second);
+}
+
+void RkWindowX::resizeCanvas()
+{
+        cairo_xlib_surface_set_size(canvasInfo->cairo_surface, size().first, size().second);
+}
+
+std::shared_ptr<RkCanvasInfo> RkWindowX::getCanvasInfo()
+{
+        return canvaseInfo;
+}
+
+void RkWindowX::freeCanvasInfo()
+{
+        cairo_surface_destroy(canvasInfo->cairo_surface);
+}
+
+#else
+#error No graphics backend defined
+#endif // RK_CAIRO_GRASPHICS_BACKEND
+

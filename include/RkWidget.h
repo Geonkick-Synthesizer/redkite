@@ -26,6 +26,7 @@
 
 #include "Rk.h"
 #include "RkEventQueue.h"
+#include "RkCanvas.h"
 
 class RkEvent;
 class RkCloseEvent;
@@ -39,9 +40,8 @@ class RkShowEvent;
 class RkHideEvent;
 struct RkWindowId;
 struct RkNativeWindowInfo;
-class RkLayout;
 
-class RkWidget {
+class RkWidget: public RkCanvas {
   public:
           RK_CLASS_INFO(style_element, "RkWidget")
           RK_CLASS_INFO(style_class, "")
@@ -89,9 +89,7 @@ class RkWidget {
           void setBorderWidth(int width);
           void setBackgroundColor(int red, int green, int blue);
           void setBorderColor(int red, int green, int blue);
-
-          void setLayout(RkLayout *layout);
-          RkLayout* layout() const;
+          std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
 
   protected:
           RK_DECLARE_IMPL(RkWidget)
