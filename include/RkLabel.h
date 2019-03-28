@@ -34,7 +34,7 @@ class RkLabel : public RkWidget {
     virtual ~RkLabel() = default;
     void setText(const std::string &text);
     std::string text() const;
-    //    void setImage(const RkImage &image);
+    void setImage(const std::string &file);
 
  protected:
     RK_DELCATE_IMPL_PTR(RkLabel)

@@ -33,6 +33,7 @@ class RkPainter {
         RkPainter(RkCanvas *canvas);
         ~RkPainter();
         void drawText(const std::string &text, int x, int y);
+        void drawImage(const std::string &file, int x, int y);
         int fontSize() const;
 
  protected:

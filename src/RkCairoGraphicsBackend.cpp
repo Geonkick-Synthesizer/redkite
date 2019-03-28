@@ -44,6 +44,15 @@ void RkCairoGraphicsBackend::drawText(const std::string &text, int x, int y)
         cairo_show_text(cairoContext, text.c_str());
 }
 
+void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
+{
+        RK_LOG_INFO("called:" << file);
+        auto image = cairo_image_surface_create_from_png(file.c_str());
+        cairo_set_source_surface(cairoContext, image, x, y);
+        cairo_paint(cairoContext);
+        cairo_surface_destroy(image);
+}
+
 int RkCairoGraphicsBackend::getFontSize() const
 {
         return fontSize;

@@ -37,9 +37,10 @@ int main(int arc, char **argv)
     auto label = new RkLabel(widget);
     label->setTitle("Label as child");
     label->setText("Hello!!");
+    label->setImage("label.png");
     label->setX(10);
     label->setY(10);
-    label->setSize(50, 20);
+    label->setSize(100, 94);
     label->setBackgroundColor(200, 200, 200);
     label->show();
 

@@ -44,6 +44,11 @@ void RkPainter::RkPainterImpl::drawText(const std::string &text, int x, int y)
         backendGraphics->drawText(text, x, y);
 }
 
+void RkPainter::RkPainterImpl::drawImage(const std::string &file, int x, int y)
+{
+        backendGraphics->drawImage(file, x, y);
+}
+
 int RkPainter::RkPainterImpl::fontSize() const
 {
         return backendGraphics->getFontSize();

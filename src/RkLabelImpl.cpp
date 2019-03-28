@@ -45,21 +45,18 @@ std::string RkLabel::RkLabelImpl::text() const
         return labelText;
 }
 
-/*void RkLabel::RkLabelImpl::setImage(const RkImage &image)
+void RkLabel::RkLabelImpl::setImage(const std::string &file)
 {
-        labelImage = image;
+        labelImage = file;
 }
-*/
+
 void RkLabel::RkLabelImpl::drawLabel()
 {
         auto painter = std::make_unique<RkPainter>(inf_ptr);
-        if (!labelText.empty()) {
-                // TODO: use font metrics to determinte the width of the text and center the text.
+        if (!labelText.empty())
                 painter->drawText(labelText, 0, painter->fontSize() + (inf_ptr->height() - painter->fontSize()) / 2);
-        } //else if (!labelImage.isNull()) {
-                //                int w = image.width() > inf_ptr.width() ? inf_ptr.width() : image.width();
-                //int h = image.height() > inf_ptr.height() ? inf_ptr.height() : image.height();
-                //painter->drawImage(image, 0, 0, w, h);
-        //}
+
+        if (!labelImage.empty())
+                painter->drawImage(labelImage, 0, 0);
 }
 

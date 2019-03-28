@@ -35,6 +35,7 @@ class RkCairoGraphicsBackend {
         RkCairoGraphicsBackend(RkCanvas* canvas);
         ~RkCairoGraphicsBackend();
         void drawText(const std::string &text, int x, int y);
+        void drawImage(const std::string &file, int x, int y);
         int getFontSize() const;
         void setFontSize(int size);
 

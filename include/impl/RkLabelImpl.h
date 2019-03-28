@@ -34,13 +34,13 @@ class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
     virtual ~RkLabelImpl();
     void setText(const std::string &text);
     std::string text() const;
-    //    void setImage(const RkImage &image);
+    void setImage(const std::string &file);
     void drawLabel();
 
  private:
     RK_DECALRE_INTERFACE_PTR(RkLabel)
     std::string labelText;
-    //    RkImage labelImage;
+    std::string labelImage;
 };
 
 #endif // RK_LABEL_H

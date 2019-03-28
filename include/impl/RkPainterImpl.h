@@ -37,6 +37,7 @@ class RkPainter::RkPainterImpl {
         RkPainterImpl(RkPainter* interface, RkCanvas* canvas);
         ~RkPainterImpl();
         void drawText(const std::string &text, int x, int y);
+        void drawImage(const std::string &file, int x, int y);
         int fontSize() const;
 
  private:
