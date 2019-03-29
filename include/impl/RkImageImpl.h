@@ -1,5 +1,5 @@
 /**
- * File name: RkImage.h
+ * File name: RkImageImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -21,31 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_IMAGE_H
-#define RK_IMAGE_H
+#include "RkImage.h"
 
-#include "RkCanvas.h"
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+class RkCairoImageBackendCanvas;
+#else
+#error No graphics backend defined.
+#endif
 
-class RkImage : public RkCanvas {
+class RkImage::RkImageImpl {
  public:
-        enum class Format : int {
-                ARGB32 = 0,
-                RGB32  = 1
-        };
-
-        explicit RkImage(const std::string &file = std::string());
-        explicit RkImage(const unsigned char *data,
-                         int width,
-                         int height,
-                         Format format = Format::ARGB32);
-
-        virtual ~RkImage() = default;
-        RkImage(const RkImage &image);
-        RkImage& operator=(const RkImage &other);
-        RkImage(RKImage &&other);
-        RkImage& operator=(RkImage &&other);
-        bool operator!=(const RkImage &image) const;
-        bool operator==(const RkImage &image) const;
+        RkImageImpl(RkImage *interface, const std::string &file)
+        RkImageImpl(RkImage *interface,
+                    const unsigned char *data,
+                    int width,
+                    int height,
+                    Format format = Format::ARGB32);
+        virtual ~RkImageImpl()
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         const unsigned char* data() const;
         std::unique_ptr<unsigned char*> dataCopy() const;
@@ -55,8 +47,14 @@ class RkImage : public RkCanvas {
         bool isNull() const;
 
  protected:
-        RK_DECLARE_IMPL(RkImage)
-        RkImage(const std::shared_ptr<RkImageImpl> &impl);
-};
+        int getPixelSize(RkImage::Format format);
 
-#endif // RK_IMAGE_H
+ private:
+        RK_DECALRE_INTERFACE_PTR(RkImage)
+        RkImage::Fromat imageFormat;
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+        std::make_unique<RkCairoImageBackendCanvas> imageBackendCanvas;
+#else
+#error No graphics backend defined
+#endif
+};
