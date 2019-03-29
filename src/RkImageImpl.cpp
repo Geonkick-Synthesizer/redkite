@@ -47,7 +47,7 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
         : inf_ptr{interface}
         , imageFormat{format}
 #ifdef #ifdef RK_GRAPHICS_CAIRO_BACKEND
-        , imageBackendCanvas{std::make_sared<RkCairoImageBackendCanvas>({width, height}, imageFormat)}
+        , imageBackendCanvas{std::make_sared<RkCairoImageBackendCanvas>({width, height}, imageFormat, data)}
 #else
 #error No graphics backend defined
 #endif

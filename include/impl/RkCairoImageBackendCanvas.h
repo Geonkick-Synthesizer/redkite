@@ -21,6 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#ifndef RK_CAIRO_IMAGE_BACKEND_CANVAS_H
+#define RK_CAIRO_IMAGE_BACKEND_CANVAS_H
+
 class RkCairoImageBackendCanvas {
  public:
         RkImageBackendCanvas(const std::pair<int, int> &size, RkImage::Format format);
@@ -29,9 +32,11 @@ class RkCairoImageBackendCanvas {
         RkImage::Format format() const;
         bool isNull() const;
         const unsigned char* data() const;
-        std::unique_ptr<unsigned char*> dataCopy() const;
+        std::vector<unsigned char> dataCopy() const;
         std::shared_ptr<RkCanvasInfo> getCanvaseInfo() const;
 
  private:
         std::shared_ptr<RkCanvasInfo> canvasInfo;
 };
+
+#endif // RK_CAIRO_IMAGE_BACKEND_CANVAS_H
