@@ -49,7 +49,7 @@ std::string RkLabel::text() const
 
 void RkLabel::setImage(const std::string &file)
 {
-        setImage(RkImage(file));
+        //        setImage(RkImage(file));
 }
 
 void RkLabel::setImage(const RkImage &image)

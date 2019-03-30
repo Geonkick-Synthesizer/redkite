@@ -24,19 +24,30 @@
 #ifndef RK_CAIRO_IMAGE_BACKEND_CANVAS_H
 #define RK_CAIRO_IMAGE_BACKEND_CANVAS_H
 
+#include "RkImage.h"
+
+#include <cairo/cairo.h>
+
 class RkCairoImageBackendCanvas {
  public:
-        RkImageBackendCanvas(const std::pair<int, int> &size, RkImage::Format format);
-        ~RkImageBackendCanvas();
+        RkCairoImageBackendCanvas(const std::pair<int, int> &size,
+                                  RkImage::Format format,
+                                  const unsigned char *data);
+        ~RkCairoImageBackendCanvas();
         std::pair<int, int> size() const;
-        RkImage::Format format() const;
         bool isNull() const;
         const unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;
-        std::shared_ptr<RkCanvasInfo> getCanvaseInfo() const;
+        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+
+ protected:
+        cairo_format_t toCairoFormat(RkImage::Format format) const;
+        int pixelLength(RkImage::Format format) const;
 
  private:
         std::shared_ptr<RkCanvasInfo> canvasInfo;
+        std::vector<unsigned char> imageData;
+        std::pair<int, int> imageSize;
 };
 
 #endif // RK_CAIRO_IMAGE_BACKEND_CANVAS_H

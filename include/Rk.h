@@ -25,6 +25,7 @@
 #define RK_GLOBAL_H
 
 #include <memory>
+#include <vector>
 #include <string>
 #include <list>
 #include <memory>

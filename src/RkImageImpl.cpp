@@ -23,31 +23,20 @@
 
 #include "RkImageImpl.h"
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
-#include "RkImageBackendCanvas.h"
+#include "RkCairoImageBackendCanvas.h"
 #else
 #error No graphics backend defined.
 #endif
-
-RkImage::RkImageImpl::RkImageImpl(RkImage *interface, const std::string &file)
-        : inf_ptr{interface}
-        , imageFormat{RkImage::Format::ARGB32}
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
-        , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(imageSize, imageFormat)}
-#else
-#error No graphics backend defined
-#endif
-{
-}
 
 RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
                                   const unsigned char *data,
                                   int width,
                                   int height,
-                                  Format format = Format::ARGB32)
+                                  RkImage::Format format)
         : inf_ptr{interface}
         , imageFormat{format}
-#ifdef #ifdef RK_GRAPHICS_CAIRO_BACKEND
-        , imageBackendCanvas{std::make_sared<RkCairoImageBackendCanvas>({width, height}, imageFormat, data)}
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+        , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(std::make_pair(width, height), imageFormat, data)}
 #else
 #error No graphics backend defined
 #endif
@@ -68,27 +57,40 @@ const unsigned char* RkImage::RkImageImpl::data() const
         return imageBackendCanvas->data();
 }
 
-std::unique_ptr<unsigned char*> RkImage::RkImageImpl::dataCopy() const
+std::vector<unsigned char> RkImage::RkImageImpl::dataCopy() const
 {
-        return imageBackendCanvas->dataCopy()
+        return imageBackendCanvas->dataCopy();
 }
 
 RkImage::Format RkImage::RkImageImpl::format() const
 {
         return imageFormat;
 }
-        
+
 int RkImage::RkImageImpl::width() const
 {
         return imageBackendCanvas->size().first;
 }
 
-int RkImage::RkImageImpl::height() cons
+int RkImage::RkImageImpl::height() const
 {
-        return imageBackendCanvas.size().second;
+        return imageBackendCanvas->size().second;
 }
 
 bool RkImage::RkImageImpl::isNull() const
 {
-        return imageBackendCanvas.isNull();
+        return !imageBackendCanvas || imageBackendCanvas->isNull();
+}
+
+void RkImage::RkImageImpl::createImage(std::pair<int, int> size,
+                                       RkImage::Format format,
+                                       const unsigned char *data)
+{
+        imageFormat = format;
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+        if (imageBackendCanvas)
+                imageBackendCanvas = std::make_unique<RkCairoImageBackendCanvas>(size, format, data);
+#else
+#error No graphics backend defined
+#endif
 }

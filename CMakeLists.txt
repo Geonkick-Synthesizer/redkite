@@ -69,6 +69,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkCanvas.h
+  ${RK_INCLUDE_PATH}/RkImage.h
   ${RK_INCLUDE_PATH}/RkPainter.h
   ${RK_INCLUDE_PATH}/RkMain.h)
 
@@ -78,13 +79,16 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
+  ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
   ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
 
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
   set(RK_GRAPHICS_BACKEND_HEADRES
-    ${RK_INCLUDE_PATH}/impl/RkCairoGraphicsBackend.h)
+    ${RK_INCLUDE_PATH}/impl/RkCairoGraphicsBackend.h
+    ${RK_INCLUDE_PATH}/impl/RkCairoImageBackendCanvas.h)
   set(RK_GRAPHICS_BACKEND_SOURCES
-    ${RK_SRC_PATH}/RkCairoGraphicsBackend.cpp)
+    ${RK_SRC_PATH}/RkCairoGraphicsBackend.cpp
+    ${RK_SRC_PATH}/RkCairoImageBackendCanvas.cpp)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
@@ -111,6 +115,8 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
   ${RK_SRC_PATH}/RkPainter.cpp
+  ${RK_SRC_PATH}/RkImage.cpp
+  ${RK_SRC_PATH}/RkImageImpl.cpp
   ${RK_SRC_PATH}/RkPainterImpl.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)

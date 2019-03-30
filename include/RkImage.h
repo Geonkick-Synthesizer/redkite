@@ -33,7 +33,7 @@ class RkImage : public RkCanvas {
                 RGB32  = 1
         };
 
-        explicit RkImage(const std::string &file = std::string());
+        RkImage();
         explicit RkImage(const unsigned char *data,
                          int width,
                          int height,
@@ -42,13 +42,12 @@ class RkImage : public RkCanvas {
         virtual ~RkImage() = default;
         RkImage(const RkImage &image);
         RkImage& operator=(const RkImage &other);
-        RkImage(RKImage &&other);
-        RkImage& operator=(RkImage &&other);
+        RK_DISABLE_MOVE(RkImage)
         bool operator!=(const RkImage &image) const;
         bool operator==(const RkImage &image) const;
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         const unsigned char* data() const;
-        std::unique_ptr<unsigned char*> dataCopy() const;
+        std::vector<unsigned char> dataCopy() const;
         Format format() const;
         int width() const;
         int height() const;

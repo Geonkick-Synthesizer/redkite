@@ -31,29 +31,29 @@ class RkCairoImageBackendCanvas;
 
 class RkImage::RkImageImpl {
  public:
-        RkImageImpl(RkImage *interface, const std::string &file)
         RkImageImpl(RkImage *interface,
                     const unsigned char *data,
                     int width,
                     int height,
-                    Format format = Format::ARGB32);
-        virtual ~RkImageImpl()
+                    RkImage::Format format = RkImage::Format::ARGB32);
+        virtual ~RkImageImpl();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         const unsigned char* data() const;
-        std::unique_ptr<unsigned char*> dataCopy() const;
+        std::vector<unsigned char> dataCopy() const;
         Format format() const;
         int width() const;
         int height() const;
         bool isNull() const;
+        void createImage(std::pair<int, int> size,
+                         RkImage::Format format,
+                         const unsigned char *data);
 
- protected:
-        int getPixelSize(RkImage::Format format);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkImage)
-        RkImage::Fromat imageFormat;
+        RkImage::Format imageFormat;
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
-        std::make_unique<RkCairoImageBackendCanvas> imageBackendCanvas;
+        std::unique_ptr<RkCairoImageBackendCanvas> imageBackendCanvas;
 #else
 #error No graphics backend defined
 #endif

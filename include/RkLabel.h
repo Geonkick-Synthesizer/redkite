@@ -25,7 +25,7 @@
 #define RK_LABEL_H
 
 #include "RkWidget.h"
-//#include "RkImage.h"
+#include "RkImage.h"
 
 class RkLabel : public RkWidget {
  public:

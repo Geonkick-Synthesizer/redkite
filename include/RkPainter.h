@@ -25,6 +25,7 @@
 #define RK_PAINTER_H
 
 #include "Rk.h"
+#include "RkImage.h"
 
 class RkCanvas;
 
@@ -33,7 +34,7 @@ class RkPainter {
         RkPainter(RkCanvas *canvas);
         ~RkPainter();
         void drawText(const std::string &text, int x, int y);
-        void drawImage(const std::string &file, int x, int y);
+        void drawImage(const RkImage &image, int x, int y);
         int fontSize() const;
 
  protected:

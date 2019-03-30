@@ -8,6 +8,14 @@ License: GPLv3
 
 Status: development, no release yet.
 
+### What was implemented
+
+* Widgets: RkWidget, RkLabel
+* Graphics: RkPainter, RkImage. RkPainter paints on RkWidgets and RkImage.
+  RkPainter uses Cairo backend.
+* Cross-platform: GNU/Linux (X11), Windows (Win API)
+* CMake build/install
+
 ### Requirements & goals
 
 Here are some requirements ideas that makes this
@@ -31,4 +39,5 @@ common usage.
 * Can be linked statically.
 
 * Platforms: GNU/Linux (XWindow System backend), Windows (Win API backend), MacOS (no plans yet)
+
 

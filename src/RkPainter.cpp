@@ -38,9 +38,9 @@ void RkPainter::drawText(const std::string &text, int x, int y)
         o_ptr->drawText(text, x, y);
 }
 
-void RkPainter::drawImage(const std::string &file, int x, int y)
+void RkPainter::drawImage(const RkImage &image, int x, int y)
 {
-        o_ptr->drawImage(file, x, y);
+        o_ptr->drawImage(image, x, y);
 }
 
 int RkPainter::fontSize() const

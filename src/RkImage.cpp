@@ -21,16 +21,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-RkImage::RkImage(const std::string &file)
-        : o_ptr{std::make_shared<RkImageImpl>(this, file)}
+#include "RkImage.h"
+#include "RkImageImpl.h"
+
+RkImage::RkImage()
+        : o_ptr{std::make_shared<RkImageImpl>(this, nullptr, 0, 0)}
 {
 }
 
 RkImage::RkImage(const unsigned char *data,
                  int width,
                  int height,
-                 Format format = Format::ARGB32)
-        : o_ptr{std::make_shared<RkImageImpl>(this, width, height, format)}
+                 Format format)
+        : o_ptr{std::make_shared<RkImageImpl>(this, data, width, height, format)}
 {
 }
 
@@ -38,36 +41,28 @@ RkImage::RkImage(const std::shared_ptr<RkImageImpl> &impl)
         : o_ptr{impl}
 {
 }
-        
+
 RkImage::RkImage(const RkImage &image)
 {
-        if (&image != this) {
-                setImageFormat(image.format());
-                setWidth(image.width());
-                setWidth(image.height());
-                setImageData(image.data());
-        }
+        if (&image != this)
+                o_ptr->createImage({image.width(), image.height()}, image.format(), image.data());
 }
 
 RkImage& RkImage::operator=(const RkImage &other)
 {
-}
+        if (&other != this)
+                o_ptr->createImage({other.width(), other.height()}, other.format(), other.data());
 
-RkImage::RkImage(RKImage &&other)
-{
-}
-
-RkImage& RkImage::operator=(RkImage &&other)
-{
+        return *this;
 }
 
 bool RkImage::operator!=(const RkImage &image) const
 {
-        if (&image != this)
-                return true;
+        if (&image == this)
+                return false;
 
-        if (image.widht() != width() || image.height() != height() || image.fromat() != format()
-            /*|| image.data() != data()*/)
+        if (image.width() != width() || image.height() != height() || image.format() != format()
+            || image.dataCopy() != dataCopy())
                 return true;
         return false;
 }
@@ -77,8 +72,8 @@ bool RkImage::operator==(const RkImage &image) const
         if (&image == this)
                 return true;
 
-        if (image.widht() == width() && image.height() == height() && image.fromat() == format()
-            /*|| image.data() == data()*/)
+        if (image.width() == width() && image.height() == height() && image.format() == format()
+            && image.dataCopy() == dataCopy())
                 return true;
         return false;
 }
@@ -88,13 +83,14 @@ std::shared_ptr<RkCanvasInfo> RkImage::getCanvasInfo() const
         return o_ptr->getCanvasInfo();
 }
 
-const unsigned char* RkImage::data() const;
+const unsigned char* RkImage::data() const
 {
+        return o_ptr->data();
 }
 
-std::unique_ptr<unsigned char*> RkImage::dataCopy() const
+std::vector<unsigned char> RkImage::dataCopy() const
 {
-        return std::move(o_ptr->dataCopy());
+        return o_ptr->dataCopy();
 }
 
 RkImage::Format RkImage::format() const
@@ -104,15 +100,15 @@ RkImage::Format RkImage::format() const
 
 int RkImage::width() const
 {
-        return optr->width();
+        return o_ptr->width();
 }
 
 int RkImage::height() const
 {
-        return optr->height();
+        return o_ptr->height();
 }
 
 bool RkImage::isNull() const
 {
-        return optr->isNull();
+        return o_ptr->isNull();
 }

@@ -31,16 +31,14 @@
 class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
  public:
     RkLabelImpl(RkLabel *interface,
-                const std::string &text = std::string(),
-                RkWidget *parent = nullptr);
-    RkLabelImpl(RkLabel *interface,
-                const RkImage &image = RkImage(),
+                const std::string &text,
                 RkWidget *parent = nullptr);
 
     virtual ~RkLabelImpl();
     void setText(const std::string &text);
     std::string text() const;
     void setImage(const std::string &file);
+    void setImage(const RkImage &image);
     void drawLabel();
 
  private:

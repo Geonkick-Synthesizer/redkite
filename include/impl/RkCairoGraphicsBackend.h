@@ -25,6 +25,7 @@
 #define RK_CAIRO_GRAPHICS_BACKEND_H
 
 #include "Rk.h"
+#include "RkImage.h"
 
 #include <cairo/cairo.h>
 
