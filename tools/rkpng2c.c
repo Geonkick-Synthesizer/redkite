@@ -63,7 +63,7 @@ int main(int argc , char **argv)
                       " * Image size name: %dx%d\n"
                       " */\n"
                       "\n"
-                "unsigned char %s[] = {\n", basename(argv[1]), w, h, basename(argv[3]));
+                "const unsigned char %s[] = {\n", basename(argv[1]), w, h, basename(argv[3]));
         for (int i = 0; i < w * h * 4; i++) {
                 if ((i + 1) == 12 || (i + 1) % 12 == 0)
                         fprintf(fptr, "0x%02x,\n", buff[i]);
