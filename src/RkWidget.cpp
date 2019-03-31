@@ -205,6 +205,11 @@ void RkWidget::setFixedSize(const std::pair<int, int> &size)
         setSize(size);
 }
 
+void RkWidget::setFixedSize(int width, int height)
+{
+        setFixedSize(std::make_pair(width, height));
+}
+
 int RkWidget::x() const
 {
         return o_ptr->position().first;
