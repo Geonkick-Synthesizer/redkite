@@ -196,7 +196,7 @@ void RkWidget::setFixedHeight(int height)
         setHeight(height);
 }
 
-void RkWidget::setFixedSize(std::pair<int, int> &size)
+void RkWidget::setFixedSize(const std::pair<int, int> &size)
 {
         setMinimumWidth(size.first);
         setMaximumWidth(size.first);

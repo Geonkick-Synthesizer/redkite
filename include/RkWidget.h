@@ -79,7 +79,7 @@ class RkWidget: public RkCanvas {
           void setMaximumHeight(int height);
           void setFixedWidth(int width);
           void setFixedHeight(int height);
-          void setFixedSize(std::pair<int, int> &size);
+          void setFixedSize(const std::pair<int, int> &size);
           int x() const;
           void setX(int x);
           int y() const;
