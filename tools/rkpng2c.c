@@ -29,17 +29,18 @@
 #define RK_VERSION_STR "1.0.0"
 
 #include <stdio.h>
+#include <libgen.h>
 #include <cairo/cairo.h>
 
 int main(int argc , char **argv)
 {
-        if (argc != 3) {
+        if (argc != 4) {
                 printf("Redkite GUI toolkit\n");
                 printf("rkpng2c version %s\n", RK_VERSION_STR);
                 printf("Converts a PNG to C array encoded in ARGB32\n");
                 printf("Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)\n");
                 printf("License GPLv2\n");
-                printf("Usage: rkpng2c <PNG file> <C or C++ file>\n");
+                printf("Usage: rkpng2c <PNG file> <C or C++ file> <array name>\n");
                 return 0;
         }
 
@@ -62,7 +63,7 @@ int main(int argc , char **argv)
                       " * Image size name: %dx%d\n"
                       " */\n"
                       "\n"
-                      "const unsigned char ImageArray[] = {\n", argv[1], w, h);
+                "unsigned char %s[] = {\n", basename(argv[1]), w, h, basename(argv[3]));
         for (int i = 0; i < w * h * 4; i++) {
                 if ((i + 1) == 12 || (i + 1) % 12 == 0)
                         fprintf(fptr, "0x%02x,\n", buff[i]);
