@@ -56,7 +56,11 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
         auto stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, image.width());
         auto image_data = image.dataCopy();
-        auto img = cairo_image_surface_create_for_data(image_data.data(), CAIRO_FORMAT_ARGB32, 100, 94, stride);
+        auto img = cairo_image_surface_create_for_data(image_data.data(),
+                                                       CAIRO_FORMAT_ARGB32,
+                                                       image.width(),
+                                                       image.height(),
+                                                       stride);
         cairo_set_source_surface(cairoContext, img, x, y);
         cairo_paint(cairoContext);
         cairo_surface_destroy(img);

@@ -24,6 +24,7 @@ endif()
 set(RK_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(RK_SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
+set(RK_TOOLS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "no build type selected, default to Debug")
@@ -161,16 +162,16 @@ add_library(redkite STATIC
   ${RK_SOURCES_PLATFORM})
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+  install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
 # Not implemented
 else()
-install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
-install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
+  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+  install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
 endif()
 
-
+add_subdirectory(tools)
 if (ENABLE_EXAMPLES)
   add_subdirectory(examples)
 endif (ENABLE_EXAMPLES)

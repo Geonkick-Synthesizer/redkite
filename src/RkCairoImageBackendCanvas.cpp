@@ -1,6 +1,7 @@
 
 #include "RkCairoImageBackendCanvas.h"
 #include "RkCanvasInfo.h"
+#include "RkLog.h"
 
 RkCairoImageBackendCanvas::RkCairoImageBackendCanvas(const std::pair<int, int> &size,
                                                      RkImage::Format format,

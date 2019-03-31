@@ -15,6 +15,7 @@ Status: development, no release yet.
   RkPainter uses Cairo backend.
 * Cross-platform: GNU/Linux (X11), Windows (Win API)
 * CMake build/install
+* rkpng2c - a tool that covnerts PNG images to C array econded in ARGB32
 
 ### Requirements & goals
 
