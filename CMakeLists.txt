@@ -64,6 +64,7 @@ endif()
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkLog.h
+  ${RK_INCLUDE_PATH}/RkPoint.h
   ${RK_INCLUDE_PATH}/RkPlatform.h
   ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkEventQueue.h
