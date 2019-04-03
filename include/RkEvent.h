@@ -25,6 +25,7 @@
 #define RK_EVENT_H
 
 #include "Rk.h"
+#include "RkPoint.h"
 
 class RkCloseEvent;
 class RkKeyEvent;
@@ -94,6 +95,14 @@ class RkMouseEvent: public RkEvent {
                         type == Type::MouseButtonRelease ||
                         type == Type::MouseDoubleClick ? type : Type::MouseButtonPress) {
       }
+
+      int x() const { return mouseCoordinates.x(); }
+      void setX(int x) { mouseCoordinates.setX(x); }
+      int y() const { return mouseCoordinates.y(); }
+      void setY(int x) { mouseCoordinates.setY(x); }
+
+ private:
+        RkPoint mouseCoordinates;
 };
 
 class RkWheelEvent: public RkEvent {

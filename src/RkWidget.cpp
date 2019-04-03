@@ -377,6 +377,11 @@ void RkWidget::setEventQueue(RkEventQueue *eventQueue)
         o_ptr->setEventQueue(eventQueue);
 }
 
+void RkWidget::update()
+{
+        o_ptr->update();
+}
+
 std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
 {
         return o_ptr->getCanvasInfo();

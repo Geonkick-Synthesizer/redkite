@@ -71,8 +71,14 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                         event = RkEvent::keyReleaseEvent();
                         break;
                 case ButtonPress:
-                        event = RkEvent::buttonPressEvent();
+                {
+                        auto buttonEvent = reinterpret_cast<XButtonEvent*>(&e);
+                        auto mouseEvent = std::make_shared<RkMouseEvent>();
+                        mouseEvent->setX(buttonEvent->x);
+                        mouseEvent->setY(buttonEvent->y);
+                        event = mouseEvent;
                         break;
+                }
                 case ButtonRelease:
                         event = RkEvent::buttonReleaseEvent();
                         break;

@@ -75,6 +75,7 @@ class RkWidget::RkWidgetImpl {
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* getEventQueue();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        void update();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)

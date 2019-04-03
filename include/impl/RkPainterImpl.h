@@ -39,6 +39,7 @@ class RkPainter::RkPainterImpl {
         void drawText(const std::string &text, int x, int y);
         void drawImage(const std::string &file, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
+        void drawEllipse(const RkPoint& p, int width, int height);
         int fontSize() const;
 
  private:

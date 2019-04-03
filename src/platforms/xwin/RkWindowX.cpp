@@ -242,6 +242,24 @@ void RkWindowX::setEventQueue(RkEventQueue *queue)
         eventQueue = queue;
 }
 
+void RkWindowX::update()
+{
+        if (isWindowCreated()) {
+                XExposeEvent event;
+                event.type       = Expose;
+                event.send_event = false;
+                event.display    = display();
+                event.window     = xWindow;
+                event.x          = 0;
+                event.y          = 0;
+                event.width      = size().first;
+                event.height     = size().second;
+                event.count      = 0;
+                XClearWindow(display(), xWindow);
+                XSendEvent(display(), xWindow, True, ExposureMask, reinterpret_cast<XEvent*>(&event));
+        }
+}
+
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
 void RkWindowX::createCanvasInfo()
 {

@@ -26,6 +26,7 @@
 
 #include "Rk.h"
 #include "RkImage.h"
+#include "RkPoint.h"
 
 class RkCanvas;
 
@@ -35,6 +36,8 @@ class RkPainter {
         ~RkPainter();
         void drawText(const std::string &text, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
+        void drawCricle(int x, int y, int radius);
+        void drawCricle(const RkPoint &p, int radius);
         int fontSize() const;
 
  protected:

@@ -26,6 +26,8 @@
 #include "RkCanvasInfo.h"
 #include "RkLog.h"
 
+#include <math.h>
+
 RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
         : cairoContext{cairo_create(canvas->getCanvasInfo()->cairo_surface)}
         , fontSize{12}
@@ -64,6 +66,19 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
         cairo_set_source_surface(cairoContext, img, x, y);
         cairo_paint(cairoContext);
         cairo_surface_destroy(img);
+}
+
+void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
+{
+        RK_LOG_INFO("called: x: " << p.x());
+        RK_LOG_INFO("called: y: " << p.y());
+        RK_LOG_INFO("called: w: " << width);
+        RK_LOG_INFO("called: h:" << height);
+        cairo_save(cairoContext);
+        cairo_translate(cairoContext, p.x(), p.y());
+        cairo_scale(cairoContext, width / 2, height / 2);
+        cairo_arc(cairoContext, 0, 0, 1, 0, 2 * M_PI);
+        cairo_restore(cairoContext);
 }
 
 int RkCairoGraphicsBackend::getFontSize() const

@@ -26,6 +26,7 @@
 
 #include "Rk.h"
 #include "RkImage.h"
+#include "RkPoint.h"
 
 #include <cairo/cairo.h>
 
@@ -38,6 +39,7 @@ class RkCairoGraphicsBackend {
         void drawText(const std::string &text, int x, int y);
         void drawImage(const std::string &file, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
+        void drawEllipse(const RkPoint& p, int width, int height);
         int getFontSize() const;
         void setFontSize(int size);
 

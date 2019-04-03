@@ -264,3 +264,8 @@ std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
 {
         return platformWindow->getCanvasInfo();
 }
+
+void RkWidget::RkWidgetImpl::update()
+{
+        platformWindow->update();
+}

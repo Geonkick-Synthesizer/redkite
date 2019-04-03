@@ -56,6 +56,7 @@ class RkWindowX {
         void setBackgroundColor(const std::tuple<int, int, int> &background);
         void resizeCanvas();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo();
+        void update();
 
  protected:
         bool openDisplay();

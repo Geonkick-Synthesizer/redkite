@@ -54,6 +54,11 @@ void RkPainter::RkPainterImpl::drawImage(const RkImage &image, int x, int y)
         backendGraphics->drawImage(image, x, y);
 }
 
+void RkPainter::RkPainterImpl::drawEllipse(const RkPoint& p, int width, int height)
+{
+        backendGraphics->drawEllipse(p, width, height);
+}
+
 int RkPainter::RkPainterImpl::fontSize() const
 {
         return backendGraphics->getFontSize();

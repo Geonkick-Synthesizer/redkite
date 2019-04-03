@@ -109,6 +109,7 @@ class RkWidget: public RkCanvas {
           virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
           virtual void showEvent(const std::shared_ptr<RkShowEvent> &event);
           virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
+          void update();
 
  private:
           RK_DISABLE_COPY(RkWidget)
