@@ -1,5 +1,5 @@
 /**
- * File name: RkPoint.h
+ * File name: RkRealPoint.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
@@ -21,55 +21,52 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef  RK_POINT_H
-#define  RK_POINT_H
+#ifndef  RK_REAL_POINT_H
+#define  RK_REAL_POINT_H
 
-#include "Rk.h"
+#include "RkPoint.h"
 
-class RkPoint {
+class RkRealPoint {
  public:
 
-       constexpr RkPoint() : xValue{0}, yValue{0}
+       constexpr RkRealPoint() : xValue{0}, yValue{0}
        {
        }
 
-       constexpr RkPoint(int x, int y) : xValue{x}, yValue{y}
+       constexpr RkRealPoint(const RkPoint &p) : xValue(p.x()), yValue(p.y())
        {
        }
 
-       constexpr bool operator==(const RkPoint &other)
+       constexpr RkRealPoint(rk_real x, rk_real y) : xValue{x}, yValue{y}
        {
-               return other.xValue == xValue && other.yValue == yValue;
        }
 
-       constexpr bool operator!=(const RkPoint &other)
-       {
-               return other.xValue != xValue || other.yValue != yValue;
-       }
+       constexpr bool operator==(const RkRealPoint &other) = delete;
+       constexpr bool operator!=(const RkRealPoint &other) = delete;
 
-       constexpr int x() const
+       constexpr rk_real x() const
        {
                return xValue;
        }
 
-       constexpr void setX(int x)
+       constexpr void setX(rk_real x)
        {
                xValue = x;
        }
 
-       constexpr int y() const
+       constexpr rk_real y() const
        {
                return yValue;
        }
 
-       constexpr void setY(int y)
+       constexpr void setY(rk_real y)
        {
                yValue = y;
        }
 
  private:
-        int xValue;
-        int yValue;
+        rk_real xValue;
+        rk_real yValue;
 };
 
-#endif // RK_POINT_H
+#endif // RK_REAL_POINT_H

@@ -60,4 +60,10 @@ int rkMain(int, char **);
 #define main rkMain
 #endif // RK_OS_WIN && !RK_FOR_SHARED
 
+#if defined(RK_SINGLE_PRECISION)
+using rk_real = float;
+#else
+using rk_real = double;
+#endif // RK_SINGLE_PRECISION
+
 #endif // RK_GLOBAL_H

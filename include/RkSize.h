@@ -1,5 +1,5 @@
 /**
- * File name: RkPoint.h
+ * File name: RkSize.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
@@ -21,55 +21,53 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef  RK_POINT_H
-#define  RK_POINT_H
+#ifndef  RK_SIZE_H
+#define  RK_SIZE_H
 
-#include "Rk.h"
-
-class RkPoint {
+class RkSize {
  public:
 
-       constexpr RkPoint() : xValue{0}, yValue{0}
+       constexpr RkSize() : widthValue{0}, heightValue{0}
        {
        }
 
-       constexpr RkPoint(int x, int y) : xValue{x}, yValue{y}
+       constexpr RkSize(int width, int height) : widthValue{width}, heightValue{height}
        {
        }
 
-       constexpr bool operator==(const RkPoint &other)
+       constexpr bool operator==(const RkSize &other)
        {
-               return other.xValue == xValue && other.yValue == yValue;
+               return other.widthValue == widthValue && other.heightValue == heightValue;
        }
 
-       constexpr bool operator!=(const RkPoint &other)
+       constexpr bool operator!=(const RkSize &other)
        {
-               return other.xValue != xValue || other.yValue != yValue;
+               return other.widthValue != widthValue || other.heightValue != heightValue;
        }
 
-       constexpr int x() const
+       constexpr int width() const
        {
-               return xValue;
+               return widthValue;
        }
 
-       constexpr void setX(int x)
+       constexpr void setWidth(int width)
        {
-               xValue = x;
+               widthValue = width;
        }
 
-       constexpr int y() const
+       constexpr int height() const
        {
-               return yValue;
+               return heightValue;
        }
 
-       constexpr void setY(int y)
+       constexpr void setHeight(int height)
        {
-               yValue = y;
+               heightValue = height;
        }
 
  private:
-        int xValue;
-        int yValue;
+        int widthValue;
+        int heightValue;
 };
 
-#endif // RK_POINT_H
+#endif // RK_SIZE_H
