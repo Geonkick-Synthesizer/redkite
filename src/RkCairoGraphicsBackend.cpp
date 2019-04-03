@@ -33,6 +33,7 @@ RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
         , fontSize{12}
 {
         cairo_set_font_size(cairoContext, getFontSize());
+        cairo_set_line_width (cairoContext, 1);
 }
 
 RkCairoGraphicsBackend::~RkCairoGraphicsBackend()
@@ -70,17 +71,13 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
-        RK_LOG_INFO("called: x: " << p.x());
-        RK_LOG_INFO("called: y: " << p.y());
-        RK_LOG_INFO("called: w: " << width);
-        RK_LOG_INFO("called: h:" << height);
-        cairo_save(cairoContext);
-        cairo_set_line_width (cairoContext, 1);
-        cairo_translate(cairoContext, p.x(), p.y());
-        //        cairo_scale(cairoContext, width / 2, height / 2);
-        cairo_arc(cairoContext, 0, 0, width / 2, 0, 2 * M_PI);
-        cairo_stroke (cairoContext);
-        cairo_restore(cairoContext);
+        if (width == height) {
+                cairo_arc(cairoContext, p.x(), p.y(), width / 2, 0, 2 * M_PI);
+                cairo_stroke(cairoContext);
+        } else {
+                // TODO: implemented ellipse.
+                RK_LOG_ERROR("ellipse not implemented yet");
+        }
 }
 
 int RkCairoGraphicsBackend::getFontSize() const

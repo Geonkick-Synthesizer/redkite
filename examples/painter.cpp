@@ -32,7 +32,7 @@ class  PainterExample: public RkWidget {
   public:
         PainterExample(RkWidget *parent = nullptr)
                 : RkWidget(parent)
-                , textPoint(50, 50)
+                , ckickPoint(50, 50)
                 , startDraw{false}
         {
                 RK_LOG_INFO("called");
@@ -44,25 +44,21 @@ class  PainterExample: public RkWidget {
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
         {
                 RK_UNUSED(event);
-                RK_LOG_INFO("called");
                 if (startDraw) {
                         RkPainter painter(this);
-                        //                        painter.drawText("Hello! ("+ std::to_string(textPoint.x()) + ", " + std::to_string(textPoint.x()) + ")",
-                        //               textPoint.x(), textPoint.y());
-                        painter.drawCircle(textPoint.x(), textPoint.y(), 20);
+                        painter.drawCircle(ckickPoint.x(), ckickPoint.y(), 10);
                 }
         }
-        
+
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
-                RK_LOG_INFO("mouse press: p(" << event->x() << ", " <<  event->y() << ")");
-                textPoint = RkPoint(event->x(), event->y());
+                ckickPoint = RkPoint(event->x(), event->y());
                 startDraw = true;
                 update();
         }
-        
+
   private:
-        RkPoint textPoint;
+        RkPoint ckickPoint;
         bool startDraw;
 };
 
