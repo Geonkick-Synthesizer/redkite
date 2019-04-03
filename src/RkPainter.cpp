@@ -43,12 +43,12 @@ void RkPainter::drawImage(const RkImage &image, int x, int y)
         o_ptr->drawImage(image, x, y);
 }
 
-void RkPainter::drawCricle(int x, int y, int radius)
+void RkPainter::drawCircle(int x, int y, int radius)
 {
         o_ptr->drawEllipse(RkPoint(x, y), 2 * radius, 2 * radius);
 }
 
-void RkPainter::drawCricle(const RkPoint &p, int radius)
+void RkPainter::drawCircle(const RkPoint &p, int radius)
 {
         o_ptr->drawEllipse(p, 2 * radius, 2 * radius);
 }

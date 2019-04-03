@@ -47,8 +47,9 @@ class  PainterExample: public RkWidget {
                 RK_LOG_INFO("called");
                 if (startDraw) {
                         RkPainter painter(this);
-                        painter.drawText("Hello! ("+ std::to_string(textPoint.x()) + ", " + std::to_string(textPoint.x()) + ")",
-                                         textPoint.x(), textPoint.y());
+                        //                        painter.drawText("Hello! ("+ std::to_string(textPoint.x()) + ", " + std::to_string(textPoint.x()) + ")",
+                        //               textPoint.x(), textPoint.y());
+                        painter.drawCircle(textPoint.x(), textPoint.y(), 20);
                 }
         }
         

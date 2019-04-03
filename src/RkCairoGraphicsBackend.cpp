@@ -75,9 +75,11 @@ void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height
         RK_LOG_INFO("called: w: " << width);
         RK_LOG_INFO("called: h:" << height);
         cairo_save(cairoContext);
+        cairo_set_line_width (cairoContext, 1);
         cairo_translate(cairoContext, p.x(), p.y());
-        cairo_scale(cairoContext, width / 2, height / 2);
-        cairo_arc(cairoContext, 0, 0, 1, 0, 2 * M_PI);
+        //        cairo_scale(cairoContext, width / 2, height / 2);
+        cairo_arc(cairoContext, 0, 0, width / 2, 0, 2 * M_PI);
+        cairo_stroke (cairoContext);
         cairo_restore(cairoContext);
 }
 

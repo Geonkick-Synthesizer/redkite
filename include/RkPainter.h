@@ -36,8 +36,8 @@ class RkPainter {
         ~RkPainter();
         void drawText(const std::string &text, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
-        void drawCricle(int x, int y, int radius);
-        void drawCricle(const RkPoint &p, int radius);
+        void drawCircle(int x, int y, int radius);
+        void drawCircle(const RkPoint &p, int radius);
         int fontSize() const;
 
  protected:
