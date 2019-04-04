@@ -21,16 +21,91 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_COLOR_H
-#define RK_COLOR_H
+#ifndef  RK_COLOR_H
+#define  RK_COLOR_H
+
+#include "Rk.h"
 
 class RkColor {
  public:
-        explicit RkColor(const RkColor &color);
-        //        explicit RkColor(const QString &color);
-        explicit RkColor(int r, int g, int b, int a = 255);
-        explicit RkColor(std::tuple<int, int, int, int> &color);
-        virtual RkColor();
+
+        constexpr RkColor()
+                : redValue{255}
+                , greenValue{255}
+                , blueValue{255}
+                , alphaValue{255}
+       {
+       }
+
+       constexpr RkColor(int red, int green, int blue, int alpha = 255)
+               : redValue(red)
+               , greenValue(green)
+               , blueValue(blue)
+               , alphaValue(alpha)
+       {
+       }
+
+       constexpr bool operator==(const RkColor &other)
+       {
+               return other.redValue == redValue
+               && other.greenValue == greenValue
+               && other.blueValue == blueValue
+               && other.alphaValue == alphaValue;
+       }
+
+       constexpr bool operator!=(const RkColor &other)
+       {
+               return other.redValue != redValue
+               || other.greenValue != greenValue
+               || other.blueValue != blueValue
+               || other.alphaValue != alphaValue;
+       }
+
+       constexpr int red() const
+       {
+               return redValue;
+       }
+
+       constexpr int green() const
+       {
+               return greenValue;
+       }
+
+       constexpr int blue() const
+       {
+               return blueValue;
+       }
+
+       constexpr int alpha() const
+       {
+               return alphaValue;
+       }
+
+       constexpr void setRed(int red)
+       {
+               redValue = red;
+       }
+
+       constexpr void setGreen(int green)
+       {
+               greenValue = green;
+       }
+
+       constexpr void setBlue(int blue)
+       {
+               blueValue = blue;
+       }
+
+       constexpr void setAlpha(int alpha)
+       {
+               alphaValue = alpha;
+       }
+
+ private:
+        unsigned short redValue;
+        unsigned short greenValue;
+        unsigned short blueValue;
+        unsigned short alphaValue;
 };
 
 #endif // RK_COLOR_H
