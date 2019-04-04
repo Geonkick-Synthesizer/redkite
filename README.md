@@ -1,5 +1,5 @@
 # Redkite
-
+1;4601;0c
 #### Description
 
 A small GUI toolkit.
@@ -12,7 +12,7 @@ Status: development, no release yet.
 
 * Widgets: RkWidget, RkLabel
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidgets and RkImage.
-  RkCanvas is just abstract class that is used by RkPainter that both uses Cairo backend.
+  RkPainter uses Cairo backend.
 * Cross-platform: GNU/Linux (X11), Windows (Win API)
 * CMake build/install
 * rkpng2c - a tool that covnerts PNG images to C array econded in ARGB32
