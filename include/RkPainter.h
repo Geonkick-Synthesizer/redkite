@@ -28,6 +28,7 @@
 #include "RkImage.h"
 #include "RkPoint.h"
 #include "RkPen.h"
+#include "RkRect.h"
 
 class RkCanvas;
 

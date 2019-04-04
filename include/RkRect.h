@@ -25,6 +25,7 @@
 #define  RK_RECT_H
 
 #include "RkSize.h"
+#include "RkPoint.h"
 
 class RkRect {
  public:
@@ -114,6 +115,26 @@ class RkRect {
                 rectTopLeft = p;
         }
 
+        constexpr RkPoint topLeft() const
+        {
+                return rectTopLeft;
+        }
+
+        constexpr RkPoint topRight() const
+        {
+                return rectTopLeft;
+        }
+
+        constexpr RkPoint bottomLeft() const
+        {
+                return rectTopLeft;
+        }
+
+        constexpr RkPoint bottomRight(void) const
+        {
+                return rectTopLeft;
+        }
+
         constexpr int left() const
         {
                 return rectTopLeft.x();
@@ -124,7 +145,7 @@ class RkRect {
                 return rectTopLeft.y();
         }
 
-        constexpr int buttom() const
+        constexpr int bottom() const
         {
                 return rectTopLeft.y() + rectSize.height();
         }

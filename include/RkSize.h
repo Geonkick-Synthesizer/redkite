@@ -24,6 +24,8 @@
 #ifndef  RK_SIZE_H
 #define  RK_SIZE_H
 
+#include "Rk.h"
+
 class RkSize {
  public:
 
