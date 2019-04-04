@@ -12,10 +12,29 @@ Status: development, no release yet.
 
 * Widgets: RkWidget, RkLabel
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidgets and RkImage.
-  RkPainter uses Cairo backend.
+  RkCanvas is just abstract class that is used by RkPainter that both uses Cairo backend.
 * Cross-platform: GNU/Linux (X11), Windows (Win API)
 * CMake build/install
 * rkpng2c - a tool that covnerts PNG images to C array econded in ARGB32
+
+Interface classes that now are implemented with the purprose of exteding their functionality.
+
+* RkCanvas
+* RkColor
+* RkEvent
+* RkEventQueue
+* RkImage
+* RkLabel
+* RkLog
+* RkMain
+* RkPainter
+* RkPen
+* RkPlatform
+* RkPoint
+* RkRealPoint
+* RkRect
+* RkSize
+* RkWidget
 
 ### Requirements & goals
 
