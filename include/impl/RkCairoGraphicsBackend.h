@@ -41,9 +41,11 @@ class RkCairoGraphicsBackend {
         void drawImage(const std::string &file, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
         void drawEllipse(const RkPoint& p, int width, int height);
+        void drawLine(const RkPoint &p1, const RkPoint &p2);
         void setPen(const RkPen &pen);
         int getFontSize() const;
         void setFontSize(int size);
+        cairo_t* context();
 
  private:
         cairo_t* cairoContext;

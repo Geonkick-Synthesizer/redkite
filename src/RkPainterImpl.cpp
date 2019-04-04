@@ -60,6 +60,11 @@ void RkPainter::RkPainterImpl::drawEllipse(const RkPoint& p, int width, int heig
         backendGraphics->drawEllipse(p, width, height);
 }
 
+void RkPainter::RkPainterImpl::drawLine(const RkPoint &p1, const RkPoint &p2)
+{
+        backendGraphics->drawLine(p1, p2);
+}
+
 const RkPen& RkPainter::RkPainterImpl::pen() const
 {
         return painterPen;

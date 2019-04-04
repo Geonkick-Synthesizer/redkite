@@ -39,6 +39,8 @@ class RkPainter {
         void drawImage(const RkImage &image, int x, int y);
         void drawCircle(int x, int y, int radius);
         void drawCircle(const RkPoint &p, int radius);
+        void drawLine(int x1, int y1, int x2, int y2);
+        void drawLine(const RkPoint &p1, const RkPoint &p2);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
         int fontSize() const;

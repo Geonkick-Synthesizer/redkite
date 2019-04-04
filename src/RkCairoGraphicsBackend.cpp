@@ -36,22 +36,27 @@ RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
         cairo_set_line_width (cairoContext, 1);
 }
 
+cairo_t* RkCairoGraphicsBackend::context()
+{
+        return cairoContext;
+}
+
 RkCairoGraphicsBackend::~RkCairoGraphicsBackend()
 {
-        cairo_destroy(cairoContext);
+        cairo_destroy(context());
 }
 
 void RkCairoGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
-        cairo_move_to(cairoContext, x, y);
-        cairo_show_text(cairoContext, text.c_str());
+        cairo_move_to(context(), x, y);
+        cairo_show_text(context(), text.c_str());
 }
 
 void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
 {
         auto image = cairo_image_surface_create_from_png(file.c_str());
-        cairo_set_source_surface(cairoContext, image, x, y);
-        cairo_paint(cairoContext);
+        cairo_set_source_surface(context(), image, x, y);
+        cairo_paint(context());
         cairo_surface_destroy(image);
 }
 
@@ -64,26 +69,33 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
                                                        image.width(),
                                                        image.height(),
                                                        stride);
-        cairo_set_source_surface(cairoContext, img, x, y);
-        cairo_paint(cairoContext);
+        cairo_set_source_surface(context(), img, x, y);
+        cairo_paint(context());
         cairo_surface_destroy(img);
 }
 
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
         if (width == height) {
-                cairo_arc(cairoContext, p.x(), p.y(), width / 2, 0, 2 * M_PI);
-                cairo_stroke(cairoContext);
+                cairo_arc(context(), p.x(), p.y(), width / 2, 0, 2 * M_PI);
+                cairo_stroke(context());
         } else {
                 // TODO: implemented ellipse.
                 RK_LOG_ERROR("ellipse not implemented yet");
         }
 }
 
+void RkCairoGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
+{
+        cairo_move_to(context(), p1.x(), p1.y());
+        cairo_line_to(context(), p2.x(), p2.y());
+        cairo_stroke(context());
+}
+
 void RkCairoGraphicsBackend::setPen(const RkPen &pen)
 {
-        cairo_set_line_width(cairoContext, pen.width());
-        cairo_set_source_rgba(cairoContext,
+        cairo_set_line_width(context(), pen.width());
+        cairo_set_source_rgba(context(),
                               static_cast<double>(pen.color().red()) / 255,
                               static_cast<double>(pen.color().green()) / 255,
                               static_cast<double>(pen.color().blue()) / 255,
@@ -93,15 +105,15 @@ void RkCairoGraphicsBackend::setPen(const RkPen &pen)
         switch (pen.style())
         {
         case RkPen::PenStyle::DashLine:
-                cairo_set_dash(cairoContext, dashLine, 2, 0);
+                cairo_set_dash(context(), dashLine, 2, 0);
                 break;
         case RkPen::PenStyle::DotLine:
-                cairo_set_dash(cairoContext, dotLine, 2, 0);
+                cairo_set_dash(context(), dotLine, 2, 0);
                 break;
         case RkPen::PenStyle::NoLine:
         case RkPen::PenStyle::SolidLine:
         default:
-                cairo_set_dash(cairoContext, nullptr, 0, 0);
+                cairo_set_dash(context(), nullptr, 0, 0);
                 break;
         }
 }

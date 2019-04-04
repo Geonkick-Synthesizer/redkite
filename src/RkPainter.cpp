@@ -53,6 +53,16 @@ void RkPainter::drawCircle(const RkPoint &p, int radius)
         o_ptr->drawEllipse(p, 2 * radius, 2 * radius);
 }
 
+void RkPainter::drawLine(int x1, int y1, int x2, int y2)
+{
+        drawLine(RkPoint(x1, y1), RkPoint(x2, y2));
+}
+
+void RkPainter::drawLine(const RkPoint &p1, const RkPoint &p2)
+{
+        o_ptr->drawLine(p1, p2);
+}
+
 const RkPen& RkPainter::pen() const
 {
         return o_ptr->pen();

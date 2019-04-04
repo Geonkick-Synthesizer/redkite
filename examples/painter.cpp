@@ -32,7 +32,7 @@ class  PainterExample: public RkWidget {
   public:
         PainterExample(RkWidget *parent = nullptr)
                 : RkWidget(parent)
-                , ckickPoint(50, 50)
+                , clickPoint(50, 50)
                 , startDraw{false}
         {
                 RK_LOG_INFO("called");
@@ -50,29 +50,32 @@ class  PainterExample: public RkWidget {
                         pen.setWidth(2);
                         pen.setPenStyle(RkPen::PenStyle::DashLine);
                         painter.setPen(pen);
-                        painter.drawCircle(ckickPoint.x() + 40 / 2, ckickPoint.y() + 40/2, 40);
+                        painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() + 40/2, 40);
+                        painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() + 80));
 
                         pen.setPenStyle(RkPen::PenStyle::DotLine);
                         pen.setPenColor(RkColor(0, 255, 0));
                         painter.setPen(pen);
-                        painter.drawCircle(ckickPoint.x() + 40 / 2, ckickPoint.y() - 40/2, 40);
+                        painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() - 40/2, 40);
+                        painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() - 80));
 
                         pen.setPenStyle(RkPen::PenStyle::SolidLine);
                         pen.setPenColor(RkColor(0, 0, 255));
                         painter.setPen(pen);
-                        painter.drawCircle(ckickPoint.x() - 40 / 2, ckickPoint.y() - 40/2, 40);
+                        painter.drawCircle(clickPoint.x() - 40 / 2, clickPoint.y() - 40/2, 40);
+                        painter.drawLine(clickPoint, RkPoint(clickPoint.x() - 80, clickPoint.y() - 80));
                 }
         }
 
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
-                ckickPoint = RkPoint(event->x(), event->y());
+                clickPoint = RkPoint(event->x(), event->y());
                 startDraw = true;
                 update();
         }
 
   private:
-        RkPoint ckickPoint;
+        RkPoint clickPoint;
         bool startDraw;
 };
 
@@ -82,6 +85,7 @@ int main(int arc, char **argv)
 
     auto widget = new PainterExample;
     widget->setTitle("Painter Example");
+    widget->setSize(350, 350);
     widget->show();
 
     if (!app.setTopLevelWindow(widget)) {
