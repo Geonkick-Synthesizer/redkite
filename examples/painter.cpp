@@ -48,19 +48,19 @@ class  PainterExample: public RkWidget {
                         RkPainter painter(this);
                         RkPen pen(RkColor(255, 0, 0));
                         pen.setWidth(2);
-                        pen.setPenStyle(RkPen::PenStyle::DashLine);
+                        pen.setStyle(RkPen::PenStyle::DashLine);
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() + 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() + 80));
 
-                        pen.setPenStyle(RkPen::PenStyle::DotLine);
-                        pen.setPenColor(RkColor(0, 255, 0));
+                        pen.setStyle(RkPen::PenStyle::DotLine);
+                        pen.setColor(RkColor(0, 255, 0));
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() - 80));
 
-                        pen.setPenStyle(RkPen::PenStyle::SolidLine);
-                        pen.setPenColor(RkColor(0, 0, 255));
+                        pen.setStyle(RkPen::PenStyle::SolidLine);
+                        pen.setColor(RkColor(0, 0, 255));
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() - 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() - 80, clickPoint.y() - 80));

@@ -70,7 +70,7 @@ class RkPen {
                return penStyleVal;
        }
 
-       constexpr void setPenStyle(PenStyle style)
+       constexpr void setStyle(PenStyle style)
        {
                penStyleVal = style;
        }
@@ -80,7 +80,7 @@ class RkPen {
                return penColorVal;
        }
 
-       constexpr void setPenColor(const RkColor &color)
+       constexpr void setColor(const RkColor &color)
        {
                penColorVal = color;
        }
