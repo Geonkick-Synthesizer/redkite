@@ -80,6 +80,32 @@ void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height
         }
 }
 
+void RkCairoGraphicsBackend::setPen(const RkPen &pen)
+{
+        cairo_set_line_width(cairoContext, pen.width());
+        cairo_set_source_rgba(cairoContext,
+                              static_cast<double>(pen.color().red()) / 255,
+                              static_cast<double>(pen.color().green()) / 255,
+                              static_cast<double>(pen.color().blue()) / 255,
+                              static_cast<double>(pen.color().alpha()) / 255);
+        double dashLine[] = {12, 8};
+        double dotLine[] = {1, 2};
+        switch (pen.style())
+        {
+        case RkPen::PenStyle::DashLine:
+                cairo_set_dash(cairoContext, dashLine, 2, 0);
+                break;
+        case RkPen::PenStyle::DotLine:
+                cairo_set_dash(cairoContext, dotLine, 2, 0);
+                break;
+        case RkPen::PenStyle::NoLine:
+        case RkPen::PenStyle::SolidLine:
+        default:
+                cairo_set_dash(cairoContext, nullptr, 0, 0);
+                break;
+        }
+}
+
 int RkCairoGraphicsBackend::getFontSize() const
 {
         return fontSize;

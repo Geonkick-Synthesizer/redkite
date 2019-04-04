@@ -75,7 +75,7 @@ class RkPen {
                penStyleVal = style;
        }
 
-       constexpr RkColor color() const
+       constexpr const RkColor& color() const
        {
                return penColorVal;
        }
@@ -83,6 +83,16 @@ class RkPen {
        constexpr void setPenColor(const RkColor &color)
        {
                penColorVal = color;
+       }
+
+       constexpr int width() const
+       {
+               return penWidthVal;
+       }
+
+       constexpr void setWidth(int width)
+       {
+               penWidthVal = width;
        }
 
  private:

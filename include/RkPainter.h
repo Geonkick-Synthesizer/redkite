@@ -27,6 +27,7 @@
 #include "Rk.h"
 #include "RkImage.h"
 #include "RkPoint.h"
+#include "RkPen.h"
 
 class RkCanvas;
 
@@ -38,6 +39,8 @@ class RkPainter {
         void drawImage(const RkImage &image, int x, int y);
         void drawCircle(int x, int y, int radius);
         void drawCircle(const RkPoint &p, int radius);
+        const RkPen& pen() const;
+        void setPen(const RkPen &pen);
         int fontSize() const;
 
  protected:

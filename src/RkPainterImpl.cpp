@@ -33,6 +33,7 @@ RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
 #error No graphics backend defined
 #endif
 {
+        backendGraphics->setPen(painterPen);
 }
 
 RkPainter::RkPainterImpl::~RkPainterImpl()
@@ -59,7 +60,19 @@ void RkPainter::RkPainterImpl::drawEllipse(const RkPoint& p, int width, int heig
         backendGraphics->drawEllipse(p, width, height);
 }
 
+const RkPen& RkPainter::RkPainterImpl::pen() const
+{
+        return painterPen;
+}
+
+void RkPainter::RkPainterImpl::setPen(const RkPen &pen)
+{
+        backendGraphics->setPen(pen);
+        painterPen = pen;
+}
+
 int RkPainter::RkPainterImpl::fontSize() const
 {
         return backendGraphics->getFontSize();
 }
+

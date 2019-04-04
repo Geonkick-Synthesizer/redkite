@@ -40,6 +40,8 @@ class RkPainter::RkPainterImpl {
         void drawImage(const std::string &file, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
         void drawEllipse(const RkPoint& p, int width, int height);
+        const RkPen& pen() const;
+        void setPen(const RkPen &pen);
         int fontSize() const;
 
  private:
@@ -49,6 +51,7 @@ class RkPainter::RkPainterImpl {
 #else
 #error No graphics backend defined
 #endif
+        RkPen painterPen;
 };
 
 #endif // RK_PAINTER_IMPL_H
