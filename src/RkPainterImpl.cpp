@@ -65,6 +65,11 @@ void RkPainter::RkPainterImpl::drawLine(const RkPoint &p1, const RkPoint &p2)
         backendGraphics->drawLine(p1, p2);
 }
 
+void RkPainter::RkPainterImpl::drawPolyline(const std::vector<RkPoint> &points)
+{
+        backendGraphics->drawPolyLine(points);
+}
+
 const RkPen& RkPainter::RkPainterImpl::pen() const
 {
         return painterPen;

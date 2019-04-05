@@ -63,6 +63,12 @@ void RkPainter::drawLine(const RkPoint &p1, const RkPoint &p2)
         o_ptr->drawLine(p1, p2);
 }
 
+void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
+{
+        if (!points.empty())
+                o_ptr->drawPolyline(points);
+}
+
 const RkPen& RkPainter::pen() const
 {
         return o_ptr->pen();

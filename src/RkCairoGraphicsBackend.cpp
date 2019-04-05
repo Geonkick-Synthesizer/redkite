@@ -118,6 +118,19 @@ void RkCairoGraphicsBackend::setPen(const RkPen &pen)
         }
 }
 
+void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
+{
+        bool first = 0;
+        for (const auto &point: points) {
+                if (first) {
+                        cairo_move_to(context(), point.x(), point.y());
+                        first = false;
+                }
+                cairo_line_to(context(), point.x(), point.y());
+        }
+        cairo_stroke(context());
+}
+
 int RkCairoGraphicsBackend::getFontSize() const
 {
         return fontSize;
