@@ -116,14 +116,17 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
         case RkEvent::Type::Paint:
                 inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                 break;
-        case RkEvent::Type::KeyPress:
+        case RkEvent::Type::KeyPressed:
                 inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
-        case RkEvent::Type::KeyRelease:
+        case RkEvent::Type::KeyReleased:
                 inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
                 inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                break;
+        case RkEvent::Type::MouseDoubleClick:
+                inf_ptr->mouseDoubleClickEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
                 break;

@@ -62,34 +62,30 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                 switch (e.type)
                 {
                 case Expose:
-                        event = RkEvent::paintEvent();
-                        break;
+                        event = std::make_shared<RkPaintEvent>();
+                break;
                 case KeyPress:
-                        event = RkEvent::keyPressEvent();
+                        event = std::make_shared<RkKeyEvent>();
                         break;
                 case KeyRelease:
-                        event = RkEvent::keyReleaseEvent();
+                        event = std::make_shared<RkKeyEvent>();
+                        event->setType(RkEvent::Type::KeyReleased);
                         break;
                 case ButtonPress:
-                {
-                        auto buttonEvent = reinterpret_cast<XButtonEvent*>(&e);
-                        auto mouseEvent = std::make_shared<RkMouseEvent>();
-                        mouseEvent->setX(buttonEvent->x);
-                        mouseEvent->setY(buttonEvent->y);
-                        event = mouseEvent;
+                        event = processButtonPressEvent(&e);
                         break;
-                }
                 case ButtonRelease:
-                        event = RkEvent::buttonReleaseEvent();
+                        event = std::make_shared<RkMouseEvent>();
+                        event->setType(RkEvent::Type::MouseButtonRelease);
                         break;
                 case ConfigureNotify:
-                        event = RkEvent::resizeEvent();
+                        event = std::make_shared<RkResizeEvent>();
                         break;
                 case ClientMessage:
                 {
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
                         if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
-                                event = RkEvent::closeEvent();
+                                event = std::make_shared<RkCloseEvent>();
                         break;
                 }
                 default:
@@ -99,4 +95,19 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                 if (event)
                         eventsQueue.push({id, event});
         }
+}
+
+std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
+{
+        auto buttonEvent = reinterpret_cast<XButtonEvent*>(e);
+        auto mouseEvent = std::make_shared<RkMouseEvent>();
+        mouseEvent->setX(buttonEvent->x);
+        mouseEvent->setY(buttonEvent->y);
+
+        auto diff = mouseEvent->time().time_since_epoch() - lastTimePressed.time_since_epoch();
+        if (std::chrono::duration_cast<std::chrono::microseconds>(diff).count() < 500000)
+                mouseEvent->setType(RkEvent::Type::MouseDoubleClick);
+        lastTimePressed = mouseEvent->time();
+
+        return mouseEvent;
 }

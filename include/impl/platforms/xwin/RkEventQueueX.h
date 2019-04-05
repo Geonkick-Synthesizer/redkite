@@ -45,8 +45,12 @@ class RkEventQueueX
         Display* display() const;
         void getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
 
+ protected:
+        std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
+
  private:
        Display* xDisplay;
+       std::chrono::system_clock::time_point lastTimePressed;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

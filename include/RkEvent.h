@@ -40,39 +40,35 @@ class RkHideEvent;
 class RkEvent {
  public:
         enum class Type: int {
-	   None,
-           Close,
-	   KeyPress,
-	   KeyRelease,
-	   MouseMove,
-	   MouseButtonPress,
-	   MouseButtonRelease,
-           MouseDoubleClick,
-	   Wheel,
-	   Move,
-           Resize,
-           Paint,
-           Show,
-           Hide
+                NoEvent = 0,
+                Close = 1,
+                KeyPressed = 2,
+                KeyReleased = 3,
+                MouseMove = 4,
+                MouseButtonPress = 5,
+                MouseButtonRelease = 6,
+                MouseDoubleClick = 7,
+                Wheel = 8,
+                Move = 9,
+                Resize = 10,
+                Paint = 11,
+                Show = 12,
+                Hide = 13
       };
 
-      RkEvent(Type type = Type::None) : eventType(type) {}
+      explicit RkEvent(Type type = Type::NoEvent)
+              : eventType{type}
+              , eventTime{std::chrono::system_clock::now()} {}
       virtual ~RkEvent() {}
 
       void setType(Type type) { eventType = type; }
       Type type() const { return eventType; }
-
-      static std::shared_ptr<RkPaintEvent> paintEvent() { return std::make_shared<RkPaintEvent>(); }
-      static std::shared_ptr<RkKeyEvent> keyPressEvent() { return std::make_shared<RkKeyEvent>(); }
-      static std::shared_ptr<RkKeyEvent> keyReleaseEvent() { return std::make_shared<RkKeyEvent>(Type::KeyRelease);}
-      static std::shared_ptr<RkMouseEvent> buttonPressEvent() { return std::make_shared<RkMouseEvent>();}
-      static std::shared_ptr<RkMouseEvent> buttonReleaseEvent() { return std::make_shared<RkMouseEvent>(Type::MouseButtonRelease);}
-      static std::shared_ptr<RkCloseEvent> closeEvent() { return std::make_shared<RkCloseEvent>();}
-      static std::shared_ptr<RkResizeEvent> resizeEvent() { return std::make_shared<RkResizeEvent>();}
+      std::chrono::system_clock::time_point time() const { return eventTime; }
+      void setTime(const std::chrono::system_clock::time_point &time) {  eventTime = time; }
 
   private:
-      //      RK_PRIVATE_IMPL(RkEventPrivate, privateEvent)
       Type eventType;
+      std::chrono::system_clock::time_point eventTime;
 };
 
 class RkCloseEvent: public RkEvent {
@@ -83,18 +79,14 @@ class RkCloseEvent: public RkEvent {
 
 class RkKeyEvent: public RkEvent {
    public:
-        RkKeyEvent(Type type = Type::KeyPress)
-	    : RkEvent(type  == Type::KeyPress ? Type::KeyPress : Type::KeyRelease) {
-	}
+        RkKeyEvent(Type type = Type::KeyPressed)
+                : RkEvent(type) {}
 };
 
 class RkMouseEvent: public RkEvent {
   public:
       RkMouseEvent(Type type = Type::MouseButtonPress)
-              : RkEvent(type == Type::MouseMove || type == Type::MouseButtonPress ||
-                        type == Type::MouseButtonRelease ||
-                        type == Type::MouseDoubleClick ? type : Type::MouseButtonPress) {
-      }
+              : RkEvent(type) {}
 
       int x() const { return mouseCoordinates.x(); }
       void setX(int x) { mouseCoordinates.setX(x); }
