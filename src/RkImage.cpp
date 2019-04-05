@@ -56,28 +56,6 @@ RkImage& RkImage::operator=(const RkImage &other)
         return *this;
 }
 
-bool RkImage::operator!=(const RkImage &image) const
-{
-        if (&image == this)
-                return false;
-
-        if (image.width() != width() || image.height() != height() || image.format() != format()
-            || image.dataCopy() != dataCopy())
-                return true;
-        return false;
-}
-
-bool RkImage::operator==(const RkImage &image) const
-{
-        if (&image == this)
-                return true;
-
-        if (image.width() == width() && image.height() == height() && image.format() == format()
-            && image.dataCopy() == dataCopy())
-                return true;
-        return false;
-}
-
 std::shared_ptr<RkCanvasInfo> RkImage::getCanvasInfo() const
 {
         return o_ptr->getCanvasInfo();

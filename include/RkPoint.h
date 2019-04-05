@@ -37,14 +37,14 @@ class RkPoint {
        {
        }
 
-       constexpr bool operator==(const RkPoint &other)
+       friend constexpr bool operator==(const RkPoint &p1, const RkPoint &p2)
        {
-               return other.xValue == xValue && other.yValue == yValue;
+               return p1.xValue == p2.xValue && p1.yValue == p2.yValue;
        }
 
-       constexpr bool operator!=(const RkPoint &other)
+       friend constexpr bool operator!=(const RkPoint &p1, const RkPoint &p2)
        {
-               return other.xValue != xValue || other.yValue != yValue;
+               return p1.xValue != p2.xValue || p1.yValue != p2.yValue;
        }
 
        constexpr int x() const

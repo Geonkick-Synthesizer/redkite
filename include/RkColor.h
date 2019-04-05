@@ -45,20 +45,20 @@ class RkColor {
        {
        }
 
-       constexpr bool operator==(const RkColor &other)
+       friend constexpr bool operator==(const RkColor &c1, const RkColor &c2)
        {
-               return other.redValue == redValue
-               && other.greenValue == greenValue
-               && other.blueValue == blueValue
-               && other.alphaValue == alphaValue;
+               return c1.redValue == c2.redValue
+               && c1.greenValue == c2.greenValue
+               && c1.blueValue == c2.blueValue
+               && c1.alphaValue == c2.alphaValue;
        }
 
-       constexpr bool operator!=(const RkColor &other)
+       friend  constexpr bool operator!=(const RkColor &c1, const RkColor &c2)
        {
-               return other.redValue != redValue
-               || other.greenValue != greenValue
-               || other.blueValue != blueValue
-               || other.alphaValue != alphaValue;
+               return c1.redValue != c2.redValue
+               || c1.greenValue != c2.greenValue
+               || c1.blueValue != c2.blueValue
+               || c1.alphaValue != c2.alphaValue;
        }
 
        constexpr int red() const

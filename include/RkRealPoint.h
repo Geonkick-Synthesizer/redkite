@@ -41,9 +41,6 @@ class RkRealPoint {
        {
        }
 
-       constexpr bool operator==(const RkRealPoint &other) = delete;
-       constexpr bool operator!=(const RkRealPoint &other) = delete;
-
        constexpr rk_real x() const
        {
                return xValue;

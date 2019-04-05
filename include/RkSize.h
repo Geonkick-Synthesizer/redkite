@@ -37,14 +37,14 @@ class RkSize {
        {
        }
 
-       constexpr bool operator==(const RkSize &other)
+       friend constexpr bool operator==(const RkSize &s1, const RkSize &s2)
        {
-               return other.widthValue == widthValue && other.heightValue == heightValue;
+               return s1.widthValue == s2.widthValue && s1.heightValue == s2.heightValue;
        }
 
-       constexpr bool operator!=(const RkSize &other)
+       friend constexpr bool operator!=(const RkSize &s1, const RkSize &s2)
        {
-               return other.widthValue != widthValue || other.heightValue != heightValue;
+               return s1.widthValue != s2.widthValue || s1.heightValue != s2.heightValue;
        }
 
        constexpr int width() const

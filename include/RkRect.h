@@ -55,14 +55,14 @@ class RkRect {
         {
         }
 
-        constexpr bool operator==(const RkRect &other)
+        friend constexpr bool operator==(const RkRect &r1, const RkRect &r2)
         {
-               return rectSize == other.rectSize && rectTopLeft == other.rectTopLeft;
+               return r1.rectSize == r2.rectSize && r1.rectTopLeft == r2.rectTopLeft;
         }
 
-        constexpr bool operator!=(const RkRect &other)
+        friend constexpr bool operator!=(const RkRect &r1, const RkRect &r2)
         {
-                return rectSize != other.rectSize || rectTopLeft != other.rectTopLeft ;
+                return r1.rectSize != r2.rectSize || r1.rectTopLeft != r2.rectTopLeft;
         }
 
         constexpr int width() const

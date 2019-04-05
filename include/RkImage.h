@@ -43,8 +43,23 @@ class RkImage : public RkCanvas {
         RkImage(const RkImage &image);
         RkImage& operator=(const RkImage &other);
         RK_DISABLE_MOVE(RkImage)
-        bool operator!=(const RkImage &image) const;
-        bool operator==(const RkImage &image) const;
+        friend  bool operator==(const RkImage &im1, const RkImage &im2)
+        {
+                return im1.width() == im2.width()
+                        && im1.height() == im2.height()
+                        && im1.format() == im2.format()
+                        && im1.dataCopy() == im2.dataCopy();
+
+        }
+
+        friend  bool operator!=(const RkImage &im1, const RkImage &im2)
+        {
+                return im1.width() != im2.width()
+                        || im1.height() != im2.height()
+                        || im1.format() != im2.format()
+                        || im1.dataCopy() != im2.dataCopy();
+
+         }
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         const unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;

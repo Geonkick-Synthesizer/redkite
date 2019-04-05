@@ -51,18 +51,18 @@ class RkPen {
        {
        }
 
-       constexpr bool operator==(const RkPen &other)
+       friend constexpr bool operator==(const RkPen &pen1, const RkPen &pen2)
        {
-               return other.penStyleVal == penStyleVal
-                      && penColorVal == other.penColorVal
-                      && other.penWidthVal == penWidthVal;
+               return pen1.penStyleVal == pen2.penStyleVal
+                      && pen1.penColorVal == pen2.penColorVal
+                      && pen1.penWidthVal == pen2.penWidthVal;
        }
 
-       constexpr bool operator!=(const RkPen &other)
+       friend constexpr bool operator!=(const RkPen &pen1, const RkPen &pen2)
        {
-               return other.penStyleVal != penStyleVal
-                      || penColorVal != other.penColorVal
-                      || other.penWidthVal != penWidthVal;
+               return pen1.penStyleVal != pen2.penStyleVal
+                      || pen1.penColorVal != pen2.penColorVal
+                      || pen1.penWidthVal != pen2.penWidthVal;
        }
 
        constexpr PenStyle style() const
