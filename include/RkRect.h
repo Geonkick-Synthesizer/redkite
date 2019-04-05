@@ -31,68 +31,66 @@ class RkRect {
  public:
 
         constexpr RkRect()
-                : rectTopLeft(0, 0)
-                , rectSize(0, 0)
         {
         }
 
         constexpr RkRect(int x, int y, int width, int height)
                 : rectTopLeft(x, y)
-                , rectSize(width, height)
+                , rectBottomRight(x + width, y + height)
         {
         }
 
         constexpr RkRect(const RkPoint &topLeft, const RkSize &size)
                 : rectTopLeft{topLeft}
-                , rectSize{size}
-
+                , rectBottomRight(topLeft.x() + size.width(), topLeft.y() + size.height())
         {
         }
 
         constexpr RkRect(const RkPoint &topLeft, const RkPoint &bottomRight)
                 : rectTopLeft{topLeft}
-                , rectSize(std::abs(bottomRight.x() - topLeft.x()), std::abs(bottomRight.y() - topLeft.y()))
+                , rectBottomRight{bottomRight}
         {
         }
 
         friend constexpr bool operator==(const RkRect &r1, const RkRect &r2)
         {
-               return r1.rectSize == r2.rectSize && r1.rectTopLeft == r2.rectTopLeft;
+               return r1.rectTopLeft == r2.rectTopLeft && r1.rectBottomRight == r2.rectBottomRight;
         }
 
         friend constexpr bool operator!=(const RkRect &r1, const RkRect &r2)
         {
-                return r1.rectSize != r2.rectSize || r1.rectTopLeft != r2.rectTopLeft;
+                return r1.rectTopLeft != r2.rectTopLeft || r1.rectBottomRight != r2.rectBottomRight;
         }
 
         constexpr int width() const
         {
-                return rectSize.width();
+                return std::abs(rectBottomRight.x() - rectTopLeft.x());
         }
 
         constexpr void setWidth(int width)
         {
-                rectSize.setWidth(width);
+                rectBottomRight.setX(rectTopLeft.x() + width);
         }
 
         constexpr int height() const
         {
-                return rectSize.height();
+                return std::abs(rectBottomRight.y() - rectTopLeft.y());
         }
 
         constexpr void setHeight(int height)
         {
-                rectSize.setHeight(height);
+                rectBottomRight.setY(rectTopLeft.y() + height);
         }
 
         constexpr RkSize size() const
         {
-                return rectSize;
+                return RkSize(width(), height());
         }
 
         constexpr void setSize(const RkSize &size)
         {
-                rectSize = size;
+                rectBottomRight.setX(rectTopLeft.x() + size.width());
+                rectBottomRight.setY(rectTopLeft.y() + size.height());
         }
 
         constexpr void setTopLeft(const RkPoint &p)
@@ -102,17 +100,19 @@ class RkRect {
 
         constexpr void setTopRight(const RkPoint &p)
         {
-                rectTopLeft = p;
+                rectTopLeft.setY(p.y());
+                rectBottomRight.setX(p.x());
         }
 
         constexpr void setBottomLeft(const RkPoint &p)
         {
-                rectTopLeft = p;
+                rectTopLeft.setX(p.x());
+                rectBottomRight.setY(p.y());
         }
 
         constexpr void setBottomRight(const RkPoint &p)
         {
-                rectTopLeft = p;
+                rectBottomRight = p;
         }
 
         constexpr RkPoint topLeft() const
@@ -122,17 +122,17 @@ class RkRect {
 
         constexpr RkPoint topRight() const
         {
-                return rectTopLeft;
+                return RkPoint(rectBottomRight.x(), rectTopLeft.y()) ;
         }
 
         constexpr RkPoint bottomLeft() const
         {
-                return rectTopLeft;
+                return RkPoint(rectTopLeft.x(), rectBottomRight.y()) ;
         }
 
         constexpr RkPoint bottomRight(void) const
         {
-                return rectTopLeft;
+                return rectBottomRight;
         }
 
         constexpr int left() const
@@ -147,17 +147,17 @@ class RkRect {
 
         constexpr int bottom() const
         {
-                return rectTopLeft.y() + rectSize.height();
+                return rectBottomRight.y();
         }
 
         constexpr int right() const
         {
-                return rectTopLeft.x() + rectSize.width();
+                return rectBottomRight.x();
         }
 
  private:
        RkPoint rectTopLeft;
-       RkSize  rectSize;
+       RkPoint rectBottomRight;
 };
 
 #endif // RK_RECT_H

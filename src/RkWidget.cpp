@@ -298,67 +298,56 @@ void RkWidget::addChild(RkWidget* child)
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-	RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::moveEvent(const std::shared_ptr<RkMoveEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO(title() + ":called");
 }
 
 void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
@@ -369,7 +358,6 @@ void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
 void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
 }
 
 void RkWidget::setEventQueue(RkEventQueue *eventQueue)

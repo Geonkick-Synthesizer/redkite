@@ -71,11 +71,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
-        RK_LOG_DEBUG("delete children " << widgetChildren.size());
-        for (auto child : widgetChildren) {
-                RK_LOG_DEBUG("delete child " << child->title());
+        for (auto child : widgetChildren)
                 delete child;
-        }
 }
 
 void RkWidget::RkWidgetImpl::show()

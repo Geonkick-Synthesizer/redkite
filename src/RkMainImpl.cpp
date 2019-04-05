@@ -45,7 +45,6 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
 {
         RK_UNUSED(argc);
         RK_UNUSED(argv);
-        RK_LOG_INFO("called");
 }
 
 RkMain::RkMainImpl::~RkMainImpl()
