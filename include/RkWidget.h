@@ -27,6 +27,8 @@
 #include "Rk.h"
 #include "RkEventQueue.h"
 #include "RkCanvas.h"
+#include "RkRect.h"
+#include "RkColor.h"
 
 class RkEvent;
 class RkCloseEvent;
@@ -63,8 +65,8 @@ class RkWidget: public RkCanvas {
           RkWindowId id() const;
 
 	  void setSize(int w, int h);
-	  void setSize(const std::pair<int, int> &size);
-	  std::pair<int, int> size() const;
+	  void setSize(const RkSize &size);
+	  RkSize size() const;
 	  void setWidth(int w);
 	  int width() const;
           int minimumWidth() const;
@@ -79,18 +81,22 @@ class RkWidget: public RkCanvas {
           void setMaximumHeight(int height);
           void setFixedWidth(int width);
           void setFixedHeight(int height);
-          void setFixedSize(const std::pair<int, int> &size);
+          void setFixedSize(const RkSize &size);
           void setFixedSize(int width, int height);
           int x() const;
           void setX(int x);
           int y() const;
           void setY(int y);
           void setPosition(int x, int y);
-          std::pair<int, int> position() const;
+          RkPoint position() const;
           void setBorderWidth(int width);
+          int borderWidth() const;
           void setBackgroundColor(int red, int green, int blue);
+          const RkColor& background() const;
           void setBorderColor(int red, int green, int blue);
+          const RkColor& borderColor() const;
           std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
+          RkRect rect() const;
 
   protected:
           RK_DECLARE_IMPL(RkWidget)

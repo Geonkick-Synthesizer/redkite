@@ -30,12 +30,12 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         : parentWindowInfo(parent)
         , xDisplay{parent ? parent->display : nullptr}
         , screenNumber{parent ? parent->screenNumber : 0}
-        , xWindow(0)
+        , xWindow{0}
         , windowPosition{0, 0}
         , windowSize{250, 250}
-        , borderWidth{0}
-        , borderColor{255, 255, 255}
-        , backgroundColor{255, 255, 255}
+        , winBorderWidth{0}
+        , winBorderColor{255, 255, 255}
+        , winBackgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
 {
@@ -45,12 +45,12 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
         , xDisplay{parent.display}
         , screenNumber{parent.screenNumber}
-        , xWindow(0)
+        , xWindow{0}
         , windowPosition{0, 0}
         , windowSize{250, 250}
-        , borderWidth{1}
-        , borderColor{255, 255, 255}
-        , backgroundColor{255, 255, 255}
+        , winBorderWidth{0}
+        , winBorderColor{255, 255, 255}
+        , winBackgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
 
@@ -89,10 +89,10 @@ bool RkWindowX::init()
 
         Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
         xWindow = XCreateSimpleWindow(xDisplay, parent,
-                                      windowPosition.first, windowPosition.second,
-                                      windowSize.first, windowSize.second, borderWidth,
-                                      pixelValue(borderColor),
-                                      pixelValue(backgroundColor));
+                                      windowPosition.x(), windowPosition.y(),
+                                      windowSize.width(), windowSize.height(), winBorderWidth,
+                                      pixelValue(winBorderColor),
+                                      pixelValue(winBackgroundColor));
 
 
         if (!xWindow) {
@@ -149,52 +149,55 @@ bool RkWindowX::isWindowCreated() const
         return xDisplay != nullptr && xWindow;
 }
 
-std::pair<int, int> RkWindowX::size() const
+RkSize& RkWindowX::size() const
 {
         if (isWindowCreated()) {
                 XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                return {attributes.width, attributes.height};
+                windowSize = RkSize(attributes.width, attributes.height);
         }
         return windowSize;
 }
 
-void RkWindowX::setSize(const std::pair<int, int> &size)
+void RkWindowX::setSize(const RkSize &size)
 {
-        if (size.first > 0 && size.second > 0) {
+        if (size.width() > 0 && size.height() > 0) {
                 windowSize = size;
                 if (isWindowCreated())
-                        XResizeWindow(display(), xWindow, windowSize.first, windowSize.second);
+                        XResizeWindow(display(), xWindow, windowSize.width(), windowSize.height());
         }
 }
 
-std::pair<int, int> RkWindowX::position() const
+RkPoint& RkWindowX::position() const
 {
         if (isWindowCreated()) {
                 XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                auto pos = std::make_pair(attributes.x, attributes.y);
-                if (pos != windowPosition)
-                        windowPosition = pos;
+                windowPosition = RkPoint(attributes.x, attributes.y);
         }
         return windowPosition;
 }
 
-void RkWindowX::setPosition(const std::pair<int, int> &position)
+void RkWindowX::setPosition(const RkPoint &position)
 {
                 windowPosition = position;
                 if (isWindowCreated())
-                         XMoveWindow(display(), xWindow, windowPosition.first, windowPosition.second);
+                        XMoveWindow(display(), xWindow, windowPosition.x(), windowPosition.y());
 }
 
 void RkWindowX::setBorderWidth(int width)
 {
-        borderWidth = width;
+        winBorderWidth = width;
         if (isWindowCreated())
-                XSetWindowBorderWidth(display(), xWindow, borderWidth);
+                XSetWindowBorderWidth(display(), xWindow, winBorderWidth);
 }
 
-unsigned long RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
+int RkWindowX::borderWidth() const
+{
+        return winBorderWidth;
+}
+
+unsigned long RkWindowX::pixelValue(const RkColor &color)
 {
         if (!display())
                 return 0;
@@ -203,31 +206,41 @@ unsigned long RkWindowX::pixelValue(const std::tuple<int, int, int> &color)
         XColor pixelColor;
         pixelColor.flags = DoRed | DoGreen | DoBlue;
         constexpr const unsigned short k = 65535 / 255;
-        pixelColor.red   = k * std::get<0>(color);
-        pixelColor.green = k * std::get<1>(color);
-        pixelColor.blue  = k * std::get<2>(color);
+        pixelColor.red   = k * color.red();
+        pixelColor.green = k * color.green();
+        pixelColor.blue  = k * color.blue();
 
         auto res = XAllocColor(display(), colorMap, &pixelColor);
         if (!res) {
                 RK_LOG_ERROR("can't allocate color");
-                return 0 ;
+                return 0;
         }
 
         return pixelColor.pixel;
 }
 
-void RkWindowX::setBorderColor(const std::tuple<int, int, int> &color)
+void RkWindowX::setBorderColor(const RkColor &color)
 {
-        borderColor = color;
+        winBorderColor = color;
         if (isWindowCreated())
-                XSetWindowBorder(display(), xWindow, pixelValue(borderColor));
+                XSetWindowBorder(display(), xWindow, pixelValue(winBorderColor));
 }
 
-void RkWindowX::setBackgroundColor(const std::tuple<int, int, int> &background)
+const RkColor& RkWindowX::borderColor() const
 {
-        backgroundColor = background;
+        return winBorderColor;
+}
+
+void RkWindowX::setBackgroundColor(const RkColor &color)
+{
+        winBackgroundColor = color;
         if (isWindowCreated())
-                XSetWindowBackground(display(), xWindow, pixelValue(background));
+                XSetWindowBackground(display(), xWindow, pixelValue(winBackgroundColor));
+}
+
+const RkColor& RkWindowX::background() const
+{
+        return winBackgroundColor;
 }
 
 RkWindowId RkWindowX::id() const
@@ -244,8 +257,19 @@ void RkWindowX::setEventQueue(RkEventQueue *queue)
 
 void RkWindowX::update()
 {
-        if (isWindowCreated())
-                XClearArea(display(), xWindow, 0, 0, 0, 0, True);
+        if (isWindowCreated()) {
+                XExposeEvent event;
+                event.type       = Expose;
+                event.send_event = false;
+                event.display    = display();
+                event.window     = xWindow;
+                event.x          = 0;
+                event.y          = 0;
+                event.width      = size().width();
+                event.height     = size().height();
+                event.count      = 0;
+                XSendEvent(display(), xWindow, True, ExposureMask, reinterpret_cast<XEvent*>(&event));
+        }
 }
 
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
@@ -254,12 +278,12 @@ void RkWindowX::createCanvasInfo()
         canvasInfo = std::make_shared<RkCanvasInfo>();
         canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
                                                               DefaultVisual(display(), screenNumber),
-                                                              size().first, size().second);
+                                                              size().width(), size().height());
 }
 
 void RkWindowX::resizeCanvas()
 {
-        cairo_xlib_surface_set_size(canvasInfo->cairo_surface, size().first, size().second);
+        cairo_xlib_surface_set_size(canvasInfo->cairo_surface, size().width(), size().height());
 }
 
 std::shared_ptr<RkCanvasInfo> RkWindowX::getCanvasInfo()
@@ -275,4 +299,3 @@ void RkWindowX::freeCanvasInfo()
 #else
 #error No graphics backend defined
 #endif // RK_GRAPHICS_CAIRO_BACKEND
-

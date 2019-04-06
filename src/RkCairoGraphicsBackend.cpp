@@ -131,6 +131,18 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
         cairo_stroke(context());
 }
 
+void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
+{
+        cairo_save(context());
+        cairo_rectangle(context(), rect.left(), rect.top(), rect.width(), rect.height());
+        cairo_set_source_rgb(context(),
+                             static_cast<double>(color.red()) / 255,
+                             static_cast<double>(color.green()) / 255,
+                             static_cast<double>(color.blue()) / 255);
+        cairo_fill(context());
+        cairo_restore(context());
+}
+
 int RkCairoGraphicsBackend::getFontSize() const
 {
         return fontSize;

@@ -3,7 +3,7 @@
 #include "RkCanvasInfo.h"
 #include "RkLog.h"
 
-RkCairoImageBackendCanvas::RkCairoImageBackendCanvas(const std::pair<int, int> &size,
+RkCairoImageBackendCanvas::RkCairoImageBackendCanvas(const RkSize &size,
                                                      RkImage::Format format,
                                                      const unsigned char *data)
         : canvasInfo{nullptr}
@@ -13,14 +13,17 @@ RkCairoImageBackendCanvas::RkCairoImageBackendCanvas(const std::pair<int, int> &
 #elif RK_OS_MAC
 #else // X11
         auto cairoFormat = toCairoFormat(format);
-        if (cairoFormat != CAIRO_FORMAT_INVALID && imageSize.first != 0 && imageSize.second != 0) {
+        if (cairoFormat != CAIRO_FORMAT_INVALID && imageSize.width() > 0 && imageSize.height() > 0) {
                 canvasInfo = std::make_shared<RkCanvasInfo>();
-                auto stride = cairo_format_stride_for_width(cairoFormat, imageSize.first);
-                imageData.assign(data, data + imageSize.first * imageSize.second * pixelLength(format));
+                auto stride = cairo_format_stride_for_width(cairoFormat, imageSize.width());
+                if (data == nullptr)
+                        imageData = std::vector<unsigned char>(imageSize.width() * imageSize.height() * pixelLength(format), 255);
+                else
+                        imageData.assign(data, data + imageSize.width() * imageSize.height() * pixelLength(format));
                 canvasInfo->cairo_surface = cairo_image_surface_create_for_data(imageData.data(),
                                                                                 CAIRO_FORMAT_ARGB32,
-                                                                                imageSize.first,
-                                                                                imageSize.second,
+                                                                                imageSize.width(),
+                                                                                imageSize.height(),
                                                                                 stride);
         }
 #endif
@@ -52,7 +55,7 @@ int RkCairoImageBackendCanvas::pixelLength(RkImage::Format format) const
         }
 }
 
-std::pair<int, int> RkCairoImageBackendCanvas::size() const
+const RkSize& RkCairoImageBackendCanvas::size() const
 {
         return imageSize;
 }

@@ -105,7 +105,7 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
         mouseEvent->setY(buttonEvent->y);
 
         auto diff = mouseEvent->time().time_since_epoch() - lastTimePressed.time_since_epoch();
-        if (std::chrono::duration_cast<std::chrono::microseconds>(diff).count() < 500000)
+        if (std::chrono::duration_cast<std::chrono::microseconds>(diff).count() < 300000)
                 mouseEvent->setType(RkEvent::Type::MouseDoubleClick);
         lastTimePressed = mouseEvent->time();
 

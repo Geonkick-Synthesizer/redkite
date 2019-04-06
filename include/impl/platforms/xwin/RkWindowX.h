@@ -26,6 +26,9 @@
 
 #include "Rk.h"
 #include "RkPlatform.h"
+#include "RkSize.h"
+#include "RkPoint.h"
+#include "RkColor.h"
 
 class RkEventQueue;
 struct RkCanvasInfo;
@@ -44,16 +47,19 @@ class RkWindowX {
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
         Display* display();
-        std::pair<int, int> size() const;
-        void setSize(const std::pair<int, int> &size);
-        std::pair<int, int> position() const;
-        void setPosition(const std::pair<int, int> &position);
+        RkSize& size() const;
+        void setSize(const RkSize &size);
+        RkPoint& position() const;
+        void setPosition(const RkPoint &position);
         RkWindowId id() const;
         void setEventQueue(RkEventQueue *queue);
 
         void setBorderWidth(int width);
-        void setBorderColor(const std::tuple<int, int, int> &color);
-        void setBackgroundColor(const std::tuple<int, int, int> &background);
+        int borderWidth() const;
+        void setBorderColor(const RkColor &color);
+        const RkColor& borderColor() const;
+        void setBackgroundColor(const RkColor &color);
+        const RkColor& background() const;
         void resizeCanvas();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo();
         void update();
@@ -62,7 +68,7 @@ class RkWindowX {
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
-        unsigned long pixelValue(const std::tuple<int, int, int> &color);
+        unsigned long pixelValue(const RkColor &color);
         void createCanvasInfo();
         void freeCanvasInfo();
 
@@ -72,11 +78,11 @@ class RkWindowX {
         int screenNumber;
         Window xWindow;
         Atom deleteWindowAtom;
-        mutable std::pair<int, int> windowPosition;
-        std::pair<int, int> windowSize;
-        int borderWidth;
-        std::tuple<int, int, int> borderColor;
-        std::tuple<int, int, int> backgroundColor;
+        mutable RkPoint windowPosition;
+        mutable RkSize windowSize;
+        int winBorderWidth;
+        RkColor winBorderColor;
+        RkColor winBackgroundColor;
         RkEventQueue *eventQueue;
         std::shared_ptr<RkCanvasInfo> canvasInfo;
 };

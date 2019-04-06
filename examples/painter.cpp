@@ -36,6 +36,7 @@ class  PainterExample: public RkWidget {
                 , startDraw{false}
         {
                 RK_LOG_INFO("called");
+                setBackgroundColor(80, 80, 80);
         }
 
         ~PainterExample() = default;
@@ -45,7 +46,9 @@ class  PainterExample: public RkWidget {
         {
                 RK_UNUSED(event);
                 if (startDraw) {
-                        RkPainter painter(this);
+                        RkImage image(width(), height());
+                        RkPainter painter(&image);
+                        painter.fillRect(rect(), background());
                         RkPen pen(RkColor(255, 0, 0));
                         pen.setWidth(2);
                         pen.setStyle(RkPen::PenStyle::DashLine);
@@ -64,6 +67,8 @@ class  PainterExample: public RkWidget {
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() - 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() - 80, clickPoint.y() - 80));
+                        RkPainter paint(this);
+                        paint.drawImage(image, 0, 0);
                 }
         }
 

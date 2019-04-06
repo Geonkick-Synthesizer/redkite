@@ -28,6 +28,7 @@
 #include "RkImage.h"
 #include "RkPoint.h"
 #include "RkPen.h"
+#include "RkRect.h"
 
 #include <cairo/cairo.h>
 
@@ -43,6 +44,7 @@ class RkCairoGraphicsBackend {
         void drawEllipse(const RkPoint& p, int width, int height);
         void drawLine(const RkPoint &p1, const RkPoint &p2);
         void drawPolyLine(const std::vector<RkPoint> &points);
+        void fillRect(const RkRect &rect, const RkColor &color);
         void setPen(const RkPen &pen);
         int getFontSize() const;
         void setFontSize(int size);

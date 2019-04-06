@@ -23,6 +23,7 @@
 
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
+#include "RkPainter.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
@@ -65,6 +66,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
+        , widgetMinimumSize{0, 0}
+        , widgetMaximumSize{1000000, 1000000}
 {
         platformWindow->init();
 }
@@ -111,8 +114,10 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
         switch (event->type())
         {
         case RkEvent::Type::Paint:
+        {
                 inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
                 break;
+        }
         case RkEvent::Type::KeyPressed:
                 inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
@@ -169,63 +174,63 @@ void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
         }
 }
 
-void RkWidget::RkWidgetImpl::setSize(const std::pair<int, int> &size)
+void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
 {
-        if (size.first > 1 && size.second > 1)
+        if (size.width() > 1 && size.height() > 1)
                 platformWindow->setSize(size);
 }
 
-std::pair<int, int> RkWidget::RkWidgetImpl::size() const
+RkSize RkWidget::RkWidgetImpl::size() const
 {
         return  platformWindow->size();
 }
 
 int RkWidget::RkWidgetImpl::minimumWidth() const
 {
-        return widgetMinimumSize.first;
+        return widgetMinimumSize.width();
 }
 
 int RkWidget::RkWidgetImpl::maximumWidth() const
 {
-        return widgetMaximumSize.first;
+        return widgetMaximumSize.width();
 }
 
 int RkWidget::RkWidgetImpl::minimumHeight() const
 {
-        return widgetMinimumSize.second;
+        return widgetMinimumSize.height();
 }
 
 int RkWidget::RkWidgetImpl::maximumHeight() const
 {
-        return widgetMaximumSize.second;
+        return widgetMaximumSize.height();
 }
 
 void RkWidget::RkWidgetImpl::setMinimumWidth(int width)
 {
-        widgetMinimumSize.first = width;
+        widgetMinimumSize.setWidth(width);
 }
 
 void RkWidget::RkWidgetImpl::setMaximumWidth(int width)
 {
-        widgetMaximumSize.first = width;
+        widgetMaximumSize.setWidth(width);
 }
 
 void RkWidget::RkWidgetImpl::setMinimumHeight(int height)
 {
-        widgetMinimumSize.second = height;
+        widgetMinimumSize.setHeight(height);
 }
 
 void RkWidget::RkWidgetImpl::setMaximumHeight(int height)
 {
-        widgetMaximumSize.second = height;
+        widgetMaximumSize.setHeight(height);
 }
 
-void RkWidget::RkWidgetImpl::setPosition(const std::pair<int, int> &position)
+void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)
 {
         platformWindow->setPosition(position);
 }
 
-std::pair<int, int> RkWidget::RkWidgetImpl::position() const
+RkPoint RkWidget::RkWidgetImpl::position() const
 {
         return platformWindow->position();
 }
@@ -235,14 +240,34 @@ void RkWidget::RkWidgetImpl::setBorderWidth(int width)
         platformWindow->setBorderWidth(width);
 }
 
-void RkWidget::RkWidgetImpl::setBorderColor(const std::tuple<int, int, int> &color)
+int RkWidget::RkWidgetImpl::borderWidth() const
+{
+        return platformWindow->borderWidth();
+}
+
+void RkWidget::RkWidgetImpl::setBorderColor(const RkColor &color)
 {
         platformWindow->setBorderColor(color);
 }
 
-void RkWidget::RkWidgetImpl::setBackgroundColor(const std::tuple<int, int, int> &background)
+const RkColor& RkWidget::RkWidgetImpl::borderColor() const
 {
-        platformWindow->setBackgroundColor(background);
+        return platformWindow->borderColor();
+}
+
+void RkWidget::RkWidgetImpl::setBackgroundColor(const RkColor &color)
+{
+        platformWindow->setBackgroundColor(color);
+}
+
+const RkColor& RkWidget::RkWidgetImpl::background() const
+{
+        return platformWindow->background();
+}
+
+RkRect RkWidget::RkWidgetImpl::rect() const
+{
+        return RkRect(RkPoint(0, 0), size());
 }
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)

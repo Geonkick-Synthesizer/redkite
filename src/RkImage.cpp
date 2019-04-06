@@ -25,15 +25,15 @@
 #include "RkImageImpl.h"
 
 RkImage::RkImage()
-        : o_ptr{std::make_shared<RkImageImpl>(this, nullptr, 0, 0)}
+        : o_ptr{std::make_shared<RkImageImpl>(this, 0, 0, nullptr)}
 {
 }
 
-RkImage::RkImage(const unsigned char *data,
-                 int width,
+RkImage::RkImage(int width,
                  int height,
+                 const unsigned char *data,
                  Format format)
-        : o_ptr{std::make_shared<RkImageImpl>(this, data, width, height, format)}
+        : o_ptr{std::make_shared<RkImageImpl>(this, width, height, data, format)}
 {
 }
 

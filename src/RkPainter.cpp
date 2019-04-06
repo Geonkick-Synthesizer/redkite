@@ -69,6 +69,12 @@ void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
                 o_ptr->drawPolyline(points);
 }
 
+void RkPainter::fillRect(const RkRect &rect, const RkColor &color)
+{
+        if (rect.area() > 0)
+                o_ptr->fillRect(rect, color);
+}
+
 const RkPen& RkPainter::pen() const
 {
         return o_ptr->pen();

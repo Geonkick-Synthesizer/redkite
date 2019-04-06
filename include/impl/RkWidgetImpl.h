@@ -57,8 +57,8 @@ class RkWidget::RkWidgetImpl {
         RkWidget* child(const RkWindowId &id) const;
         void addChild(RkWidget* child);
 
-        void setSize(const std::pair<int, int> &size);
-        std::pair<int, int> size() const;
+        void setSize(const RkSize &size);
+        RkSize size() const;
         int minimumWidth() const;
         int maximumWidth() const;
         int minimumHeight() const;
@@ -67,11 +67,15 @@ class RkWidget::RkWidgetImpl {
         void setMaximumWidth(int widht);
         void setMinimumHeight(int heigth);
         void setMaximumHeight(int heigth);
-        void setPosition(const std::pair<int, int> &position);
-        std::pair<int, int> position() const;
+        void setPosition(const RkPoint &position);
+        RkPoint position() const;
         void setBorderWidth(int width);
-        void setBorderColor(const std::tuple<int, int, int> &color);
-        void setBackgroundColor(const std::tuple<int, int, int> &background);
+        int borderWidth() const;
+        void setBorderColor(const RkColor &color);
+        const RkColor &borderColor() const;
+        void setBackgroundColor(const RkColor &color);
+        const RkColor& background() const;
+        RkRect rect() const;
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* getEventQueue();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
@@ -90,8 +94,8 @@ class RkWidget::RkWidgetImpl {
         std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
         RkEventQueue* eventQueue;
-        std::pair<int, int> widgetMinimumSize;
-        std::pair<int, int> widgetMaximumSize;
+        RkSize widgetMinimumSize;
+        RkSize widgetMaximumSize;
 };
 
 #endif // RK_WIDGET_IMPL_H

@@ -25,6 +25,7 @@
 #define RK_IMAGE_H
 
 #include "RkCanvas.h"
+#include "RkSize.h"
 
 class RkImage : public RkCanvas {
  public:
@@ -34,9 +35,9 @@ class RkImage : public RkCanvas {
         };
 
         RkImage();
-        explicit RkImage(const unsigned char *data,
-                         int width,
+        explicit RkImage(int width,
                          int height,
+                         const unsigned char *data = nullptr,
                          Format format = Format::ARGB32);
 
         virtual ~RkImage() = default;

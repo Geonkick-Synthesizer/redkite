@@ -32,9 +32,9 @@ class RkCairoImageBackendCanvas;
 class RkImage::RkImageImpl {
  public:
         RkImageImpl(RkImage *interface,
-                    const unsigned char *data,
                     int width,
                     int height,
+                    const unsigned char *data,
                     RkImage::Format format = RkImage::Format::ARGB32);
         virtual ~RkImageImpl();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
@@ -44,7 +44,7 @@ class RkImage::RkImageImpl {
         int width() const;
         int height() const;
         bool isNull() const;
-        void createImage(std::pair<int, int> size,
+        void createImage(const RkSize &size,
                          RkImage::Format format,
                          const unsigned char *data);
 

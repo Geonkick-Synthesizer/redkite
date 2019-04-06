@@ -29,14 +29,14 @@
 #endif
 
 RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
-                                  const unsigned char *data,
                                   int width,
                                   int height,
+                                  const unsigned char *data,
                                   RkImage::Format format)
         : inf_ptr{interface}
         , imageFormat{format}
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
-        , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(std::make_pair(width, height), imageFormat, data)}
+        , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #else
 #error No graphics backend defined
 #endif
@@ -69,12 +69,12 @@ RkImage::Format RkImage::RkImageImpl::format() const
 
 int RkImage::RkImageImpl::width() const
 {
-        return imageBackendCanvas->size().first;
+        return imageBackendCanvas->size().width();
 }
 
 int RkImage::RkImageImpl::height() const
 {
-        return imageBackendCanvas->size().second;
+        return imageBackendCanvas->size().height();
 }
 
 bool RkImage::RkImageImpl::isNull() const
@@ -82,7 +82,7 @@ bool RkImage::RkImageImpl::isNull() const
         return !imageBackendCanvas || imageBackendCanvas->isNull();
 }
 
-void RkImage::RkImageImpl::createImage(std::pair<int, int> size,
+void RkImage::RkImageImpl::createImage(const RkSize &size,
                                        RkImage::Format format,
                                        const unsigned char *data)
 {

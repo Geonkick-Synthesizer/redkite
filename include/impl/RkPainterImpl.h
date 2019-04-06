@@ -42,6 +42,7 @@ class RkPainter::RkPainterImpl {
         void drawEllipse(const RkPoint& p, int width, int height);
         void drawLine(const RkPoint &p1, const RkPoint &p2);
         void drawPolyline(const std::vector<RkPoint> &points);
+        void fillRect(const RkRect &rect, const RkColor &color);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
         int fontSize() const;

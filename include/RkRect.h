@@ -155,6 +155,11 @@ class RkRect {
                 return rectBottomRight.x();
         }
 
+        constexpr int area() const
+        {
+                return width() * height();
+        }
+
  private:
        RkPoint rectTopLeft;
        RkPoint rectBottomRight;

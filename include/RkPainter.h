@@ -43,6 +43,7 @@ class RkPainter {
         void drawLine(int x1, int y1, int x2, int y2);
         void drawLine(const RkPoint &p1, const RkPoint &p2);
         void drawPolyline(const std::vector<RkPoint> &points);
+        void fillRect(const RkRect &rect, const RkColor &color);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
         int fontSize() const;

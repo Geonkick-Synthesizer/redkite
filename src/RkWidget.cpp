@@ -98,33 +98,32 @@ void RkWidget::setSize(int w, int h)
         else if (h < minimumHeight())
                 h = minimumHeight();
 
-        o_ptr->setSize({w, h});
+        o_ptr->setSize(RkSize(w, h));
 }
 
-void RkWidget::setSize(const std::pair<int, int> &size)
+void RkWidget::setSize(const RkSize &size)
 {
-        setSize(size.first, size.second);
+        o_ptr->setSize(size);
 }
 
-std::pair<int, int> RkWidget::size() const
+RkSize RkWidget::size() const
 {
         return o_ptr->size();
 }
 
 void RkWidget::setWidth(int w)
 {
-        RK_LOG_DEBUG("max: " <<  minimumWidth() << ", w = " << w);
         if (w > maximumWidth())
-                o_ptr->setSize({maximumWidth(), o_ptr->size().second});
+                o_ptr->setSize(RkSize(maximumWidth(), o_ptr->size().height()));
         else if (w < minimumWidth())
-                o_ptr->setSize({minimumWidth(), o_ptr->size().second});
+                o_ptr->setSize(RkSize(minimumWidth(), o_ptr->size().height()));
         else
-                o_ptr->setSize({w, o_ptr->size().second});
+                o_ptr->setSize(RkSize(w, o_ptr->size().height()));
 }
 
 int RkWidget::width() const
 {
-        return o_ptr->size().first;
+        return o_ptr->size().width();
 }
 
 int RkWidget::minimumWidth() const
@@ -140,16 +139,16 @@ int RkWidget::maximumWidth() const
 void RkWidget::setHeight(int h)
 {
         if (h > maximumHeight())
-                o_ptr->setSize({o_ptr->size().first,  maximumHeight()});
+                o_ptr->setSize(RkSize(o_ptr->size().width(),  maximumHeight()));
         else if (h < minimumHeight())
-                o_ptr->setSize({o_ptr->size().first,  minimumHeight()});
+                o_ptr->setSize(RkSize(o_ptr->size().width(),  minimumHeight()));
         else
-                o_ptr->setSize({o_ptr->size().first,  h});
+                o_ptr->setSize(RkSize(o_ptr->size().width(),  h));
 }
 
 int RkWidget::height() const
 {
-        return o_ptr->size().second;
+        return o_ptr->size().height();
 }
 
 int RkWidget::minimumHeight() const
@@ -196,48 +195,53 @@ void RkWidget::setFixedHeight(int height)
         setHeight(height);
 }
 
-void RkWidget::setFixedSize(const std::pair<int, int> &size)
+void RkWidget::setFixedSize(const RkSize &size)
 {
-        setMinimumWidth(size.first);
-        setMaximumWidth(size.first);
-        setMinimumHeight(size.second);
-        setMaximumHeight(size.second);
+        setMinimumWidth(size.width());
+        setMaximumWidth(size.width());
+        setMinimumHeight(size.height());
+        setMaximumHeight(size.height());
         setSize(size);
 }
 
 void RkWidget::setFixedSize(int width, int height)
 {
-        setFixedSize(std::make_pair(width, height));
+        setFixedSize(RkSize(width, height));
 }
 
 int RkWidget::x() const
 {
-        return o_ptr->position().first;
+        return o_ptr->position().x();
 }
 
 void RkWidget::setX(int x)
 {
-        o_ptr->setPosition({x, o_ptr->position().second});
+        o_ptr->setPosition(RkPoint(x, o_ptr->position().y()));
 }
 
 int RkWidget::y() const
 {
-        return o_ptr->position().second;
+        return o_ptr->position().y();
 }
 
 void RkWidget::setY(int y)
 {
-        return o_ptr->setPosition({o_ptr->position().first, y});
+        return o_ptr->setPosition(RkPoint(o_ptr->position().x(), y));
 }
 
 void RkWidget::setPosition(int x, int y)
 {
-        o_ptr->setPosition({x, y});
+        o_ptr->setPosition(RkPoint(x, y));
 }
 
 void RkWidget::setBorderWidth(int width)
 {
         o_ptr->setBorderWidth(width);
+}
+
+int RkWidget::borderWidth() const
+{
+        return o_ptr->borderWidth();
 }
 
 void RkWidget::setBorderColor(int red, int green, int blue)
@@ -256,7 +260,12 @@ void RkWidget::setBorderColor(int red, int green, int blue)
                 blue = 255;
         if (blue < 0)
                 blue = 0;
-        o_ptr->setBorderColor({red, green, blue});
+        o_ptr->setBorderColor(RkColor(red, green, blue));
+}
+
+const RkColor& RkWidget::borderColor() const
+{
+        return o_ptr->borderColor();
 }
 
 void RkWidget::setBackgroundColor(int red, int green, int blue)
@@ -276,7 +285,12 @@ void RkWidget::setBackgroundColor(int red, int green, int blue)
         if (blue < 0)
                 blue = 0;
 
-        o_ptr->setBackgroundColor({red, green, blue});
+        o_ptr->setBackgroundColor(RkColor(red, green, blue));
+}
+
+const RkColor& RkWidget::background() const
+{
+        return o_ptr->background();
 }
 
 RkWidget* RkWidget::parent() const
@@ -373,4 +387,9 @@ void RkWidget::update()
 std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
 {
         return o_ptr->getCanvasInfo();
+}
+
+RkRect RkWidget::rect() const
+{
+        return o_ptr->rect();
 }
