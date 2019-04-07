@@ -58,7 +58,6 @@ class RkWidget: public RkCanvas {
 	  const std::string& title() const;
           std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
 	  bool isClose() const;
-	  void processEvents();
           RkWidget* parent() const;
           RkWidget* child(const RkWindowId &id) const;
           void processEvent(const std::shared_ptr<RkEvent> &event);
