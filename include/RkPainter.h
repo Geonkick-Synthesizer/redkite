@@ -52,6 +52,8 @@ class RkPainter {
         void setPen(const RkPen &pen);
         const RkFont& font() const;
         void setFont(const RkFont &font);
+        void translate(const RkPoint &offset);
+        void rotate(rk_real angle);
 
  protected:
         RK_DECLARE_IMPL(RkPainter)

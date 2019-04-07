@@ -98,6 +98,16 @@ void RkPainter::RkPainterImpl::setFont(const RkFont &font)
         backendGraphics->setFont(painterFont);
 }
 
+void RkPainter::RkPainterImpl::translate(const RkPoint &offset)
+{
+        backendGraphics->translate(offset);
+}
+
+void RkPainter::RkPainterImpl::rotate(rk_real angle)
+{
+        backendGraphics->rotate(angle);
+}
+
 int RkPainter::RkPainterImpl::getTextWidth(const std::string &text) const
 {
         return backendGraphics->getTextWidth(text);

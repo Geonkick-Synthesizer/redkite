@@ -183,6 +183,16 @@ void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
         cairo_restore(context());
 }
 
+void RkCairoGraphicsBackend::translate(const RkPoint &offset)
+{
+        cairo_translate(context(), offset.x(), offset.y());
+}
+
+void RkCairoGraphicsBackend::rotate(rk_real angle)
+{
+        cairo_rotate(context(), angle);
+}
+
 int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
 {
         cairo_text_extents_t extents;

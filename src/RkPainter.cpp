@@ -118,3 +118,14 @@ void RkPainter::setFont(const RkFont &font)
 {
         o_ptr->setFont(font);
 }
+
+void RkPainter::translate(const RkPoint &offset)
+{
+        o_ptr->translate(offset);
+}
+
+void RkPainter::rotate(rk_real angle)
+{
+        o_ptr->rotate(angle);
+}
+

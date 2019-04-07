@@ -47,6 +47,8 @@ class RkPainter::RkPainterImpl {
         void setPen(const RkPen &pen);
         const RkFont& font() const;
         void setFont(const RkFont &font);
+        void translate(const RkPoint &offset);
+        void rotate(rk_real angle);
         int getTextWidth(const std::string &text) const;
 
  private:

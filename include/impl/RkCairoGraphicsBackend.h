@@ -49,6 +49,8 @@ class RkCairoGraphicsBackend {
         void setPen(const RkPen &pen);
         void setFont(const RkFont &font);
         int getTextWidth(const std::string &text) const;
+        void translate(const RkPoint &offset);
+        void rotate(rk_real angle);
 
  protected:
         cairo_t* context() const;
