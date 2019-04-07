@@ -88,8 +88,8 @@ void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height
 
 void RkCairoGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
-        cairo_move_to(context(), p1.x(), p1.y());
-        cairo_line_to(context(), p2.x(), p2.y());
+        cairo_move_to(context(), p1.x() + 0.5, p1.y() + 0.5);
+        cairo_line_to(context(), p2.x() + 0.5, p2.y() + 0.5);
         cairo_stroke(context());
 }
 
