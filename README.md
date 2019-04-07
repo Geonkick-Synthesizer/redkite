@@ -11,7 +11,7 @@ Status: development, no release yet.
 ### What was implemented
 
 * Widgets: RkWidget, RkLabel
-* Graphics: RkPainter, RkImage. RkPainter paints on RkWidgets and RkImage.
+* Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
   RkPainter uses Cairo backend.
 * Cross-platform: GNU/Linux (X11), Windows (Win API)
 * CMake build/install
@@ -29,6 +29,7 @@ Interface classes that now are implemented with the purprose of exteding their f
 * RkMain
 * RkPainter
 * RkPen
+* RkFont
 * RkPlatform
 * RkPoint
 * RkRealPoint
