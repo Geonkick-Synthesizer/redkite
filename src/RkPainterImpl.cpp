@@ -34,6 +34,7 @@ RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
 #endif
 {
         backendGraphics->setPen(painterPen);
+        backendGraphics->setFont(painterFont);
 }
 
 RkPainter::RkPainterImpl::~RkPainterImpl()
@@ -86,8 +87,19 @@ void RkPainter::RkPainterImpl::setPen(const RkPen &pen)
         painterPen = pen;
 }
 
-int RkPainter::RkPainterImpl::fontSize() const
+const RkFont& RkPainter::RkPainterImpl::font() const
 {
-        return backendGraphics->getFontSize();
+        return painterFont;
+}
+
+void RkPainter::RkPainterImpl::setFont(const RkFont &font)
+{
+        painterFont = font;
+        backendGraphics->setFont(painterFont);
+}
+
+int RkPainter::RkPainterImpl::getTextWidth(const std::string &text) const
+{
+        return backendGraphics->getTextWidth(text);
 }
 

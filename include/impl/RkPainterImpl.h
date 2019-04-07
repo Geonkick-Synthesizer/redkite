@@ -45,7 +45,9 @@ class RkPainter::RkPainterImpl {
         void fillRect(const RkRect &rect, const RkColor &color);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
-        int fontSize() const;
+        const RkFont& font() const;
+        void setFont(const RkFont &font);
+        int getTextWidth(const std::string &text) const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkPainter)
@@ -55,6 +57,7 @@ class RkPainter::RkPainterImpl {
 #error No graphics backend defined
 #endif
         RkPen painterPen;
+        RkFont painterFont;
 };
 
 #endif // RK_PAINTER_IMPL_H

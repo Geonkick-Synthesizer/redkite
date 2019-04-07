@@ -29,6 +29,7 @@
 #include "RkPoint.h"
 #include "RkPen.h"
 #include "RkRect.h"
+#include "RkFont.h"
 
 class RkCanvas;
 
@@ -37,6 +38,9 @@ class RkPainter {
         RkPainter(RkCanvas *canvas);
         ~RkPainter();
         void drawText(const std::string &text, int x, int y);
+        void drawText(const RkRect &rect,
+                      const std::string &text,
+                      Rk::Alignment alignment = Rk::Alignment::AlignCenter);
         void drawImage(const RkImage &image, int x, int y);
         void drawCircle(int x, int y, int radius);
         void drawCircle(const RkPoint &p, int radius);
@@ -46,7 +50,8 @@ class RkPainter {
         void fillRect(const RkRect &rect, const RkColor &color);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
-        int fontSize() const;
+        const RkFont& font() const;
+        void setFont(const RkFont &font);
 
  protected:
         RK_DECLARE_IMPL(RkPainter)

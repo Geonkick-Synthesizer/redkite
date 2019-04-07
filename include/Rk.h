@@ -24,6 +24,11 @@
 #ifndef RK_GLOBAL_H
 #define RK_GLOBAL_H
 
+#define RK_VERSION 0x010000
+#define RK_MAJOR   0x00
+#define RK_MINOR   0x00
+#define RK_PATCH   0x00
+
 #include <memory>
 #include <vector>
 #include <string>
@@ -65,5 +70,15 @@ using rk_real = float;
 #else
 using rk_real = double;
 #endif // RK_SINGLE_PRECISION
+
+class Rk {
+ public:
+        Rk() = delete;
+        enum class Alignment : int {
+                AlignLeft   = 1,
+                AlignRight  = 2,
+                AlignCenter = 3
+        };
+};
 
 #endif // RK_GLOBAL_H

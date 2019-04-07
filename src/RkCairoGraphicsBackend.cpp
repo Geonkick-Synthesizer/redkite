@@ -32,11 +32,11 @@ RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
         : cairoContext{cairo_create(canvas->getCanvasInfo()->cairo_surface)}
         , fontSize{12}
 {
-        cairo_set_font_size(cairoContext, getFontSize());
-        cairo_set_line_width (cairoContext, 1);
+        cairo_set_font_size(context(), 10);
+        cairo_set_line_width (context(), 1);
 }
 
-cairo_t* RkCairoGraphicsBackend::context()
+cairo_t* RkCairoGraphicsBackend::context() const
 {
         return cairoContext;
 }
@@ -118,6 +118,44 @@ void RkCairoGraphicsBackend::setPen(const RkPen &pen)
         }
 }
 
+void RkCairoGraphicsBackend::setFont(const RkFont &font)
+{
+        cairo_set_font_size(context(), font.size());
+        cairo_font_slant_t slant;
+        switch (font.style())
+        {
+        case RkFont::Style::Normal:
+                slant = CAIRO_FONT_SLANT_NORMAL;
+                break;
+        case RkFont::Style::Italic:
+                slant = CAIRO_FONT_SLANT_ITALIC;
+                break;
+        case RkFont::Style::Oblique:
+                slant = CAIRO_FONT_SLANT_OBLIQUE;
+                break;
+        default:
+                slant = CAIRO_FONT_SLANT_NORMAL;
+        }
+
+        cairo_font_weight_t weight;
+        switch (font.weight())
+        {
+        case RkFont::Weight::Normal:
+                weight = CAIRO_FONT_WEIGHT_NORMAL;
+                break;
+        case RkFont::Weight::Bold:
+                weight = CAIRO_FONT_WEIGHT_BOLD;
+                break;
+        default:
+                weight = CAIRO_FONT_WEIGHT_NORMAL;
+        }
+
+        auto face = cairo_toy_font_face_create(font.family().c_str(), slant, weight);
+        cairo_set_font_face(context(), face);
+        cairo_font_face_destroy(face);
+        cairo_set_font_size(context(), font.size());
+}
+
 void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 {
         bool first = 0;
@@ -143,13 +181,10 @@ void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
         cairo_restore(context());
 }
 
-int RkCairoGraphicsBackend::getFontSize() const
+int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
 {
-        return fontSize;
-}
-
-void RkCairoGraphicsBackend::setFontSize(int size)
-{
-        fontSize = size;
+        cairo_text_extents_t extents;
+        cairo_text_extents (context(), text.data(), &extents);
+        return extents.width;
 }
 

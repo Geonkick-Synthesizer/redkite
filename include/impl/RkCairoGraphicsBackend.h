@@ -29,6 +29,7 @@
 #include "RkPoint.h"
 #include "RkPen.h"
 #include "RkRect.h"
+#include "RkFont.h"
 
 #include <cairo/cairo.h>
 
@@ -46,9 +47,11 @@ class RkCairoGraphicsBackend {
         void drawPolyLine(const std::vector<RkPoint> &points);
         void fillRect(const RkRect &rect, const RkColor &color);
         void setPen(const RkPen &pen);
-        int getFontSize() const;
-        void setFontSize(int size);
-        cairo_t* context();
+        void setFont(const RkFont &font);
+        int getTextWidth(const std::string &text) const;
+
+ protected:
+        cairo_t* context() const;
 
  private:
         cairo_t* cairoContext;

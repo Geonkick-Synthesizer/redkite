@@ -57,13 +57,13 @@ void RkLabel::RkLabelImpl::drawLabel()
 
         // TODO: use the same painter for both when fixing the Cairo problem of text over image.
         if (!labelImage.isNull()) {
-                auto painter = std::make_unique<RkPainter>(inf_ptr);
-                painter->drawImage(labelImage, 0, 0);
+                RkPainter painter(inf_ptr);
+                painter.drawImage(labelImage, 0, 0);
         }
 
         if (!labelText.empty()) {
-                auto painter = std::make_unique<RkPainter>(inf_ptr);
-                painter->drawText(labelText, 0, painter->fontSize() + (inf_ptr->height() - painter->fontSize()) / 2);
+                RkPainter painter(inf_ptr);
+                painter.drawText(inf_ptr->rect(), labelText);
         }
 
 }

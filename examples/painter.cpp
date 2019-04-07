@@ -67,6 +67,24 @@ class  PainterExample: public RkWidget {
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() - 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() - 80, clickPoint.y() - 80));
+
+                        int y = 50;
+                        painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
+                        RkFont font = painter.font();
+                        font.setStyle(RkFont::Style::Italic);
+                        painter.setFont(font);
+                        painter.drawText({50, y, 100, 25}, "Hello!");
+
+                        y += 55;
+                        painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
+                        painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignLeft);
+
+                        y += 55;
+                        painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
+                        painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignRight);
+
+
+
                         RkPainter paint(this);
                         paint.drawImage(image, 0, 0);
                 }

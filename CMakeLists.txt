@@ -70,6 +70,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkRect.h
   ${RK_INCLUDE_PATH}/RkColor.h
   ${RK_INCLUDE_PATH}/RkPen.h
+  ${RK_INCLUDE_PATH}/RkFont.h
   ${RK_INCLUDE_PATH}/RkPlatform.h
   ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkEventQueue.h
