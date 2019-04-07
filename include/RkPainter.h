@@ -37,7 +37,7 @@ class RkPainter {
  public:
         RkPainter(RkCanvas *canvas);
         ~RkPainter();
-        void drawText(const std::string &text, int x, int y);
+        void drawText(int x, int y, const std::string &text);
         void drawText(const RkRect &rect,
                       const std::string &text,
                       Rk::Alignment alignment = Rk::Alignment::AlignCenter);

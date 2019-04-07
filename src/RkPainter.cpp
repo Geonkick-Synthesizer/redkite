@@ -33,56 +33,63 @@ RkPainter::~RkPainter()
 {
 }
 
-void RkPainter::drawText(const std::string &text, int x, int y)
+void RkPainter::drawText(int x, int y, const std::string &text)
 {
-        o_ptr->drawText(text, x, y);
+        if (!text.empty())
+                o_ptr->drawText(text, x, y);
 }
 
 void RkPainter::drawText(const RkRect &rect,
                          const std::string &text,
                          Rk::Alignment alignment)
 {
-        RkFont f = font();
-
-        int x;
-        if (alignment == Rk::Alignment::AlignLeft)
-                x = rect.left();
-        else if (alignment == Rk::Alignment::AlignCenter)
-                x = rect.left() + (rect.width() - o_ptr->getTextWidth(text)) / 2;
-        else
-                x = rect.right() - o_ptr->getTextWidth(text);
-        int y = rect.top() + f.size() + (rect.height() - f.size()) / 2;
-        drawText(text, x, y);
+        if (!text.empty()) {
+                RkFont f = font();
+                int x;
+                if (alignment == Rk::Alignment::AlignLeft)
+                        x = rect.left();
+                else if (alignment == Rk::Alignment::AlignCenter)
+                        x = rect.left() + (rect.width() - o_ptr->getTextWidth(text)) / 2;
+                else
+                        x = rect.right() - o_ptr->getTextWidth(text);
+                int y = rect.top() + f.size() + (rect.height() - f.size()) / 2;
+                drawText(x, y, text);
+        }
 }
 
 void RkPainter::drawImage(const RkImage &image, int x, int y)
 {
-        o_ptr->drawImage(image, x, y);
+        if (!image.isNull())
+                o_ptr->drawImage(image, x, y);
 }
 
 void RkPainter::drawCircle(int x, int y, int radius)
 {
-        o_ptr->drawEllipse(RkPoint(x, y), 2 * radius, 2 * radius);
+        if (radius > 0)
+                o_ptr->drawEllipse(RkPoint(x, y), 2 * radius, 2 * radius);
 }
 
 void RkPainter::drawCircle(const RkPoint &p, int radius)
 {
-        o_ptr->drawEllipse(p, 2 * radius, 2 * radius);
+        if (radius > 0)
+                o_ptr->drawEllipse(p, 2 * radius, 2 * radius);
 }
 
 void RkPainter::drawLine(int x1, int y1, int x2, int y2)
 {
-        drawLine(RkPoint(x1, y1), RkPoint(x2, y2));
+        if (RkPoint(x1, y1) != RkPoint(x2, y2))
+                drawLine(RkPoint(x1, y1), RkPoint(x2, y2));
 }
 
 void RkPainter::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
-        o_ptr->drawLine(p1, p2);
+        if (p1 != p2)
+                o_ptr->drawLine(p1, p2);
 }
 
 void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
 {
-        if (!points.empty())
+        if (points.size() > 1)
                 o_ptr->drawPolyline(points);
 }
 

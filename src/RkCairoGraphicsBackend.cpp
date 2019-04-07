@@ -77,6 +77,7 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
         if (width == height) {
+                cairo_move_to(context(), p.x() + width / 2, p.y());
                 cairo_arc(context(), p.x(), p.y(), width / 2, 0, 2 * M_PI);
                 cairo_stroke(context());
         } else {
@@ -158,11 +159,12 @@ void RkCairoGraphicsBackend::setFont(const RkFont &font)
 
 void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 {
-        bool first = 0;
+        bool first = true;
         for (const auto &point: points) {
                 if (first) {
                         cairo_move_to(context(), point.x(), point.y());
                         first = false;
+                        continue;
                 }
                 cairo_line_to(context(), point.x(), point.y());
         }
