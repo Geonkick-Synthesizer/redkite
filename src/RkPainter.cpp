@@ -39,6 +39,11 @@ void RkPainter::drawText(int x, int y, const std::string &text)
                 o_ptr->drawText(text, x, y);
 }
 
+void RkPainter::drawText(const RkPoint &p,  const std::string &text)
+{
+        drawText(p.x(), p.y(), text);
+}
+
 void RkPainter::drawText(const RkRect &rect,
                          const std::string &text,
                          Rk::Alignment alignment)
