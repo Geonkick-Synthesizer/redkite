@@ -107,6 +107,27 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
         mouseEvent->setX(buttonEvent->x);
         mouseEvent->setY(buttonEvent->y);
 
+        switch (buttonEvent->button)
+        {
+        case Button1:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::Left);
+                break;
+        case Button2:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::Middle);
+                break;
+        case Button3:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::Right);
+                break;
+        case Button4:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::WeelUp);
+                break;
+        case Button5:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::WeelDown);
+                break;
+        default:
+                mouseEvent->setButton(RkMouseEvent::ButtonType::Unknown);
+        }
+
         auto diff = mouseEvent->time().time_since_epoch() - lastTimePressed.time_since_epoch();
         if (std::chrono::duration_cast<std::chrono::microseconds>(diff).count() < 300000)
                 mouseEvent->setType(RkEvent::Type::MouseDoubleClick);

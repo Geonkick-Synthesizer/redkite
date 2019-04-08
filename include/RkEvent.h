@@ -85,16 +85,30 @@ class RkKeyEvent: public RkEvent {
 
 class RkMouseEvent: public RkEvent {
   public:
+
+        enum class ButtonType : int {
+                Unknown = 0,
+                Left = 1,
+                Middle = 2,
+                Right = 3,
+                WeelUp  = 4,
+                WeelDown = 5
+        };
+
       RkMouseEvent(Type type = Type::MouseButtonPress)
-              : RkEvent(type) {}
+              : RkEvent(type)
+              , buttonType{ButtonType::Unknown} {}
 
       int x() const { return mouseCoordinates.x(); }
       void setX(int x) { mouseCoordinates.setX(x); }
       int y() const { return mouseCoordinates.y(); }
       void setY(int x) { mouseCoordinates.setY(x); }
+      ButtonType button() const { return buttonType; }
+      void setButton(ButtonType type) { buttonType = type; }
 
  private:
         RkPoint mouseCoordinates;
+        ButtonType buttonType;
 };
 
 class RkWheelEvent: public RkEvent {
