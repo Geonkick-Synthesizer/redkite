@@ -131,6 +131,10 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->mouseDoubleClickEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
+                inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                break;
+        case RkEvent::Type::MouseMove:
+                inf_ptr->mouseMoveEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::Resize:
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));

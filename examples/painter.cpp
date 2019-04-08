@@ -83,8 +83,6 @@ class  PainterExample: public RkWidget {
                         painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
                         painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignRight);
 
-
-
                         RkPainter paint(this);
                         paint.drawImage(image, 0, 0);
                 }
@@ -93,9 +91,18 @@ class  PainterExample: public RkWidget {
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
                 clickPoint = RkPoint(event->x(), event->y());
-                startDraw = true;
+                startDraw = !startDraw;
                 update();
         }
+
+        void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        {
+                if (startDraw) {
+                        clickPoint = RkPoint(event->x(), event->y());
+                        update();
+                }
+        }
+
 
   private:
         RkPoint clickPoint;

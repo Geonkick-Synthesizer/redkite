@@ -47,6 +47,7 @@ class RkEventQueueX
 
  protected:
         std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
+        std::shared_ptr<RkEvent> processMouseMove(XEvent *e);
 
  private:
        Display* xDisplay;

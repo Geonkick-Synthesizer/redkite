@@ -102,7 +102,7 @@ bool RkWindowX::init()
 
         XSelectInput(xDisplay, xWindow, ExposureMask
                                         | KeyPressMask | KeyReleaseMask
-                                        | ButtonPressMask | ButtonReleaseMask
+                                        | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
                                         | StructureNotifyMask);
 
         if (!hasParent()) {

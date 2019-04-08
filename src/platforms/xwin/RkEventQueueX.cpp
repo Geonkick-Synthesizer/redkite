@@ -78,6 +78,9 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                         event = std::make_shared<RkMouseEvent>();
                         event->setType(RkEvent::Type::MouseButtonRelease);
                         break;
+                case MotionNotify:
+                        event = processMouseMove(&e);
+                        break;
                 case ConfigureNotify:
                         event = std::make_shared<RkResizeEvent>();
                         break;
@@ -111,3 +114,14 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
 
         return mouseEvent;
 }
+
+std::shared_ptr<RkEvent> RkEventQueueX::processMouseMove(XEvent *e)
+{
+        auto buttonEvent = reinterpret_cast<XMotionEvent*>(e);
+        auto mouseEvent = std::make_shared<RkMouseEvent>();
+        mouseEvent->setType(RkEvent::Type::MouseMove);
+        mouseEvent->setX(buttonEvent->x);
+        mouseEvent->setY(buttonEvent->y);
+        return mouseEvent;
+}
+
