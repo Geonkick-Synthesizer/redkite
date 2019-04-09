@@ -17,6 +17,7 @@ Status: active development, no release yet
 * Widgets: RkWidget, RkLabel
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
   RkPainter uses Cairo backend.
+* Actions: a set of macroses that define actions, i.s. a binding mechanism between objects.
 * Cross-platform: GNU/Linux (X11), Windows (Win API). Not plans now for Mac.
 * CMake build/install
 * rkpng2c - a tool that converts PNG images to C array encoded in ARGB32.

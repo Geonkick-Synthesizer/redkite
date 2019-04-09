@@ -36,6 +36,7 @@
 #include <memory>
 #include <thread>
 #include <chrono>
+#include <functional>
 
 #define RK_UNUSED(expr) (void)expr
 
@@ -80,5 +81,28 @@ class Rk {
                 AlignCenter = 3
         };
 };
+
+#define RK_ACT_ARGS(arg, ...) arg, ##__VA_ARGS__
+#define RK_ARG_TYPE(type, ...) type, ##__VA_ARGS__
+#define RK_ARG_VAL(val, ...) val, ##__VA_ARGS__
+
+#define RK_DECL_ACT(name, prot, type, val) \
+        void prot \
+        { \
+                for (const auto &cb: rk_actions_ ##name ) \
+                        cb(val); \
+        } \
+        void add_action_cb_##name (const std::function<void(type)> &cb) \
+        { \
+                rk_actions_ ##name.push_back(cb); \
+        } \
+        std::vector<std::function<void(type)>> rk_actions_ ##name
+
+
+#define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
+        obj1->add_action_cb_##act ([obj2](act_args){ obj2->callback; })
+
+#define RK_CALL_ACT(name, args) \
+        name(args)
 
 #endif // RK_GLOBAL_H

@@ -28,26 +28,14 @@
 #include "RkLog.h"
 #include "RkEvent.h"
 
-#include <functional>
-
 class Button: public RkWidget {
   public:
         Button(RkWidget *parent = nullptr)
                 : RkWidget(parent)
                 , isToggled{false} {}
-        void toggled(bool b)
-        {
-                for (auto cb: rk_actions_toggled)
-                        cb(b);
-        }
-        void add_action_toggled_cb(const std::function<void(bool)> &cb)
-        {
-                rk_actions_toggled.push_back(cb);
-        }
-private:
-        std::vector<std::function<void(bool)>> rk_actions_toggled;
 
-        
+        RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
+
   protected:
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
@@ -69,7 +57,7 @@ class  PainterExample: public RkWidget {
                 button->setPosition(30, 30);
                 button->setSize({30, 30});
                 button->setBackgroundColor(255, 30, 100);
-                button->add_action_toggled_cb([this](bool b){ drawCircle(b); });
+                RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool b), this, drawCircle(b));
                 button->show();
         }
 
