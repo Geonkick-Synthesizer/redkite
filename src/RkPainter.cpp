@@ -92,6 +92,11 @@ void RkPainter::drawLine(const RkPoint &p1, const RkPoint &p2)
                 o_ptr->drawLine(p1, p2);
 }
 
+void RkPainter::drawRect(const RkRect &rect)
+{
+        o_ptr->drawRect(rect);
+}
+
 void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
 {
         if (points.size() > 1)

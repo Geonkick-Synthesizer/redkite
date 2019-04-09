@@ -93,6 +93,12 @@ void RkCairoGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
         cairo_stroke(context());
 }
 
+void RkCairoGraphicsBackend::drawRect(const RkRect &rect)
+{
+        cairo_rectangle(context(), rect.left() + 0.5, rect.top() + 0.5, rect.width(), rect.height());
+        cairo_stroke(context());
+}
+
 void RkCairoGraphicsBackend::setPen(const RkPen &pen)
 {
         cairo_set_line_width(context(), pen.width());
@@ -162,11 +168,11 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
         bool first = true;
         for (const auto &point: points) {
                 if (first) {
-                        cairo_move_to(context(), point.x(), point.y());
+                        cairo_move_to(context(), point.x() + 0.5, point.y() + 0.5);
                         first = false;
                         continue;
                 }
-                cairo_line_to(context(), point.x(), point.y());
+                cairo_line_to(context(), point.x() + 0.5, point.y() + 0.5);
         }
         cairo_stroke(context());
 }

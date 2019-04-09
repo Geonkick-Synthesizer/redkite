@@ -47,6 +47,7 @@ class RkPainter {
         void drawCircle(const RkPoint &p, int radius);
         void drawLine(int x1, int y1, int x2, int y2);
         void drawLine(const RkPoint &p1, const RkPoint &p2);
+        void drawRect(const RkRect &rect);
         void drawPolyline(const std::vector<RkPoint> &points);
         void fillRect(const RkRect &rect, const RkColor &color);
         const RkPen& pen() const;

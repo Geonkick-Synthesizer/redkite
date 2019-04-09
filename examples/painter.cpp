@@ -50,7 +50,7 @@ class  PainterExample: public RkWidget {
                         RkPainter painter(&image);
                         painter.fillRect(rect(), background());
                         RkPen pen(RkColor(255, 0, 0));
-                        pen.setWidth(2);
+                        pen.setWidth(1);
                         pen.setStyle(RkPen::PenStyle::DashLine);
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() + 40/2, 40);
@@ -82,6 +82,9 @@ class  PainterExample: public RkWidget {
                         y += 55;
                         painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
                         painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignRight);
+
+                        y += 55;
+                        painter.drawRect(RkRect(50, y, 100, 25));
 
                         RkPainter paint(this);
                         paint.drawImage(image, 0, 0);
