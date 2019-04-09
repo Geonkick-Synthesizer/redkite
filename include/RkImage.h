@@ -26,6 +26,7 @@
 
 #include "RkCanvas.h"
 #include "RkSize.h"
+#include "RkColor.h"
 
 class RkImage : public RkCanvas {
  public:
@@ -37,6 +38,10 @@ class RkImage : public RkCanvas {
         RkImage();
         explicit RkImage(int width,
                          int height,
+                         const unsigned char *data = nullptr,
+                         Format format = Format::ARGB32);
+
+        explicit RkImage(const RkSize &size,
                          const unsigned char *data = nullptr,
                          Format format = Format::ARGB32);
 
@@ -61,6 +66,7 @@ class RkImage : public RkCanvas {
                         || im1.dataCopy() != im2.dataCopy();
 
          }
+        void fill(const RkColor &color);
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         const unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;

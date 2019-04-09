@@ -79,3 +79,13 @@ std::shared_ptr<RkCanvasInfo> RkCairoImageBackendCanvas::getCanvasInfo() const
 {
         return canvasInfo;
 }
+
+void RkCairoImageBackendCanvas::fill(const RkColor &color)
+{
+        for (decltype(imageData.size()) i = 0; i < imageData.size() - 4; i += 4) {
+                imageData[i]     = color.red();
+                imageData[i + 1] = color.green();
+                imageData[i + 2] = color.blue();
+                imageData[i + 3] = color.alpha();
+        }
+}

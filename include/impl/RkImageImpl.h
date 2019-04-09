@@ -47,6 +47,7 @@ class RkImage::RkImageImpl {
         void createImage(const RkSize &size,
                          RkImage::Format format,
                          const unsigned char *data);
+        void fill(const RkColor &color);
 
 
  private:

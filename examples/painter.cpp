@@ -47,8 +47,8 @@ class  PainterExample: public RkWidget {
                 RK_UNUSED(event);
                 if (startDraw) {
                         RkImage image(width(), height());
+                        image.fill(background());
                         RkPainter painter(&image);
-                        painter.fillRect(rect(), background());
                         RkPen pen(RkColor(255, 0, 0));
                         pen.setWidth(1);
                         pen.setStyle(RkPen::PenStyle::DashLine);

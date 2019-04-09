@@ -49,7 +49,9 @@ RkImage::RkImageImpl::~RkImageImpl()
 
 std::shared_ptr<RkCanvasInfo> RkImage::RkImageImpl::getCanvasInfo() const
 {
-        return imageBackendCanvas->getCanvasInfo();
+        if (imageBackendCanvas)
+                return imageBackendCanvas->getCanvasInfo();
+        return nullptr;
 }
 
 const unsigned char* RkImage::RkImageImpl::data() const
@@ -59,7 +61,9 @@ const unsigned char* RkImage::RkImageImpl::data() const
 
 std::vector<unsigned char> RkImage::RkImageImpl::dataCopy() const
 {
-        return imageBackendCanvas->dataCopy();
+        if (imageBackendCanvas)
+                return imageBackendCanvas->dataCopy();
+        return std::vector<unsigned char>();
 }
 
 RkImage::Format RkImage::RkImageImpl::format() const
@@ -69,12 +73,16 @@ RkImage::Format RkImage::RkImageImpl::format() const
 
 int RkImage::RkImageImpl::width() const
 {
-        return imageBackendCanvas->size().width();
+        if (imageBackendCanvas)
+                return imageBackendCanvas->size().width();
+        return 0;
 }
 
 int RkImage::RkImageImpl::height() const
 {
-        return imageBackendCanvas->size().height();
+        if (imageBackendCanvas)
+                return imageBackendCanvas->size().height();
+        return 0;
 }
 
 bool RkImage::RkImageImpl::isNull() const
@@ -93,4 +101,10 @@ void RkImage::RkImageImpl::createImage(const RkSize &size,
 #else
 #error No graphics backend defined
 #endif
+}
+
+void RkImage::RkImageImpl::fill(const RkColor &color)
+{
+        if (imageBackendCanvas)
+                imageBackendCanvas->fill(color);
 }

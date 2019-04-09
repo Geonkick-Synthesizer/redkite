@@ -39,6 +39,7 @@ class RkCairoImageBackendCanvas {
         const unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        void fill(const RkColor &color);
 
  protected:
         cairo_format_t toCairoFormat(RkImage::Format format) const;

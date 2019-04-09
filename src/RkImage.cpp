@@ -37,6 +37,13 @@ RkImage::RkImage(int width,
 {
 }
 
+RkImage::RkImage(const RkSize &size,
+                 const unsigned char *data,
+                 Format format)
+        : o_ptr{std::make_shared<RkImageImpl>(this, size.width(), size.height(), data, format)}
+{
+}
+
 RkImage::RkImage(const std::shared_ptr<RkImageImpl> &impl)
         : o_ptr{impl}
 {
@@ -44,16 +51,18 @@ RkImage::RkImage(const std::shared_ptr<RkImageImpl> &impl)
 
 RkImage::RkImage(const RkImage &image)
 {
-        if (&image != this)
-                o_ptr->createImage({image.width(), image.height()}, image.format(), image.data());
+        o_ptr->createImage({image.width(), image.height()}, image.format(), image.data());
 }
 
 RkImage& RkImage::operator=(const RkImage &other)
 {
-        if (&other != this)
-                o_ptr->createImage({other.width(), other.height()}, other.format(), other.data());
-
+        o_ptr->createImage({other.width(), other.height()}, other.format(), other.data());
         return *this;
+}
+
+void RkImage::fill(const RkColor &color)
+{
+        o_ptr->fill(color);
 }
 
 std::shared_ptr<RkCanvasInfo> RkImage::getCanvasInfo() const
