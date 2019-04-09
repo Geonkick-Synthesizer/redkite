@@ -5,6 +5,7 @@ set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
+set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -90,7 +91,7 @@ target_link_libraries(widget_colors redkite)
 target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
 target_link_libraries(widget_colors ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
-# ------------ Painter Ezmaple -------
+# ------------ Painter Exmaple -------
 
 add_executable(painter
   ${RK_HEADERS}
@@ -101,3 +102,13 @@ target_link_libraries(painter redkite)
 target_link_libraries(painter "-lX11 -lrt -lm -ldl")
 target_link_libraries(painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
+# ------------ Action Exmaple -------
+
+add_executable(action
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_ACTION})
+
+add_dependencies(action redkite)
+target_link_libraries(action redkite)
+target_link_libraries(action "-lX11 -lrt -lm -ldl")
+target_link_libraries(action ${RK_GRAPHICS_BACKEND_LINK_LIBS})
