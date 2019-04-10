@@ -114,10 +114,14 @@ bool RkWindowX::init()
         return true;
 }
 
-void RkWindowX::show()
+void RkWindowX::show(bool b)
 {
-        if (isWindowCreated())
-                XMapRaised(display(), xWindow);
+        if (isWindowCreated()) {
+                if (b)
+                        XMapRaised(display(), xWindow);
+                else
+                        XUnmapWindow(display(), xWindow);
+        }
 }
 
 Display* RkWindowX::display()

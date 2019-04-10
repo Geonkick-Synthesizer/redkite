@@ -43,7 +43,7 @@ class RkWindowX {
         RkWindowX(RkWindowX &&other) = delete;
         RkWindowX& operator=(RkWindowX &&other) = delete;
         bool init();
-        void show();
+        void show(bool b);
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
         Display* display();

@@ -45,7 +45,7 @@ class RkWidget::RkWidgetImpl {
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
         virtual ~RkWidgetImpl();
 
-        void show();
+        void show(bool b);
         void setTitle(const std::string &title);
         const std::string& title() const;
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;

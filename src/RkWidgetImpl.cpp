@@ -78,9 +78,9 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
                 delete child;
 }
 
-void RkWidget::RkWidgetImpl::show()
+void RkWidget::RkWidgetImpl::show(bool b)
 {
-        platformWindow->show();
+        platformWindow->show(b);
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)

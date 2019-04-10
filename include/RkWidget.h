@@ -54,6 +54,7 @@ class RkWidget: public RkCanvas {
           virtual ~RkWidget();
 
 	  void show();
+          void hide();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
           std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;

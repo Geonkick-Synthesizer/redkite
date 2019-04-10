@@ -63,7 +63,12 @@ const std::string& RkWidget::title() const
 
 void RkWidget::show()
 {
-        o_ptr->show();
+        o_ptr->show(true);
+}
+
+void RkWidget::hide()
+{
+        o_ptr->show(false);
 }
 
 std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
