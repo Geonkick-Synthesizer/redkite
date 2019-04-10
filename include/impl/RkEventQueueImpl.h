@@ -29,6 +29,7 @@
 
 #include <list>
 #include <queue>
+#include <mutex>
 
 #ifdef RK_OS_WIN
         class RkEventQueueWin;
@@ -57,11 +58,15 @@ class RkEventQueue::RkEventQueueImpl {
         void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
+        void postAction(const std::function<void(void)> &act);
+        void processActions();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)
         std::list<RkWidget*> widgetList;
         std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
+        std::vector<std::function<void(void)>> actionsQueue;
+        std::mutex actionsQueueMutex;
 
 #ifdef RK_OS_WIN
         std::unique_ptr<RkEventQueueWin> platformEventQueue;

@@ -27,6 +27,7 @@
 #include "RkPoint.h"
 #include "RkLog.h"
 #include "RkEvent.h"
+#include "RkEventQueue.h"
 
 class Button: public RkWidget {
   public:
@@ -40,7 +41,13 @@ class Button: public RkWidget {
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
                 isToggled = !isToggled;
-                toggled(isToggled);
+                // Post action to be executed by the GUI main thread.
+                eventQueue()->postAction([&](){ toggled(isToggled); });
+                // Or just call toggled(isToggled) directly to be
+                // executed by the thread executing this method.
+                // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
+                // eventQueue()->postAction([&](){ toggled(isToggled); });
+                // can be called from a defferent thread than GUI main thread;
         }
 
 private:

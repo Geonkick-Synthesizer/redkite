@@ -48,6 +48,7 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
 	bool setTopLevelWindow(RkWidget* widget);
         RkWidget* topLevelWindow(void);
+        std::shared_ptr<RkEventQueue> getEventQueue();
 	int exec(bool block = true);
 
  private:

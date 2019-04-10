@@ -77,3 +77,13 @@ void RkEventQueue::processEvents()
 {
         o_ptr->processEvents();
 }
+
+void RkEventQueue::postAction(const std::function<void(void)> &act)
+{
+        o_ptr->postAction(act);
+}
+
+void RkEventQueue::processActions()
+{
+        o_ptr->processActions();
+}

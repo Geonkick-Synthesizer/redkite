@@ -120,3 +120,23 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 eventsQueue.pop();
         }
 }
+
+void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> &act)
+{
+        std::lock_guard<std::mutex> lock(actionsQueueMutex);
+        RK_LOG_INFO("called");
+        actionsQueue.push_back(act);
+}
+
+void RkEventQueue::RkEventQueueImpl::processActions()
+{
+        std::vector<std::function<void(void)>> actions;
+        {
+                std::lock_guard<std::mutex> lock(actionsQueueMutex);
+                actions = std::move(actionsQueue);
+        }
+
+        for (auto const &act: actions)
+                act();
+}
+

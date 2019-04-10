@@ -346,7 +346,7 @@ void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &even
 
 void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
-        RK_UNUSED(event);
+        mouseButtonPressEvent(event);
 }
 
 void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
@@ -382,6 +382,11 @@ void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 void RkWidget::setEventQueue(RkEventQueue *eventQueue)
 {
         o_ptr->setEventQueue(eventQueue);
+}
+
+RkEventQueue* RkWidget::eventQueue()
+{
+        return o_ptr->getEventQueue();
 }
 
 void RkWidget::update()

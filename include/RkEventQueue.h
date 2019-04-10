@@ -44,6 +44,8 @@ class RkEventQueue {
         void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
+        void postAction(const std::function<void(void)> &act);
+        void processActions();
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue)

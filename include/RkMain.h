@@ -27,6 +27,7 @@
 #include "Rk.h"
 
 class RkWidget;
+class RkEventQueue;
 
 class RkMain {
   public:
@@ -35,6 +36,7 @@ class RkMain {
           ~RkMain();
           bool setTopLevelWindow(RkWidget* widget);
           int exec(bool block = true);
+          std::shared_ptr<RkEventQueue> eventQueue();
   protected:
        	  RK_DECLARE_IMPL(RkMain)
 

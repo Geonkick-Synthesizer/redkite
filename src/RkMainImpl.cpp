@@ -68,6 +68,11 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
       return topWindow;
 }
 
+std::shared_ptr<RkEventQueue> RkMain::RkMainImpl::getEventQueue()
+{
+        return eventQueue;
+}
+
 int RkMain::RkMainImpl::exec(bool block)
 {
         if (!topLevelWindow()) {
@@ -77,9 +82,11 @@ int RkMain::RkMainImpl::exec(bool block)
 
         if (!block) {
                 eventQueue->processEvents();
+                eventQueue->processActions();
         } else {
                 for (; block ;) {
                         eventQueue->processEvents();
+                        eventQueue->processActions();
                         if (topWindow->isClose())
                                 break;
                         std::this_thread::sleep_for(std::chrono::milliseconds(15));
