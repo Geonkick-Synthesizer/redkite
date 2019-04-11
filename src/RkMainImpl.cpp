@@ -81,15 +81,15 @@ int RkMain::RkMainImpl::exec(bool block)
 	}
 
         if (!block) {
-                eventQueue->processEvents();
                 eventQueue->processActions();
+                eventQueue->processEvents();
         } else {
                 for (; block ;) {
                         eventQueue->processEvents();
                         eventQueue->processActions();
                         if (topWindow->isClose())
                                 break;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
         }
 

@@ -70,7 +70,7 @@ std::shared_ptr<RkCanvasInfo> RkImage::getCanvasInfo() const
         return o_ptr->getCanvasInfo();
 }
 
-const unsigned char* RkImage::data() const
+unsigned char* RkImage::data() const
 {
         return o_ptr->data();
 }

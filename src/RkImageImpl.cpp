@@ -54,7 +54,7 @@ std::shared_ptr<RkCanvasInfo> RkImage::RkImageImpl::getCanvasInfo() const
         return nullptr;
 }
 
-const unsigned char* RkImage::RkImageImpl::data() const
+unsigned char* RkImage::RkImageImpl::data() const
 {
         return imageBackendCanvas->data();
 }

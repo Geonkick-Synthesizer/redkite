@@ -124,7 +124,6 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
 void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> &act)
 {
         std::lock_guard<std::mutex> lock(actionsQueueMutex);
-        RK_LOG_INFO("called");
         actionsQueue.push_back(act);
 }
 

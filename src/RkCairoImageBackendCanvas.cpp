@@ -65,7 +65,7 @@ bool RkCairoImageBackendCanvas::isNull() const
         return canvasInfo == nullptr;
 }
 
-const unsigned char* RkCairoImageBackendCanvas::data() const
+unsigned char* RkCairoImageBackendCanvas::data()
 {
         return imageData.data();
 }
@@ -82,10 +82,11 @@ std::shared_ptr<RkCanvasInfo> RkCairoImageBackendCanvas::getCanvasInfo() const
 
 void RkCairoImageBackendCanvas::fill(const RkColor &color)
 {
+        unsigned char *data = imageData.data();
         for (decltype(imageData.size()) i = 0; i < imageData.size() - 4; i += 4) {
-                imageData[i]     = color.red();
-                imageData[i + 1] = color.green();
-                imageData[i + 2] = color.blue();
-                imageData[i + 3] = color.alpha();
+                *(data + i)     = color.red();
+                *(data + i + 1) = color.green();
+                *(data + i + 2) = color.blue();
+                *(data + i + 3) = color.alpha();
         }
 }

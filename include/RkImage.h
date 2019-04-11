@@ -1,3 +1,4 @@
+
 /**
  * File name: RkImage.h
  * Project: Redkite (A small GUI toolkit)
@@ -68,7 +69,7 @@ class RkImage : public RkCanvas {
          }
         void fill(const RkColor &color);
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
-        const unsigned char* data() const;
+        unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;
         Format format() const;
         int width() const;

@@ -38,7 +38,7 @@ class RkImage::RkImageImpl {
                     RkImage::Format format = RkImage::Format::ARGB32);
         virtual ~RkImageImpl();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
-        const unsigned char* data() const;
+        unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;
         Format format() const;
         int width() const;
