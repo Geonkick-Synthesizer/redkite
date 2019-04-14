@@ -62,7 +62,8 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                 switch (e.type)
                 {
                 case Expose:
-                        event = std::make_shared<RkPaintEvent>();
+                        if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
+                                event = std::make_shared<RkPaintEvent>();
                 break;
                 case KeyPress:
                         event = std::make_shared<RkKeyEvent>();
@@ -95,8 +96,9 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                         break;
                 }
 
-                if (event)
+                if (event) {
                         eventsQueue.push({id, event});
+                }
         }
 }
 
@@ -104,6 +106,7 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
 {
         auto buttonEvent = reinterpret_cast<XButtonEvent*>(e);
         auto mouseEvent = std::make_shared<RkMouseEvent>();
+        mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setX(buttonEvent->x);
         mouseEvent->setY(buttonEvent->y);
 
@@ -140,6 +143,7 @@ std::shared_ptr<RkEvent> RkEventQueueX::processMouseMove(XEvent *e)
 {
         auto buttonEvent = reinterpret_cast<XMotionEvent*>(e);
         auto mouseEvent = std::make_shared<RkMouseEvent>();
+        mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setType(RkEvent::Type::MouseMove);
         mouseEvent->setX(buttonEvent->x);
         mouseEvent->setY(buttonEvent->y);

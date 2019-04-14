@@ -96,6 +96,8 @@ class RkWidget::RkWidgetImpl {
         RkEventQueue* eventQueue;
         RkSize widgetMinimumSize;
         RkSize widgetMaximumSize;
+        RkSize widgetSize;
+        RkColor widgetBackground;
 };
 
 #endif // RK_WIDGET_IMPL_H

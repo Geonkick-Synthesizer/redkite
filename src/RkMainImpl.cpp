@@ -81,8 +81,8 @@ int RkMain::RkMainImpl::exec(bool block)
 	}
 
         if (!block) {
-                eventQueue->processActions();
                 eventQueue->processEvents();
+                eventQueue->processActions();
         } else {
                 for (; block ;) {
                         eventQueue->processEvents();

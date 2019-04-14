@@ -62,15 +62,8 @@ void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
 
 void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
-        auto stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, image.width());
-        auto img = cairo_image_surface_create_for_data(image.data(),
-                                                       CAIRO_FORMAT_ARGB32,
-                                                       image.width(),
-                                                       image.height(),
-                                                       stride);
-        cairo_set_source_surface(context(), img, x, y);
+        cairo_set_source_surface(context(), image.getCanvasInfo()->cairo_surface, x, y);
         cairo_paint(context());
-        cairo_surface_destroy(img);
 }
 
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
@@ -169,14 +162,12 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
         for (const auto &point: points) {
                 if (first) {
                         cairo_move_to(context(), point.x() + 0.5, point.y() + 0.5);
-                        first = false;
                         currPoint = point;
-                        continue;
+                        first = false;
+                } else if (currPoint != point) {
+                        cairo_rel_line_to(context(), point.x() - currPoint.x(), point.y() - currPoint.y());
+                        currPoint = point;
                 }
-                if (currPoint.x() == point.x() && currPoint.y() == point.y())
-                        continue;
-                cairo_rel_line_to(context(), point.x() - currPoint.x(), point.y() - currPoint.y());
-                currPoint = point;
         }
         cairo_stroke(context());
 }

@@ -46,13 +46,21 @@ class  PainterExample: public RkWidget {
         {
                 RK_UNUSED(event);
                 if (startDraw) {
-                        RkImage image(width(), height());
-                        image.fill(background());
+
+                        if (image.width() != width() || image.height() != height()) {
+                                RkImage im(width(), height());
+                                image = im;
+                        }
+
                         RkPainter painter(&image);
+                        painter.fillRect(rect(), background());
                         RkPen pen(RkColor(255, 0, 0));
                         pen.setWidth(1);
                         pen.setStyle(RkPen::PenStyle::DashLine);
                         painter.setPen(pen);
+                        painter.drawCircle(50, 50, 40);
+                        painter.drawLine(50, 50, 100, 100);
+
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() + 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() + 80));
 
@@ -83,9 +91,7 @@ class  PainterExample: public RkWidget {
                         painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
                         painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignRight);
 
-                        y += 55;
                         painter.drawRect(RkRect(50, y, 100, 25));
-
                         RkPainter paint(this);
                         paint.drawImage(image, 0, 0);
                 }
@@ -110,6 +116,7 @@ class  PainterExample: public RkWidget {
   private:
         RkPoint clickPoint;
         bool startDraw;
+        RkImage image;
 };
 
 int main(int arc, char **argv)

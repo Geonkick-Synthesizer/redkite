@@ -160,6 +160,7 @@ RkSize& RkWindowX::size() const
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
                 windowSize = RkSize(attributes.width, attributes.height);
         }
+
         return windowSize;
 }
 

@@ -129,13 +129,14 @@ void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> 
 
 void RkEventQueue::RkEventQueueImpl::processActions()
 {
-        std::vector<std::function<void(void)>> actions;
+        decltype(actionsQueue) q;
         {
                 std::lock_guard<std::mutex> lock(actionsQueueMutex);
-                actions = std::move(actionsQueue);
+                q = actionsQueue;
+                actionsQueue.clear();
         }
 
-        for (auto const &act: actions)
+        for(const auto &act: q)
                 act();
 }
 

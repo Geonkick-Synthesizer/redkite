@@ -50,6 +50,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , eventQueue{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
+        , widgetSize{platformWindow->size()}
+        , widgetBackground(platformWindow->background())
 {
         platformWindow->init();
 }
@@ -68,6 +70,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
         , eventQueue{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
+        , widgetSize{platformWindow->size()}
 {
         platformWindow->init();
 }
@@ -137,8 +140,9 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 inf_ptr->mouseMoveEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::Resize:
-                inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
+                inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
                 break;
         case RkEvent::Type::Close:
                 widgetClosed = true;
@@ -182,11 +186,12 @@ void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
 {
         if (size.width() > 1 && size.height() > 1)
                 platformWindow->setSize(size);
+        widgetSize = size;
 }
 
 RkSize RkWidget::RkWidgetImpl::size() const
 {
-        return  platformWindow->size();
+        return  widgetSize;
 }
 
 int RkWidget::RkWidgetImpl::minimumWidth() const
@@ -262,11 +267,12 @@ const RkColor& RkWidget::RkWidgetImpl::borderColor() const
 void RkWidget::RkWidgetImpl::setBackgroundColor(const RkColor &color)
 {
         platformWindow->setBackgroundColor(color);
+        widgetBackground = color;
 }
 
 const RkColor& RkWidget::RkWidgetImpl::background() const
 {
-        return platformWindow->background();
+        return widgetBackground;
 }
 
 RkRect RkWidget::RkWidgetImpl::rect() const

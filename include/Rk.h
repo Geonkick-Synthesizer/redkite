@@ -100,7 +100,7 @@ class Rk {
 
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->add_action_cb_##act ([obj2](act_args){ obj2->callback; })
+        obj1->add_action_cb_##act ([this](act_args){ obj2->callback; })
 
 #define RK_CALL_ACT(name, args) \
         name(args)
