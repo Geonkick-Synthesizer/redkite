@@ -58,11 +58,13 @@ void RkLabel::RkLabelImpl::drawLabel()
         // TODO: use the same painter for both when fixing the Cairo problem of text over image.
         if (!labelImage.isNull()) {
                 RkPainter painter(inf_ptr);
+                painter.fillRect(rect(), background());
                 painter.drawImage(labelImage, 0, 0);
         }
 
         if (!labelText.empty()) {
                 RkPainter painter(inf_ptr);
+                painter.fillRect(rect(), background());
                 painter.drawText(inf_ptr->rect(), labelText);
         }
 
