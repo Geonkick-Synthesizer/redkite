@@ -26,9 +26,9 @@
 
 #include "Rk.h"
 
-struct RkCanvasInfo;
+struct RK_EXPORT RkCanvasInfo;
 
-class RkCanvas {
+class RK_EXPORT RkCanvas {
  public:
         RkCanvas() = default;
         virtual ~RkCanvas() = default;

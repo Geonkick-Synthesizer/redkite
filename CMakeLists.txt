@@ -32,8 +32,16 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
-set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS} -fvisibility=hidden")
+
+if (NOT RK_EXPORT_INTERFACE)
+  message(STATUS "don't export Redkite interface")
+else ()
+  message(STATUS "export Redkite interface")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_EXPORT_INTERFACE")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_EXPORT_INTERFACE")
+endif ()
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
@@ -54,7 +62,7 @@ if (NOT RK_GRAPHICS_BACKEND)
   set(RK_GRAPHICS_BACKEND "Cairo")
 #  find_package(Cairo REQUIRED)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")  
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
 elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
   find_package(Cairo REQUIRED)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
@@ -147,6 +155,7 @@ else() # defaut GNU/Linux
 endif()
 
 add_definitions(-fPIC)
+
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
 

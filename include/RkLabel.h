@@ -27,7 +27,7 @@
 #include "RkWidget.h"
 #include "RkImage.h"
 
-class RkLabel : public RkWidget {
+class RK_EXPORT RkLabel : public RkWidget {
  public:
     RkLabel(RkWidget *parent = nullptr);
     RkLabel(const std::string &text, RkWidget *parent = nullptr);

@@ -31,7 +31,7 @@ struct RkNativeWindowInfo;
 class RkWidget;
 class RkEvent;
 
-class RkEventQueue {
+class RK_EXPORT RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();

@@ -43,7 +43,7 @@ class RkHideEvent;
 struct RkWindowId;
 struct RkNativeWindowInfo;
 
-class RkWidget: public RkCanvas {
+class RK_EXPORT RkWidget: public RkCanvas {
   public:
           RK_CLASS_INFO(style_element, "RkWidget")
           RK_CLASS_INFO(style_class, "")

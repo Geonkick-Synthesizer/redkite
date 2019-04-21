@@ -29,7 +29,7 @@
 class RkWidget;
 class RkEventQueue;
 
-class RkMain {
+class RK_EXPORT RkMain {
   public:
           RkMain();
           RkMain(int argc, char **argv);

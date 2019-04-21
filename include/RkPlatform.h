@@ -31,23 +31,23 @@
 #define WINVER 0x0501
 #include <windows.h>
 
-struct RkWindowId {
+struct RK_EXPORT RkWindowId {
     RkWindowId(HWND arg = nullptr) : id(arg) {}
     HWND id;
 };
 
-struct RkNativeWindowInfo {
+struct RK_EXPORT RkNativeWindowInfo {
         RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {}
         HINSTANCE instance;
         std::string className;
         HWND window;
 };
 
-extern std::string rk_winApiClassName;
-extern HINSTANCE rk_winApiInstance;
+extern std::string RK_NO_EXPORT rk_winApiClassName;
+extern HINSTANCE RK_NO_EXPORT rk_winApiInstance;
 
-RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
-RkWindowId rk_id_from_win(HWND window);
+RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
+RkWindowId RK_EXPORT rk_id_from_win(HWND window);
 
 #define RK_WIN_MESSAGE_PAINT (WM_USER + 0x0001)
 
@@ -56,19 +56,19 @@ RkWindowId rk_id_from_win(HWND window);
 #else // X11
 #include <X11/Xlib.h>
 
-struct RkWindowId {
+struct RK_EXPORT RkWindowId {
         Window id;
 };
 
-struct RkNativeWindowInfo
+struct RK_EXPORT RkNativeWindowInfo
 {
         Display* display;
         int screenNumber;
         Window window;
 };
 
-RkNativeWindowInfo rk_from_native_x11(Display* display, int screenNumber, Window window);
-RkWindowId rk_id_from_x11(Window window);
+RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display, int screenNumber, Window window);
+RkWindowId RK_EXPORT rk_id_from_x11(Window window);
 
 #endif // X11
 

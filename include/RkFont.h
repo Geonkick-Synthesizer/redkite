@@ -27,7 +27,7 @@
 #include "Rk.h"
 #include "RkColor.h"
 
-class RkFont {
+class RK_EXPORT RkFont {
  public:
         enum class Style : int {
                 Normal = 0,

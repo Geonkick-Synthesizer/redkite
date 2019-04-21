@@ -33,7 +33,7 @@
 
 class RkCanvas;
 
-class RkPainter {
+class RK_EXPORT RkPainter {
  public:
         RkPainter(RkCanvas *canvas);
         ~RkPainter();

@@ -29,7 +29,7 @@
 #include "RkSize.h"
 #include "RkColor.h"
 
-class RkImage : public RkCanvas {
+class RK_EXPORT RkImage : public RkCanvas {
  public:
         enum class Format : int {
                 ARGB32 = 0,

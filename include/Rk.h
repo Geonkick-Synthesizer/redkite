@@ -40,6 +40,26 @@
 
 #define RK_UNUSED(expr) (void)expr
 
+#ifdef RK_OS_WIN
+#define RK_NO_EXPORT
+#ifdef RK_EXPORT_INTERFACE
+// Export Redkite interface
+#define RK_EXPORT  __declspec(dllexport)
+#else
+#define RK_EXPORT
+#endif
+#elif RK_OS_MAC
+#error not implemented for Mac
+#else // RK_OS_GNU
+#define RK_NO_EXPORT __attribute__((visibility("hidden")))
+#ifdef RK_EXPORT_INTERFACE
+// Export Redkite interface
+#define RK_EXPORT __attribute__((visibility("default")))
+#else
+#define RK_EXPORT
+#endif
+#endif
+
 #define RK_DECLARE_IMPL(Class) \
   class Class##Impl; \
   std::shared_ptr<Class##Impl> o_ptr;

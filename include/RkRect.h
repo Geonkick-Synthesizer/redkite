@@ -27,7 +27,7 @@
 #include "RkSize.h"
 #include "RkPoint.h"
 
-class RkRect {
+class RK_EXPORT RkRect {
  public:
 
         constexpr RkRect()

@@ -24,6 +24,8 @@
 #ifndef RK_LOGGING_H
 #define RK_LOGGING_H
 
+#include "Rk.h"
+
 #include <iostream>
 #include <sstream>
 
@@ -34,7 +36,7 @@ enum class RkLogLevel : int {
         Error
 };
 
-void rkLogMessage(RkLogLevel level, const std::string &func_name, const std::string &msg);
+void RK_EXPORT rkLogMessage(RkLogLevel level, const std::string &func_name, const std::string &msg);
 
 #if defined(__GNUC__) || defined(__MINGW32__)
 #define RK_LOG_FUNC_NAME __PRETTY_FUNCTION__

@@ -37,7 +37,7 @@ class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
 
-class RkEvent {
+class RK_EXPORT RkEvent {
  public:
         enum class Type: int {
                 NoEvent = 0,

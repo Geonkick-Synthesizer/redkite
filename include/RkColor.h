@@ -26,7 +26,7 @@
 
 #include "Rk.h"
 
-class RkColor {
+class RK_EXPORT RkColor {
  public:
 
         constexpr RkColor()

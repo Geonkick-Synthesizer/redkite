@@ -27,7 +27,7 @@
 #include "Rk.h"
 #include "RkColor.h"
 
-class RkPen {
+class RK_EXPORT RkPen {
  public:
 
         enum class PenStyle {

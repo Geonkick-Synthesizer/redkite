@@ -26,7 +26,7 @@
 
 #include "Rk.h"
 
-class RkSize {
+class RK_EXPORT RkSize {
  public:
 
        constexpr RkSize() : widthValue{0}, heightValue{0}
