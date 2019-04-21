@@ -3,7 +3,7 @@
 #### Description
 
 Redkite is a small free software and cross-platform GUI toolkit.
-It is developed in C++11&14 and inspired from other 
+It is developed in C++11&14 and inspired from other
 well known GUI toolkits.
 
 Version: 0.9
@@ -16,11 +16,11 @@ Status: active development, no release yet
 An application that is developed in a particular GUI toolkit
 is loading in its address space GUI plugins that are developed
 in a different GUI toolkit, or different versions of a particular
-toolkit. The well known GUI toolkits were not designed with 
-this in mind, and this scenario will cause conflicts, problems,
-crashes. Redkite GUI toolkit is developed to address this problem,
-and provide a way to develop self-sufficient GUI plugins apart 
-from developing of standalone applications. Most often these kind
+toolkit. The well known GUI toolkits were not designed with
+this scenario in mind, and this will cause difficulties, problems,
+even crashes. Redkite GUI toolkit is developed to address this problem,
+and provide a way to develop easily self-sufficient GUI plugins apart
+from developing of standalone applications. Most often these kinds
 of problems arise in music software, for example, when a Digital
 Audio Workstation as a host is loading audio GUI plugins.
 
@@ -44,8 +44,7 @@ Audio Workstation as a host is loading audio GUI plugins.
 
  * Be cross-platform
 
- * User interface API to be simple.
-
+ * User interface API to be simple
 
 ### What was implemented
 
@@ -79,6 +78,6 @@ Interface classes that now are implemented with the purpose of extending their f
 
 ### What applications were developed with Redkite?
 
-* [Geonkick](https://gitlab.com/quamplex/geonkick) - a percussion synthesizer is 
+* [Geonkick](https://gitlab.com/quamplex/geonkick) - a percussion synthesizer is
 in the process of migrating from Qt to Redkite. See "devel" branch.
 
