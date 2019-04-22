@@ -122,7 +122,8 @@ class Rk {
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
         obj1->add_action_cb_##act ([&](act_args){ obj2->callback; })
 
-#define RK_CALL_ACT(name, args) \
-        name(args)
+#define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_##act.clear();
+
+#define RK_CALL_ACT(name, args) name(args)
 
 #endif // RK_GLOBAL_H
