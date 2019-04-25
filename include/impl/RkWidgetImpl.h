@@ -37,8 +37,8 @@ class RkWindowX;
 
 class RkWidget::RkWidgetImpl {
  public:
-        explicit RkWidgetImpl(RkWidget* interface, RkWidget* parent = nullptr);
-        explicit RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent);
+        explicit RkWidgetImpl(RkWidget* interface, RkWidget* parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
@@ -80,6 +80,13 @@ class RkWidget::RkWidgetImpl {
         RkEventQueue* getEventQueue();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         void update();
+        void deleteChild(RkWidget* child);
+        static Rk::WidgetAttribute defaultWidgetAttributes();
+        Rk::Modality modality() const;
+        const std::list<RkWidget*>& childWidgets() const;
+        void setWidgetAttribute(Rk::WidgetAttribute attribute);
+        void clearWidgetAttribute(Rk::WidgetAttribute attribute);
+        Rk::WidgetAttribute getWidgetAttributes() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -98,6 +105,8 @@ class RkWidget::RkWidgetImpl {
         RkSize widgetMaximumSize;
         RkSize widgetSize;
         RkColor widgetBackground;
+        Rk::WidgetAttribute widgetAttributes;
+        Rk::Modality widgetModality;
 };
 
 #endif // RK_WIDGET_IMPL_H

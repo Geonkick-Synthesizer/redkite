@@ -49,8 +49,8 @@ class RK_EXPORT RkWidget: public RkCanvas {
           RK_CLASS_INFO(style_class, "")
           RK_CLASS_INFO(style_id, "")
 
-          explicit RkWidget(RkWidget *parent = nullptr);
-          explicit RkWidget(const RkNativeWindowInfo &parent);
+          explicit RkWidget(RkWidget *parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           virtual ~RkWidget();
 
 	  void show();
@@ -99,6 +99,15 @@ class RK_EXPORT RkWidget: public RkCanvas {
           std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
           RkRect rect() const;
           void update();
+          void close();
+          Rk::Modality modality() const;
+          bool isModal() const;
+          void setWidgetAttribute(Rk::WidgetAttribute attribute);
+          void clearWidgetAttribute(Rk::WidgetAttribute attribute);
+          Rk::WidgetAttribute widgetAttributes() const;
+          void enableInput();
+          void disableInput();
+          RkWidget* getTopWindow();
 
   protected:
           RK_DECLARE_IMPL(RkWidget)

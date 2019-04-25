@@ -100,6 +100,32 @@ class Rk {
                 AlignRight  = 2,
                 AlignCenter = 3
         };
+
+        enum class WindowFlags: int {
+                Widget = 0x00000000,
+                Dialog = 0x00000001,
+                Popup  = 0x00000002
+        };
+
+        enum class Modality : int {
+                NonModal = 0,
+
+                // Disable input for parent and all its children
+                // except the current modal one.
+                ModalParent = 1,
+
+                // Disable input for all widgets hierarhy
+                // of the top window, including top window,
+                // except the current modal one.
+                ModalTopWindow = 2
+        };
+
+        enum class WidgetAttribute : int {
+                NoAttributes = 0x00000000,
+                KeyInputEnabled = 0x00000001,
+                MouseInputEnabled = 0x00000002,
+                CloseInputEnabled = 0x00000004,
+        };
 };
 
 #define RK_ACT_ARGS(arg, ...) arg, ##__VA_ARGS__

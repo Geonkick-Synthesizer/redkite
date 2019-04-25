@@ -71,6 +71,16 @@ void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
         widget->setEventQueue(inf_ptr);
 }
 
+void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
+{
+        for (auto it = widgetList.begin(); it != widgetList.end(); ++it) {
+                if (*it == widget) {
+                       widgetList.erase(it);
+                       return;
+                }
+        }
+}
+
 void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
 {
         eventsQueue.push({widget->id(), event});

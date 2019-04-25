@@ -36,15 +36,15 @@
 #undef Paint
 #endif
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
         , parentWidget{parent}
 #ifdef RK_OS_WIN
-        , platformWindow{!parent ? std::make_unique<RkWindowWin>() : std::make_unique<RkWindowWin>(parent->nativeWindowInfo())}
+        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
 #elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>() : std::make_unique<RkWindowMac>(parent->nativeWindowInfo())}
+        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags)}
 #else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>() : std::make_unique<RkWindowX>(parent->nativeWindowInfo())}
+        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
@@ -52,25 +52,29 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetMaximumSize{1000000, 1000000}
         , widgetSize{platformWindow->size()}
         , widgetBackground(platformWindow->background())
+        , widgetAttributes{defaultWidgetAttributes()}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
 {
         platformWindow->init();
 }
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWindowInfo &parent)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
         , parentWidget{nullptr}
 #ifdef RK_OS_WIN
-        , platformWindow{std::make_unique<RkWindowWin>(parent)}
+        , platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
 #elif RK_OS_MAC
-        , platformWindow{std::make_unique<RkWindowMac>(parent)}
+        , platformWindow{std::make_unique<RkWindowMac>(parent, flags)}
 #else // X11
-        , platformWindow{std::make_unique<RkWindowX>(parent)}
+        , platformWindow{std::make_unique<RkWindowX>(parent, flags)}
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
         , widgetSize{platformWindow->size()}
+        , widgetAttributes{defaultWidgetAttributes()}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
 {
         platformWindow->init();
 }
@@ -79,6 +83,14 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
         for (auto child : widgetChildren)
                 delete child;
+}
+
+Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
+{
+        return static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
+                                                | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
+                                                | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled));
+
 }
 
 void RkWidget::RkWidgetImpl::show(bool b)
@@ -122,31 +134,42 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         }
         case RkEvent::Type::KeyPressed:
-                inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
+                        inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::KeyReleased:
-                inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
+                        inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseDoubleClick:
-                inf_ptr->mouseDoubleClickEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->mouseDoubleClickEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
-                inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::MouseMove:
-                inf_ptr->mouseMoveEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->mouseMoveEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
                 break;
         case RkEvent::Type::Resize:
                 widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
                 break;
+        case RkEvent::Type::DeleteChild:
+                deleteChild(std::dynamic_pointer_cast<RkDeleteChild>(event)->child());
+                break;
         case RkEvent::Type::Close:
-                widgetClosed = true;
-                inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)) {
+                        widgetClosed = true;
+                        inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
+                }
                 break;
         default:
                 break;
@@ -303,4 +326,41 @@ std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
 void RkWidget::RkWidgetImpl::update()
 {
         platformWindow->update();
+}
+
+void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
+{
+        eventQueue->removeWidget(child);
+        for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
+                if (*it == child) {
+                        it = widgetChildren.erase(it);
+                        delete child;
+                        return;
+                }
+        }
+}
+
+Rk::Modality RkWidget::RkWidgetImpl::modality() const
+{
+        return widgetModality;
+}
+
+const std::list<RkWidget*>& RkWidget::RkWidgetImpl::childWidgets() const
+{
+        return widgetChildren;
+}
+
+void RkWidget::RkWidgetImpl::setWidgetAttribute(Rk::WidgetAttribute attribute)
+{
+        widgetAttributes = static_cast<Rk::WidgetAttribute>(static_cast<int>(widgetAttributes) | static_cast<int>(attribute));
+}
+
+void RkWidget::RkWidgetImpl::clearWidgetAttribute(Rk::WidgetAttribute attribute)
+{
+        widgetAttributes = static_cast<Rk::WidgetAttribute>(static_cast<int>(widgetAttributes) & (~static_cast<int>(attribute)));
+}
+
+Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
+{
+        return widgetAttributes;
 }

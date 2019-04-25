@@ -35,8 +35,8 @@ struct RkCanvasInfo;
 
 class RkWindowX {
  public:
-        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
-        explicit RkWindowX(const RkNativeWindowInfo &parent);
+        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowX();
         RkWindowX(const RkWindowX &other) = delete;
         RkWindowX& operator=(const RkWindowX &other) = delete;
@@ -85,6 +85,7 @@ class RkWindowX {
         RkColor winBackgroundColor;
         RkEventQueue *eventQueue;
         std::shared_ptr<RkCanvasInfo> canvasInfo;
+        Rk::WindowFlags windowFlags;
 };
 
 #endif // RK_WIDGET_XWIN_H

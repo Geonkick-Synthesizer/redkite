@@ -27,15 +27,15 @@
 #include "RkWidgetImpl.h"
 #include "RkPlatform.h"
 
-RkWidget::RkWidget(RkWidget *parent)
-    : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
+RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
+        : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
 {
         if (parent)
                 parent->addChild(this);
 }
 
-RkWidget::RkWidget(const RkNativeWindowInfo &parent)
-    : o_ptr{std::make_shared<RkWidgetImpl>(this, parent)}
+RkWidget::RkWidget(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+        : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
 {
 }
 
@@ -48,7 +48,25 @@ RkWidget::RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl)
 
 RkWidget::~RkWidget()
 {
+        if (parent()) {
+                if (modality() == Rk::Modality::ModalTopWindow) {
+                        if (!parent()->isModal()) {
+                                auto topWindow = getTopWindow();
+                                if (topWindow)
+                                        topWindow->enableInput();
+                        } else {
+                                // Enable inputs only for parent widget and its
+                                // childs since it is modal.
+                                // TODO: Ideally the current child that are being destroyed
+                                // to be first removed from the parent.
+                                parent()->enableInput();
+                        }
+                } else if (modality() == Rk::Modality::ModalParent) {
+                        parent()->enableInput();
+                }
+        }
 }
+
 
 void RkWidget::setTitle(const std::string &title)
 {
@@ -310,13 +328,40 @@ RkWidget* RkWidget::child(const RkWindowId &id) const
 
 void RkWidget::addChild(RkWidget* child)
 {
-        if (child)
-               o_ptr->addChild(child);
+        if (child) {
+                if (child->modality() == Rk::Modality::ModalTopWindow) {
+                        auto topWidget = getTopWindow();
+                        if (topWidget)
+                                topWidget->disableInput();
+                } else if (child->modality() == Rk::Modality::ModalParent) {
+                        disableInput();
+                }
+                o_ptr->addChild(child);
+        }
+}
+
+void RkWidget::enableInput()
+{
+        setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
+                           | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
+                           | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
+        for (const auto &ch: o_ptr->childWidgets())
+                ch->enableInput();
+}
+
+void RkWidget::disableInput()
+{
+        clearWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
+                            | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
+                            | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
+        for (const auto &ch: o_ptr->childWidgets())
+                ch->disableInput();
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
 {
         RK_UNUSED(event);
+        close();
 }
 
 void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
@@ -402,4 +447,42 @@ std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
 RkRect RkWidget::rect() const
 {
         return o_ptr->rect();
+}
+
+void RkWidget::close()
+{
+        if (o_ptr->parent())
+                eventQueue()->postEvent(parent(), std::make_shared<RkDeleteChild>(parent(), this));
+}
+
+bool RkWidget::isModal() const
+{
+        return modality() != Rk::Modality::NonModal;
+}
+
+Rk::Modality RkWidget::modality() const
+{
+        return o_ptr->modality();
+}
+
+void RkWidget::setWidgetAttribute(Rk::WidgetAttribute attribute)
+{
+        o_ptr->setWidgetAttribute(attribute);
+}
+
+void RkWidget::clearWidgetAttribute(Rk::WidgetAttribute attribute)
+{
+        o_ptr->clearWidgetAttribute(attribute);
+}
+
+Rk::WidgetAttribute RkWidget::widgetAttributes() const
+{
+        return o_ptr->getWidgetAttributes();
+}
+
+RkWidget* RkWidget::getTopWindow()
+{
+        if (!parent())
+                return this;
+        return parent()->getTopWindow();
 }

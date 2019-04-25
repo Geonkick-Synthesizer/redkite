@@ -26,7 +26,7 @@
 #include "RkEventQueue.h"
 #include "RkCanvasInfo.h"
 
-RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
+RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
         : parentWindowInfo(parent)
         , xDisplay{parent ? parent->display : nullptr}
         , screenNumber{parent ? parent->screenNumber : 0}
@@ -38,10 +38,11 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , winBackgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
+        , windowFlags{flags}
 {
 }
 
-RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
+RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
         , xDisplay{parent.display}
         , screenNumber{parent.screenNumber}
@@ -53,16 +54,18 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         , winBackgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
-
+        , windowFlags{flags}
 {
         *parentWindowInfo.get() = parent;
 }
 
 RkWindowX::~RkWindowX()
 {
-        if (!hasParent() && xDisplay) {
+        if (xDisplay) {
                 freeCanvasInfo();
-                XCloseDisplay(xDisplay);
+                XDestroyWindow(xDisplay, xWindow);
+                if (!hasParent())
+                        XCloseDisplay(xDisplay);
         }
 }
 
@@ -87,29 +90,32 @@ bool RkWindowX::init()
                 }
 	}
 
-        Window parent  = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
+        Window parent = 0;
+        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
+                parent = RootWindow(xDisplay, screenNumber);
+        else
+                parent = hasParent() ? parentWindowInfo->window : RootWindow(xDisplay, screenNumber);
         xWindow = XCreateSimpleWindow(xDisplay, parent,
                                       windowPosition.x(), windowPosition.y(),
                                       windowSize.width(), windowSize.height(), winBorderWidth,
                                       pixelValue(winBorderColor),
                                       pixelValue(winBackgroundColor));
 
-
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
                 return false;
         }
+
+        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent())
+                XSetTransientForHint(xDisplay, xWindow, parentWindowInfo->window);
 
         XSelectInput(xDisplay, xWindow, ExposureMask
                                         | KeyPressMask | KeyReleaseMask
                                         | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
                                         | StructureNotifyMask);
 
-        if (!hasParent()) {
-                deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
-                XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
-        }
-
+        deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
+        XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         createCanvasInfo();
         return true;
 }

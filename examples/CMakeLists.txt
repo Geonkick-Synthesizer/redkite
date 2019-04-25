@@ -6,6 +6,7 @@ set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
 set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
+set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -112,3 +113,15 @@ add_dependencies(action redkite)
 target_link_libraries(action redkite)
 target_link_libraries(action "-lX11 -lrt -lm -ldl")
 target_link_libraries(action ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+
+# ------------ Dialog example -------
+
+add_executable(dialog
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_DIALOG})
+
+add_dependencies(dialog redkite)
+target_link_libraries(dialog redkite)
+target_link_libraries(dialog "-lX11 -lrt -lm -ldl")
+target_link_libraries(dialog ${RK_GRAPHICS_BACKEND_LINK_LIBS})

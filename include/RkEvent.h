@@ -36,6 +36,7 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
+class RkWidget;
 
 class RK_EXPORT RkEvent {
  public:
@@ -53,7 +54,8 @@ class RK_EXPORT RkEvent {
                 Resize = 10,
                 Paint = 11,
                 Show = 12,
-                Hide = 13
+                Hide = 13,
+                DeleteChild = 14
       };
 
       explicit RkEvent(Type type = Type::NoEvent)
@@ -134,6 +136,20 @@ class RkShowEvent: public RkEvent {
 
 class RkHideEvent: public RkEvent {
 };
+
+class RkDeleteChild: public RkEvent {
+ public:
+         RkDeleteChild(RkWidget *parent, RkWidget* child)
+                 : RkEvent(Type::DeleteChild)
+                 , parentWidget{parent}
+                 , childWidget{child} {}
+        RkWidget* child() const { return childWidget; }
+        RkWidget* parent() const { return parentWidget; }
+ private:
+        RkWidget *parentWidget;
+        RkWidget *childWidget;
+};
+
 
 #endif // RK_EVENT_H
 
