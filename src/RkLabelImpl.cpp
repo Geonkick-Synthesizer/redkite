@@ -23,6 +23,7 @@
 
 #include "RkLabelImpl.h"
 #include "RkPainter.h"
+#include "RkLog.h"
 
 RkLabel::RkLabelImpl::RkLabelImpl(RkLabel *interface, const std::string &text, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -38,6 +39,7 @@ RkLabel::RkLabelImpl::~RkLabelImpl()
 void RkLabel::RkLabelImpl::setText(const std::string &text)
 {
         labelText = text;
+        update();
 }
 
 std::string RkLabel::RkLabelImpl::text() const
@@ -55,16 +57,19 @@ void RkLabel::RkLabelImpl::drawLabel()
         if (labelText.empty() && labelImage.isNull())
                 return;
 
+        {
+                RkPainter painter(inf_ptr);
+                painter.fillRect(rect(), background());
+        }
+
         // TODO: use the same painter for both when fixing the Cairo problem of text over image.
         if (!labelImage.isNull()) {
                 RkPainter painter(inf_ptr);
-                painter.fillRect(rect(), background());
                 painter.drawImage(labelImage, 0, 0);
         }
 
         if (!labelText.empty()) {
                 RkPainter painter(inf_ptr);
-                painter.fillRect(rect(), background());
                 painter.drawText(inf_ptr->rect(), labelText);
         }
 

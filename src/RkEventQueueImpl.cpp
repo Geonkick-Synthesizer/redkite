@@ -24,6 +24,7 @@
 #include "RkEvent.h"
 #include "RkWidget.h"
 #include "RkEventQueueImpl.h"
+#include "RkTimer.h"
 
 #ifdef RK_OS_WIN
 #include "RkEventQueueWin.h"
@@ -160,3 +161,27 @@ void RkEventQueue::RkEventQueueImpl::processActions()
                 act();
 }
 
+void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)
+{
+        RK_LOG_INFO("called");
+        timersList.push_back(timer);
+}
+
+void RkEventQueue::RkEventQueueImpl::unsubscribeTimer(RkTimer *timer)
+{
+        RK_LOG_INFO("called");
+        for (auto it = timersList.begin(); it != timersList.end(); ++it) {
+                if (*it == timer) {
+                       timersList.erase(it);
+                       return;
+                }
+        }
+}
+
+void RkEventQueue::RkEventQueueImpl::processTimers()
+{
+        for (const auto &timer: timersList) {
+                if (timer->started() && timer->isTimeout())
+                        timer->callTimeout();
+        }
+}

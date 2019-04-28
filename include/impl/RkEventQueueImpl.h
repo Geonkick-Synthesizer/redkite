@@ -62,6 +62,9 @@ class RkEventQueue::RkEventQueueImpl {
         void processEvents();
         void postAction(const std::function<void(void)> &act);
         void processActions();
+        void subscribeTimer(RkTimer *timer);
+        void unsubscribeTimer(RkTimer *timer);
+        void processTimers();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)
@@ -69,6 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
         std::mutex actionsQueueMutex;
+        std::vector<RkTimer*> timersList;
 
 #ifdef RK_OS_WIN
         std::unique_ptr<RkEventQueueWin> platformEventQueue;

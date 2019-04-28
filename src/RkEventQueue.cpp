@@ -97,3 +97,21 @@ void RkEventQueue::processActions()
 {
         o_ptr->processActions();
 }
+
+void RkEventQueue::subscribeTimer(RkTimer *timer)
+{
+        if (timer)
+                o_ptr->subscribeTimer(timer);
+}
+
+void RkEventQueue::unsubscribeTimer(RkTimer *timer)
+{
+        if (timer)
+                o_ptr->unsubscribeTimer(timer);
+}
+
+void RkEventQueue::processTimers()
+{
+        o_ptr->processTimers();
+}
+

@@ -30,6 +30,7 @@ struct RkWindowId;
 struct RkNativeWindowInfo;
 class RkWidget;
 class RkEvent;
+class RkTimer;
 
 class RK_EXPORT RkEventQueue {
  public:
@@ -48,6 +49,9 @@ class RK_EXPORT RkEventQueue {
         void processEvents();
         void postAction(const std::function<void(void)> &act);
         void processActions();
+        void subscribeTimer(RkTimer *timer);
+        void unsubscribeTimer(RkTimer *timer);
+        void processTimers();
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue)

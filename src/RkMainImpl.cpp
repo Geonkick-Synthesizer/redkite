@@ -81,10 +81,12 @@ int RkMain::RkMainImpl::exec(bool block)
 	}
 
         if (!block) {
+                eventQueue->processTimers();
                 eventQueue->processActions();
                 eventQueue->processEvents();
         } else {
                 for (; block ;) {
+                        eventQueue->processTimers();
                         eventQueue->processActions();
                         eventQueue->processEvents();
                         if (topWindow->isClose())

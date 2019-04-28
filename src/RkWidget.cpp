@@ -311,6 +311,11 @@ void RkWidget::setBackgroundColor(int red, int green, int blue)
         o_ptr->setBackgroundColor(RkColor(red, green, blue));
 }
 
+void RkWidget::setBackgroundColor(const RkColor &color)
+{
+        o_ptr->setBackgroundColor(color);
+}
+
 const RkColor& RkWidget::background() const
 {
         return o_ptr->background();

@@ -82,6 +82,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkPlatform.h
   ${RK_INCLUDE_PATH}/RkEvent.h
   ${RK_INCLUDE_PATH}/RkEventQueue.h
+  ${RK_INCLUDE_PATH}/RkTimer.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkCanvas.h
@@ -126,6 +127,7 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp
   ${RK_SRC_PATH}/RkEventQueue.cpp
+  ${RK_SRC_PATH}/RkTimer.cpp
   ${RK_SRC_PATH}/RkEventQueueImpl.cpp
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp

@@ -7,6 +7,7 @@ set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
 set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
 set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
+set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -125,3 +126,14 @@ add_dependencies(dialog redkite)
 target_link_libraries(dialog redkite)
 target_link_libraries(dialog "-lX11 -lrt -lm -ldl")
 target_link_libraries(dialog ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+# ------------ Timer example -------
+
+add_executable(timer
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_TIMER})
+
+add_dependencies(timer redkite)
+target_link_libraries(timer redkite)
+target_link_libraries(timer "-lX11 -lrt -lm -ldl")
+target_link_libraries(timer ${RK_GRAPHICS_BACKEND_LINK_LIBS})
