@@ -48,6 +48,11 @@ void RkEventQueue::removeWidget(RkWidget *widget)
         o_ptr->removeWidget(widget);
 }
 
+void RkEventQueue::removeWidgetEvents(RkWidget *widget)
+{
+        o_ptr->removeWidgetEvents(widget);
+}
+
 void RkEventQueue::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
 {
         o_ptr->postEvent(widget, event);

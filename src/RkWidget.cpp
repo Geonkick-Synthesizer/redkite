@@ -451,7 +451,7 @@ RkRect RkWidget::rect() const
 
 void RkWidget::close()
 {
-        if (o_ptr->parent())
+        if (parent())
                 eventQueue()->postEvent(parent(), std::make_shared<RkDeleteChild>(parent(), this));
 }
 

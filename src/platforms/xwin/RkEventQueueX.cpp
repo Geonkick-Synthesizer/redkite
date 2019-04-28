@@ -52,7 +52,7 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
+void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
 {
         while (pending()) {
                 XEvent e;
@@ -96,9 +96,8 @@ void RkEventQueueX::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<R
                         break;
                 }
 
-                if (event) {
-                        eventsQueue.push({id, event});
-                }
+                if (event)
+                        eventsQueue.push_back({id, event});
         }
 }
 

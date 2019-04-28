@@ -81,6 +81,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
+        eventQueue->removeWidget(inf_ptr);
         for (auto child : widgetChildren)
                 delete child;
 }
@@ -330,7 +331,6 @@ void RkWidget::RkWidgetImpl::update()
 
 void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
 {
-        eventQueue->removeWidget(child);
         for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
                 if (*it == child) {
                         it = widgetChildren.erase(it);

@@ -38,6 +38,7 @@ class RK_EXPORT RkEventQueue {
 
         void addWidget(RkWidget *widget);
         void removeWidget(RkWidget *widget);
+        void removeWidgetEvents(RkWidget *widget);
         void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
         void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);

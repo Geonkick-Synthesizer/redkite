@@ -81,14 +81,25 @@ void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
         }
 }
 
+void RkEventQueue::RkEventQueueImpl::removeWidgetEvents(RkWidget *widget)
+{
+        for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
+                if (it->first.id == widget->id().id) {
+                        it = eventsQueue.erase(it);
+                }
+                else
+                        ++it;
+        }
+}
+
 void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push({widget->id(), event});
+        eventsQueue.push_back({widget->id(), event});
 }
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push({id, event});
+        eventsQueue.push_back({id, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
@@ -124,17 +135,16 @@ void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
         platformEventQueue->getEvents(eventsQueue);
-        while (!eventsQueue.empty()) {
-                auto res = eventsQueue.front();
-                processEvent(res.first, res.second);
-                eventsQueue.pop();
+        for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
+                processEvent(it->first, it->second);
+                it = eventsQueue.erase(it);
         }
 }
 
 void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> &act)
 {
         std::lock_guard<std::mutex> lock(actionsQueueMutex);
-        actionsQueue.push_back(act);
+        actionsQueue.emplace_back(act);
 }
 
 void RkEventQueue::RkEventQueueImpl::processActions()

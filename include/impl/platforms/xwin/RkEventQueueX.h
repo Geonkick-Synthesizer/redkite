@@ -43,7 +43,7 @@ class RkEventQueueX
         bool pending();
         void setDisplay(Display *display);
         Display* display() const;
-        void getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
+        void getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
 
  protected:
         std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
