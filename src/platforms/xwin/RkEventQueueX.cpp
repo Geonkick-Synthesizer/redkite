@@ -157,7 +157,9 @@ std::shared_ptr<RkEvent> RkEventQueueX::processKeyEvent(XEvent *e)
 {
         auto event = std::make_shared<RkKeyEvent>();
         event->setType(e->type == KeyPress ? RkEvent::Type::KeyPressed : RkEvent::Type::KeyReleased);
-        auto keyCode = XkbKeycodeToKeysym(xDisplay, reinterpret_cast<XKeyEvent*>(e)->keycode, 0, 1);
+        auto keyCode = XkbKeycodeToKeysym(xDisplay,
+                                          reinterpret_cast<XKeyEvent*>(e)->keycode,
+                                          0, keyModifiers & static_cast<int>(Rk::KeyModifiers::Shift) ? 1 : 0);
         event->setKey(fromKeysym(keyCode));
         updateModifiers(event->key(), event->type());
         if (keyModifiers != static_cast<int>(Rk::KeyModifiers::NoModifier))
@@ -170,16 +172,21 @@ void RkEventQueueX::updateModifiers(Rk::Key key, RkEvent::Type type)
         if (key == Rk::Key::Key_Shift_Left || key == Rk::Key::Key_Shift_Right)
         {
                 if (type == RkEvent::Type::KeyPressed)
-                        keyModifiers |= static_cast<int>(key);
+                        keyModifiers |= static_cast<int>(key) >> 16;
                 else
-                        keyModifiers &= ~static_cast<int>(key);
+                        keyModifiers &= ~(static_cast<int>(key) >> 16);
         }
-        RK_LOG_DEBUG("modifyier: " << keyModifiers);
 }
 
 Rk::Key RkEventQueueX::fromKeysym(int keycode)
 {
-        if (static_cast<int>(Rk::Key::Key_A) <= keycode && keycode <= static_cast<int>(Rk::Key::Key_Z))
+        // Latin1: A - Z
+        auto diff = keyModifiers & static_cast<int>(Rk::KeyModifiers::Shift) ? 0 : 0x61 - 0x41;
+        if (static_cast<int>(Rk::Key::Key_A) + diff <= keycode && keycode <= static_cast<int>(Rk::Key::Key_Z) + diff)
+                return static_cast<Rk::Key>(keycode - diff);
+
+        // Numbers: 0 - 9
+        if (static_cast<int>(Rk::Key::Key_0) <= keycode && keycode <= static_cast<int>(Rk::Key::Key_9))
                 return static_cast<Rk::Key>(keycode);
 
         switch (keycode)
@@ -201,17 +208,15 @@ Rk::Key RkEventQueueX::fromKeysym(int keycode)
         case XK_Hyper_R: return Rk::Key::Key_Hyper_Right;
 
         // Pointer control keys
-        case XK_Home: return Key_Home;                         0xff50
-        case XK_Left: Key_Left                         0xff51  /* Move left, left arrow */
-        case XK_Up:   return Key_Up                         0xff52  /* Move up, up arrow */
-        case XK_Right: return Key_Right;
-        case XK_Down:  return Key_down                        0xff54  /* Move down, down arrow */
-        case XK_Prior:                         0xff55  /* Prior, previous */
-        case XK_Page_Up:                       0xff55
-        case XK_Next:                          0xff56  /* Next */
-        case XK_Page_Down:                     0xff56
-        case XK_End:                           0xff57  /* EOL */
-        case XK_Begin:                         0xff58  /* BOL */
+        case XK_Home:  return Rk::Key::Key_Home;
+        case XK_Left:  return Rk::Key::Key_Left;
+        case XK_Up:    return Rk::Key::Key_Up;
+        case XK_Right: return Rk::Key::Key_Right;
+        case XK_Down:  return Rk::Key::Key_Down;
+        case XK_Page_Up: return Rk::Key::Key_Page_Up;
+        case XK_Page_Down: return Rk::Key::Key_Page_Down;
+        case XK_End: return Rk::Key::Key_End;
+        case XK_Begin: return Rk::Key::Key_Begin;
         default: return Rk::Key::Key_None;
         }
 }
