@@ -25,8 +25,13 @@
 #include "RkLog.h"
 #include "RkWidget.h"
 
+#include <X11/keysym.h>
+#include <X11/keysymdef.h>
+#include <X11/XKBlib.h>
+
 RkEventQueueX::RkEventQueueX()
         : xDisplay(nullptr)
+        , keyModifiers{0}
 {
         RK_LOG_INFO("called");
 }
@@ -66,11 +71,10 @@ void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<
                                 event = std::make_shared<RkPaintEvent>();
                 break;
                 case KeyPress:
-                        event = std::make_shared<RkKeyEvent>();
+                        event = processKeyEvent(&e);
                         break;
                 case KeyRelease:
-                        event = std::make_shared<RkKeyEvent>();
-                        event->setType(RkEvent::Type::KeyReleased);
+                        event = processKeyEvent(&e);
                         break;
                 case ButtonPress:
                         event = processButtonPressEvent(&e);
@@ -149,3 +153,65 @@ std::shared_ptr<RkEvent> RkEventQueueX::processMouseMove(XEvent *e)
         return mouseEvent;
 }
 
+std::shared_ptr<RkEvent> RkEventQueueX::processKeyEvent(XEvent *e)
+{
+        auto event = std::make_shared<RkKeyEvent>();
+        event->setType(e->type == KeyPress ? RkEvent::Type::KeyPressed : RkEvent::Type::KeyReleased);
+        auto keyCode = XkbKeycodeToKeysym(xDisplay, reinterpret_cast<XKeyEvent*>(e)->keycode, 0, 1);
+        event->setKey(fromKeysym(keyCode));
+        updateModifiers(event->key(), event->type());
+        if (keyModifiers != static_cast<int>(Rk::KeyModifiers::NoModifier))
+                event->setModifiers(keyModifiers);
+        return event;
+}
+
+void RkEventQueueX::updateModifiers(Rk::Key key, RkEvent::Type type)
+{
+        if (key == Rk::Key::Key_Shift_Left || key == Rk::Key::Key_Shift_Right)
+        {
+                if (type == RkEvent::Type::KeyPressed)
+                        keyModifiers |= static_cast<int>(key);
+                else
+                        keyModifiers &= ~static_cast<int>(key);
+        }
+        RK_LOG_DEBUG("modifyier: " << keyModifiers);
+}
+
+Rk::Key RkEventQueueX::fromKeysym(int keycode)
+{
+        if (static_cast<int>(Rk::Key::Key_A) <= keycode && keycode <= static_cast<int>(Rk::Key::Key_Z))
+                return static_cast<Rk::Key>(keycode);
+
+        switch (keycode)
+        {
+        // Key modifiers
+        case XK_Shift_L: return Rk::Key::Key_Shift_Left;
+        case XK_Shift_R: return Rk::Key::Key_Shift_Right;
+        case XK_Control_L: return Rk::Key::Key_Control_Left;
+        case XK_Control_R: return Rk::Key::Key_Control_Right;
+        case XK_Caps_Lock: return Rk::Key::Key_Caps_Lock;
+        case XK_Shift_Lock: return Rk::Key::Key_Shift_Lock;
+        case XK_Meta_L: return Rk::Key::Key_Meta_Left;
+        case XK_Meta_R: return Rk::Key::Key_Meta_Right;
+        case XK_Alt_L: return Rk::Key::Key_Alt_Left;
+        case XK_Alt_R: return Rk::Key::Key_Alt_Right;
+        case XK_Super_L: return Rk::Key::Key_Super_Left;
+        case XK_Super_R: return Rk::Key::Key_Super_Right;
+        case XK_Hyper_L: return Rk::Key::Key_Hyper_Left;
+        case XK_Hyper_R: return Rk::Key::Key_Hyper_Right;
+
+        // Pointer control keys
+        case XK_Home: return Key_Home;                         0xff50
+        case XK_Left: Key_Left                         0xff51  /* Move left, left arrow */
+        case XK_Up:   return Key_Up                         0xff52  /* Move up, up arrow */
+        case XK_Right: return Key_Right;
+        case XK_Down:  return Key_down                        0xff54  /* Move down, down arrow */
+        case XK_Prior:                         0xff55  /* Prior, previous */
+        case XK_Page_Up:                       0xff55
+        case XK_Next:                          0xff56  /* Next */
+        case XK_Page_Down:                     0xff56
+        case XK_End:                           0xff57  /* EOL */
+        case XK_Begin:                         0xff58  /* BOL */
+        default: return Rk::Key::Key_None;
+        }
+}

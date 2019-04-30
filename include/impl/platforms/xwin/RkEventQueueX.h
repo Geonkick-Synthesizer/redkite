@@ -48,10 +48,14 @@ class RkEventQueueX
  protected:
         std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
         std::shared_ptr<RkEvent> processMouseMove(XEvent *e);
+        std::shared_ptr<RkEvent> processKeyEvent(XEvent *e);
+        void updateModifiers(Rk::Key key, RkEvent::Type type);
+        Rk::Key fromKeysym(int keycode);
 
  private:
        Display* xDisplay;
        std::chrono::system_clock::time_point lastTimePressed;
+       int keyModifiers;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

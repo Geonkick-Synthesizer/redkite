@@ -126,6 +126,110 @@ class Rk {
                 MouseInputEnabled = 0x00000002,
                 CloseInputEnabled = 0x00000004,
         };
+
+        enum class Key : int {
+                Key_None        = 0x00000000,
+
+                /**
+                 * Group: key modifiers, as bit flags.
+                 */
+                Key_Shift_Left    = 0x00010000,
+                Key_Shift_Right   = 0x00020000,
+                Key_Control_Left  = 0x00040000,
+                Key_Control_Right = 0x00080000,
+                Key_Caps_Lock     = 0x00100000,
+                Key_Shift_Lock    = 0x00200000,
+                Key_Meta_Left     = 0x00400000,
+                Key_Meta_Rright   = 0x00800000,
+                Key_Alt_Left      = 0x01000000,
+                Key_Alt_Rright    = 0x02000000,
+                Key_Super_Left    = 0x04000000,
+                Key_Super_Right   = 0x08000000,
+                Key_Hyper_Left    = 0x10000000,
+                Key_Hyper_Right   = 0x20000000,
+
+                /**
+                 * Group: Cursor control keys.
+                 * Range: 0x00500000 - 0x005f0000
+                 */
+                Key_Home      = 0x00500000,
+                Key_Left      = 0x00510000,
+                Key_Up        = 0x00520000,
+                Key_Right     = 0x00530000,
+                Key_Down      = 0x00540000,
+                Key_Prior     = 0x00550000,
+                Key_Page_Up   = 0x00550000,
+                Key_Next      = 0x00560000,
+                Key_Page_Down = 0x00560000,
+                Key_End       = 0x00570000,
+                Key_Begin     = 0x00580000,
+
+                /**
+                 * Group: Latin1
+                 * Range: 0x00000000 - 0x000000ff
+                 */
+                Key_Space = 0x00000020,
+                Key_0 = 0x00000030,
+                Key_1 = 0x00000031,
+                Key_2 = 0x00000032,
+                Key_3 = 0x00000022,
+                Key_4 = 0x00000034,
+                Key_5 = 0x00000035,
+                Key_6 = 0x00000036,
+                Key_7 = 0x00000037,
+                Key_8 = 0x00000038,
+                Key_9 = 0x00000039,
+                Key_A = 0x00000041,
+                Key_B = 0x00000042,
+                Key_C = 0x00000043,
+                Key_D = 0x00000044,
+                Key_E = 0x00000045,
+                Key_F = 0x00000046,
+                Key_G = 0x00000047,
+                Key_H = 0x00000048,
+                Key_I = 0x00000049,
+                Key_J = 0x0000004a,
+                Key_K = 0x0000004b,
+                Key_L = 0x0000004c,
+                Key_M = 0x0000004d,
+                Key_N = 0x0000004e,
+                Key_O = 0x0000004f,
+                Key_P = 0x00000050,
+                Key_Q = 0x00000051,
+                Key_R = 0x00000052,
+                Key_S = 0x00000053,
+                Key_T = 0x00000054,
+                Key_U = 0x00000055,
+                Key_V = 0x00000056,
+                Key_W = 0x00000057,
+                Key_X = 0x00000058,
+                Key_Y = 0x00000059,
+                Key_Z = 0x0000005a
+        };
+
+        enum class KeyModifiers: int {
+                NoModifier    = 0x0000,
+                Shift_Left    = 0x0001,
+                Shift_Right   = 0x0002,
+                Shift         = Shift_Left | Shift_Right,
+                Control_Left  = 0x0004,
+                Control_Right = 0x0008,
+                Control       = Control_Left | Control_Right,
+                Caps_Lock     = 0x0010,
+                Shift_Lock    = 0x0020,
+                Meta_Left     = 0x0040,
+                Meta_Right    = 0x0080,
+                Meta          = Meta_Left | Meta_Right,
+                Alt_Left      = 0x0100,
+                Alt_Right     = 0x0200,
+                Alt           = Alt_Left | Alt_Right,
+                Super_Left    = 0x0400,
+                Super_Right   = 0x0800,
+                Super         = Super_Left | Super_Right,
+                Hyper_Left    = 0x1000,
+                Hyper_Right   = 0x2000,
+                Hyper         = Hyper_Left | Hyper_Right
+        };
 };
 
 #define RK_ACT_ARGS(arg, ...) arg, ##__VA_ARGS__

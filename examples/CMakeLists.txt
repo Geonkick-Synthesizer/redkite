@@ -8,6 +8,7 @@ set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
 set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
 set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
 set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
+set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -137,3 +138,15 @@ add_dependencies(timer redkite)
 target_link_libraries(timer redkite)
 target_link_libraries(timer "-lX11 -lrt -lm -ldl")
 target_link_libraries(timer ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+# ------------ KeyEvent example -------
+
+add_executable(keyevent
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_KEYEVENT})
+
+add_dependencies(keyevent redkite)
+target_link_libraries(keyevent redkite)
+target_link_libraries(keyevent "-lX11 -lrt -lm -ldl")
+target_link_libraries(keyevent ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+

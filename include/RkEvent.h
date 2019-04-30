@@ -82,7 +82,24 @@ class RkCloseEvent: public RkEvent {
 class RkKeyEvent: public RkEvent {
    public:
         RkKeyEvent(Type type = Type::KeyPressed)
-                : RkEvent(type) {}
+                : RkEvent(type)
+                , keyValue{Rk::Key::Key_None}
+                , keyModifiers{0}
+        {
+        }
+
+        void setKey(Rk::Key key)
+        {
+                keyValue = key;
+        }
+        
+        Rk::Key key() const { return keyValue; }
+        void setModifiers(int mod) { keyModifiers = mod; }
+        int modifiers() const { return keyModifiers; }
+
+ private:
+        Rk::Key keyValue;
+        int keyModifiers;
 };
 
 class RkMouseEvent: public RkEvent {
