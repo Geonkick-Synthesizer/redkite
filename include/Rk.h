@@ -163,6 +163,21 @@ class Rk {
                 Key_Begin     = 0x00580000,
 
                 /**
+                 * Group: Other edit keys.
+                 * Range: 0x00590000 - 0x00620000
+                 */
+                 Key_BackSpace   = 0x00590000,
+                 Key_Tab         = 0x005a0000,
+                 Key_Linefeed    = 0x005b0000,
+                 Key_Clear       = 0x005c0000,
+                 Key_Return      = 0x005d0000,
+                 Key_Pause       = 0x005e0000,
+                 Key_Scroll_Lock = 0x005f0000,
+                 Key_Sys_Req     = 0x00600000,
+                 Key_Escape      = 0x00610000,
+                 Key_Delete      = 0x00620000,
+
+                /**
                  * Group: Latin1
                  * Range: 0x00000000 - 0x000000ff
                  */

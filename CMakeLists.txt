@@ -85,6 +85,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkTimer.h
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
+  ${RK_INCLUDE_PATH}/RkLineEdit.h
   ${RK_INCLUDE_PATH}/RkCanvas.h
   ${RK_INCLUDE_PATH}/RkImage.h
   ${RK_INCLUDE_PATH}/RkPainter.h
@@ -95,6 +96,7 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
   ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
   ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
@@ -132,6 +134,8 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkMainImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
+  ${RK_SRC_PATH}/RkLineEdit.cpp
+  ${RK_SRC_PATH}/RkLineEditImpl.cpp
   ${RK_SRC_PATH}/RkPainter.cpp
   ${RK_SRC_PATH}/RkImage.cpp
   ${RK_SRC_PATH}/RkImageImpl.cpp

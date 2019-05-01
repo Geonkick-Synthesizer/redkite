@@ -207,6 +207,8 @@ Rk::Key RkEventQueueX::fromKeysym(int keycode)
         case XK_Hyper_L: return Rk::Key::Key_Hyper_Left;
         case XK_Hyper_R: return Rk::Key::Key_Hyper_Right;
 
+        case XK_space: return Rk::Key::Key_Space;
+
         // Pointer control keys
         case XK_Home:  return Rk::Key::Key_Home;
         case XK_Left:  return Rk::Key::Key_Left;
@@ -217,6 +219,18 @@ Rk::Key RkEventQueueX::fromKeysym(int keycode)
         case XK_Page_Down: return Rk::Key::Key_Page_Down;
         case XK_End: return Rk::Key::Key_End;
         case XK_Begin: return Rk::Key::Key_Begin;
+
+        case XK_BackSpace: return Rk::Key::Key_BackSpace;
+        case XK_Tab: return Rk::Key::Key_Tab;
+        case XK_Linefeed: return Rk::Key::Key_Linefeed;
+        case XK_Clear: return Rk::Key::Key_Clear;
+        case XK_Return: return Rk::Key::Key_Return;
+        case XK_Pause: return Rk::Key::Key_Pause;
+        case XK_Scroll_Lock: return Rk::Key::Key_Scroll_Lock;
+        case XK_Sys_Req: return Rk::Key::Key_Sys_Req;
+        case XK_Escape: return Rk::Key::Key_Escape;
+        case XK_Delete: return Rk::Key::Key_Delete;
+
         default: return Rk::Key::Key_None;
         }
 }

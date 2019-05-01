@@ -24,6 +24,7 @@
 #include "RkMain.h"
 #include "RkWidget.h"
 #include "RkLog.h"
+#include "RkLineEdit.h"
 
 class  LineEditExample: public RkWidget {
   public:
@@ -31,10 +32,11 @@ class  LineEditExample: public RkWidget {
                 : RkWidget(parent)
         {
                 auto lineEdit = new RkLineEdit(this);
-                RK_ACT_BIND(lineEdit, textChanged, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                lineEdit->setBackgroundColor(80, 80, 80);
+                lineEdit->setSize(150, 25);
+                RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                lineEdit->show();
         }
-
-        ~PainterExample() = default;
 
   protected:
         void onUpdateText(const std::string &text)

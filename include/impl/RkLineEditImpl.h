@@ -24,6 +24,7 @@
 #ifndef RK_LINE_EDIT_IMPL_H
 #define RK_LINE_EDIT_IMPL_H
 
+#include "RkLineEdit.h"
 #include "RkWidgetImpl.h"
 
 class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
@@ -31,14 +32,19 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         RkLineEditImpl(RkLineEdit *interface,  RkWidget *parent = nullptr, const std::string &text = std::string());
         virtual ~RkLineEditImpl();
         void setText(const std::string &text);
+        void addText(const std::string& text);
+        void removeText(int n, bool after);
         std::string text() const;
-        void moveCursorLeft(int n = 1);
         void moveCursorRight(int n = 1);
+        void moveCursorLeft(int n = 1);
+        void enableSelectionMode(bool b);
 
  private:
     RK_DECALRE_INTERFACE_PTR(RkLineEdit)
     std::string editedText;
     int cursorIndex;
+    int selectionIndex;
+    bool isSelectionMode;
 };
 
 #endif // RK_LABEL_H

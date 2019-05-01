@@ -31,6 +31,7 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , editedText{text}
     , cursorIndex{0}
     , selectionIndex{0}
+    , isSelectionMode{false}
 {
 }
 
@@ -49,76 +50,70 @@ void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
 
 void RkLineEdit::RkLineEditImpl::moveCursorLeft(int n)
 {
-        if (isSelectionMode()) {
-                if (cursorIndex - n < 0)
-                        cursorIndex = 0;
-                else
-                        cursorIndex -= n;
+        if (editedText.empty()) {
+                cursorIndex = 0;
+        } else if (isSelectionMode) {
         } else {
-                if (selectionIndex - n < 0)
-                        selectionIndex = 0;
-                else
-                        selectionIndex -= n;
+                cursorIndex -= n;
+                if (cursorIndex < 0)
+                        cursorIndex = 0;
         }
 }
 
 void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
 {
-        if (isSelectionMode()) {
-                if (cursorIndex + n > editedText.size() - 1)
-                        cursorIndex = editedText.size() - 1;
-                else
-                        cursorIndex += n;
-        else {
-                if (selectionIndex + n > editedText.size() - 1)
-                        selectionIndex = editedText.size() - 1;
-                else
-                        selectionIndex += n;
+        if (editedText.empty()) {
+                cursorIndex = 0;
+        } else if (isSelectionMode) {
+        } else {
+                cursorIndex += n;
+                if (cursorIndex > editedText.size() - 1)
+                        cursorIndex = editedText.size();
         }
 }
 
-void RkLineEdit::RkLineEditImpl::addText(std::string& text)
+void RkLineEdit::RkLineEditImpl::addText(const std::string& text)
 {
-        if (selectionMode()) {
-                if (selectionIndex >= cursorIndex) {
-                        editedText.replace(cursorIndex, std::abs(selectionIndex - cursorIndex), text);
-                        cursorIndex += text.size();
-                } else {
-                        editedText.replace(selectionIndex, std::abs(selectionIndex - cursorIndex), text);
-                        cursorIndex = selectionIndex + text.size();
-                }
-                selectionIndex = cursorIndex;
+        if (isSelectionMode) {
         } else {
-                editedText.insert(cursorIndex, text);
+                if (cursorIndex == editedText.size())
+                        editedText += text;
+                else
+                        editedText.insert(cursorIndex, text);
                 cursorIndex += text.size();
         }
 }
 
 void RkLineEdit::RkLineEditImpl::removeText(int n, bool after)
 {
-        if (selectionMode())
-                n = std::abs(selectionIndex - cursorIndex);
-                
+        if (editedText.size() < 1)
+                return;
+        
         if (after) {
-                if (cursorIndex + n > editedText.size() - 1)
+                if (static_cast<decltype(editedText.size())>(cursorIndex + n) > editedText.size())
                         editedText.erase(cursorIndex, editedText.size() - 1);
                 else
                         editedText.erase(cursorIndex, n);
-        } else {
+        } else if (cursorIndex > 0) {
                 if (cursorIndex - n < 0) {
-                        editedText.erase(0, cursorIndex);
+                        editedText.erase(editedText.begin(), editedText.begin() + cursorIndex);
                         cursorIndex = 0;
                 } else {
-                        editedText.erase(cursorIndex - n, cursorIndex);
+                        editedText.erase(cursorIndex - n, n);
                         cursorIndex -= n;
-                }       
+                }
         }
 
-        if (selectionMode())
+        if (isSelectionMode)
                 selectionIndex = cursorIndex;
 }
 
 std::string RkLineEdit::RkLineEditImpl::text() const
 {
         return editedText;
+}
+
+void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
+{
+        isSelectionMode = b;
 }

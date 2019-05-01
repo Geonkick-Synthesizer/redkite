@@ -21,9 +21,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkLabel.h"
-#include "RkLabelImpl.h"
+#include "RkLineEdit.h"
+#include "RkLineEditImpl.h"
 #include "RkLog.h"
+#include "RkEvent.h"
 
 RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
         : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLineEdit::RkLineEditImpl>(this, parent, text)))
@@ -49,22 +50,43 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
-        impl_ptr->enableSelectionMode(event->modifiers() & Rk::KeyModifier::Shift);
+        //        impl_ptr->enableSelectionMode(event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift));
+
+        int diff = event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift) ? 0 : 0x61 - 0x41;
+        if (static_cast<int>(event->key()) >= static_cast<int>(Rk::Key::Key_A)
+            && static_cast<int>(event->key()) <= static_cast<int>(Rk::Key::Key_Z)) {
+                std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key()) + diff ));
+                impl_ptr->addText(str);
+                textEdited(impl_ptr->text());
+                return;
+        }
+
+        if (event->key() == Rk::Key::Key_Space) {
+                std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
+                impl_ptr->addText(str);
+                textEdited(impl_ptr->text());
+                return;
+        }
+        
+        
         switch (event->key())
         {
-        case Rk::Key::Left:
+        case Rk::Key::Key_Left:
                 impl_ptr->moveCursorLeft(1);
                 break;
-        case Rk::Key::Right:
+        case Rk::Key::Key_Right:
                 impl_ptr->moveCursorRight(1);
                 break;
-        case Rk::Key::Backspace:
+        case Rk::Key::Key_BackSpace:
                 impl_ptr->removeText(1, false);
+                textEdited(impl_ptr->text());
                 break;
-        case Rk::Key::Delete:
+        case Rk::Key::Key_Delete:
                 impl_ptr->removeText(1, true);
+                textEdited(impl_ptr->text());
                 break;
-
+        default:
+                break;
         }
         
         update();
