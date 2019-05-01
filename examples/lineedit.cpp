@@ -28,11 +28,12 @@
 
 class  LineEditExample: public RkWidget {
   public:
-        LineEditExample(RkWidget *parent = nullptr)
+        LineEditExample(const std::shared_ptr<RkEventQueue> &q, RkWidget *parent = nullptr)
                 : RkWidget(parent)
         {
+                setEventQueue(q.get());
                 auto lineEdit = new RkLineEdit(this);
-                lineEdit->setBackgroundColor(80, 80, 80);
+                //                lineEdit->setBackgroundColor(80, 80, 80);
                 lineEdit->setSize(150, 25);
                 RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
                 lineEdit->show();
@@ -49,7 +50,7 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new LineEditExample();
+    auto widget = new LineEditExample(app.eventQueue());
     widget->setTitle("Line Edit Example");
     widget->setSize(350, 350);
     widget->show();

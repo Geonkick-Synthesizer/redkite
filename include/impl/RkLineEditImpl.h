@@ -27,6 +27,8 @@
 #include "RkLineEdit.h"
 #include "RkWidgetImpl.h"
 
+class RkTimer;
+
 class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
  public:
         RkLineEditImpl(RkLineEdit *interface,  RkWidget *parent = nullptr, const std::string &text = std::string());
@@ -38,6 +40,11 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         void moveCursorRight(int n = 1);
         void moveCursorLeft(int n = 1);
         void enableSelectionMode(bool b);
+        std::string textToCursor() const;
+        bool isCursorHidden() const;
+
+ protected:
+        void onCursorTimeout();
 
  private:
     RK_DECALRE_INTERFACE_PTR(RkLineEdit)
@@ -45,6 +52,8 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
     int cursorIndex;
     int selectionIndex;
     bool isSelectionMode;
+    std::unique_ptr<RkTimer> cursorTimer;
+    bool hideCursor;
 };
 
 #endif // RK_LABEL_H

@@ -109,6 +109,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           void enableInput();
           void disableInput();
           RkWidget* getTopWindow();
+          void setEventQueue(RkEventQueue *eventQueue);
 
   protected:
           RK_DECLARE_IMPL(RkWidget)
@@ -134,7 +135,6 @@ class RK_EXPORT RkWidget: public RkCanvas {
 
           void addChild(RkWidget* child);
           friend class RkEventQueue;
-          void setEventQueue(RkEventQueue *eventQueue);
 };
 
 #endif // RK_WIDGET_H

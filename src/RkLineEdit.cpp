@@ -25,6 +25,7 @@
 #include "RkLineEditImpl.h"
 #include "RkLog.h"
 #include "RkEvent.h"
+#include "RkPainter.h"
 
 RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
         : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLineEdit::RkLineEditImpl>(this, parent, text)))
@@ -46,29 +47,43 @@ std::string RkLineEdit::text() const
 void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
+
+        {
+                RkPainter painter(this);
+                painter.fillRect(rect(), {150, 150, 150});
+        }
+
+        {
+                RkPainter painter(this);
+                auto r = rect();
+                painter.drawText(RkRect(r.left() + 3, r.top() + 3,
+                                 r.width() - 6, r.height() - 6), text(),
+                                 Rk::Alignment::AlignLeft);
+                if (!impl_ptr->isCursorHidden()) {
+                        int cursorX = painter.getTextWidth(impl_ptr->textToCursor());
+                        painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 3);
+                }
+        }
 }
 
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
-        //        impl_ptr->enableSelectionMode(event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift));
-
         int diff = event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift) ? 0 : 0x61 - 0x41;
         if (static_cast<int>(event->key()) >= static_cast<int>(Rk::Key::Key_A)
             && static_cast<int>(event->key()) <= static_cast<int>(Rk::Key::Key_Z)) {
                 std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key()) + diff ));
                 impl_ptr->addText(str);
                 textEdited(impl_ptr->text());
+                update();
                 return;
-        }
-
-        if (event->key() == Rk::Key::Key_Space) {
+        } else if (event->key() == Rk::Key::Key_Space) {
                 std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
                 impl_ptr->addText(str);
                 textEdited(impl_ptr->text());
+                update();
                 return;
         }
-        
-        
+      
         switch (event->key())
         {
         case Rk::Key::Key_Left:
@@ -111,4 +126,5 @@ void RkLineEdit::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &ev
 {
         RK_UNUSED(event);
 }
+
 

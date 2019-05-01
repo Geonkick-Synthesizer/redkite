@@ -56,6 +56,7 @@ class RK_EXPORT RkPainter {
         void setFont(const RkFont &font);
         void translate(const RkPoint &offset);
         void rotate(rk_real angle);
+        int getTextWidth(const std::string &text) const;
 
  protected:
         RK_DECLARE_IMPL(RkPainter)

@@ -24,6 +24,7 @@
 #include "RkLineEditImpl.h"
 #include "RkPainter.h"
 #include "RkLog.h"
+#include "RkTimer.h"
 
 RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *parent, const std::string &text)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -32,11 +33,16 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , cursorIndex{0}
     , selectionIndex{0}
     , isSelectionMode{false}
+    , cursorTimer{std::make_unique<RkTimer>(800, interface->eventQueue())}
+    , hideCursor{false}
 {
+        RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
+        cursorTimer->start();
 }
 
 RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
 {
+        cursorTimer->stop();
 }
 
 void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
@@ -113,7 +119,27 @@ std::string RkLineEdit::RkLineEditImpl::text() const
         return editedText;
 }
 
+std::string RkLineEdit::RkLineEditImpl::textToCursor() const
+{
+        if (editedText.empty())
+                return std::string();
+        else
+                return editedText.substr(0, cursorIndex);
+}
+
 void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
 {
         isSelectionMode = b;
+}
+
+bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
+{
+        return hideCursor;
+}
+
+void RkLineEdit::RkLineEditImpl::onCursorTimeout()
+{
+        RK_LOG_INFO("called");
+        hideCursor = !hideCursor;
+        inf_ptr->update(); 
 }

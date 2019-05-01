@@ -139,3 +139,7 @@ void RkPainter::rotate(rk_real angle)
         o_ptr->rotate(angle);
 }
 
+int RkPainter::getTextWidth(const std::string &text) const
+{
+        o_ptr->getTextWidth(text);
+}

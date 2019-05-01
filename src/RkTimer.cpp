@@ -33,8 +33,6 @@ RkTimer::RkTimer(int interval, RkEventQueue* queue)
         , lastTime{-1}
         , eventQueue{queue}
 {
-        if (!eventQueue)
-                RK_LOG_INFO("null");
         if (eventQueue)
                 eventQueue->subscribeTimer(this);
 }
@@ -90,6 +88,7 @@ int RkTimer::getCurrentTime() const
 
 void RkTimer::callTimeout()
 {
+        RK_LOG_INFO("called");
         timeout();
         lastTime = getCurrentTime();
 }
