@@ -29,8 +29,7 @@
 
 class RK_EXPORT RkLabel : public RkWidget {
  public:
-    RkLabel(RkWidget *parent = nullptr);
-    RkLabel(const std::string &text, RkWidget *parent = nullptr);
+    RkLabel(RkWidget *parent, const std::string &text = std::string());
     virtual ~RkLabel() = default;
     void setText(const std::string &text);
     std::string text() const;

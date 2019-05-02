@@ -40,6 +40,7 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
+class RkMain;
 struct RkWindowId;
 struct RkNativeWindowInfo;
 
@@ -49,8 +50,9 @@ class RK_EXPORT RkWidget: public RkCanvas {
           RK_CLASS_INFO(style_class, "")
           RK_CLASS_INFO(style_id, "")
 
-          explicit RkWidget(RkWidget *parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-          explicit RkWidget(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(RkMain *mainApp, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(RkWidget *parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           virtual ~RkWidget();
 
 	  void show();

@@ -58,8 +58,8 @@ private:
 
 class  PainterExample: public RkWidget {
   public:
-        PainterExample(RkWidget *parent = nullptr)
-                : RkWidget(parent)
+        PainterExample(RkMain *app)
+                : RkWidget(app)
                 , startDraw{false}
                 , timerLabel{nullptr}
                 , myTime{0}
@@ -71,14 +71,15 @@ class  PainterExample: public RkWidget {
                 RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool b), this, drawCircle(b));
                 button->show();
 
-                timerLabel = new RkLabel("Time: 0", this);
+                timerLabel = new RkLabel(this, "Timer");
                 timerLabel->setBackgroundColor(80, 80, 80);
                 timerLabel->setSize(100, 25);
                 timerLabel->setPosition(30, 80);
                 timerLabel->show();
 
-                timer = std::make_unique<RkTimer>(1000);
+                timer = std::make_unique<RkTimer>(1000, eventQueue());
                 RK_ACT_BIND(timer.get(), timeout, RK_ACT_ARGS(), this, onShowTime());
+                timer->start();
         }
 
         ~PainterExample() = default;
@@ -98,11 +99,6 @@ class  PainterExample: public RkWidget {
 
         void drawCircle(bool b)
         {
-                if (!timer->started()) {
-                        eventQueue()->subscribeTimer(timer.get());
-                        timer->start();
-                }
-
                 startDraw = b;
                 update();
         }
@@ -123,15 +119,10 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new PainterExample();
+    auto widget = new PainterExample(&app);
     widget->setTitle("Painter Example");
     widget->setSize(350, 350);
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("can't set top level window");
-            exit(1);
-    }
 
     return app.exec();
 }

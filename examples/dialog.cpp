@@ -9,7 +9,7 @@ int main(int arc, char **argv)
         RkMain app(arc, argv);
 
         // Create main window.
-        auto mainWindow = new RkWidget;
+        auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Main Window");
 	mainWindow->setPosition(180, 180);
         mainWindow->setSize(400, 500);
@@ -25,11 +25,6 @@ int main(int arc, char **argv)
         modal->setTitle("Dialog");
         modal->setBackgroundColor(80, 80, 80);
         modal->setSize(170, 110);
-
-        if (!app.setTopLevelWindow(mainWindow)) {
-                RK_LOG_ERROR("can't set top level window");
-                exit(1);
-        }
 
         mainWindow->show();
         modal->show();

@@ -8,7 +8,12 @@ class MyProperty : public RkWidget {
         RK_SET_CLASS_INFO(style_element, "MyProperty")
         RK_SET_CLASS_INFO(style_id, "MyID")
 
-        MyProperty(RkWidget *parent = nullptr) : RkWidget(parent)
+        MyProperty(RkMain *app) : RkWidget(app)
+        {
+                RK_LOG_INFO("called");
+        }
+
+        MyProperty(RkWidget *parent) : RkWidget(parent)
         {
                 RK_LOG_INFO("called");
         }
@@ -27,7 +32,7 @@ class OverrideMyProperty : public MyProperty {
         RK_SET_CLASS_INFO(style_class, "MyProperty")
         RK_SET_CLASS_INFO(style_id, "MyNewId")
 
-        OverrideMyProperty(RkWidget *parent = nullptr) : MyProperty(parent)
+        OverrideMyProperty(RkWidget *parent) : MyProperty(parent)
         {
                 RK_LOG_INFO("called");
         }
@@ -42,14 +47,9 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new MyProperty;
+    auto widget = new MyProperty(&app);
     widget->setTitle("Property Example");
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("can't set top level window");
-            exit(1);
-    }
 
     RK_LOG_DEBUG("element: " << widget->rk_property_style_element());
     RK_LOG_DEBUG("class: " << widget->rk_property_style_class());

@@ -72,6 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
         std::mutex actionsQueueMutex;
+        int myData;
         std::vector<RkTimer*> timersList;
 
 #ifdef RK_OS_WIN

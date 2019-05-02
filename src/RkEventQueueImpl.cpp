@@ -45,10 +45,12 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* eventQueueInterfa
         , platformEventQueue{std::make_unique<RkEventQueueX>()}
 #endif
 {
+        myData = 12345;
 }
 
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
+        RK_LOG_INFO("called");
 }
 
 bool RkEventQueue::RkEventQueueImpl::widgetExists(RkWidget *widget)
@@ -69,7 +71,8 @@ void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
                 platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
 #endif //!defined(Rk_OS_WIN) && !defined(Rk_OS_MAC)
         widgetList.push_back(widget);
-        widget->setEventQueue(inf_ptr);
+        if (!widget->eventQueue())
+                widget->setEventQueue(inf_ptr);
 }
 
 void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
@@ -163,13 +166,11 @@ void RkEventQueue::RkEventQueueImpl::processActions()
 
 void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)
 {
-        RK_LOG_INFO("called");
         timersList.push_back(timer);
 }
 
 void RkEventQueue::RkEventQueueImpl::unsubscribeTimer(RkTimer *timer)
 {
-        RK_LOG_INFO("called");
         for (auto it = timersList.begin(); it != timersList.end(); ++it) {
                 if (*it == timer) {
                        timersList.erase(it);

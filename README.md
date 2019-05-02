@@ -48,13 +48,14 @@ Audio Workstation as a host is loading audio GUI plugins.
 
 ### What was implemented
 
-* Widgets: RkWidget, RkLabel
+* Widgets: RkWidget, RkLabel, RkLineEdit
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
   RkPainter uses Cairo backend.
 * Actions: a binding mechanism between objects. An action can be posted in thread-safe manner.
-* Cross-platform: GNU/Linux (X11), Windows (Win API). No plans for Mac now.
+* Cross-platform: GNU/Linux (X11), Windows (Win API, partial). No plans for Mac now.
 * CMake system, build/install
 * rkpng2c - a tool that converts PNG images to C array encoded in ARGB32
+* RkTimer - a timer class
 
 Interface classes that now are implemented with the purpose of extending their functionality:
 
@@ -74,6 +75,8 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkRealPoint
 * RkRect
 * RkSize
+* RkTimer
+* RkLineEdit
 * RkWidget
 
 ### What applications were developed with Redkite?

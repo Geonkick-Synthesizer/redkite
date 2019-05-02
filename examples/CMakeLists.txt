@@ -61,7 +61,6 @@ else()
   target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 endif()
 
-
 # ------------ Property -------
 
 add_executable(property

@@ -26,17 +26,25 @@
 #include "RkEvent.h"
 #include "RkWidgetImpl.h"
 #include "RkPlatform.h"
+#include "RkMain.h"
+
+RkWidget::RkWidget(RkMain *mainApp, Rk::WindowFlags flags)
+        : o_ptr{std::make_shared<RkWidgetImpl>(this, nullptr, flags)}
+{
+        mainApp->setTopLevelWindow(this);
+}
+
+RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+        : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
+{
+        mainApp->setTopLevelWindow(this);
+}
 
 RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
         : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
 {
         if (parent)
                 parent->addChild(this);
-}
-
-RkWidget::RkWidget(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
-{
 }
 
 RkWidget::RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl)

@@ -33,7 +33,7 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , cursorIndex{0}
     , selectionIndex{0}
     , isSelectionMode{false}
-    , cursorTimer{std::make_unique<RkTimer>(800, interface->eventQueue())}
+    , cursorTimer{std::make_unique<RkTimer>(500, parent->eventQueue())}
     , hideCursor{false}
 {
         RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
@@ -139,7 +139,6 @@ bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 
 void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 {
-        RK_LOG_INFO("called");
         hideCursor = !hideCursor;
         inf_ptr->update(); 
 }

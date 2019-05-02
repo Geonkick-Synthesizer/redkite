@@ -56,8 +56,8 @@ private:
 
 class  PainterExample: public RkWidget {
   public:
-        PainterExample(RkWidget *parent = nullptr)
-                : RkWidget(parent)
+        PainterExample(RkMain *app)
+                : RkWidget(app)
                 , startDraw{false}
         {
                 auto button = new Button(this);
@@ -97,15 +97,10 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new PainterExample;
+    auto widget = new PainterExample(&app);
     widget->setTitle("Painter Example");
     widget->setSize(350, 350);
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("can't set top level window");
-            exit(1);
-    }
 
     return app.exec();
 }

@@ -28,7 +28,7 @@
 
 class RK_EXPORT RkLineEdit : public RkWidget {
  public:
-    RkLineEdit(RkWidget *parent = nullptr, const std::string &text = std::string());
+    RkLineEdit(RkWidget *parent, const std::string &text = std::string());
     virtual ~RkLineEdit() = default;
     RK_DECL_ACT(textEdited, textEdited(const std::string &text), RK_ARG_TYPE(const std::string&), RK_ARG_VAL(text)); 
     void setText(const std::string &text);

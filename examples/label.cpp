@@ -3171,7 +3171,7 @@ int main(int arc, char **argv)
         RkMain app(arc, argv);
 
         // Create main window.
-        auto widget = new RkWidget;
+        auto widget = new RkWidget(&app);
         widget->setTitle("Label Example");
         widget->setSize(250, 250);
 
@@ -3203,12 +3203,6 @@ int main(int arc, char **argv)
         label->setSize(100, 94);
         label->setBackgroundColor(200, 200, 200);
         label->show();
-
-
-        if (!app.setTopLevelWindow(widget)) {
-                RK_LOG_ERROR("can't set top level window");
-                exit(1);
-        }
 
         widget->show();
 

@@ -45,7 +45,6 @@ RkTimer::~RkTimer()
 
 void RkTimer::start()
 {
-        RK_LOG_INFO("called");
         timerStarted = true;
         lastTime = getCurrentTime();
 }
@@ -57,7 +56,6 @@ bool RkTimer::started() const
 
 void RkTimer::stop()
 {
-        RK_LOG_INFO("called");
         timerStarted = false;
 }
 
@@ -88,7 +86,6 @@ int RkTimer::getCurrentTime() const
 
 void RkTimer::callTimeout()
 {
-        RK_LOG_INFO("called");
         timeout();
         lastTime = getCurrentTime();
 }

@@ -103,7 +103,6 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         default:
                 break;
         }
-        
         update();
 }
 

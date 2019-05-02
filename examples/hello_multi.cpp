@@ -13,17 +13,12 @@ static int func1()
 {
     RkMain app;
 
-    auto widget = new RkWidget;
+    auto widget = new RkWidget(&app);
     widget->setTitle("Hello First!");
     widget->setX(10);
     widget->setY(10);
     widget->setSize(250, 250);
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("first: can't set top level window");
-            exit(1);
-    }
 
     return app.exec();
 }
@@ -32,17 +27,12 @@ static int func2()
 {
     RkMain app;
 
-    auto widget = new RkWidget;;
+    auto widget = new RkWidget(&app);
     widget->setTitle("Hello Second!");
     widget->setX(100);
     widget->setY(100);
     widget->setSize(300, 400);
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("second: can't set top level window");
-            exit(1);
-    }
 
     return app.exec();
 }

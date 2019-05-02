@@ -28,12 +28,10 @@
 
 class  LineEditExample: public RkWidget {
   public:
-        LineEditExample(const std::shared_ptr<RkEventQueue> &q, RkWidget *parent = nullptr)
-                : RkWidget(parent)
+        LineEditExample(RkMain *app)
+                : RkWidget(app)
         {
-                setEventQueue(q.get());
                 auto lineEdit = new RkLineEdit(this);
-                //                lineEdit->setBackgroundColor(80, 80, 80);
                 lineEdit->setSize(150, 25);
                 RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
                 lineEdit->show();
@@ -50,15 +48,10 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new LineEditExample(app.eventQueue());
+    auto widget = new LineEditExample(&app);
     widget->setTitle("Line Edit Example");
     widget->setSize(350, 350);
     widget->show();
-
-    if (!app.setTopLevelWindow(widget)) {
-            RK_LOG_ERROR("can't set top level window");
-            exit(1);
-    }
 
     return app.exec();
 }

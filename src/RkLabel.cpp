@@ -25,13 +25,7 @@
 #include "RkLabelImpl.h"
 #include "RkLog.h"
 
-RkLabel::RkLabel(RkWidget *parent)
-        : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, std::string(), parent)))
-        , impl_ptr{std::static_pointer_cast<RkLabel::RkLabelImpl>(o_ptr)}
-{
-}
-
-RkLabel::RkLabel(const std::string &text, RkWidget *parent)
+RkLabel::RkLabel(RkWidget *parent, const std::string &text)
         : RkWidget(parent, std::static_pointer_cast<RkLabel::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, text, parent)))
         , impl_ptr{std::static_pointer_cast<RkLabel::RkLabelImpl>(o_ptr)}
 {
