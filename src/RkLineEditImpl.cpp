@@ -94,7 +94,7 @@ void RkLineEdit::RkLineEditImpl::removeText(int n, bool after)
 {
         if (editedText.size() < 1)
                 return;
-        
+
         if (after) {
                 if (static_cast<decltype(editedText.size())>(cursorIndex + n) > editedText.size())
                         editedText.erase(cursorIndex, editedText.size() - 1);
@@ -140,5 +140,5 @@ bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 {
         hideCursor = !hideCursor;
-        inf_ptr->update(); 
+        inf_ptr->update();
 }

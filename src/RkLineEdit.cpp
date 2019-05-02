@@ -68,41 +68,29 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
-        int diff = event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift) ? 0 : 0x61 - 0x41;
-        if (static_cast<int>(event->key()) >= static_cast<int>(Rk::Key::Key_A)
-            && static_cast<int>(event->key()) <= static_cast<int>(Rk::Key::Key_Z)) {
-                std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key()) + diff ));
-                impl_ptr->addText(str);
-                textEdited(impl_ptr->text());
-                update();
-                return;
-        } else if (event->key() == Rk::Key::Key_Space) {
-                std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
-                impl_ptr->addText(str);
-                textEdited(impl_ptr->text());
-                update();
-                return;
-        }
-      
         switch (event->key())
         {
         case Rk::Key::Key_Left:
                 impl_ptr->moveCursorLeft(1);
-                break;
+                return;
         case Rk::Key::Key_Right:
                 impl_ptr->moveCursorRight(1);
-                break;
+                return;
         case Rk::Key::Key_BackSpace:
                 impl_ptr->removeText(1, false);
                 textEdited(impl_ptr->text());
-                break;
+                return;
         case Rk::Key::Key_Delete:
                 impl_ptr->removeText(1, true);
                 textEdited(impl_ptr->text());
-                break;
+                return;
         default:
                 break;
         }
+
+        std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
+        impl_ptr->addText(str);
+        textEdited(impl_ptr->text());
         update();
 }
 

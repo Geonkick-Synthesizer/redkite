@@ -180,13 +180,8 @@ void RkEventQueueX::updateModifiers(Rk::Key key, RkEvent::Type type)
 
 Rk::Key RkEventQueueX::fromKeysym(int keycode)
 {
-        // Latin1: A - Z
-        auto diff = keyModifiers & static_cast<int>(Rk::KeyModifiers::Shift) ? 0 : 0x61 - 0x41;
-        if (static_cast<int>(Rk::Key::Key_A) + diff <= keycode && keycode <= static_cast<int>(Rk::Key::Key_Z) + diff)
-                return static_cast<Rk::Key>(keycode - diff);
-
-        // Numbers: 0 - 9
-        if (static_cast<int>(Rk::Key::Key_0) <= keycode && keycode <= static_cast<int>(Rk::Key::Key_9))
+        // Latine1
+        if (0x00000020 <= keycode && keycode <= 0x000000ff)
                 return static_cast<Rk::Key>(keycode);
 
         switch (keycode)
