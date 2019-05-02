@@ -252,20 +252,19 @@ class Rk {
 #define RK_DECL_ACT(name, prot, type, val) \
         void prot \
         { \
-                for (const auto &cb: rk_actions_ ##name ) \
+                for (const auto &cb: rk_actions_cb_ ##name ) \
                         cb(val); \
         } \
-        void add_action_cb_##name (const std::function<void(type)> &cb) \
+        void rk_add_action_cb_##name (const std::function<void(type)> &cb) \
         { \
-                rk_actions_ ##name.push_back(cb); \
+                rk_actions_cb_##name.push_back(cb); \
         } \
-        std::vector<std::function<void(type)>> rk_actions_ ##name
-
+        std::vector<std::function<void(type)>> rk_actions_cb_ ##name
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->add_action_cb_##act ([=](act_args){ obj2->callback; })
+        obj1->rk_add_action_cb_##act ([=](act_args){ obj2->callback; })
 
-#define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_##act.clear();
+#define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_cb_##act.clear();
 
 #define RK_CALL_ACT(name, args) name(args)
 
