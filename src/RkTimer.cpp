@@ -59,7 +59,7 @@ void RkTimer::stop()
         timerStarted = false;
 }
 
-int RkTimer::interval() const
+long int RkTimer::interval() const
 {
         return timerInterval;
 }
@@ -79,7 +79,7 @@ bool RkTimer::isTimeout() const
         return false;
 }
 
-int RkTimer::getCurrentTime() const
+long int RkTimer::getCurrentTime() const
 {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }

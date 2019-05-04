@@ -36,20 +36,20 @@ class RK_EXPORT RkTimer {
         void start();
         void stop();
         bool started() const;
-        int interval() const;
+        long int interval() const;
         void setInterval(int val);
         bool isTimeout() const;
         void callTimeout();
 
  protected:
-        int getCurrentTime() const;
+        long int getCurrentTime() const;
 
  private:
         RK_DISABLE_COPY(RkTimer)
         RK_DISABLE_MOVE(RkTimer)
-        int timerInterval;
+        long int timerInterval;
         bool timerStarted;
-        int lastTime;
+        long int lastTime;
         RkEventQueue *eventQueue;
 };
 

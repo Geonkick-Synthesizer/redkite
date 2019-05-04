@@ -92,7 +92,7 @@ class RkKeyEvent: public RkEvent {
         {
                 keyValue = key;
         }
-        
+
         Rk::Key key() const { return keyValue; }
         void setModifiers(int mod) { keyModifiers = mod; }
         int modifiers() const { return keyModifiers; }
