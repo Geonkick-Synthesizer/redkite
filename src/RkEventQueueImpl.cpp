@@ -139,10 +139,10 @@ void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
         platformEventQueue->getEvents(eventsQueue);
-        for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
-                processEvent(it->first, it->second);
-                it = eventsQueue.erase(it);
-        }
+        decltype(eventsQueue) queue = eventsQueue;
+        eventsQueue.clear();
+        for (const auto &e: queue)
+                processEvent(e.first, e.second);
 }
 
 void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> &act)

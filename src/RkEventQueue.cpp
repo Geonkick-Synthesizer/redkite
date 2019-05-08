@@ -115,3 +115,9 @@ void RkEventQueue::processTimers()
         o_ptr->processTimers();
 }
 
+void RkEventQueue::processQueue()
+{
+        processTimers();
+        processActions();
+        processEvents();
+}

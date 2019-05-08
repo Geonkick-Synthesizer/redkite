@@ -52,6 +52,7 @@ class RK_EXPORT RkEventQueue {
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processTimers();
+        void processQueue();
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue)
