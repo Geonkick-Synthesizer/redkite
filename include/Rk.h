@@ -101,6 +101,11 @@ class Rk {
                 AlignCenter = 3
         };
 
+        enum class Orientation : int {
+                Horizontal = 0,
+                Vertical = 1
+        };
+
         enum class WindowFlags: int {
                 Widget = 0x00000000,
                 Dialog = 0x00000001,
