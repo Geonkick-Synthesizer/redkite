@@ -23,15 +23,16 @@
 
 #include "RkProgressBarImpl.h"
 #include "RkPainter.h"
+#include "RkImage.h"
 #include "RkLog.h"
 
 RkProgressBar::RkProgressBarImpl::RkProgressBarImpl(RkProgressBar *interface, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
-    , minimumValue{0}
-    , maximumValue{100}
-    , currentValue{0}
-    , progressColor{0}
+    , beginVal{0}
+    , endVal{100}
+    , currentVal{beginVal}
+    , progressColor{52, 116, 209}
     , progressOrientation{Rk::Orientation::Horizontal}
 {
 }
@@ -41,27 +42,31 @@ RkProgressBar::RkProgressBarImpl::~RkProgressBarImpl()
 }
 
 
-int RkProgressBar::RkProgressBarImpl::minVal() const
+int RkProgressBar::RkProgressBarImpl::beginValue() const
 {
-        return minimumValue;
+        return beginVal;
 }
 
-void RkProgressBar::RkProgressBarImpl::setMinVal(int val) const
+void RkProgressBar::RkProgressBarImpl::setBeginValue(int val)
 {
-        minimumValue = val;
+        if (currentVal < val)
+                currentVal = val;
+        beginVal = val;
 }
 
-int RkProgressBar::RkProgressBarImpl::maxVal() const
+int RkProgressBar::RkProgressBarImpl::endValue() const
 {
-        return maximumValue;
+        return endVal;
 }
 
-int RkProgressBar::RkProgressBarImpl::setMaxVal(int val)
+void RkProgressBar::RkProgressBarImpl::setEndValue(int val)
 {
-        maximumValue = val;
+        if (currentVal > val)
+                currentVal = val;
+        endVal = val;
 }
 
-Rk::Orinetation RkProgressBar::RkProgressBarImpl::orientation() const
+Rk::Orientation RkProgressBar::RkProgressBarImpl::orientation() const
 {
         return progressOrientation;
 }
@@ -71,14 +76,19 @@ void RkProgressBar::RkProgressBarImpl::setOrientation(Rk::Orientation orientatio
         progressOrientation  = orientation;
 }
 
-int RkProgressBar::RkProgressBarImpl::value(Rk::Orientation orientation) const
+int RkProgressBar::RkProgressBarImpl::value() const
 {
-        return currentValue;
+        return currentVal;
 }
 
 void RkProgressBar::RkProgressBarImpl::setValue(int val)
 {
-        currentValue = val;
+        if (val > endVal)
+                currentVal = endVal;
+        else if (val < beginVal)
+                currentVal = beginVal;
+        else
+                currentVal = val;
 }
 
 void RkProgressBar::RkProgressBarImpl::setProgressColor(const RkColor &color)
@@ -88,14 +98,20 @@ void RkProgressBar::RkProgressBarImpl::setProgressColor(const RkColor &color)
 
 void RkProgressBar::RkProgressBarImpl::drawProgressBar()
 {
-        RkImage img(width(), height());
+        RkSize thisSize = size();
+        RkImage img(thisSize);
         RkPainter painter(&img);
         painter.fillRect(rect(), background());
-        int range = maximumValue - minimumValue;
-        if (range > 0) {
+        int range = std::abs(endVal - beginVal);
+        if (range > 0 && thisSize.width() > 0 && thisSize.height() > 0) {
                 if (progressOrientation == Rk::Orientation::Horizontal)
-                        painter.fillRect(RkRect(0, 0, currentValue * width() / range, height()), background());
+                        painter.fillRect(RkRect(0, 0, currentVal * thisSize.width() / range, thisSize.height()),
+                                         progressColor);
                 else
+                        painter.fillRect(RkRect(0, 0, thisSize.width(), currentVal * thisSize.height() / range),
+                                         progressColor);
+                RkPainter paint(inf_ptr);
+                paint.drawImage(img, 0, 0);
          }
 }
 

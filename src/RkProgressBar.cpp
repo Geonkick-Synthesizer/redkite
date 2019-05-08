@@ -29,34 +29,35 @@ RkProgressBar::RkProgressBar(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkProgressBar::RkWidgetImpl>(std::make_shared<RkProgressBar::RkProgressBarImpl>(this, parent)))
         , impl_ptr{std::static_pointer_cast<RkProgressBar::RkProgressBarImpl>(o_ptr)}
 {
+        show();
 }
 
-int RkProgressBar::maximumValue() const
+int RkProgressBar::beginValue() const
 {
-        return impl_ptr->maxVal();
+        return impl_ptr->beginValue();
 }
 
-void RkProgressBar::setMaximum(int maximum)
+void RkProgressBar::setBeginValue(int value)
 {
-        impl_ptr->setMaxVal(maximum);
+        impl_ptr->setBeginValue(value);
         update();
 }
 
-int RkProgressBar::minimumValue() const
+int RkProgressBar::endValue() const
 {
-        return impl_ptr->minVal();
+        return impl_ptr->endValue();
 }
 
-void RkProgressBar::setMinimum(int minimum)
+void RkProgressBar::setEndValue(int value)
 {
-        impl_ptr->setMinVal(minimum);
+        impl_ptr->setEndValue(value);
         update();
 }
 
-void RkProgressBar::setRange(int minimum, int maximum)
+void RkProgressBar::setRange(int begin, int end)
 {
-        impl_ptr->setMinVal(minimum);
-        impl_ptr->setMaxVal(minimum);
+        impl_ptr->setBeginValue(begin);
+        impl_ptr->setEndValue(end);
         update();
 }
 
@@ -84,7 +85,7 @@ void RkProgressBar::setValue(int value)
 
 void RkProgressBar::reset()
 {
-        setValue(minimumValue());
+        setValue(beginValue());
 }
 
 void RkProgressBar::setProgressColor(const RkColor &color)

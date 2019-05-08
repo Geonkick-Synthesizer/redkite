@@ -28,16 +28,15 @@
 
 class RK_EXPORT RkProgressBar : public RkWidget {
  public:
-        
     RkProgressBar(RkWidget *parent);
-    int maximumValue() const;
-    void setMaximum(int maximum)
-    int minimumValue() const;
-    void setMinimum(int minimum)
-    void setRange(int minimum, int maximum);
+    int beginValue() const;
+    void setBeginValue(int value);
+    int endValue() const;
+    void setEndValue(int value);
+    void setRange(int begin, int end);
+    int value() const;
     Rk::Orientation orientation() const;
     void setOrientation(Rk::Orientation orientation);
-    int value() const;           
     void setValue(int value);
     void reset();
     void setProgressColor(const RkColor &color);

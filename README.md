@@ -77,6 +77,7 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkSize
 * RkTimer
 * RkLineEdit
+* RkProgressBar
 * RkWidget
 
 ### What applications were developed with Redkite?

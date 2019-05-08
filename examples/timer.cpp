@@ -30,6 +30,7 @@
 #include "RkEventQueue.h"
 #include "RkLabel.h"
 #include "RkTimer.h"
+#include "RkProgressBar.h"
 
 class Button: public RkWidget {
   public:
@@ -64,12 +65,19 @@ class  PainterExample: public RkWidget {
                 , timerLabel{nullptr}
                 , myTime{0}
         {
+                setSize(350, 350);
                 auto button = new Button(this);
                 button->setPosition(30, 30);
                 button->setSize({30, 30});
                 button->setBackgroundColor(255, 30, 100);
                 RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool b), this, drawCircle(b));
                 button->show();
+
+                progressBar = new RkProgressBar(this);
+                progressBar->setRange(0, 23);
+                progressBar->setSize(width() - 10, 5);
+                progressBar->setPosition(5, 150);
+                progressBar->setProgressColor({0, 200, 0});
 
                 timerLabel = new RkLabel(this, "Timer");
                 timerLabel->setBackgroundColor(80, 80, 80);
@@ -105,7 +113,8 @@ class  PainterExample: public RkWidget {
 
         void onShowTime()
         {
-                timerLabel->setText(std::to_string(myTime++) + "s");
+                timerLabel->setText(std::to_string(myTime) + "s");
+                progressBar->setValue(myTime++);
         }
 
   private:
@@ -113,6 +122,7 @@ class  PainterExample: public RkWidget {
         RkLabel *timerLabel;
         int myTime;
         std::unique_ptr<RkTimer> timer;
+        RkProgressBar *progressBar;
 };
 
 int main(int arc, char **argv)
@@ -121,7 +131,6 @@ int main(int arc, char **argv)
 
     auto widget = new PainterExample(&app);
     widget->setTitle("Painter Example");
-    widget->setSize(350, 350);
     widget->show();
 
     return app.exec();
