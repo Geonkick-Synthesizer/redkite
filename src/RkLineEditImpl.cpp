@@ -34,10 +34,11 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , selectionIndex{0}
     , isSelectionMode{false}
     , cursorTimer{std::make_unique<RkTimer>(500, parent->eventQueue())}
-    , hideCursor{false}
+    , isShowCursor{hasFocus()}
+    , lastCahnges{std::chrono::system_clock::now()}
 {
         RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
-        cursorTimer->start();
+        hasFocus() ? showCursor(true) : showCursor(false);
 }
 
 RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
@@ -52,6 +53,7 @@ void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
                 cursorIndex = 0;
         else if (cursorIndex > editedText.size() - 1)
                 cursorIndex = editedText.size() - 1;
+        lastCahnges = std::chrono::system_clock::now();
 }
 
 void RkLineEdit::RkLineEditImpl::moveCursorLeft(int n)
@@ -64,6 +66,7 @@ void RkLineEdit::RkLineEditImpl::moveCursorLeft(int n)
                 if (cursorIndex < 0)
                         cursorIndex = 0;
         }
+        lastCahnges = std::chrono::system_clock::now();
 }
 
 void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
@@ -76,6 +79,7 @@ void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
                 if (cursorIndex > editedText.size() - 1)
                         cursorIndex = editedText.size();
         }
+        lastCahnges = std::chrono::system_clock::now();
 }
 
 void RkLineEdit::RkLineEditImpl::addText(const std::string& text)
@@ -88,6 +92,7 @@ void RkLineEdit::RkLineEditImpl::addText(const std::string& text)
                         editedText.insert(cursorIndex, text);
                 cursorIndex += text.size();
         }
+        lastCahnges = std::chrono::system_clock::now();
 }
 
 void RkLineEdit::RkLineEditImpl::removeText(int n, bool after)
@@ -112,6 +117,7 @@ void RkLineEdit::RkLineEditImpl::removeText(int n, bool after)
 
         if (isSelectionMode)
                 selectionIndex = cursorIndex;
+        lastCahnges = std::chrono::system_clock::now();
 }
 
 std::string RkLineEdit::RkLineEditImpl::text() const
@@ -134,11 +140,19 @@ void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
 
 bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 {
-        return hideCursor;
+        return !isShowCursor;
 }
 
 void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 {
-        hideCursor = !hideCursor;
-        inf_ptr->update();
+        if (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - lastCahnges).count() > 1000) {
+                isShowCursor = !isShowCursor;
+                inf_ptr->update();
+        }
+}
+
+void RkLineEdit::RkLineEditImpl::showCursor(bool b)
+{
+        isShowCursor = b;
+        isShowCursor ? cursorTimer->start() : cursorTimer->stop();
 }

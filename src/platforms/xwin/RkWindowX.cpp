@@ -112,7 +112,7 @@ bool RkWindowX::init()
         XSelectInput(xDisplay, xWindow, ExposureMask
                                         | KeyPressMask | KeyReleaseMask
                                         | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
-                                        | StructureNotifyMask);
+                                        | StructureNotifyMask | FocusChangeMask);
 
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
@@ -310,3 +310,8 @@ void RkWindowX::freeCanvasInfo()
 #else
 #error No graphics backend defined
 #endif // RK_GRAPHICS_CAIRO_BACKEND
+
+void RkWindowX::setFocus()
+{
+        XSetInputFocus(display(), xWindow, RevertToPointerRoot, CurrentTime);
+}

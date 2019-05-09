@@ -87,6 +87,12 @@ class RkWidget::RkWidgetImpl {
         void setWidgetAttribute(Rk::WidgetAttribute attribute);
         void clearWidgetAttribute(Rk::WidgetAttribute attribute);
         Rk::WidgetAttribute getWidgetAttributes() const;
+        void setFocus(bool b);
+        bool hasFocus() const;
+        void setTextColor(const RkColor &color);
+        const RkColor& textColor() const;
+        const RkColor& color() const;
+        void setColor(const RkColor &color);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -107,6 +113,9 @@ class RkWidget::RkWidgetImpl {
         RkColor widgetBackground;
         Rk::WidgetAttribute widgetAttributes;
         Rk::Modality widgetModality;
+        bool widgetHasFocus;
+        RkColor widgetTextColor;
+        RkColor widgetDrawingColor;
 };
 
 #endif // RK_WIDGET_IMPL_H

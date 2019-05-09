@@ -50,15 +50,21 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
         {
                 RkPainter painter(this);
-                painter.fillRect(rect(), {150, 150, 150});
+                painter.fillRect(rect(), background());
         }
 
         {
                 RkPainter painter(this);
                 auto r = rect();
+                auto pen = painter.pen();
+                pen.setColor(textColor());
+                painter.setPen(pen);
                 painter.drawText(RkRect(r.left() + 3, r.top() + 3,
                                  r.width() - 6, r.height() - 6), text(),
                                  Rk::Alignment::AlignLeft);
+                pen = painter.pen();
+                pen.setColor(color());
+                painter.setPen(pen);
                 if (!impl_ptr->isCursorHidden()) {
                         int cursorX = painter.getTextWidth(impl_ptr->textToCursor());
                         painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 3);
@@ -68,6 +74,10 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
+        if (!hasFocus())
+                return;
+
+        showCursor();
         switch (event->key())
         {
         case Rk::Key::Key_Left:
@@ -83,6 +93,7 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         case Rk::Key::Key_Delete:
                 impl_ptr->removeText(1, true);
                 textEdited(impl_ptr->text());
+                update();
                 return;
         default:
                 break;
@@ -104,14 +115,35 @@ void RkLineEdit::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
         RK_UNUSED(event);
 }
 
-void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+//void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+//{
+//        RK_UNUSED(event);
+        //        setFocus(true);
+        //        showCursor();
+//}
+
+//void RkLineEdit::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
+//{
+//        RK_UNUSED(event);
+//}
+
+
+void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
         RK_UNUSED(event);
+        RK_LOG_INFO("called");
+        setFocus(event->type() == RkEvent::Type::FocusedIn);
+        hasFocus() ? showCursor() : hideCursor();
 }
 
-void RkLineEdit::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkLineEdit::showCursor()
 {
-        RK_UNUSED(event);
+        impl_ptr->showCursor(true);
+        update();
 }
 
-
+void RkLineEdit::hideCursor()
+{
+        impl_ptr->showCursor(false);
+        update();
+}

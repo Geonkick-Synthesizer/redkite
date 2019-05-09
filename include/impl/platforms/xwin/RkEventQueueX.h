@@ -49,6 +49,7 @@ class RkEventQueueX
         std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
         std::shared_ptr<RkEvent> processMouseMove(XEvent *e);
         std::shared_ptr<RkEvent> processKeyEvent(XEvent *e);
+        std::shared_ptr<RkEvent> processFocusEvent(XEvent *e);
         void updateModifiers(Rk::Key key, RkEvent::Type type);
         Rk::Key fromKeysym(int keycode);
 

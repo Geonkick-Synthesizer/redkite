@@ -40,6 +40,7 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
+class RkFocusEvent;
 class RkMain;
 struct RkWindowId;
 struct RkNativeWindowInfo;
@@ -99,6 +100,10 @@ class RK_EXPORT RkWidget: public RkCanvas {
           const RkColor& background() const;
           void setBorderColor(int red, int green, int blue);
           const RkColor& borderColor() const;
+          void setTextColor(const RkColor &color);
+          const RkColor& textColor() const;
+          const RkColor& color() const;
+          void setColor(const RkColor &color);
           std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
           RkRect rect() const;
           void update();
@@ -112,6 +117,8 @@ class RK_EXPORT RkWidget: public RkCanvas {
           void disableInput();
           RkWidget* getTopWindow();
           void setEventQueue(RkEventQueue *eventQueue);
+          void setFocus(bool b);
+          bool hasFocus() const;
 
   protected:
           RK_DECLARE_IMPL(RkWidget)
@@ -130,6 +137,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
           virtual void showEvent(const std::shared_ptr<RkShowEvent> &event);
           virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
+          virtual void focusEvent(const std::shared_ptr<RkFocusEvent> &event);
 
  private:
           RK_DISABLE_COPY(RkWidget)

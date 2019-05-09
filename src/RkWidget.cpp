@@ -329,6 +329,26 @@ const RkColor& RkWidget::background() const
         return o_ptr->background();
 }
 
+void RkWidget::setTextColor(const RkColor &color)
+{
+        return o_ptr->setTextColor(color);
+}
+
+const RkColor& RkWidget::textColor() const
+{
+        return o_ptr->textColor();
+}
+
+const RkColor& RkWidget::color() const
+{
+        return o_ptr->color();
+}
+
+void RkWidget::setColor(const RkColor &color)
+{
+        return o_ptr->setColor(color);
+}
+
 RkWidget* RkWidget::parent() const
 {
         return o_ptr->parent();
@@ -394,6 +414,7 @@ void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 
 void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
+        setFocus(true);
         RK_UNUSED(event);
 }
 
@@ -435,6 +456,11 @@ void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
 void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 {
         RK_UNUSED(event);
+}
+
+void RkWidget::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
+{
+        update();
 }
 
 void RkWidget::setEventQueue(RkEventQueue *eventQueue)
@@ -499,3 +525,14 @@ RkWidget* RkWidget::getTopWindow()
                 return this;
         return parent()->getTopWindow();
 }
+
+void RkWidget::setFocus(bool b)
+{
+        o_ptr->setFocus(b);
+}
+
+bool RkWidget::hasFocus() const
+{
+        return o_ptr->hasFocus();
+}
+

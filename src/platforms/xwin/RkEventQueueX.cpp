@@ -76,6 +76,10 @@ void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<
                 case KeyRelease:
                         event = processKeyEvent(&e);
                         break;
+                case FocusIn:
+                case FocusOut:
+                        event = processFocusEvent(&e);
+                        break;
                 case ButtonPress:
                         event = processButtonPressEvent(&e);
                         break;
@@ -229,3 +233,11 @@ Rk::Key RkEventQueueX::fromKeysym(int keycode)
         default: return Rk::Key::Key_None;
         }
 }
+
+std::shared_ptr<RkEvent> RkEventQueueX::processFocusEvent(XEvent *e)
+{
+        auto event = std::make_shared<RkFocusEvent>();
+        event->setType(e->type == FocusIn ? RkEvent::Type::FocusedIn : RkEvent::Type::FocusedOut);
+        return event;
+}
+

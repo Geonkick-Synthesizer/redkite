@@ -33,11 +33,22 @@ class  LineEditExample: public RkWidget {
         {
                 auto lineEdit = new RkLineEdit(this);
                 lineEdit->setSize(150, 25);
+                lineEdit->setTitle("RkLineEdit");
+                lineEdit->setBorderWidth(1);
+                lineEdit->setBorderColor(80, 80, 80);
                 RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
                 lineEdit->show();
         }
 
   protected:
+        void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
+        {
+                RK_LOG_INFO("called");
+        }
+        void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
+        {
+                //                RK_LOG_INFO("called");
+        }
         void onUpdateText(const std::string &text)
         {
                 RK_LOG_INFO("text:" << text);

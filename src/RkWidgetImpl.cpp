@@ -34,6 +34,8 @@
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
+#undef FocusIn
+#undef FocusOut
 #endif
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
@@ -54,6 +56,9 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetBackground(platformWindow->background())
         , widgetAttributes{defaultWidgetAttributes()}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
+        , widgetHasFocus{false}
+        , widgetTextColor{0, 0, 0}
+        , widgetDrawingColor{0, 0, 0}
 {
         platformWindow->init();
 }
@@ -75,6 +80,9 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
         , widgetSize{platformWindow->size()}
         , widgetAttributes{defaultWidgetAttributes()}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
+        , widgetHasFocus{false}
+        , widgetTextColor{0, 0, 0}
+        , widgetDrawingColor{0, 0, 0}
 {
         platformWindow->init();
 }
@@ -141,6 +149,11 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
         case RkEvent::Type::KeyReleased:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                break;
+        case RkEvent::Type::FocusedIn:
+        case RkEvent::Type::FocusedOut:
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
+                        inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
@@ -364,3 +377,38 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 {
         return widgetAttributes;
 }
+
+void RkWidget::RkWidgetImpl::setFocus(bool b)
+{
+       RK_LOG_DEBUG("setFocus [" << title() << "]: " << b);
+       widgetHasFocus = b;
+       if (b)
+               platformWindow->setFocus();
+}
+
+bool RkWidget::RkWidgetImpl::hasFocus() const
+{
+        return widgetHasFocus;
+}
+
+void RkWidget::RkWidgetImpl::setTextColor(const RkColor &color)
+{
+        widgetTextColor = color;
+}
+
+const RkColor& RkWidget::RkWidgetImpl::textColor() const
+{
+        return widgetTextColor;
+}
+
+const RkColor& RkWidget::RkWidgetImpl::color() const
+{
+        return widgetDrawingColor;
+}
+
+void RkWidget::RkWidgetImpl::setColor(const RkColor &color)
+{
+        widgetDrawingColor = color;
+}
+
+

@@ -63,6 +63,7 @@ class RkWindowX {
         void resizeCanvas();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo();
         void update();
+        void setFocus();
 
  protected:
         bool openDisplay();

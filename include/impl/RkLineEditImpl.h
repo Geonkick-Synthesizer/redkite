@@ -42,6 +42,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         void enableSelectionMode(bool b);
         std::string textToCursor() const;
         bool isCursorHidden() const;
+        void showCursor(bool b = true);
 
  protected:
         void onCursorTimeout();
@@ -53,7 +54,8 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
     int selectionIndex;
     bool isSelectionMode;
     std::unique_ptr<RkTimer> cursorTimer;
-    bool hideCursor;
+    bool isShowCursor;
+    decltype(std::chrono::system_clock::now()) lastCahnges;
 };
 
 #endif // RK_LABEL_H

@@ -55,7 +55,9 @@ class RK_EXPORT RkEvent {
                 Paint = 11,
                 Show = 12,
                 Hide = 13,
-                DeleteChild = 14
+                DeleteChild = 14,
+                FocusedIn = 15,
+                FocusedOut = 16
       };
 
       explicit RkEvent(Type type = Type::NoEvent)
@@ -167,6 +169,10 @@ class RkDeleteChild: public RkEvent {
         RkWidget *childWidget;
 };
 
+class RkFocusEvent: public RkEvent {
+ public:
+      RkFocusEvent(Type type = Type::FocusedIn) : RkEvent(type) {};
+};
 
 #endif // RK_EVENT_H
 
