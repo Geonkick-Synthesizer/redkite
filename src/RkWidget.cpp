@@ -460,6 +460,7 @@ void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 
 void RkWidget::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
+        RK_LOG_DEBUG("setFocus [" << title() << "]: " << (event->type() == RkEvent::Type::FocusedIn));
         update();
 }
 

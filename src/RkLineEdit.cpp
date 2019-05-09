@@ -131,7 +131,7 @@ void RkLineEdit::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_INFO("called");
+        RK_LOG_DEBUG("setFocus [" << title() << "]: " << (event->type() == RkEvent::Type::FocusedIn));
         setFocus(event->type() == RkEvent::Type::FocusedIn);
         hasFocus() ? showCursor() : hideCursor();
 }

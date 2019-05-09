@@ -380,7 +380,6 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 
 void RkWidget::RkWidgetImpl::setFocus(bool b)
 {
-       RK_LOG_DEBUG("setFocus [" << title() << "]: " << b);
        widgetHasFocus = b;
        if (b)
                platformWindow->setFocus();
