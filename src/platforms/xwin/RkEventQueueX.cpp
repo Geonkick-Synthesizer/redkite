@@ -173,7 +173,10 @@ std::shared_ptr<RkEvent> RkEventQueueX::processKeyEvent(XEvent *e)
 
 void RkEventQueueX::updateModifiers(Rk::Key key, RkEvent::Type type)
 {
-        if (key == Rk::Key::Key_Shift_Left || key == Rk::Key::Key_Shift_Right)
+        if (key == Rk::Key::Key_Shift_Left
+            || key == Rk::Key::Key_Shift_Right
+            || key == Rk::Key::Key_Control_Left
+            || key == Rk::Key::Key_Control_Right)
         {
                 if (type == RkEvent::Type::KeyPressed)
                         keyModifiers |= static_cast<int>(key) >> 16;

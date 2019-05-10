@@ -30,20 +30,18 @@ class RK_EXPORT RkLineEdit : public RkWidget {
  public:
     RkLineEdit(RkWidget *parent, const std::string &text = std::string());
     virtual ~RkLineEdit() = default;
-    RK_DECL_ACT(textEdited, textEdited(const std::string &text), RK_ARG_TYPE(const std::string&), RK_ARG_VAL(text)); 
     void setText(const std::string &text);
     std::string text() const;
     void showCursor();
     void hideCursor();
 
+    RK_DECL_ACT(textEdited, textEdited(const std::string &text), RK_ARG_TYPE(const std::string&), RK_ARG_VAL(text));
+    RK_DECL_ACT(enterPressed, enterPressed(), RK_ARG_TYPE(), RK_ARG_VAL());
+
  protected:
     void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
     void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event) override;
-    void keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event) override;
-    void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) override;
     void focusEvent(const std::shared_ptr<RkFocusEvent> &event) override;
-    //    void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-    //    void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) override;
 
     RK_DELCATE_IMPL_PTR(RkLineEdit)
 };

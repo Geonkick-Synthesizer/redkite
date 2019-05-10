@@ -93,6 +93,8 @@ class RkWidget::RkWidgetImpl {
         const RkColor& textColor() const;
         const RkColor& color() const;
         void setColor(const RkColor &color);
+        const RkFont& font() const;
+        void setFont(const RkFont &font);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -116,6 +118,7 @@ class RkWidget::RkWidgetImpl {
         bool widgetHasFocus;
         RkColor widgetTextColor;
         RkColor widgetDrawingColor;
+        RkFont widgetFont;
 };
 
 #endif // RK_WIDGET_IMPL_H

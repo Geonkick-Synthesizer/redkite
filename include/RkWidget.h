@@ -29,6 +29,7 @@
 #include "RkCanvas.h"
 #include "RkRect.h"
 #include "RkColor.h"
+#include "RkFont.h"
 
 class RkEvent;
 class RkCloseEvent;
@@ -104,6 +105,8 @@ class RK_EXPORT RkWidget: public RkCanvas {
           const RkColor& textColor() const;
           const RkColor& color() const;
           void setColor(const RkColor &color);
+          const RkFont& font() const;
+          void setFont(const RkFont &font);
           std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
           RkRect rect() const;
           void update();

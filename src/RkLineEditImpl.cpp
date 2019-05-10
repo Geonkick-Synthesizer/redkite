@@ -33,7 +33,7 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , cursorIndex{0}
     , selectionIndex{0}
     , isSelectionMode{false}
-    , cursorTimer{std::make_unique<RkTimer>(500, parent->eventQueue())}
+    , cursorTimer{std::make_unique<RkTimer>(800, parent->eventQueue())}
     , isShowCursor{hasFocus()}
     , lastCahnges{std::chrono::system_clock::now()}
 {
@@ -138,6 +138,11 @@ void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
         isSelectionMode = b;
 }
 
+bool RkLineEdit::RkLineEditImpl::selectionMode() const
+{
+        return isSelectionMode;
+}
+
 bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 {
         return !isShowCursor;
@@ -155,4 +160,56 @@ void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
         isShowCursor = b;
         isShowCursor ? cursorTimer->start() : cursorTimer->stop();
+}
+
+void RkLineEdit::RkLineEditImpl::selectAll()
+{
+        if (!editedText.empty()) {
+                enableSelectionMode(true);
+                showCursor(false);
+                selectionIndex = editedText.size();
+                cursorIndex = 0;
+                RK_LOG_DEBUG("selectionIndex: " << selectionIndex);
+                RK_LOG_DEBUG("cursorIndex: " << cursorIndex);
+        }
+}
+
+int RkLineEdit::RkLineEditImpl::getCursorIndex() const
+{
+        return cursorIndex;
+}
+
+int RkLineEdit::RkLineEditImpl::selectionStart() const
+{
+        return selectionIndex > cursorIndex ? cursorIndex : selectionIndex;
+}
+
+int RkLineEdit::RkLineEditImpl::selectionEnd() const
+{
+        return selectionIndex < cursorIndex ? cursorIndex : selectionIndex;
+}
+
+std::string RkLineEdit::RkLineEditImpl::getText(int pos, int n) const
+{
+        if (editedText.empty())
+                return std::string();
+
+        if (pos > editedText.size())
+                return std::string();
+        else if (pos < 0)
+                pos = 0;
+        else if (n > editedText.npos)
+                n = editedText.npos;
+
+        return editedText.substr(pos, n);
+}
+
+void RkLineEdit::RkLineEditImpl::deleteSelection()
+{
+        if (selectionMode() && selectionStart() != selectionEnd()) {
+                editedText.erase(selectionStart(), selectionEnd() - selectionStart());
+                selectionIndex = cursorIndex = 0;
+                enableSelectionMode(false);
+                showCursor(true);
+        }
 }

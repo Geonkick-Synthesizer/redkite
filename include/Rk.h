@@ -429,6 +429,6 @@ class Rk {
 
 #define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_cb_##act.clear();
 
-#define RK_CALL_ACT(name, args) name(args)
+#define action
 
 #endif // RK_GLOBAL_H

@@ -349,6 +349,16 @@ void RkWidget::setColor(const RkColor &color)
         return o_ptr->setColor(color);
 }
 
+const RkFont& RkWidget::font() const
+{
+        return o_ptr->font();
+}
+
+void RkWidget::setFont(const RkFont &font)
+{
+        o_ptr->setFont(font);
+}
+
 RkWidget* RkWidget::parent() const
 {
         return o_ptr->parent();

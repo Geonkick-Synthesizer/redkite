@@ -55,23 +55,57 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
         {
                 RkPainter painter(this);
-                auto r = rect();
+                painter.setFont(font());
+
+                // Draw selection background.
+                if (impl_ptr->selectionMode()) {
+                        auto text = impl_ptr->getText(0, impl_ptr->selectionStart());
+                        int xpos = painter.getTextWidth(text);
+                        int nSelectedChars = impl_ptr->selectionEnd() - impl_ptr->selectionStart();
+                        text = impl_ptr->getText(impl_ptr->selectionStart(), nSelectedChars);
+                        int w = painter.getTextWidth(text);
+                        painter.fillRect(RkRect(4 + xpos, 2, w, height() - 4) , {52, 116, 209});
+                }
+
+                // Draw edited text.
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
-                painter.drawText(RkRect(r.left() + 3, r.top() + 3,
-                                 r.width() - 6, r.height() - 6), text(),
-                                 Rk::Alignment::AlignLeft);
+                painter.drawText(4, rect().top() + (height() - font().size()) / 2 + font().size() - height() / 8, text());
+
+                // Draw cursor.
                 pen = painter.pen();
                 pen.setColor(color());
                 painter.setPen(pen);
                 if (!impl_ptr->isCursorHidden()) {
                         int cursorX = painter.getTextWidth(impl_ptr->textToCursor());
-                        painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 3);
+                        painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 4);
                 }
         }
 }
 
+/**
+ * [OK] Left
+ * Shift+Left
+ * [OK] Right Arrow
+ * Shift+Right Arrow
+ * Home
+ * End
+ * [OK] Backspace
+ * Ctrl+Backspace
+ * [OK] Delete
+ * Ctrl+Delete
+ * [OK] Ctrl+A
+ * Ctrl+C
+ * Ctrl+Insert
+ * Ctrl+K
+ * Ctrl+V
+ * Shift+Insert
+ * Ctrl+X
+ * Shift+Delete
+ * Ctrl+Z
+ * Ctrl+Y
+ */
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
         if (!hasFocus())
@@ -91,9 +125,26 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
                 textEdited(impl_ptr->text());
                 return;
         case Rk::Key::Key_Delete:
-                impl_ptr->removeText(1, true);
+                if (impl_ptr->selectionMode())
+                        impl_ptr->deleteSelection();
+                else
+                        impl_ptr->removeText(1, true);
                 textEdited(impl_ptr->text());
                 update();
+                return;
+        case Rk::Key::Key_Return:
+                action enterPressed();
+                return;
+        case Rk::Key::Key_a:
+        case Rk::Key::Key_A:
+                if (event->modifiers() & static_cast<int>(Rk::KeyModifiers::Control)) {
+                        impl_ptr->selectAll();
+                        update();
+                        return;
+                }
+                break;
+        case Rk::Key::Key_Control_Left:
+        case Rk::Key::Key_Control_Right:
                 return;
         default:
                 break;
@@ -104,29 +155,6 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         textEdited(impl_ptr->text());
         update();
 }
-
-void RkLineEdit::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
-{
-        RK_UNUSED(event);
-}
-
-void RkLineEdit::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
-{
-        RK_UNUSED(event);
-}
-
-//void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
-//{
-//        RK_UNUSED(event);
-        //        setFocus(true);
-        //        showCursor();
-//}
-
-//void RkLineEdit::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
-//{
-//        RK_UNUSED(event);
-//}
-
 
 void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {

@@ -31,8 +31,13 @@ class  LineEditExample: public RkWidget {
         LineEditExample(RkMain *app)
                 : RkWidget(app)
         {
+                setSize(350, 350);
                 auto lineEdit = new RkLineEdit(this);
-                lineEdit->setSize(150, 25);
+                auto font = lineEdit->font();
+                font.setSize(30);
+                lineEdit->setFont(font);
+                lineEdit->setSize(300, 50);
+                lineEdit->setPosition((width() - lineEdit->width()) / 2, (height() - lineEdit->height()) / 2);
                 lineEdit->setTitle("RkLineEdit");
                 lineEdit->setBorderWidth(1);
                 lineEdit->setBorderColor(80, 80, 80);
@@ -61,7 +66,6 @@ int main(int arc, char **argv)
 
     auto widget = new LineEditExample(&app);
     widget->setTitle("Line Edit Example");
-    widget->setSize(350, 350);
     widget->show();
 
     return app.exec();

@@ -410,4 +410,12 @@ void RkWidget::RkWidgetImpl::setColor(const RkColor &color)
         widgetDrawingColor = color;
 }
 
+const RkFont& RkWidget::RkWidgetImpl::font() const
+{
+        return widgetFont;
+}
 
+void RkWidget::RkWidgetImpl::setFont(const RkFont &font)
+{
+        widgetFont = font;
+}

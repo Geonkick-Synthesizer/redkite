@@ -40,9 +40,16 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         void moveCursorRight(int n = 1);
         void moveCursorLeft(int n = 1);
         void enableSelectionMode(bool b);
+        bool selectionMode() const;
         std::string textToCursor() const;
         bool isCursorHidden() const;
         void showCursor(bool b = true);
+        int getCursorIndex() const;
+        int selectionStart() const;
+        int selectionEnd() const;
+        std::string getText(int pos, int n) const;
+        void selectAll();
+        void deleteSelection();
 
  protected:
         void onCursorTimeout();
