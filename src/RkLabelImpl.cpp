@@ -70,6 +70,10 @@ void RkLabel::RkLabelImpl::drawLabel()
 
         if (!labelText.empty()) {
                 RkPainter painter(inf_ptr);
+                auto pen = painter.pen();
+                pen.setColor(textColor());
+                painter.setPen(pen);
+                painter.setFont(font());
                 painter.drawText(inf_ptr->rect(), labelText);
         }
 
