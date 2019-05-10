@@ -48,15 +48,12 @@ class  LineEditExample: public RkWidget {
   protected:
         void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         {
-                RK_LOG_INFO("called");
         }
         void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
         {
-                //                RK_LOG_INFO("called");
         }
         void onUpdateText(const std::string &text)
         {
-                RK_LOG_INFO("text:" << text);
         }
 };
 

@@ -47,14 +47,10 @@ std::string RkLineEdit::text() const
 void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RK_UNUSED(event);
-
+        RkImage img(width(), height());
         {
-                RkPainter painter(this);
+                RkPainter painter(&img);
                 painter.fillRect(rect(), background());
-        }
-
-        {
-                RkPainter painter(this);
                 painter.setFont(font());
 
                 // Draw selection background.
@@ -82,29 +78,31 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
                         painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 4);
                 }
         }
+        RkPainter paint(this);
+        paint.drawImage(img, 0, 0);
 }
 
 /**
- * [OK] Left
- * Shift+Left
+ * [OK] Left Arrow
+ * [ok] Shift + Left Arrow
  * [OK] Right Arrow
- * Shift+Right Arrow
- * Home
- * End
+ * [OK] Shift + Right Arrow
+ * [OK] Home
+ * [OK] End
  * [OK] Backspace
- * Ctrl+Backspace
+ * Ctrl + Backspace // TODO: v1.0
  * [OK] Delete
- * Ctrl+Delete
- * [OK] Ctrl+A
- * Ctrl+C
- * Ctrl+Insert
- * Ctrl+K
- * Ctrl+V
- * Shift+Insert
- * Ctrl+X
- * Shift+Delete
- * Ctrl+Z
- * Ctrl+Y
+ * Ctrl + Delete    // TODO: v1.0
+ * [OK] Ctrl + A
+ * Ctrl + C
+ * Ctrl + Insert
+ * Ctrl + K
+ * Ctrl + V
+ * Shift + Insert
+ * Ctrl + X
+ * Shift + Delete
+ * Ctrl+Z         // TODO: v1.0
+ * Ctrl+Y         // TODO: v1.0
  */
 void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
 {
@@ -115,10 +113,39 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         switch (event->key())
         {
         case Rk::Key::Key_Left:
-                impl_ptr->moveCursorLeft(1);
+                if (event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift)) {
+                        impl_ptr->enableSelectionMode(true);
+                        impl_ptr->showCursor(false);
+                } else {
+                        impl_ptr->showCursor(true);
+                        impl_ptr->enableSelectionMode(false);
+                }
+                impl_ptr->moveCursorLeft();
+                update();
                 return;
         case Rk::Key::Key_Right:
-                impl_ptr->moveCursorRight(1);
+                if (event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift)) {
+                        impl_ptr->enableSelectionMode(true);
+                        impl_ptr->showCursor(false);
+                } else {
+                        impl_ptr->enableSelectionMode(false);
+                        impl_ptr->showCursor(true);
+                }
+                impl_ptr->moveCursorRight();
+                update();
+                return;
+        case Rk::Key::Key_Home:
+        case Rk::Key::Key_End:
+                if (event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift)) {
+                        impl_ptr->enableSelectionMode(true);
+                        impl_ptr->showCursor(false);
+                        Rk::Key::Key_Home == event->key() ? impl_ptr->moveSelectionToFront() : impl_ptr->moveSelectionToBack();
+                } else {
+                        impl_ptr->showCursor(true);
+                        impl_ptr->enableSelectionMode(false);
+                        Rk::Key::Key_Home == event->key() ? impl_ptr->moveCursorToFront() : impl_ptr->moveCursorToBack();
+                }
+                update();
                 return;
         case Rk::Key::Key_BackSpace:
                 impl_ptr->removeText(1, false);
@@ -143,17 +170,24 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
                         return;
                 }
                 break;
+        // Ignore these keys.
         case Rk::Key::Key_Control_Left:
         case Rk::Key::Key_Control_Right:
+        case Rk::Key::Key_Shift_Left:
+        case Rk::Key::Key_Shift_Right:
                 return;
         default:
                 break;
         }
 
-        std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
-        impl_ptr->addText(str);
-        textEdited(impl_ptr->text());
-        update();
+        // Allow only Latin1.
+        int key = static_cast<int>(event->key());
+        if (0x00000020 <= key && key <= 0x000000ff) {
+                std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
+                impl_ptr->addText(str);
+                textEdited(impl_ptr->text());
+                update();
+        }
 }
 
 void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)

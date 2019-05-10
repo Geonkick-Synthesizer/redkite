@@ -60,7 +60,14 @@ void RkLineEdit::RkLineEditImpl::moveCursorLeft(int n)
 {
         if (editedText.empty()) {
                 cursorIndex = 0;
-        } else if (isSelectionMode) {
+        } else if (selectionMode()) {
+                selectionIndex--;
+                if (selectionIndex < 0)
+                        selectionIndex = 0;
+                if (selectionIndex == cursorIndex) {
+                        enableSelectionMode(false);
+                        showCursor(true);
+                }
         } else {
                 cursorIndex -= n;
                 if (cursorIndex < 0)
@@ -73,13 +80,42 @@ void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
 {
         if (editedText.empty()) {
                 cursorIndex = 0;
-        } else if (isSelectionMode) {
+        } else if (selectionMode()) {
+                selectionIndex++;
+                if (selectionIndex > editedText.size())
+                        selectionIndex = editedText.size();
+                if (selectionIndex == cursorIndex) {
+                        enableSelectionMode(false);
+                        showCursor(true);
+                }
         } else {
                 cursorIndex += n;
                 if (cursorIndex > editedText.size() - 1)
                         cursorIndex = editedText.size();
         }
         lastCahnges = std::chrono::system_clock::now();
+}
+
+void RkLineEdit::RkLineEditImpl::moveCursorToFront()
+{
+        cursorIndex = 0;
+}
+
+void RkLineEdit::RkLineEditImpl::moveCursorToBack()
+{
+        cursorIndex = editedText.size();
+}
+
+void RkLineEdit::RkLineEditImpl::moveSelectionToFront()
+{
+        if (selectionMode())
+                selectionIndex = 0;
+}
+
+void RkLineEdit::RkLineEditImpl::moveSelectionToBack()
+{
+        if (selectionMode())
+                selectionIndex = editedText.size();
 }
 
 void RkLineEdit::RkLineEditImpl::addText(const std::string& text)
@@ -135,7 +171,10 @@ std::string RkLineEdit::RkLineEditImpl::textToCursor() const
 
 void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
 {
-        isSelectionMode = b;
+        if (isSelectionMode != b) {
+                isSelectionMode = b;
+                selectionIndex = cursorIndex;
+        }
 }
 
 bool RkLineEdit::RkLineEditImpl::selectionMode() const
@@ -158,8 +197,10 @@ void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 
 void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
-        isShowCursor = b;
-        isShowCursor ? cursorTimer->start() : cursorTimer->stop();
+        if (isShowCursor != b) {
+                isShowCursor = b;
+                isShowCursor ? cursorTimer->start() : cursorTimer->stop();
+        }
 }
 
 void RkLineEdit::RkLineEditImpl::selectAll()
@@ -169,8 +210,6 @@ void RkLineEdit::RkLineEditImpl::selectAll()
                 showCursor(false);
                 selectionIndex = editedText.size();
                 cursorIndex = 0;
-                RK_LOG_DEBUG("selectionIndex: " << selectionIndex);
-                RK_LOG_DEBUG("cursorIndex: " << cursorIndex);
         }
 }
 
@@ -208,7 +247,7 @@ void RkLineEdit::RkLineEditImpl::deleteSelection()
 {
         if (selectionMode() && selectionStart() != selectionEnd()) {
                 editedText.erase(selectionStart(), selectionEnd() - selectionStart());
-                selectionIndex = cursorIndex = 0;
+                selectionIndex = cursorIndex = selectionStart();
                 enableSelectionMode(false);
                 showCursor(true);
         }
