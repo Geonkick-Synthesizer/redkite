@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7)
 
-project(redkite VERSION 0.0.1)
+project(redkite VERSION 0.5.0)
 
 # Temporary. For Windows. To be removed.
 #set(CMAKE_SYSTEM_NAME Windows)

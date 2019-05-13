@@ -6,10 +6,9 @@ Redkite is a small free software and cross-platform GUI toolkit.
 It is developed in C++11&14 and inspired from other
 well known GUI toolkits.
 
-Version: 0.9
+Version: 0.5
 License: GPLv3
 Author: Iurie Nistor
-Status: active development, no release yet
 
 #### The problem
 
@@ -52,7 +51,7 @@ Audio Workstation as a host is loading audio GUI plugins.
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
   RkPainter uses Cairo backend.
 * Actions: a binding mechanism between objects. An action can be posted in thread-safe manner.
-* Cross-platform: GNU/Linux (X11), Windows (Win API, partial). No plans for Mac now.
+* Cross-platform: GNU/Linux (X11), Windows (Win API, partial, not usable now). No plans for Mac now.
 * CMake system, build/install
 * rkpng2c - a tool that converts PNG images to C array encoded in ARGB32
 * RkTimer - a timer class
@@ -82,6 +81,4 @@ Interface classes that now are implemented with the purpose of extending their f
 
 ### What applications were developed with Redkite?
 
-* [Geonkick](https://gitlab.com/quamplex/geonkick) - a percussion synthesizer is
-in the process of migrating from Qt to Redkite. See "devel" branch.
-
+* [Geonkick](https://gitlab.com/quamplex/geonkick) - a percussion synthesizer.
