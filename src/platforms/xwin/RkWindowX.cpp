@@ -313,6 +313,5 @@ void RkWindowX::freeCanvasInfo()
 
 void RkWindowX::setFocus()
 {
-        XGrabKeyboard(display(), xWindow, False, GrabModeAsync, GrabModeAsync, CurrentTime);
-        //        XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
+        XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
 }
