@@ -115,7 +115,6 @@ class RkWidget::RkWidgetImpl {
         RkColor widgetBackground;
         Rk::WidgetAttribute widgetAttributes;
         Rk::Modality widgetModality;
-        bool widgetHasFocus;
         RkColor widgetTextColor;
         RkColor widgetDrawingColor;
         RkFont widgetFont;

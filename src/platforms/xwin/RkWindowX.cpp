@@ -315,3 +315,12 @@ void RkWindowX::setFocus()
 {
         XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
 }
+
+bool RkWindowX::hasFocus()
+{
+        Window focus_return;
+        int revert_to;
+        XGetInputFocus(display(), &focus_return, &revert_to);
+        return focus_return == xWindow;
+}
+

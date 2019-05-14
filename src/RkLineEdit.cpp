@@ -190,12 +190,15 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         }
 }
 
+void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+{
+        setFocus(true);
+}
+
 void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
         RK_UNUSED(event);
-        RK_LOG_DEBUG("setFocus [" << title() << "]: " << (event->type() == RkEvent::Type::FocusedIn));
-        setFocus(event->type() == RkEvent::Type::FocusedIn);
-        hasFocus() ? showCursor() : hideCursor();
+        event->type() == RkEvent::Type::FocusedIn ? showCursor() : hideCursor();
 }
 
 void RkLineEdit::showCursor()

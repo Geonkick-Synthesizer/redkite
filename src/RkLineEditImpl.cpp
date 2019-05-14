@@ -197,10 +197,8 @@ void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 
 void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
-        if (isShowCursor != b) {
-                isShowCursor = b;
-                isShowCursor ? cursorTimer->start() : cursorTimer->stop();
-        }
+        isShowCursor = b;
+        isShowCursor ? cursorTimer->start() : cursorTimer->stop();
 }
 
 void RkLineEdit::RkLineEditImpl::selectAll()

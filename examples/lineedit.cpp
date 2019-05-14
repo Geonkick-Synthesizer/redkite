@@ -38,7 +38,19 @@ class  LineEditExample: public RkWidget {
                 lineEdit->setFont(font);
                 lineEdit->setSize(300, 50);
                 lineEdit->setPosition((width() - lineEdit->width()) / 2, (height() - lineEdit->height()) / 2);
-                lineEdit->setTitle("RkLineEdit");
+                lineEdit->setTitle("RkLineEdit1");
+                lineEdit->setBorderWidth(1);
+                lineEdit->setBorderColor(80, 80, 80);
+                RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                lineEdit->show();
+
+                lineEdit = new RkLineEdit(this);
+                font = lineEdit->font();
+                font.setSize(30);
+                lineEdit->setFont(font);
+                lineEdit->setSize(300, 50);
+                lineEdit->setPosition((width() - lineEdit->width()) / 2, (height() - lineEdit->height()) / 2 + 10 + lineEdit->height());
+                lineEdit->setTitle("RkLineEdit2");
                 lineEdit->setBorderWidth(1);
                 lineEdit->setBorderColor(80, 80, 80);
                 RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));

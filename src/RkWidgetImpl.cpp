@@ -56,7 +56,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetBackground(platformWindow->background())
         , widgetAttributes{defaultWidgetAttributes()}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
-        , widgetHasFocus{false}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
 {
@@ -80,7 +79,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
         , widgetSize{platformWindow->size()}
         , widgetAttributes{defaultWidgetAttributes()}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
-        , widgetHasFocus{false}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
 {
@@ -380,14 +378,12 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 
 void RkWidget::RkWidgetImpl::setFocus(bool b)
 {
-       widgetHasFocus = b;
-       if (b)
-               platformWindow->setFocus();
+        platformWindow->setFocus();
 }
 
 bool RkWidget::RkWidgetImpl::hasFocus() const
 {
-        return widgetHasFocus;
+        return platformWindow->hasFocus();
 }
 
 void RkWidget::RkWidgetImpl::setTextColor(const RkColor &color)
