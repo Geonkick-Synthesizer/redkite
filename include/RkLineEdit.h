@@ -43,6 +43,7 @@ class RK_EXPORT RkLineEdit : public RkWidget {
     void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event) override;
     void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
     void focusEvent(const std::shared_ptr<RkFocusEvent> &event) override;
+    void resizeEvent(const std::shared_ptr<RkResizeEvent> &event) override;
 
     RK_DELCATE_IMPL_PTR(RkLineEdit)
 };

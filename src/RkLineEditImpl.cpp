@@ -36,6 +36,9 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *pare
     , cursorTimer{std::make_unique<RkTimer>(800, parent->eventQueue())}
     , isShowCursor{hasFocus()}
     , lastCahnges{std::chrono::system_clock::now()}
+    , contentsRect{0, 0, 0, 0}
+    , beginX{0}
+    , endX{0}
 {
         RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
         hasFocus() ? showCursor(true) : showCursor(false);
@@ -161,12 +164,12 @@ std::string RkLineEdit::RkLineEditImpl::text() const
         return editedText;
 }
 
-std::string RkLineEdit::RkLineEditImpl::textToCursor() const
+std::string RkLineEdit::RkLineEditImpl::textTo(int index) const
 {
         if (editedText.empty())
                 return std::string();
         else
-                return editedText.substr(0, cursorIndex);
+                return editedText.substr(0, index);
 }
 
 void RkLineEdit::RkLineEditImpl::enableSelectionMode(bool b)
@@ -249,4 +252,73 @@ void RkLineEdit::RkLineEditImpl::deleteSelection()
                 enableSelectionMode(false);
                 showCursor(true);
         }
+}
+
+void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+{
+        RK_UNUSED(event);
+        if (contentsRect.height() * contentsRect.width() == 0)
+                updateSize();
+                
+        RkImage img(size());
+        {
+                RkPainter painter(&img);
+                painter.fillRect(rect(), background());
+                painter.setFont(font());
+
+                int cursorX = 0;
+                if (selectionMode())
+                        cursorX = painter.getTextWidth(textTo(selectionIndex));
+                else
+                        cursorX = painter.getTextWidth(textTo(cursorIndex));
+                
+                if (cursorX > endX) {
+                        endX += cursorX - endX;
+                        beginX = endX - contentsRect.width();
+                        cursorX = contentsRect.width();
+                } else if (cursorX < beginX) {
+                        beginX -= beginX - cursorX;
+                        endX = beginX + contentsRect.width();
+                        cursorX = 1;
+                } else {
+                        cursorX = cursorX - beginX;
+                        endX = beginX + contentsRect.width();
+                }
+
+                // Draw selection background.
+                if (selectionMode()) {
+                        auto text = getText(0, selectionStart());
+                        int xpos = painter.getTextWidth(text);
+                        int nSelectedChars = selectionEnd() - selectionStart();
+                        text = getText(selectionStart(), nSelectedChars);
+                        int w = painter.getTextWidth(text);
+                        painter.fillRect(RkRect(contentsRect.left() + xpos - beginX,
+                                                contentsRect.top(), w,
+                                                contentsRect.height()) , {52, 116, 209});
+                }
+
+                // Draw edited text.
+                auto pen = painter.pen();
+                pen.setColor(textColor());
+                painter.setPen(pen);
+                painter.drawText(contentsRect.left() - beginX, contentsRect.top() + (contentsRect.height() - font().size()) / 2 + font().size(), text());
+
+                // Draw cursor.
+                if (!isCursorHidden()) {
+                        pen = painter.pen();
+                        pen.setColor(color());
+                        painter.setPen(pen);
+                        painter.drawLine(contentsRect.left() + cursorX + 1, contentsRect.top(),
+                                         contentsRect.left() + cursorX + 1, contentsRect.top() + contentsRect.height());
+                }
+        }
+        RkPainter paint(inf_ptr);
+        paint.drawImage(img, 0, 0);
+}
+
+void RkLineEdit::RkLineEditImpl::updateSize()
+{
+        contentsRect = RkRect(2, 2, size().width() - 6, size().height() - 4);
+        beginX = 0;
+        endX = contentsRect.width();
 }

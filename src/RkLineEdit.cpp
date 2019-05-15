@@ -46,40 +46,7 @@ std::string RkLineEdit::text() const
 
 void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
-        RK_UNUSED(event);
-        RkImage img(width(), height());
-        {
-                RkPainter painter(&img);
-                painter.fillRect(rect(), background());
-                painter.setFont(font());
-
-                // Draw selection background.
-                if (impl_ptr->selectionMode()) {
-                        auto text = impl_ptr->getText(0, impl_ptr->selectionStart());
-                        int xpos = painter.getTextWidth(text);
-                        int nSelectedChars = impl_ptr->selectionEnd() - impl_ptr->selectionStart();
-                        text = impl_ptr->getText(impl_ptr->selectionStart(), nSelectedChars);
-                        int w = painter.getTextWidth(text);
-                        painter.fillRect(RkRect(4 + xpos, 2, w, height() - 4) , {52, 116, 209});
-                }
-
-                // Draw edited text.
-                auto pen = painter.pen();
-                pen.setColor(textColor());
-                painter.setPen(pen);
-                painter.drawText(4, rect().top() + (height() - font().size()) / 2 + font().size() - height() / 8, text());
-
-                // Draw cursor.
-                pen = painter.pen();
-                pen.setColor(color());
-                painter.setPen(pen);
-                if (!impl_ptr->isCursorHidden()) {
-                        int cursorX = painter.getTextWidth(impl_ptr->textToCursor());
-                        painter.drawLine(cursorX + 4, 3, cursorX + 4, height() - 4);
-                }
-        }
-        RkPainter paint(this);
-        paint.drawImage(img, 0, 0);
+        impl_ptr->paintEvent(event);
 }
 
 /**
@@ -199,6 +166,12 @@ void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
         RK_UNUSED(event);
         event->type() == RkEvent::Type::FocusedIn ? showCursor() : hideCursor();
+}
+
+void RkLineEdit::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
+{
+        RK_UNUSED(event);
+        impl_ptr->updateSize();
 }
 
 void RkLineEdit::showCursor()
