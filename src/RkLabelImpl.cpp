@@ -57,19 +57,12 @@ void RkLabel::RkLabelImpl::drawLabel()
         if (labelText.empty() && labelImage.isNull())
                 return;
 
-        {
-                RkPainter painter(inf_ptr);
-                painter.fillRect(rect(), background());
-        }
-
-        // TODO: use the same painter for both when fixing the Cairo problem of text over image.
-        if (!labelImage.isNull()) {
-                RkPainter painter(inf_ptr);
+        RkImage img(size());
+        RkPainter painter(&img);
+        painter.fillRect(rect(), background());
+        if (!labelImage.isNull())
                 painter.drawImage(labelImage, 0, 0);
-        }
-
         if (!labelText.empty()) {
-                RkPainter painter(inf_ptr);
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
@@ -77,5 +70,7 @@ void RkLabel::RkLabelImpl::drawLabel()
                 painter.drawText(inf_ptr->rect(), labelText);
         }
 
+        RkPainter paint(inf_ptr);
+        paint.drawImage(img, 0, 0);
 }
 
