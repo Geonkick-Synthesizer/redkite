@@ -92,9 +92,7 @@ using rk_real = float;
 using rk_real = double;
 #endif // RK_SINGLE_PRECISION
 
-class Rk {
- public:
-        Rk() = delete;
+namespace Rk {
         enum class Alignment : int {
                 AlignLeft   = 1,
                 AlignRight  = 2,
@@ -405,6 +403,28 @@ class Rk {
                 Hyper_Left    = 0x1000,
                 Hyper_Right   = 0x2000,
                 Hyper         = Hyper_Left | Hyper_Right
+        };
+
+        enum class PointerShape: int {
+                NoShape = 0,
+                Arrow = 1,
+                UpArrow = 2,
+                Cross = 3,
+                Wait = 4,
+                WhatsThis = 5,
+                IBeam = 6,
+                SizeVertical = 7,
+                SizeHorizontal = 8,
+                SizeTLDiagonal = 9,
+                SizeTRDiagonal = 10,
+                SizeAll = 11,
+                SplitVertical = 12,
+                SplitHorizontal = 13,
+                PointingHand = 14,
+                OpenHand = 15,
+                ClosedHand = 16,
+                Forbidden = 17,
+                Busy = 18
         };
 };
 

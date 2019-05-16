@@ -58,6 +58,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
+        , widgetPointerShape{Rk::PointerShape::Arrow}
 {
         platformWindow->init();
 }
@@ -81,6 +82,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
+        , widgetPointerShape{Rk::PointerShape::Arrow}
 {
         platformWindow->init();
 }
@@ -413,4 +415,17 @@ const RkFont& RkWidget::RkWidgetImpl::font() const
 void RkWidget::RkWidgetImpl::setFont(const RkFont &font)
 {
         widgetFont = font;
+}
+
+void RkWidget::RkWidgetImpl::setPointerShape(Rk::PointerShape shape)
+{
+        if (widgetPointerShape != shape) {
+                widgetPointerShape = shape;
+                platformWindow->setPointerShape(widgetPointerShape);
+        }
+}
+
+Rk::PointerShape RkWidget::RkWidgetImpl::pointerShape() const
+{
+        return widgetPointerShape;
 }

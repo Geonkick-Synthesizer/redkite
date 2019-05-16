@@ -21,9 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include "RkWidget.h"
 #include "RkEventQueueX.h"
 #include "RkLog.h"
-#include "RkWidget.h"
 
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>

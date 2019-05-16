@@ -65,6 +65,7 @@ class RkWindowX {
         void update();
         void setFocus(bool b);
         bool hasFocus();
+        void setPointerShape(Rk::PointerShape shape);
 
  protected:
         bool openDisplay();

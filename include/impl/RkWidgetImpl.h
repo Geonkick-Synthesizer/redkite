@@ -95,6 +95,8 @@ class RkWidget::RkWidgetImpl {
         void setColor(const RkColor &color);
         const RkFont& font() const;
         void setFont(const RkFont &font);
+        void setPointerShape(Rk::PointerShape shape);
+        Rk::PointerShape pointerShape() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -118,6 +120,7 @@ class RkWidget::RkWidgetImpl {
         RkColor widgetTextColor;
         RkColor widgetDrawingColor;
         RkFont widgetFont;
+        Rk::PointerShape widgetPointerShape;
 };
 
 #endif // RK_WIDGET_IMPL_H

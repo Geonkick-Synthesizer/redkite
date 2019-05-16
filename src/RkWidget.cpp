@@ -547,3 +547,13 @@ bool RkWidget::hasFocus() const
         return o_ptr->hasFocus();
 }
 
+void RkWidget::setPointerShape(Rk::PointerShape shape)
+{
+        o_ptr->setPointerShape(shape);
+}
+
+Rk::PointerShape RkWidget::pointerShape() const
+{
+        return o_ptr->pointerShape();
+}
+

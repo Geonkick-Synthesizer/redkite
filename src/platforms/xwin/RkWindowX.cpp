@@ -26,6 +26,8 @@
 #include "RkEventQueue.h"
 #include "RkCanvasInfo.h"
 
+#include "X11/cursorfont.h"
+
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
         : parentWindowInfo(parent)
         , xDisplay{parent ? parent->display : nullptr}
@@ -325,5 +327,25 @@ bool RkWindowX::hasFocus()
         int revert_to;
         XGetInputFocus(display(), &focus_return, &revert_to);
         return focus_return == xWindow;
+}
+
+void RkWindowX::setPointerShape(Rk::PointerShape shape)
+{
+        if (!isWindowCreated())
+                return;
+
+        Cursor pointer;
+        switch (shape)
+        {
+        case Rk::PointerShape::Arrow:
+                pointer = XCreateFontCursor(display(), XC_arrow);
+        break;
+        case Rk::PointerShape::IBeam:
+                pointer = XCreateFontCursor(display(), XC_xterm);
+        break;
+        default:
+                return;
+        };
+        XDefineCursor(display(), xWindow, pointer);
 }
 
