@@ -150,8 +150,7 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         case RkEvent::Type::FocusedIn:
         case RkEvent::Type::FocusedOut:
-                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
-                        inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
+                inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
@@ -378,7 +377,7 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 
 void RkWidget::RkWidgetImpl::setFocus(bool b)
 {
-        platformWindow->setFocus();
+        platformWindow->setFocus(b);
 }
 
 bool RkWidget::RkWidgetImpl::hasFocus() const

@@ -25,6 +25,7 @@
 #include "RkPainter.h"
 #include "RkLog.h"
 #include "RkTimer.h"
+#include "RkEvent.h"
 
 RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *parent, const std::string &text)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -202,6 +203,7 @@ void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
         isShowCursor = b;
         isShowCursor ? cursorTimer->start() : cursorTimer->stop();
+        update();
 }
 
 void RkLineEdit::RkLineEditImpl::selectAll()

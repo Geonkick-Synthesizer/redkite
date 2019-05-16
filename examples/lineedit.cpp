@@ -26,6 +26,31 @@
 #include "RkLog.h"
 #include "RkLineEdit.h"
 
+class Button: public RkWidget {
+  public:
+        Button(RkWidget *parent = nullptr)
+                : RkWidget(parent)
+                , isToggled{false} {}
+
+        RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
+
+  protected:
+        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        {
+                isToggled = !isToggled;
+                // Post action to be executed by the GUI main thread.
+                eventQueue()->postAction([&](){ toggled(isToggled); });
+                // Or just call toggled(isToggled) directly to be
+                // executed by the thread executing this method.
+                // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
+                // eventQueue()->postAction([&](){ toggled(isToggled); });
+                // can be called from a defferent thread than GUI main thread;
+        }
+
+private:
+        bool isToggled;
+};
+
 class  LineEditExample: public RkWidget {
   public:
         LineEditExample(RkMain *app)
@@ -54,7 +79,13 @@ class  LineEditExample: public RkWidget {
                 lineEdit->setBorderWidth(1);
                 lineEdit->setBorderColor(80, 80, 80);
                 RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                show();
                 lineEdit->show();
+                auto button = new Button(this);
+                button->setBackgroundColor(100, 200, 100);
+                button->setFixedSize(50, 25);
+                button->show();
+                RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool toggled), this, openDialog());
         }
 
   protected:
@@ -67,6 +98,13 @@ class  LineEditExample: public RkWidget {
         void onUpdateText(const std::string &text)
         {
         }
+
+        void openDialog()
+        {
+                auto dialog = new RkWidget(this, Rk::WindowFlags::Dialog);
+                dialog->setSize(50, 50);
+                dialog->show();
+        }
 };
 
 int main(int arc, char **argv)
@@ -75,7 +113,5 @@ int main(int arc, char **argv)
 
     auto widget = new LineEditExample(&app);
     widget->setTitle("Line Edit Example");
-    widget->show();
-
     return app.exec();
 }

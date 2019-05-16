@@ -63,7 +63,7 @@ class RkWindowX {
         void resizeCanvas();
         std::shared_ptr<RkCanvasInfo> getCanvasInfo();
         void update();
-        void setFocus();
+        void setFocus(bool b);
         bool hasFocus();
 
  protected:

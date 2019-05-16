@@ -311,9 +311,12 @@ void RkWindowX::freeCanvasInfo()
 #error No graphics backend defined
 #endif // RK_GRAPHICS_CAIRO_BACKEND
 
-void RkWindowX::setFocus()
+void RkWindowX::setFocus(bool b)
 {
-        XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
+        if (b)
+                XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
+        else
+                XSetInputFocus(display(), None, RevertToParent, CurrentTime);
 }
 
 bool RkWindowX::hasFocus()
