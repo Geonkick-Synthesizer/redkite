@@ -2,17 +2,10 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.5.0)
 
-# Temporary. For Windows. To be removed.
-#set(CMAKE_SYSTEM_NAME Windows)
-#set(CMAKE_INSTALL_PREFIX "./install/redkite")
-
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
-# For build with mingw on GNU/Linux. To be removed.
-#  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc)
-#  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
@@ -27,8 +20,8 @@ set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 set(RK_TOOLS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 
 if (NOT CMAKE_BUILD_TYPE)
-  message(STATUS "no build type selected, default to Debug")
-  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type Debug" FORCE)
+  message(STATUS "no build type selected, default to Release")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type Release" FORCE)
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
@@ -54,8 +47,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_LOG_DEBUG_LEVEL")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_LOG_DEBUG_LEVEL")
 endif()
-
-#find_package(PgkConfig)
 
 if (NOT RK_GRAPHICS_BACKEND)
   message(STATUS "use default Cairo graphics backend")

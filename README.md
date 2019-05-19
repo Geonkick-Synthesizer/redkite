@@ -79,6 +79,29 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkProgressBar
 * RkWidget
 
+### Install
+
+I order to build Geonkick there is a need to install the following development packages:
+
+* Cairo
+
+On Debian, Ubuntu, Ubuntu Studio install:
+
+    apt-get install build-essential
+    apt-get install cmake
+    apt-get install libcairo2-dev
+
+###### Build & install Redkite
+
+Clone the code repository, compile and install
+
+        git clone git@github.com:quamplex/redkite.git
+        mkdir redkite/build
+        cd redkite/build
+        cmake ../
+        make
+        make install
+
 ### What applications were developed with Redkite?
 
-* [Geonkick](https://gitlab.com/quamplex/geonkick) - a percussion synthesizer.
+* [Geonkick](https://github.com/quamplex/geonkick) - a percussion synthesizer.
