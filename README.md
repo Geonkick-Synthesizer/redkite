@@ -83,7 +83,7 @@ Interface classes that now are implemented with the purpose of extending their f
 
 ### Build & install Redkite
 
-I order to build Geonkick there is a need to install the following development packages:
+I order to build Redkite there is a need to install the following development packages:
 
 * Cairo
 
