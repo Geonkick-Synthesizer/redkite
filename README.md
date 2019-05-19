@@ -7,7 +7,9 @@ It is developed in C++11&14 and inspired from other
 well known GUI toolkits.
 
 Version: 0.5
+
 License: GPLv3
+
 Author: Iurie Nistor
 
 #### The problem
@@ -79,7 +81,7 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkProgressBar
 * RkWidget
 
-### Install
+### Build & install Redkite
 
 I order to build Geonkick there is a need to install the following development packages:
 
@@ -90,8 +92,6 @@ On Debian, Ubuntu, Ubuntu Studio install:
     apt-get install build-essential
     apt-get install cmake
     apt-get install libcairo2-dev
-
-###### Build & install Redkite
 
 Clone the code repository, compile and install
 
