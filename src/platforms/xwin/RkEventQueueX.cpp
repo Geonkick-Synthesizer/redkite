@@ -129,10 +129,10 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
                 mouseEvent->setButton(RkMouseEvent::ButtonType::Right);
                 break;
         case Button4:
-                mouseEvent->setButton(RkMouseEvent::ButtonType::WeelUp);
+                mouseEvent->setButton(RkMouseEvent::ButtonType::WheelUp);
                 break;
         case Button5:
-                mouseEvent->setButton(RkMouseEvent::ButtonType::WeelDown);
+                mouseEvent->setButton(RkMouseEvent::ButtonType::WheelDown);
                 break;
         default:
                 mouseEvent->setButton(RkMouseEvent::ButtonType::Unknown);

@@ -112,8 +112,8 @@ class RkMouseEvent: public RkEvent {
                 Left = 1,
                 Middle = 2,
                 Right = 3,
-                WeelUp  = 4,
-                WeelDown = 5
+                WheelUp  = 4,
+                WheelDown = 5
         };
 
       RkMouseEvent(Type type = Type::MouseButtonPress)
