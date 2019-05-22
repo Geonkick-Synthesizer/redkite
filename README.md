@@ -17,13 +17,12 @@ Author: Iurie Nistor
 An application that is developed in a particular GUI toolkit
 is loading in its address space GUI plugins that are developed
 in a different GUI toolkit, or different versions of a particular
-toolkit. The well known GUI toolkits were not designed with
-this scenario in mind, and this will cause difficulties, problems,
-even crashes. Redkite GUI toolkit is developed to address this problem,
-and provide a way to develop easily self-sufficient GUI plugins apart
-from developing standalone applications. Often these kinds
-of problems arise in music software, for example, when a Digital
-Audio Workstation as a host is loading audio GUI plugins.
+toolkit. Using well known GUI toolkits for this purpose can cause
+a lot of difficulties. Redkite GUI toolkit is developed to address
+this problem, and provide a way to develop easily self-sufficient
+GUI plugins apart from developing standalone applications. Often
+these kinds of problems arise in music software, for example, when
+a Digital Audio Workstation as a host is loading audio GUI plugins.
 
 ### Goals
 
@@ -81,9 +80,9 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkProgressBar
 * RkWidget
 
-### Build & install Redkite
+### Build & Install Redkite
 
-I order to build Redkite there is a need to install the following development packages:
+In order to build Redkite there is a need to install the following development packages:
 
 * Cairo
 
