@@ -117,7 +117,18 @@ void RkEventQueue::processTimers()
 
 void RkEventQueue::processQueue()
 {
+        // The order is important.
         processTimers();
         processActions();
         processEvents();
+}
+
+void RkEventQueue::clearEvents(const RkWidget *widget)
+{
+        o_ptr->clearEvents(widget);
+}
+
+void RkEventQueue::clearAllEvents()
+{
+        o_ptr->clearAllEvents();
 }

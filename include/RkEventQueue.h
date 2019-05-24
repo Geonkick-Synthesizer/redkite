@@ -52,7 +52,10 @@ class RK_EXPORT RkEventQueue {
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processTimers();
+        // Process all: events, actions and timers.
         void processQueue();
+        void clearEvents(const RkWidget *widget);
+        void clearAllEvents();
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue)

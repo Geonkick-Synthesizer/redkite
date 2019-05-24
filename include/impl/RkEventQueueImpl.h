@@ -65,6 +65,8 @@ class RkEventQueue::RkEventQueueImpl {
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processTimers();
+        void clearEvents(const RkWidget *widget);
+        void clearAllEvents();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)

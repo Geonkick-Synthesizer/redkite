@@ -186,3 +186,18 @@ void RkEventQueue::RkEventQueueImpl::processTimers()
                         timer->callTimeout();
         }
 }
+
+void RkEventQueue::RkEventQueueImpl::clearEvents(const RkWidget *widget)
+{
+        for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
+                if (it->first.id == widget->id().id)
+                        it = eventsQueue.erase(it);
+                else
+                        ++it;
+        }
+}
+
+void RkEventQueue::RkEventQueueImpl::clearAllEvents()
+{
+        eventsQueue.clear();
+}

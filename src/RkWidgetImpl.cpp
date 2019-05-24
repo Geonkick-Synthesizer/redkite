@@ -90,6 +90,9 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWi
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
         eventQueue->removeWidget(inf_ptr);
+        // Remove all events queued for the
+        // current widget from the event queue.
+        eventQueue->clearEvents(inf_ptr);
         for (auto child : widgetChildren)
                 delete child;
 }
