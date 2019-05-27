@@ -195,6 +195,9 @@ void RkCairoGraphicsBackend::rotate(rk_real angle)
 
 int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
 {
+        if (text.empty())
+                return 0;
+
         cairo_text_extents_t extents;
         cairo_text_extents (context(), text.data(), &extents);
         return extents.width;
