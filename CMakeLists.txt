@@ -40,6 +40,11 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
 endif()
 
+if (NOT CMAKE_INSTALL_LIBDIR)
+  message(STATUS "setting the default lib dir path to /usr/lib")
+  set(CMAKE_INSTALL_LIBDIR /usr/lib CACHE STRING "lib dir to /usr/lib" FORCE)
+endif()
+
 option(ENABLE_EXAMPLES    "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -179,12 +184,12 @@ add_library(redkite STATIC
   ${RK_SOURCES_PLATFORM})
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX})
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
 # Not implemented
 else()
-  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_LIBDIR})
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
 endif()
 
