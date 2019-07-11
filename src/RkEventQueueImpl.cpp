@@ -45,7 +45,6 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* eventQueueInterfa
         , platformEventQueue{std::make_unique<RkEventQueueX>()}
 #endif
 {
-        myData = 12345;
 }
 
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
