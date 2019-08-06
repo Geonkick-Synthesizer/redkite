@@ -6,7 +6,7 @@ Redkite is a small free software and cross-platform GUI toolkit.
 It is developed in C++11&14 and inspired from other
 well known GUI toolkits.
 
-Version: 0.6
+Version: 0.6.1
 
 License: GPLv3
 

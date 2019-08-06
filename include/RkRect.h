@@ -64,7 +64,10 @@ class RK_EXPORT RkRect {
 
         constexpr int width() const
         {
-                return std::abs(rectBottomRight.x() - rectTopLeft.x());
+               if (rectBottomRight.x() >= rectTopLeft.x())
+                       return rectBottomRight.x() - rectTopLeft.x();
+               else
+                       return rectTopLeft.x() - rectBottomRight.x();
         }
 
         constexpr void setWidth(int width)
@@ -74,7 +77,10 @@ class RK_EXPORT RkRect {
 
         constexpr int height() const
         {
-                return std::abs(rectBottomRight.y() - rectTopLeft.y());
+                if (rectBottomRight.y() >= rectTopLeft.y())
+                        return rectBottomRight.y() - rectTopLeft.y();
+                else
+                        return rectTopLeft.y() - rectBottomRight.y();
         }
 
         constexpr void setHeight(int height)
