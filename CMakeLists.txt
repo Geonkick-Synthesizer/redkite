@@ -174,6 +174,8 @@ else() # defualt GNU/Linux
 include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
 endif()
 
+# Redkite is not supposed to be provided as shared library,
+# it must be only as static library for development.
 add_library(redkite STATIC
   ${RK_HEADERS}
   ${RK_HEADERS_IMPL}
