@@ -12,6 +12,9 @@ License: GPLv3
 
 Author: Iurie Nistor
 
+Note: Redkite is not supposed to be provided as shared library,
+      it must be only as static library for development.
+
 #### The problem
 
 An application that is developed in a particular GUI toolkit
@@ -40,7 +43,7 @@ a Digital Audio Workstation as a host is loading audio GUI plugins.
 
  * Not to add dependences that breaks the above two points.
 
- * Can be easily linked statically.
+ * Linked statically
 
  * Be cross-platform
 
