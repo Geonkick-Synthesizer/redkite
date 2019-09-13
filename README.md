@@ -17,38 +17,34 @@ Note: Redkite is not supposed to be provided as shared library,
 
 #### The problem
 
-An application that is developed in a particular GUI toolkit
-is loading in its address space GUI plugins that are developed
-in a different GUI toolkit, or different versions of a particular
-toolkit. Using well known GUI toolkits for this purpose can cause
-a lot of difficulties. Redkite GUI toolkit is developed to address
-this problem, and provide a way to develop easily self-sufficient
-GUI plugins apart from developing standalone applications. Often
-these kinds of problems arise in music software, for example, when
-a Digital Audio Workstation as a host is loading audio GUI plugins.
+An application that is developed in a particular GUI toolkit is loading
+in its address space GUI plugins that are developed with different versions
+of the same or different GUI toolkit. Using well known GUI toolkits for this
+purpose can cause a lot of conflicts. For example, often these conflicts arise
+in music software when a Digital Audio Workstation as a host is loading GUI
+audio plugins. The Redkite GUI toolkit is developed to address
+this issue, and provide a way to develop easily self-sufficiency
+GUI plugins apart from developing standalone applications.
 
 ### Goals
 
  * Generally to have the same basic properties as common GUI toolkits.
 
- * Many instances of the same toolkit version or different must be able
-  to run without problems in the same process address space.
+ * Many instances of the same or different version of the toolkit must be able
+   to run without problems in the same process address space.
 
- * Can be linked statically into a shared library that uses the toolkit
-  and that shared library to be loaded dynamically by the host.
-  Loading these kinds of shared libraries (linked against the same
-  toolkit version or not) in the same address process space must run
-  without problems, there must be no interference between
-  toolkit instances and versions.
+ * Can be easily linked statically. Shared libraries that are developed 
+   using the toolkit and loaded dynamically must not cause conflicts.
 
- * Not to add dependences that breaks the above two points.
-
- * Linked statically
+ * Not to add dependencies that breaks the above points. Also, maximum
+   to relay on dependencies for runtime that are provided by default
+   by the system. Avoid requiring to install additional dependencies
+   for runtime that may cause versioning conflicts.
 
  * Be cross-platform
 
- * User interface API to be simple
-
+ * Interface (API) to be simple
+ 
 ### What was implemented
 
 * Widgets: RkWidget, RkLabel, RkLineEdit
