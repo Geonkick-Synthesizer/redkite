@@ -93,7 +93,7 @@ On Debian, Ubuntu, Ubuntu Studio install:
 
 Clone the code repository, compile and install
 
-        git clone git@github.com:quamplex/redkite.git
+        git clone git@gitlab.com:geontime/redkite.git
         mkdir redkite/build
         cd redkite/build
         cmake ../
@@ -102,4 +102,4 @@ Clone the code repository, compile and install
 
 ### What applications were developed with Redkite?
 
-* [Geonkick](https://github.com/quamplex/geonkick) - a percussion synthesizer.
+* [Geonkick](https://gitlab.com/geontime/geonkick) - a percussion synthesizer.
