@@ -34,9 +34,11 @@ class KeyExampleWidget: public RkWidget {
   protected:
         void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event) final
         {
+#ifdef RK_LOG_DEBUG_LEVEL
                 int diff = event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift) ? 0x61 - 0x41 : 0;
                 RK_LOG_DEBUG("key: " << static_cast<unsigned char>(static_cast<int>(event->key()) + diff)
                              << "[0x" << std::hex << static_cast<int>(event->key()) + diff << "]");
+#endif
         }
 };
 

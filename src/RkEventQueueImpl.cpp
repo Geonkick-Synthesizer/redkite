@@ -68,10 +68,39 @@ void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
         // Set the display from the top window.
         if (!widget->parent() && !platformEventQueue->display())
                 platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
-#endif //!defined(Rk_OS_WIN) && !defined(Rk_OS_MAC)
+        windowIdsMap.insert({widget->id().id, widget});
+#else
+#error platform not implemented
+#endif
         widgetList.push_back(widget);
         if (!widget->eventQueue())
                 widget->setEventQueue(inf_ptr);
+}
+
+RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkWindowId &id) const
+{
+#if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
+        auto it = windowIdsMap.find(id.id);
+#else
+#error platform not implemented
+#endif
+        if (it != windowIdsMap.end())
+                return it->second;
+
+        return nullptr;
+}
+
+RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkNativeWindowInfo &info) const
+{
+#if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
+        auto it = windowIdsMap.find(info.window);
+#else
+#error platform not implemented
+#endif
+        if (it != windowIdsMap.end())
+                return it->second;
+
+        return nullptr;
 }
 
 void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
@@ -79,6 +108,11 @@ void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
         for (auto it = widgetList.begin(); it != widgetList.end(); ++it) {
                 if (*it == widget) {
                        widgetList.erase(it);
+#if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
+                       windowIdsMap.erase((*it)->id().id);
+#else
+#error platform not implemented
+#endif
                        return;
                 }
         }
@@ -117,22 +151,14 @@ void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::s
 
 void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
 {
-        for(auto widget : widgetList) {
-                if (widget->id().id == id.id) {
-                        widget->processEvent(event);
-                        break;
-                }
-        }
+        if (auto widget = findWidget(id); widget)
+                widget->processEvent(event);
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
-        for(auto widget : widgetList) {
-                if (widget->id().id == info.window) {
-                        widget->processEvent(event);
-                        break;
-                }
-        }
+        if (auto widget = findWidget(info); widget)
+                widget->processEvent(event);
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvents()

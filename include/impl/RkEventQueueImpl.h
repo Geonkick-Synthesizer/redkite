@@ -51,6 +51,8 @@ class RkEventQueue::RkEventQueueImpl {
 
         bool widgetExists(RkWidget *widget);
         void addWidget(RkWidget *widget);
+        RkWidget* findWidget(const RkWindowId &id) const;
+        RkWidget* findWidget(const RkNativeWindowInfo &info) const;
         void removeWidget(RkWidget *widget);
         void removeWidgetEvents(RkWidget *widget);
         void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
@@ -71,6 +73,7 @@ class RkEventQueue::RkEventQueueImpl {
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)
         std::list<RkWidget*> widgetList;
+        std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
         std::mutex actionsQueueMutex;
