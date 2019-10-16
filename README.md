@@ -3,10 +3,10 @@
 #### Description
 
 Redkite is a small free software GUI toolkit.
-It is developed in C++11&14 and inspired from other
+It is developed in C++17 and inspired from other
 well known GUI toolkits.
 
-Version: 0.6.1
+Version: 0.6.2
 
 License: GPLv3
 
@@ -33,7 +33,7 @@ GUI plugins apart from developing standalone applications.
  * Many instances of the same or different version of the toolkit must be able
    to run without problems in the same process address space.
 
- * Can be easily linked statically. Shared libraries that are developed 
+ * Can be easily linked statically. Shared libraries that are developed
    using the toolkit and loaded dynamically must not cause conflicts.
 
  * Not to add dependencies that breaks the above points. Also, maximum
@@ -44,7 +44,7 @@ GUI plugins apart from developing standalone applications.
  * Be cross-platform
 
  * Interface (API) to be simple
- 
+
 ### What was implemented
 
 * Widgets: RkWidget, RkLabel, RkLineEdit
