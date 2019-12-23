@@ -51,7 +51,7 @@ GUI plugins apart from developing standalone applications.
 * Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
   RkPainter uses Cairo backend.
 * Actions: a binding mechanism between objects. An action can be posted in thread-safe manner.
-* Cross-platform: GNU/Linux (X11), Windows (Win API, partial, not usable now). No plans for Mac now.
+* GNU/Linux (XLib/X11)
 * CMake system, build/install
 * rkpng2c - a tool that converts PNG images to C array encoded in ARGB32
 * RkTimer - a timer class
