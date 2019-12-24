@@ -200,6 +200,6 @@ int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
 
         cairo_text_extents_t extents;
         cairo_text_extents (context(), text.data(), &extents);
-        return extents.width;
+        return extents.x_advance;
 }
 
