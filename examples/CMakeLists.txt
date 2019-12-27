@@ -4,7 +4,7 @@ set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
 set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
-set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
+set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/Painter.cpp)
 set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
 set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
 set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
@@ -97,16 +97,16 @@ target_link_libraries(widget_colors redkite)
 target_link_libraries(widget_colors "-lX11 -lrt -lm -ldl")
 target_link_libraries(widget_colors ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
-# ------------ Painter Exmaple -------
+#------- Painter Example -----
 
-add_executable(painter
+add_executable(Painter
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES_PAINTER})
 
-add_dependencies(painter redkite)
-target_link_libraries(painter redkite)
-target_link_libraries(painter "-lX11 -lrt -lm -ldl")
-target_link_libraries(painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+add_dependencies(Painter redkite)
+target_link_libraries(Painter redkite)
+target_link_libraries(Painter "-lX11 -lrt -lm -ldl")
+target_link_libraries(Painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Action Exmaple -------
 

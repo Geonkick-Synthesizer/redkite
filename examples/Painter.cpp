@@ -1,8 +1,8 @@
 /**
- * File name: painter.cpp
+ * File name: Painter.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -28,6 +28,10 @@
 #include "RkLog.h"
 #include "RkEvent.h"
 
+/**
+ * This is an example how to draw on a widget by using RkPainter.
+ */
+
 class  PainterExample: public RkWidget {
   public:
         PainterExample(RkMain *app)
@@ -35,47 +39,69 @@ class  PainterExample: public RkWidget {
                 , clickPoint(50, 50)
                 , startDraw{false}
         {
-                RK_LOG_INFO("called");
+                // Set widget background color.
                 setBackgroundColor(80, 80, 80);
         }
 
         ~PainterExample() = default;
 
   protected:
+        // paintEvent is re-implemented from RkWidget interface.
+        // paintEvent is called every time the widget needs to be painted.
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
         {
+                // The event will be not used.
                 RK_UNUSED(event);
+
+                /**
+                 * There are two options to draw. Draw directly to a widget or
+                 * draw first on an image, and than draw the image on the widget.
+                 * The second option is to avoid flickering.
+                 */
                 if (startDraw) {
 
+                        // Create the image if the widget size changed or if the image was not created.
                         if (image.width() != width() || image.height() != height()) {
                                 RkImage im(width(), height());
+                                // Because there is no copy constructor developed yet for RkImage.
                                 image = im;
                         }
 
+                        // Use RkPainter to draw on the image.
                         RkPainter painter(&image);
+
+                        // Fill the rect with the widget background color.
                         painter.fillRect(rect(), background());
+
+                        // Create a pen with color, with and style.
                         RkPen pen(RkColor(255, 0, 0));
                         pen.setWidth(1);
                         pen.setStyle(RkPen::PenStyle::DashLine);
+
+                        // Set RkPainter pen.
                         painter.setPen(pen);
+
+                        // Draw some circles and lines.
                         painter.drawCircle(50, 50, 40);
                         painter.drawLine(50, 50, 100, 100);
-
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() + 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() + 80));
 
+                        // Change the pen style and draw.
                         pen.setStyle(RkPen::PenStyle::DotLine);
                         pen.setColor(RkColor(0, 255, 0));
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() + 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() + 80, clickPoint.y() - 80));
 
+                        // Change the pen style and draw again.
                         pen.setStyle(RkPen::PenStyle::SolidLine);
                         pen.setColor(RkColor(0, 0, 255));
                         painter.setPen(pen);
                         painter.drawCircle(clickPoint.x() - 40 / 2, clickPoint.y() - 40/2, 40);
                         painter.drawLine(clickPoint, RkPoint(clickPoint.x() - 80, clickPoint.y() - 80));
 
+                        // Draw text with a font color and style.
                         int y = 50;
                         painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
                         RkFont font = painter.font();
@@ -90,9 +116,12 @@ class  PainterExample: public RkWidget {
                         y += 55;
                         painter.fillRect(RkRect(50, y, 100, 25), RkColor(255, 255, 255));
                         painter.drawText({50, y, 100, 25}, "Hello!", Rk::Alignment::AlignRight);
-
                         painter.drawRect(RkRect(50, y, 100, 25));
+
+                        // Create the RkPainter that will draw on widget.
                         RkPainter paint(this);
+
+                        // Draw the image that was create before.
                         paint.drawImage(image, 0, 0);
                 }
         }
