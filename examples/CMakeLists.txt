@@ -1,4 +1,4 @@
-set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
+set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/HelloWorld.cpp)
 set(RK_EXAMPLES_SOURCES_MULTI ${RK_EXAMPLES_PATH}/hello_multi.cpp)
 set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
 set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
@@ -21,18 +21,21 @@ if (RK_GRAPHICS_BACKEND MATCHES Cairo)
   set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
 endif()
 
-add_executable(hello ${RK_EXEC_OPTION}
+
+#------- Hello World Example -----
+
+add_executable(HelloWorld ${RK_EXEC_OPTION}
 	${RK_HEADERS}
 	${RK_EXAMPLES_SOURCES})
 
-add_dependencies(hello redkite)
-target_link_libraries(hello redkite)
+add_dependencies(HelloWorld redkite)
+target_link_libraries(HelloWorld redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-  target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32")
-  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+  target_link_libraries(HelloWorld "-mwindows -lstdc++ -lm -lmingw32")
+  target_link_libraries(HelloWorld ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
-  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
-  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+  target_link_libraries(HelloWorld "-lX11 -lpthread -lrt -lm -ldl")
+  target_link_libraries(HelloWorld ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 endif()
 
 # ------------ Multithreading Example -------
