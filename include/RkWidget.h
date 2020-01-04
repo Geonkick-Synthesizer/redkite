@@ -93,6 +93,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           int y() const;
           void setY(int y);
           void setPosition(int x, int y);
+          void setPosition(const RkPoint &p);
           RkPoint position() const;
           void setBorderWidth(int width);
           int borderWidth() const;

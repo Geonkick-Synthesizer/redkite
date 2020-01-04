@@ -451,4 +451,7 @@ namespace Rk {
 
 #define action
 
+#define RK_DECLARE_IMAGE_RC(name) extern const unsigned char rk_ ## name ## _png[]
+#define RK_IMAGE_RC(name) rk_ ## name ## _png
+
 #endif // RK_GLOBAL_H

@@ -265,6 +265,11 @@ void RkWidget::setPosition(int x, int y)
         o_ptr->setPosition(RkPoint(x, y));
 }
 
+void RkWidget::setPosition(const RkPoint &p)
+{
+        o_ptr->setPosition(p);
+}
+
 void RkWidget::setBorderWidth(int width)
 {
         o_ptr->setBorderWidth(width);
