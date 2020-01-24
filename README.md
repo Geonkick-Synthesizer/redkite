@@ -93,7 +93,7 @@ On Debian, Ubuntu, Ubuntu Studio install:
 
 Clone the code repository, compile and install
 
-        git clone git@gitlab.com:geontime/redkite.git
+        git clone https://gitlab.com/geontime/redkite.git
         mkdir redkite/build
         cd redkite/build
         cmake ../
