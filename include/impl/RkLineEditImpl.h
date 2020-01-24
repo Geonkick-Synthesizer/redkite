@@ -56,6 +56,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         void deleteSelection();
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
         void updateSize();
+	bool hasEditFocus() const;
 
  protected:
         void onCursorTimeout();
