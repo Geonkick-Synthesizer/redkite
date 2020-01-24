@@ -52,11 +52,13 @@ RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
 
 void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
 {
+	selectionIndex = 0;
+	enableSelectionMode(false);
         editedText = text;
         if (editedText.size() < 1)
                 cursorIndex = 0;
-        else if (cursorIndex > editedText.size() - 1)
-                cursorIndex = editedText.size() - 1;
+        else
+		cursorIndex > editedText.size() - 1;
         lastCahnges = std::chrono::system_clock::now();
 }
 

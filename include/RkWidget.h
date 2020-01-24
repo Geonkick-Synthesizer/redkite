@@ -121,7 +121,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           void disableInput();
           RkWidget* getTopWindow();
           void setEventQueue(RkEventQueue *eventQueue);
-          void setFocus(bool b);
+          void setFocus(bool b = true);
           bool hasFocus() const;
           void setPointerShape(Rk::PointerShape shape);
           Rk::PointerShape pointerShape() const;
