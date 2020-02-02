@@ -1,5 +1,5 @@
 /**
- * File name: RkButton.h
+ * File name: RkButtonImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
@@ -21,30 +21,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_BUTTON_H
-#define RK_BUTTON_H
+#ifndef RK_LABEL_IMPL_H
+#define RK_LABEL_IMPL_H
 
-#include "RkWidget.h"
+#include "RkWidgetImpl.h"
+#include "RkButton.h"
 #include "RkImage.h"
 
-class RkButton: public RkWidget
-{
+class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
  public:
-        explicit RkButton(RkWidget *parent);
-        virtual ~RkButton() = default;
+        RkButtonImpl(RkButton *interface, RkWidget *parent = nullptr);
+        virtual ~RkButtonImpl() = default;
         void setPressedImage(const RkImage &img);
         void setUnpressedImage(const RkImage &img);
         bool isPressed() const;
         bool isCheckable();
         void setPressed(bool pressed);
         void setCheckable(bool checkable);
-        RK_DECL_ACT(toggled, toggled(bool pressed), RK_ARG_TYPE(bool), RK_ARG_VAL(pressed));
 
- protected:
-        RK_DELCATE_IMPL_PTR(RkButton)
-        RkButton(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
+ private:
+        RK_DECALRE_INTERFACE_PTR(RkButton)
+        bool is_pressed;
+        bool is_checkable;
+        RkImage pressedImage;
+        RkImage unpressedImage;
 };
 
-#endif // RK_BUTTON_H
+#endif // RK_LABEL_H

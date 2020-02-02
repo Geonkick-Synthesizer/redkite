@@ -1,5 +1,5 @@
 /**
- * File name: RkButton.h
+ * File name: Button.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
@@ -21,30 +21,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_BUTTON_H
-#define RK_BUTTON_H
-
+#include "RkMain.h"
 #include "RkWidget.h"
-#include "RkImage.h"
+#include "RkPainter.h"
+#include "RkEvent.h"
 
-class RkButton: public RkWidget
+int main(int arc, char **argv)
 {
- public:
-        explicit RkButton(RkWidget *parent);
-        virtual ~RkButton() = default;
-        void setPressedImage(const RkImage &img);
-        void setUnpressedImage(const RkImage &img);
-        bool isPressed() const;
-        bool isCheckable();
-        void setPressed(bool pressed);
-        void setCheckable(bool checkable);
-        RK_DECL_ACT(toggled, toggled(bool pressed), RK_ARG_TYPE(bool), RK_ARG_VAL(pressed));
+    RkMain app(arc, argv);
 
- protected:
-        RK_DELCATE_IMPL_PTR(RkButton)
-        RkButton(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
-};
+    auto widget = new PainterExample(&app);
+    widget->setTitle("Button Example");
+    widget->setSize(350, 350);
+    widget->show();
 
-#endif // RK_BUTTON_H
+    auto button = new RkButton(widget);
+    button->setPosition(10, 10);
+    button->setPressedImage(RkImage(48, 48, pressed_button));
+    button->unpressedImage(RkImage(48, 48, unpressed_button));
+    button->show();
+
+    return app.exec();
+}

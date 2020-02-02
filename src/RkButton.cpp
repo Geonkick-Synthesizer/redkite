@@ -30,30 +30,59 @@ RkButton::RkButton(RkWidget *parent)
 {
 }
 
+RkButton::RkButton(RkWidget *parent, const std::shared_ptr<RkButtonImpl> &impl)
+        : RkWidget(parent, std::static_pointer_cast<RkWidgetImpl>(impl)}
+{
+}
+
 void RkButton::setPressedImage(const RkImage &img)
 {
-        impl_ptr
+        impl_ptr->setPressedImage(img);
+        update();
 }
 
 void RkButton::setUnpressedImage(const RkImage &img)
 {
-        impl_ptr
+        impl_ptr->setUnpressedImage(img);
+        update();
 }
 
 bool RkButton::isPressed() const
 {
-        impl_ptr
+        impl_ptr->isPressed();
 }
 
 bool RkButton::isCheckable()
 {
-        impl_ptr
+        impl_ptr->isCheckable();
 }
 
 void RkButton::setPressed(bool pressed)
 {
+        impl_ptr->setPressed(pressed);
+        update();
 }
 
 void RkButton::setCheckable(bool checkable)
 {
+        impl_ptr->setCheckable(checkable);
 }
+
+void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+{
+        RK_UNUSED(event);
+        if (isCheckable()) {
+                setPressed(!isPressed());
+                action toggled(isPressed());
+        } else if (!isPressed()) {
+                setPressed(true);
+                action toggled(true);
+        }
+}
+
+void RkButton::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+{
+        RkPainter painter(this);
+        impl_ptr->drawButton(painter);
+}
+
