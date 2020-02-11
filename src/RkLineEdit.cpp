@@ -129,6 +129,7 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
                 return;
         case Rk::Key::Key_Return:
                 action enterPressed();
+		action editingFinished();
                 return;
         case Rk::Key::Key_a:
         case Rk::Key::Key_A:
@@ -165,8 +166,13 @@ void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &even
 
 void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
-        RK_UNUSED(event);
-        event->type() == RkEvent::Type::FocusedIn ? showCursor() : hideCursor();
+        if (event->type() == RkEvent::Type::FocusedIn) {
+		showCursor();
+	} else if (event->type() == RkEvent::Type::FocusedOut) {
+		if (impl_ptr->hasEditFocus())
+			action editingFinished();
+		hideCursor();
+	}
 }
 
 void RkLineEdit::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)

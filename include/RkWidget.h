@@ -93,6 +93,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           int y() const;
           void setY(int y);
           void setPosition(int x, int y);
+          void setPosition(const RkPoint &p);
           RkPoint position() const;
           void setBorderWidth(int width);
           int borderWidth() const;
@@ -120,7 +121,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           void disableInput();
           RkWidget* getTopWindow();
           void setEventQueue(RkEventQueue *eventQueue);
-          void setFocus(bool b);
+          void setFocus(bool b = true);
           bool hasFocus() const;
           void setPointerShape(Rk::PointerShape shape);
           Rk::PointerShape pointerShape() const;

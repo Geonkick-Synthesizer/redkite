@@ -52,11 +52,13 @@ RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
 
 void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
 {
+	selectionIndex = 0;
+	enableSelectionMode(false);
         editedText = text;
         if (editedText.size() < 1)
                 cursorIndex = 0;
-        else if (cursorIndex > editedText.size() - 1)
-                cursorIndex = editedText.size() - 1;
+        else
+		cursorIndex = editedText.size();
         lastCahnges = std::chrono::system_clock::now();
 }
 
@@ -323,4 +325,9 @@ void RkLineEdit::RkLineEditImpl::updateSize()
         contentsRect = RkRect(2, 2, size().width() - 6, size().height() - 4);
         beginX = 0;
         endX = contentsRect.width();
+}
+
+bool RkLineEdit::RkLineEditImpl::hasEditFocus() const
+{
+	return cursorTimer->started();
 }

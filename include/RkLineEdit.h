@@ -37,6 +37,7 @@ class RK_EXPORT RkLineEdit : public RkWidget {
 
     RK_DECL_ACT(textEdited, textEdited(const std::string &text), RK_ARG_TYPE(const std::string&), RK_ARG_VAL(text));
     RK_DECL_ACT(enterPressed, enterPressed(), RK_ARG_TYPE(), RK_ARG_VAL());
+    RK_DECL_ACT(editingFinished, editingFinished(), RK_ARG_TYPE(), RK_ARG_VAL());
 
  protected:
     void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
