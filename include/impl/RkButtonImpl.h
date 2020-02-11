@@ -27,6 +27,7 @@
 #include "RkWidgetImpl.h"
 #include "RkButton.h"
 #include "RkImage.h"
+#include "RkPainter.h"
 
 class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
  public:
@@ -38,6 +39,7 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
         bool isCheckable();
         void setPressed(bool pressed);
         void setCheckable(bool checkable);
+	void drawButton(RkPainter &painter);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkButton)

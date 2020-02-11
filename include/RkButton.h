@@ -42,7 +42,6 @@ class RkButton: public RkWidget
 
  protected:
         RK_DELCATE_IMPL_PTR(RkButton)
-        RkButton(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
 };

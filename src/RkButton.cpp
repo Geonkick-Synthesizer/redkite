@@ -23,15 +23,11 @@
 
 #include "RkButton.h"
 #include "RkButtonImpl.h"
+#include "RkPainter.h"
 
 RkButton::RkButton(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkButton::RkWidgetImpl>(std::make_shared<RkButton::RkButtonImpl>(this, parent)))
         , impl_ptr{std::static_pointer_cast<RkButton::RkButtonImpl>(o_ptr)}
-{
-}
-
-RkButton::RkButton(RkWidget *parent, const std::shared_ptr<RkButtonImpl> &impl)
-        : RkWidget(parent, std::static_pointer_cast<RkWidgetImpl>(impl)}
 {
 }
 
@@ -49,12 +45,12 @@ void RkButton::setUnpressedImage(const RkImage &img)
 
 bool RkButton::isPressed() const
 {
-        impl_ptr->isPressed();
+	return impl_ptr->isPressed();
 }
 
 bool RkButton::isCheckable()
 {
-        impl_ptr->isCheckable();
+        return impl_ptr->isCheckable();
 }
 
 void RkButton::setPressed(bool pressed)

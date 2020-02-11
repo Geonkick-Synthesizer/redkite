@@ -22,7 +22,7 @@
  */
 
 #include "RkButtonImpl.h"
-#include "RkPainter.h"
+#include "RkLog.h"
 
 RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -35,15 +35,13 @@ RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
 void RkButton::RkButtonImpl::setPressedImage(const RkImage &img)
 {
         pressedImage = img;
-        if (isPressed())
-                setFixedSize(img.width(), img.height());
+	inf_ptr->setFixedSize(img.width(), img.height());
 }
 
 void RkButton::RkButtonImpl::setUnpressedImage(const RkImage &img)
 {
         unpressedImage = img;
-        if (!isPressed())
-                setFixedSize(img.width(), img.height());
+	inf_ptr->setFixedSize(img.width(), img.height());
 }
 
 bool RkButton::RkButtonImpl::isPressed() const
@@ -68,8 +66,13 @@ void RkButton::RkButtonImpl::setCheckable(bool checkable)
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
-        if (isPressed())
+        if (isPressed()) {
+		RK_LOG_INFO("pressedImage");
                 painter.drawImage(pressedImage, 0, 0);
+	}
         else
+		{
+			RK_LOG_INFO("pressedImage");
                 painter.drawImage(unpressedImage, 0, 0);
+		}
 }
