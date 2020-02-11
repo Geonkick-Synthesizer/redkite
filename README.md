@@ -63,6 +63,7 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkEvent
 * RkEventQueue
 * RkImage
+* RkButton
 * RkLabel
 * RkLog
 * RkMain
