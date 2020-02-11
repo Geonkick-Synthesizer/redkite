@@ -447,6 +447,10 @@ namespace Rk {
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
         obj1->rk_add_action_cb_##act ([=](act_args){ obj2->callback; })
 
+// Bind lamda functions to object actions.
+#define RK_ACT_BINDL(obj1, act, act_args, lamda) \
+        obj1->rk_add_action_cb_##act (lamda)
+
 #define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_cb_##act.clear();
 
 #define action

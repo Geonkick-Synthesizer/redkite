@@ -48,7 +48,7 @@ bool RkButton::isPressed() const
 	return impl_ptr->isPressed();
 }
 
-bool RkButton::isCheckable()
+bool RkButton::isCheckable() const
 {
         return impl_ptr->isCheckable();
 }
@@ -78,6 +78,7 @@ void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 
 void RkButton::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
+	RK_UNUSED(event);
         RkPainter painter(this);
         impl_ptr->drawButton(painter);
 }

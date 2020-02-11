@@ -22,7 +22,6 @@
  */
 
 #include "RkButtonImpl.h"
-#include "RkLog.h"
 
 RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
@@ -66,13 +65,8 @@ void RkButton::RkButtonImpl::setCheckable(bool checkable)
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
-        if (isPressed()) {
-		RK_LOG_INFO("pressedImage");
+        if (isPressed())
                 painter.drawImage(pressedImage, 0, 0);
-	}
-        else
-		{
-			RK_LOG_INFO("pressedImage");
-                painter.drawImage(unpressedImage, 0, 0);
-		}
+	else
+		painter.drawImage(unpressedImage, 0, 0);
 }

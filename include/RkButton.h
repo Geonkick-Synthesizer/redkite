@@ -35,7 +35,7 @@ class RkButton: public RkWidget
         void setPressedImage(const RkImage &img);
         void setUnpressedImage(const RkImage &img);
         bool isPressed() const;
-        bool isCheckable();
+        bool isCheckable() const;
         void setPressed(bool pressed);
         void setCheckable(bool checkable);
         RK_DECL_ACT(toggled, toggled(bool pressed), RK_ARG_TYPE(bool), RK_ARG_VAL(pressed));

@@ -26,6 +26,7 @@
 #include "RkPainter.h"
 #include "RkEvent.h"
 #include "RkButton.h"
+#include "RkLog.h"
 
 extern const unsigned char button_up[];
 extern const unsigned char button_down[];
@@ -39,12 +40,20 @@ int main(int arc, char **argv)
     widget->setSize(350, 350);
     widget->show();
 
-    auto button = new RkButton(widget);
-    button->setCheckable(true);
-    button->setPosition(10, 10);
-    button->setPressedImage(RkImage(48, 48, button_down));
-    button->setUnpressedImage(RkImage(48, 48, button_up));
-    button->show();
+    auto button1 = new RkButton(widget);
+    button1->setCheckable(true);
+    button1->setPosition(10, 10);
+    button1->setPressedImage(RkImage(48, 48, button_down));
+    button1->setUnpressedImage(RkImage(48, 48, button_up));
+    button1->show();
+    RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b), [](bool b){ RK_LOG_INFO("Button1: " << b); });
+
+    auto button2 = new RkButton(widget);
+    button2->setPosition(70, 10);
+    button2->setPressedImage(RkImage(48, 48, button_down));
+    button2->setUnpressedImage(RkImage(48, 48, button_up));
+    button2->show();
+    RK_ACT_BINDL(button2, toggled, RK_ACT_ARGS(bool b), [](bool b){ RK_LOG_INFO("Button2: " << b); });
 
     return app.exec();
 }
