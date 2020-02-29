@@ -51,7 +51,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         int getCursorIndex() const;
         int selectionStart() const;
         int selectionEnd() const;
-        std::string getText(int pos, int n) const;
+        std::string getText(int pos, size_t n) const;
         void selectAll();
         void deleteSelection();
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event);

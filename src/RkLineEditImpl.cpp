@@ -55,7 +55,7 @@ void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
         editedText = text;
         if (editedText.size() < 1)
                 cursorIndex = 0;
-        else if (cursorIndex > static_cast<decltype(cursorIndex)>(editedText.size() - 1))
+        else if (cursorIndex > static_cast<decltype(cursorIndex)>(editedText.size()) - 1)
                 cursorIndex = editedText.size() - 1;
         lastCahnges = std::chrono::system_clock::now();
 }
@@ -231,7 +231,7 @@ int RkLineEdit::RkLineEditImpl::selectionEnd() const
         return selectionIndex < cursorIndex ? cursorIndex : selectionIndex;
 }
 
-std::string RkLineEdit::RkLineEditImpl::getText(int pos, int n) const
+std::string RkLineEdit::RkLineEditImpl::getText(int pos, size_t n) const
 {
         if (editedText.empty())
                 return std::string();
@@ -240,8 +240,8 @@ std::string RkLineEdit::RkLineEditImpl::getText(int pos, int n) const
                 return std::string();
         else if (pos < 0)
                 pos = 0;
-        else if (n > static_cast<decltype(n)>(editedText.npos))
-                n = static_cast<decltype(n)>(editedText.npos);
+        else if (n > editedText.npos)
+                n = editedText.npos;
 
         return editedText.substr(pos, n);
 }
