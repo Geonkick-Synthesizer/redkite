@@ -57,8 +57,8 @@ void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
         editedText = text;
         if (editedText.size() < 1)
                 cursorIndex = 0;
-        else
-		cursorIndex = editedText.size();
+        else if (cursorIndex > static_cast<decltype(cursorIndex)>(editedText.size()) - 1)
+                cursorIndex = editedText.size() - 1;
         lastCahnges = std::chrono::system_clock::now();
 }
 
@@ -88,7 +88,7 @@ void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
                 cursorIndex = 0;
         } else if (selectionMode()) {
                 selectionIndex++;
-                if (selectionIndex > editedText.size())
+                if (selectionIndex > static_cast<decltype(selectionIndex)>(editedText.size()))
                         selectionIndex = editedText.size();
                 if (selectionIndex == cursorIndex) {
                         enableSelectionMode(false);
@@ -96,7 +96,7 @@ void RkLineEdit::RkLineEditImpl::moveCursorRight(int n)
                 }
         } else {
                 cursorIndex += n;
-                if (cursorIndex > editedText.size() - 1)
+                if (cursorIndex > static_cast<decltype(cursorIndex)>(editedText.size() - 1))
                         cursorIndex = editedText.size();
         }
         lastCahnges = std::chrono::system_clock::now();
@@ -128,7 +128,7 @@ void RkLineEdit::RkLineEditImpl::addText(const std::string& text)
 {
         if (isSelectionMode) {
         } else {
-                if (cursorIndex == editedText.size())
+                if (cursorIndex == static_cast<decltype(cursorIndex)>(editedText.size()))
                         editedText += text;
                 else
                         editedText.insert(cursorIndex, text);
@@ -233,12 +233,12 @@ int RkLineEdit::RkLineEditImpl::selectionEnd() const
         return selectionIndex < cursorIndex ? cursorIndex : selectionIndex;
 }
 
-std::string RkLineEdit::RkLineEditImpl::getText(int pos, int n) const
+std::string RkLineEdit::RkLineEditImpl::getText(int pos, size_t n) const
 {
         if (editedText.empty())
                 return std::string();
 
-        if (pos > editedText.size())
+        if (pos > static_cast<decltype(pos)>(editedText.size()))
                 return std::string();
         else if (pos < 0)
                 pos = 0;
@@ -263,7 +263,7 @@ void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> 
         RK_UNUSED(event);
         if (contentsRect.height() * contentsRect.width() == 0)
                 updateSize();
-                
+
         RkImage img(size());
         {
                 RkPainter painter(&img);
@@ -275,7 +275,7 @@ void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> 
                         cursorX = painter.getTextWidth(textTo(selectionIndex));
                 else
                         cursorX = painter.getTextWidth(textTo(cursorIndex));
-                
+
                 if (cursorX > endX) {
                         endX += cursorX - endX;
                         beginX = endX - contentsRect.width();
