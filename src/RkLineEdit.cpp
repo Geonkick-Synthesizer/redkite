@@ -152,6 +152,7 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         // Allow only Latin1.
         int key = static_cast<int>(event->key());
         if (0x00000020 <= key && key <= 0x000000ff) {
+                impl_ptr->enableSelectionMode(false);
                 std::string str = std::string(1, static_cast<char>(static_cast<int>(event->key())));
                 impl_ptr->addText(str);
                 textEdited(impl_ptr->text());
