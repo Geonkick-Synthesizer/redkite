@@ -65,8 +65,8 @@ void RkButton::RkButtonImpl::setCheckable(bool checkable)
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
-        if (isPressed())
+        if (isPressed() && !pressedImage.isNull())
                 painter.drawImage(pressedImage, 0, 0);
-	else
+	else if (!unpressedImage.isNull())
 		painter.drawImage(unpressedImage, 0, 0);
 }

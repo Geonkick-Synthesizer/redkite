@@ -62,6 +62,7 @@ void RkButton::setPressed(bool pressed)
 void RkButton::setCheckable(bool checkable)
 {
         impl_ptr->setCheckable(checkable);
+        update();
 }
 
 void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
