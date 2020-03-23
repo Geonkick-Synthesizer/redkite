@@ -10,6 +10,7 @@ set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
 set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
 set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 set(RK_EXAMPLES_SOURCES_LINEEDIT ${RK_EXAMPLES_PATH}/lineedit.cpp)
+set(RK_EXAMPLES_SOURCES_CONTINER ${RK_EXAMPLES_PATH}/WidgetContiner.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -163,5 +164,17 @@ add_dependencies(lineedit redkite)
 target_link_libraries(lineedit redkite)
 target_link_libraries(lineedit "-lX11 -lrt -lm -ldl")
 target_link_libraries(lineedit ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+# ------------ RkWidgetContiner example -------
+
+add_executable(WidgetContiner
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_CONTINER})
+
+add_dependencies(WidgetContiner redkite)
+target_link_libraries(WidgetContiner redkite)
+target_link_libraries(WidgetContiner "-lX11 -lrt -lm -ldl")
+target_link_libraries(WidgetContiner ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
 
 
