@@ -96,7 +96,9 @@ namespace Rk {
         enum class Alignment : int {
                 AlignLeft   = 1,
                 AlignRight  = 2,
-                AlignCenter = 3
+		AlignCenter = 3,
+		AlignTop    = 4,
+		AlignBottom = 5
         };
 
         enum class Orientation : int {
