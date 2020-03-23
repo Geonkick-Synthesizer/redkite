@@ -58,6 +58,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           virtual ~RkWidget();
 
 	  void show();
+	  bool isShown() const;
           void hide();
           void setTitle(const std::string &title);
 	  const std::string& title() const;

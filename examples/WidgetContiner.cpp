@@ -40,14 +40,19 @@ int main(int arc, char **argv)
 	auto continer = new RkWidgetContiner(widget, Rk::Orientation::Horizontal);
 	continer->setSpacing(5);
 	for (int i = 0; i < 10; i++) {
-		if (i == 2)
-			continer->addSpace(10);
-		if (i == 8)
-			continer->addSpace(30, Rk::Alignment::AlignRight);
+		//if (i == 2)
+		//	continer->addSpace(10);
+		//if (i == 8)
+		//	continer->addSpace(30, Rk::Alignment::AlignRight);
 		auto child = new RkWidget(widget);
 		child->setSize(10, 10);
 		child->setBackgroundColor({255, 0, 0});
 		child->show();
+		if (i == 3) {
+			child->setBackgroundColor({100, 0, 34});
+			child->hide();
+		}
+			
 		if (i > 5) {
 			continer->addWidget(child, Rk::Alignment::AlignRight);
 			child->setBackgroundColor({0, 255, 0});

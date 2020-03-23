@@ -46,6 +46,7 @@ class RkWidget::RkWidgetImpl {
         virtual ~RkWidgetImpl();
 
         void show(bool b);
+	bool isShown() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
@@ -121,6 +122,7 @@ class RkWidget::RkWidgetImpl {
         RkColor widgetDrawingColor;
         RkFont widgetFont;
         Rk::PointerShape widgetPointerShape;
+	bool isWidgetSown;
 };
 
 #endif // RK_WIDGET_IMPL_H

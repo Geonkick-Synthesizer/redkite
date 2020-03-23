@@ -92,6 +92,11 @@ void RkWidget::show()
         o_ptr->show(true);
 }
 
+bool RkWidget::isShown() const
+{
+	return o_ptr->isShown();
+}
+
 void RkWidget::hide()
 {
         o_ptr->show(false);

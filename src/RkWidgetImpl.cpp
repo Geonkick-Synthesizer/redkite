@@ -59,6 +59,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}
+	, isWidgetSown{false}
 {
         platformWindow->init();
 }
@@ -107,7 +108,13 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 
 void RkWidget::RkWidgetImpl::show(bool b)
 {
-        platformWindow->show(b);
+	isWidgetSown = b;
+        platformWindow->show(isWidgetSown);
+}
+
+bool RkWidget::RkWidgetImpl::isShown() const
+{
+	return isWidgetSown;
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
@@ -177,6 +184,14 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
                 inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                break;
+	case RkEvent::Type::Show:
+		isWidgetSown = true;
+                inf_ptr->showEvent(std::dynamic_pointer_cast<RkShowEvent>(event));
+                break;
+	case RkEvent::Type::Hide:
+		isWidgetSown = false;
+                inf_ptr->hideEvent(std::dynamic_pointer_cast<RkHideEvent>(event));
                 break;
         case RkEvent::Type::DeleteChild:
                 deleteChild(std::dynamic_pointer_cast<RkDeleteChild>(event)->child());

@@ -66,7 +66,7 @@ void RkWidgetContiner::update()
 	int posRight = initPosition(Rk::Alignment::AlignRight);
 	for (const auto &id: itemsIds) {
 		auto resWidget = widgets.find(id);
-		if (resWidget != widgets.end()) {
+		if (resWidget != widgets.end() && resWidget->second.second->isShown()) {
 			auto widget = resWidget->second.second;
 			auto align = static_cast<Rk::Alignment>(resWidget->second.first);
 			if (orientation() == Rk::Orientation::Horizontal) {
@@ -84,7 +84,6 @@ void RkWidgetContiner::update()
 				posLeft += w + widgetsSpacing;
 			else
 				posRight -= w + widgetsSpacing;
-			continue;
 		}
 
 		auto resSpace = spaces.find(id);
