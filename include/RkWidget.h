@@ -57,7 +57,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           explicit RkWidget(RkWidget *parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           virtual ~RkWidget();
 
-	  void show();
+	  void show(bool b = true);
 	  bool isShown() const;
           void hide();
           void setTitle(const std::string &title);

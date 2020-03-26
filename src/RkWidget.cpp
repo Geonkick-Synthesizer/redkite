@@ -87,9 +87,9 @@ const std::string& RkWidget::title() const
 }
 
 
-void RkWidget::show()
+void RkWidget::show(bool b)
 {
-        o_ptr->show(true);
+        o_ptr->show(b);
 }
 
 bool RkWidget::isShown() const
