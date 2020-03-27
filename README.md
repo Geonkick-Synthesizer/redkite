@@ -3,17 +3,14 @@
 #### Description
 
 Redkite is a small free software GUI toolkit.
-It is developed in C++17 and inspired from other
+It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 0.6.3
+Version: 0.8.0
 
 License: GPLv3
 
 Author: Iurie Nistor
-
-Note: Redkite is not supposed to be provided as shared library,
-      it must be only as static library for development.
 
 #### The problem
 
@@ -45,18 +42,19 @@ GUI plugins apart from developing standalone applications.
 
  * Interface (API) to be simple
 
-### What was implemented
+### Main features
 
-* Widgets: RkWidget, RkLabel, RkLineEdit
-* Graphics: RkPainter, RkImage. RkPainter paints on RkWidget and RkImage.
-  RkPainter uses Cairo backend.
-* Actions: a binding mechanism between objects. An action can be posted in thread-safe manner.
+* Widgets
+* Graphics (with Cairo backend)
+* Painter (paints RkImage and widgets)
+* Actions (a binding mechanism between objects)
 * GNU/Linux (XLib/X11)
 * CMake system, build/install
-* rkpng2c - a tool that converts PNG images to C array encoded in ARGB32
-* RkTimer - a timer class
+* rkpng2c (a tool that converts PNG images to C array encoded in ARGB32)
+* RkTimer (a timer class)
+* Widget (continer used for vertical and horizontal layout)
 
-Interface classes that now are implemented with the purpose of extending their functionality:
+### Interface classes
 
 * RkCanvas
 * RkColor
@@ -79,6 +77,7 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkLineEdit
 * RkProgressBar
 * RkWidget
+* RkWidgetContiner
 
 ### Build & Install Redkite
 
