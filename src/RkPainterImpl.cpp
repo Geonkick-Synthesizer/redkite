@@ -33,6 +33,7 @@ RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
 #error No graphics backend defined
 #endif
 {
+        RK_UNUSED(inf_ptr);
         backendGraphics->setPen(painterPen);
         backendGraphics->setFont(painterFont);
 }

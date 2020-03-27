@@ -30,7 +30,6 @@
 
 RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
         : cairoContext{cairo_create(canvas->getCanvasInfo()->cairo_surface)}
-        , fontSize{12}
 {
         cairo_set_font_size(context(), 10);
         cairo_set_line_width (context(), 1);

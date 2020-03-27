@@ -41,6 +41,7 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
 #error No graphics backend defined
 #endif
 {
+        RK_UNUSED(inf_ptr);
 }
 
 RkImage::RkImageImpl::~RkImageImpl()

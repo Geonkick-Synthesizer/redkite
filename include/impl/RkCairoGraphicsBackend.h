@@ -58,7 +58,6 @@ class RkCairoGraphicsBackend {
 
  private:
         cairo_t* cairoContext;
-        int fontSize;
 };
 
 #endif // RK_CAIRO_GRAPHICS_BACKEND_H

@@ -35,6 +35,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         , topWindow(nullptr)
         , eventQueue{std::make_shared<RkEventQueue>()}
 {
+        RK_UNUSED(inf_ptr);
         RK_LOG_DEBUG("called");
 }
 
@@ -43,6 +44,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         , topWindow(nullptr)
         , eventQueue{std::make_shared<RkEventQueue>()}
 {
+        RK_UNUSED(inf_ptr);
         RK_UNUSED(argc);
         RK_UNUSED(argv);
 }
