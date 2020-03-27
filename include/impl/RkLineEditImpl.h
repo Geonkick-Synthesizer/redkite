@@ -2,7 +2,7 @@
  * File name: RkLineEditImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -31,7 +31,9 @@ class RkTimer;
 
 class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
  public:
-        RkLineEditImpl(RkLineEdit *interface,  RkWidget *parent = nullptr, const std::string &text = std::string());
+        RkLineEditImpl(RkLineEdit *interface,
+                       RkWidget *parent = nullptr,
+                       const std::string &text = std::string());
         virtual ~RkLineEditImpl();
         void setText(const std::string &text);
         void addText(const std::string& text);

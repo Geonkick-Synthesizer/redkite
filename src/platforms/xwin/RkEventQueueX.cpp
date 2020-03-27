@@ -2,7 +2,7 @@
  * File name: RkQueueX.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -33,7 +33,6 @@ RkEventQueueX::RkEventQueueX()
         : xDisplay(nullptr)
         , keyModifiers{0}
 {
-        RK_LOG_INFO("called");
 }
 
 RkEventQueueX::~RkEventQueueX()
@@ -57,7 +56,8 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
+void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId,
+                              std::shared_ptr<RkEvent>>> &eventsQueue)
 {
         while (pending()) {
                 XEvent e;

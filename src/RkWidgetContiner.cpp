@@ -2,7 +2,7 @@
  * File name: RkWidgetContiner.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://geontiem.com>
+ * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *

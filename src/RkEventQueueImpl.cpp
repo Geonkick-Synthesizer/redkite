@@ -2,7 +2,7 @@
  * File name: RkEventQueueImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://goentime.com>
  *
  * This file is part of Redkite.
  *
@@ -49,7 +49,7 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* eventQueueInterfa
 
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
-        RK_LOG_INFO("called");
+        RK_LOG_DEBUG("called");
 }
 
 bool RkEventQueue::RkEventQueueImpl::widgetExists(RkWidget *widget)
@@ -129,33 +129,39 @@ void RkEventQueue::RkEventQueueImpl::removeWidgetEvents(RkWidget *widget)
         }
 }
 
-void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget,
+                                               const std::shared_ptr<RkEvent> &event)
 {
         eventsQueue.push_back({widget->id(), event});
 }
 
-void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id,
+                                               const std::shared_ptr<RkEvent> &event)
 {
         eventsQueue.push_back({id, event});
 }
 
-void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info,
+                                               const std::shared_ptr<RkEvent> &event)
 {
         //        eventsQueue.push({info.window, event});
 }
 
-void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget,
+                                                  const std::shared_ptr<RkEvent> &event)
 {
         widget->processEvent(event);
 }
 
-void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id,
+                                                  const std::shared_ptr<RkEvent> &event)
 {
         if (auto widget = findWidget(id); widget)
                 widget->processEvent(event);
 }
 
-void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info,
+                                                  const std::shared_ptr<RkEvent> &event)
 {
         if (auto widget = findWidget(info); widget)
                 widget->processEvent(event);

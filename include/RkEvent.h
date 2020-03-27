@@ -2,7 +2,7 @@
  * File name: RkEvent.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -60,19 +60,19 @@ class RK_EXPORT RkEvent {
                 FocusedOut = 16
       };
 
-      explicit RkEvent(Type type = Type::NoEvent)
+        explicit RkEvent(Type type = Type::NoEvent)
               : eventType{type}
               , eventTime{std::chrono::system_clock::now()} {}
-      virtual ~RkEvent() {}
+        virtual ~RkEvent() = default;
 
-      void setType(Type type) { eventType = type; }
-      Type type() const { return eventType; }
-      std::chrono::system_clock::time_point time() const { return eventTime; }
-      void setTime(const std::chrono::system_clock::time_point &time) {  eventTime = time; }
+        void setType(Type type) { eventType = type; }
+        Type type() const { return eventType; }
+        std::chrono::system_clock::time_point time() const { return eventTime; }
+        void setTime(const std::chrono::system_clock::time_point &time) {  eventTime = time; }
 
   private:
-      Type eventType;
-      std::chrono::system_clock::time_point eventTime;
+        Type eventType;
+        std::chrono::system_clock::time_point eventTime;
 };
 
 class RkCloseEvent: public RkEvent {
@@ -171,7 +171,8 @@ class RkDeleteChild: public RkEvent {
 
 class RkFocusEvent: public RkEvent {
  public:
-      RkFocusEvent(Type type = Type::FocusedIn) : RkEvent(type) {};
+      RkFocusEvent(Type type = Type::FocusedIn)
+              : RkEvent(type) {};
 };
 
 #endif // RK_EVENT_H

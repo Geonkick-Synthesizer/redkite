@@ -53,7 +53,9 @@ class RK_EXPORT RkWidget: public RkCanvas {
           RK_CLASS_INFO(style_id, "")
 
           explicit RkWidget(RkMain *mainApp, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-          explicit RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(RkMain *mainApp,
+                            const RkNativeWindowInfo &parent,
+                            Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           explicit RkWidget(RkWidget *parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           virtual ~RkWidget();
 
@@ -130,7 +132,6 @@ class RK_EXPORT RkWidget: public RkCanvas {
   protected:
           RK_DECLARE_IMPL(RkWidget)
           RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
-
           virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
           virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);
           virtual void keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event);

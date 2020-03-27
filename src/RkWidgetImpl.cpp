@@ -64,7 +64,9 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         platformWindow->init();
 }
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
+                                     const RkNativeWindowInfo &parent,
+                                     Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
         , parentWidget{nullptr}
 #ifdef RK_OS_WIN

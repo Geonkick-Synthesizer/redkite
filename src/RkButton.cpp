@@ -83,4 +83,3 @@ void RkButton::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
         RkPainter painter(this);
         impl_ptr->drawButton(painter);
 }
-

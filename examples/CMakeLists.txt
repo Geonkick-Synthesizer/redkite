@@ -187,5 +187,3 @@ add_dependencies(WidgetContiner redkite)
 target_link_libraries(WidgetContiner redkite)
 target_link_libraries(WidgetContiner "-lX11 -lrt -lm -ldl")
 target_link_libraries(WidgetContiner ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-
-

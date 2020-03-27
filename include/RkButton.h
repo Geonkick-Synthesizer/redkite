@@ -38,7 +38,10 @@ class RkButton: public RkWidget
         bool isCheckable() const;
         void setPressed(bool pressed);
         void setCheckable(bool checkable);
-        RK_DECL_ACT(toggled, toggled(bool pressed), RK_ARG_TYPE(bool), RK_ARG_VAL(pressed));
+        RK_DECL_ACT(toggled,
+                    toggled(bool pressed),
+                    RK_ARG_TYPE(bool),
+                    RK_ARG_VAL(pressed));
 
  protected:
         RK_DELCATE_IMPL_PTR(RkButton)

@@ -44,7 +44,7 @@ class Button: public RkWidget {
                 // executed by the thread executing this method.
                 // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
                 // eventQueue()->postAction([&](){ toggled(isToggled); });
-                // can be called from a defferent thread than GUI main thread;
+                // can be called from a defferent thread than the GUI main thread;
         }
 
 private:
@@ -62,11 +62,15 @@ class  LineEditExample: public RkWidget {
                 font.setSize(30);
                 lineEdit->setFont(font);
                 lineEdit->setSize(300, 50);
-                lineEdit->setPosition((width() - lineEdit->width()) / 2, (height() - lineEdit->height()) / 2);
+                lineEdit->setPosition((width() - lineEdit->width()) / 2,
+                                      (height() - lineEdit->height()) / 2);
                 lineEdit->setTitle("RkLineEdit1");
                 lineEdit->setBorderWidth(1);
                 lineEdit->setBorderColor(80, 80, 80);
-                RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                RK_ACT_BIND(lineEdit,
+                            textEdited,
+                            RK_ACT_ARGS(const std::string &text),
+                            this, onUpdateText(text));
                 lineEdit->show();
 
                 lineEdit = new RkLineEdit(this);
@@ -74,18 +78,25 @@ class  LineEditExample: public RkWidget {
                 font.setSize(30);
                 lineEdit->setFont(font);
                 lineEdit->setSize(300, 50);
-                lineEdit->setPosition((width() - lineEdit->width()) / 2, (height() - lineEdit->height()) / 2 + 10 + lineEdit->height());
+                lineEdit->setPosition((width() - lineEdit->width()) / 2,
+                                      (height() - lineEdit->height()) / 2 + 10 + lineEdit->height());
                 lineEdit->setTitle("RkLineEdit2");
                 lineEdit->setBorderWidth(1);
                 lineEdit->setBorderColor(80, 80, 80);
-                RK_ACT_BIND(lineEdit, textEdited, RK_ACT_ARGS(const std::string &text), this, onUpdateText(text));
+                RK_ACT_BIND(lineEdit,
+                            textEdited,
+                            RK_ACT_ARGS(const std::string &text),
+                            this, onUpdateText(text));
                 show();
                 lineEdit->show();
                 auto button = new Button(this);
                 button->setBackgroundColor(100, 200, 100);
                 button->setFixedSize(50, 25);
                 button->show();
-                RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool toggled), this, openDialog());
+                RK_ACT_BIND(button,
+                            toggled,
+                            RK_ACT_ARGS(bool toggled),
+                            this, openDialog());
         }
 
   protected:

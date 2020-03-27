@@ -28,8 +28,8 @@
 #include "RkButton.h"
 #include "RkLog.h"
 
-extern const unsigned char button_up[];
-extern const unsigned char button_down[];
+RK_DECLARE_IMAGE_RC(button_up);
+RK_DECLARE_IMAGE_RC(button_down);
 
 int main(int arc, char **argv)
 {
@@ -43,22 +43,24 @@ int main(int arc, char **argv)
     auto button1 = new RkButton(widget);
     button1->setCheckable(true);
     button1->setPosition(10, 10);
-    button1->setPressedImage(RkImage(48, 48, button_down));
-    button1->setUnpressedImage(RkImage(48, 48, button_up));
+    button1->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
+    button1->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
     button1->show();
-    RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b), [](bool b){ RK_LOG_INFO("Button1: " << b); });
+    RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b),
+                 [](bool b){ RK_LOG_INFO("Button1: " << b); });
 
     auto button2 = new RkButton(widget);
     button2->setPosition(70, 10);
-    button2->setPressedImage(RkImage(48, 48, button_down));
-    button2->setUnpressedImage(RkImage(48, 48, button_up));
+    button2->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
+    button2->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
     button2->show();
-    RK_ACT_BINDL(button2, toggled, RK_ACT_ARGS(bool b), [](bool b){ RK_LOG_INFO("Button2: " << b); });
+    RK_ACT_BINDL(button2, toggled, RK_ACT_ARGS(bool b),
+                 [](bool b){ RK_LOG_INFO("Button2: " << b); });
 
     return app.exec();
 }
 
-const unsigned char button_up[] = {
+const unsigned char rk_button_up_png[] = {
 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff,
 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff,
 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff,
@@ -8277,7 +8279,7 @@ const unsigned char button_up[] = {
 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff, 0x00, 0x80, 0x80, 0xff,
 0x00, 0x80, 0x80, 0xff, };
 
-const unsigned char button_down[] = {
+const unsigned char rk_button_down_png[] = {
 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,
 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0xff, 0xff,

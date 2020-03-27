@@ -434,8 +434,8 @@ void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 
 void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
-        setFocus(true);
         RK_UNUSED(event);
+        setFocus(true);
 }
 
 void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
@@ -565,4 +565,3 @@ Rk::PointerShape RkWidget::pointerShape() const
 {
         return o_ptr->pointerShape();
 }
-

@@ -2,7 +2,7 @@
  * File name: RkWindowX.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -281,7 +281,11 @@ void RkWindowX::update()
                 event.width      = size().width();
                 event.height     = size().height();
                 event.count      = 0;
-                XSendEvent(display(), xWindow, True, ExposureMask, reinterpret_cast<XEvent*>(&event));
+                XSendEvent(display(),
+                           xWindow,
+                           True,
+                           ExposureMask,
+                           reinterpret_cast<XEvent*>(&event));
         }
 }
 
@@ -296,7 +300,9 @@ void RkWindowX::createCanvasInfo()
 
 void RkWindowX::resizeCanvas()
 {
-        cairo_xlib_surface_set_size(canvasInfo->cairo_surface, size().width(), size().height());
+        cairo_xlib_surface_set_size(canvasInfo->cairo_surface,
+                                    size().width(),
+                                    size().height());
 }
 
 std::shared_ptr<RkCanvasInfo> RkWindowX::getCanvasInfo()
@@ -316,9 +322,15 @@ void RkWindowX::freeCanvasInfo()
 void RkWindowX::setFocus(bool b)
 {
         if (b)
-                XSetInputFocus(display(), xWindow, RevertToParent, CurrentTime);
+                XSetInputFocus(display(),
+                               xWindow,
+                               RevertToParent,
+                               CurrentTime);
         else
-                XSetInputFocus(display(), None, RevertToParent, CurrentTime);
+                XSetInputFocus(display(),
+                               None,
+                               RevertToParent,
+                               CurrentTime);
 }
 
 bool RkWindowX::hasFocus()
@@ -348,4 +360,3 @@ void RkWindowX::setPointerShape(Rk::PointerShape shape)
         };
         XDefineCursor(display(), xWindow, pointer);
 }
-

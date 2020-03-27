@@ -2,7 +2,7 @@
  * File name: RkLog.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -86,4 +86,3 @@ void RK_EXPORT rkLogMessage(RkLogLevel level, const std::string &func_name, cons
 #endif // RK_LOG_ERROR_LEVEL
 
 #endif // RK_LOGGING_H
-

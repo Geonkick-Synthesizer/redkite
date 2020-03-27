@@ -90,8 +90,6 @@ class  PainterExample: public RkWidget {
                 timer->start();
         }
 
-        ~PainterExample() = default;
-
   protected:
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
         {

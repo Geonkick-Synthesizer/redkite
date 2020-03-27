@@ -2,7 +2,7 @@
  * File name: RkLabelImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -25,7 +25,9 @@
 #include "RkPainter.h"
 #include "RkLog.h"
 
-RkLabel::RkLabelImpl::RkLabelImpl(RkLabel *interface, const std::string &text, RkWidget *parent)
+RkLabel::RkLabelImpl::RkLabelImpl(RkLabel *interface,
+                                  const std::string &text,
+                                  RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
     , labelText{text}

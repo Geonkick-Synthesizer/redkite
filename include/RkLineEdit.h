@@ -2,7 +2,7 @@
  * File name: RkLineEdit.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -35,9 +35,18 @@ class RK_EXPORT RkLineEdit : public RkWidget {
     void showCursor();
     void hideCursor();
 
-    RK_DECL_ACT(textEdited, textEdited(const std::string &text), RK_ARG_TYPE(const std::string&), RK_ARG_VAL(text));
-    RK_DECL_ACT(enterPressed, enterPressed(), RK_ARG_TYPE(), RK_ARG_VAL());
-    RK_DECL_ACT(editingFinished, editingFinished(), RK_ARG_TYPE(), RK_ARG_VAL());
+    RK_DECL_ACT(textEdited,
+                textEdited(const std::string &text),
+                RK_ARG_TYPE(const std::string&),
+                RK_ARG_VAL(text));
+    RK_DECL_ACT(enterPressed,
+                enterPressed(),
+                RK_ARG_TYPE(),
+                RK_ARG_VAL());
+    RK_DECL_ACT(editingFinished,
+                editingFinished(),
+                RK_ARG_TYPE(),
+                RK_ARG_VAL());
 
  protected:
     void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
@@ -45,7 +54,6 @@ class RK_EXPORT RkLineEdit : public RkWidget {
     void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
     void focusEvent(const std::shared_ptr<RkFocusEvent> &event) override;
     void resizeEvent(const std::shared_ptr<RkResizeEvent> &event) override;
-
     RK_DELCATE_IMPL_PTR(RkLineEdit)
 };
 

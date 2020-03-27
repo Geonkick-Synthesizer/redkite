@@ -43,8 +43,6 @@ class  PainterExample: public RkWidget {
                 setBackgroundColor(80, 80, 80);
         }
 
-        ~PainterExample() = default;
-
   protected:
         // paintEvent is re-implemented from RkWidget interface.
         // paintEvent is called every time the widget needs to be painted.

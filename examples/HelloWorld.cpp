@@ -57,10 +57,9 @@ int main(int arc, char **argv)
      * Run the main loop. This will be blocking and
      * will exit until the main window will be closed.
      * By default exec is blocking. But can be called as
-     * non-blocking useful for GUI plugins.
+     * non-blocking, useful for GUI plugins.
      */
     auto res = app.exec();
-
     return res;
 }
 

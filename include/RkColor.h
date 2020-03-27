@@ -2,7 +2,7 @@
  * File name: RkColor.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://goentime.com>
  *
  * This file is part of Redkite.
  *

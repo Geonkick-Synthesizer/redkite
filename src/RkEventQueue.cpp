@@ -2,7 +2,7 @@
  * File name: RkEventQueue.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -53,32 +53,38 @@ void RkEventQueue::removeWidgetEvents(RkWidget *widget)
         o_ptr->removeWidgetEvents(widget);
 }
 
-void RkEventQueue::postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::postEvent(RkWidget *widget,
+                             const std::shared_ptr<RkEvent> &event)
 {
         o_ptr->postEvent(widget, event);
 }
 
-void RkEventQueue::postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::postEvent(const RkWindowId &id,
+                             const std::shared_ptr<RkEvent> &event)
 {
         o_ptr->postEvent(id, event);
 }
 
-void RkEventQueue::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::postEvent(const RkNativeWindowInfo &info,
+                             const std::shared_ptr<RkEvent> &event)
 {
         o_ptr->postEvent(info, event);
 }
 
-void RkEventQueue::processEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::processEvent(RkWidget *widget,
+                                const std::shared_ptr<RkEvent> &event)
 {
 	o_ptr->processEvent(widget, event);
 }
 
-void RkEventQueue::processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::processEvent(const RkWindowId &id,
+                                const std::shared_ptr<RkEvent> &event)
 {
 	o_ptr->processEvent(id, event);
 }
 
-void RkEventQueue::processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
+void RkEventQueue::processEvent(const RkNativeWindowInfo &info,
+                                const std::shared_ptr<RkEvent> &event)
 {
 	o_ptr->processEvent(info, event);
 }

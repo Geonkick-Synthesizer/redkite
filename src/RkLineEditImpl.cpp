@@ -2,7 +2,7 @@
  * File name: RkLineEditImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -27,7 +27,9 @@
 #include "RkTimer.h"
 #include "RkEvent.h"
 
-RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface, RkWidget *parent, const std::string &text)
+RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface,
+                                           RkWidget *parent,
+                                           const std::string &text)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
     , editedText{text}

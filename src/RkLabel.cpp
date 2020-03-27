@@ -2,7 +2,7 @@
  * File name: RkLabel.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -39,11 +39,6 @@ void RkLabel::setText(const std::string &text)
 std::string RkLabel::text() const
 {
      return impl_ptr->text();
-}
-
-void RkLabel::setImage(const std::string &file)
-{
-        //        setImage(RkImage(file));
 }
 
 void RkLabel::setImage(const RkImage &image)

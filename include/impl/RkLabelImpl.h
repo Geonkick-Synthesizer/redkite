@@ -2,7 +2,7 @@
  * File name: RkLabelImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -37,7 +37,6 @@ class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
     virtual ~RkLabelImpl();
     void setText(const std::string &text);
     std::string text() const;
-    void setImage(const std::string &file);
     void setImage(const RkImage &image);
     void drawLabel();
 

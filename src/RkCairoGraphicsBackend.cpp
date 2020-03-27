@@ -2,7 +2,7 @@
  * File name: RkCairoGraphicsBackend.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor (http://geontime.com)
  *
  * This file is part of Redkite.
  *
@@ -62,7 +62,9 @@ void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
 
 void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
-        cairo_set_source_surface(context(), image.getCanvasInfo()->cairo_surface, x, y);
+        cairo_set_source_surface(context(),
+                                 image.getCanvasInfo()->cairo_surface,
+                                 x, y);
         cairo_paint(context());
 }
 
@@ -87,7 +89,11 @@ void RkCairoGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 
 void RkCairoGraphicsBackend::drawRect(const RkRect &rect)
 {
-        cairo_rectangle(context(), rect.left() + 0.5, rect.top() + 0.5, rect.width(), rect.height());
+        cairo_rectangle(context(),
+                        rect.left() + 0.5,
+                        rect.top() + 0.5,
+                        rect.width(),
+                        rect.height());
         cairo_stroke(context());
 }
 
@@ -165,7 +171,8 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
                         currPoint = point;
                         first = false;
                 } else if (currPoint != point) {
-                        cairo_rel_line_to(context(), point.x() - currPoint.x(), point.y() - currPoint.y());
+                        cairo_rel_line_to(context(), point.x() - currPoint.x(),
+                                          point.y() - currPoint.y());
                         currPoint = point;
                 }
         }
@@ -202,4 +209,3 @@ int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
         cairo_text_extents (context(), text.data(), &extents);
         return extents.x_advance;
 }
-

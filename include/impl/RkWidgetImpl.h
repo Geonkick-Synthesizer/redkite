@@ -2,7 +2,7 @@
  * File name: RkWidgetImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -37,14 +37,17 @@ class RkWindowX;
 
 class RkWidget::RkWidgetImpl {
  public:
-        explicit RkWidgetImpl(RkWidget* interface, RkWidget* parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-        explicit RkWidgetImpl(RkWidget* interface, const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWidgetImpl(RkWidget* interface,
+                              RkWidget* parent = nullptr,
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWidgetImpl(RkWidget* interface,
+                              const RkNativeWindowInfo &parent,
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
         virtual ~RkWidgetImpl();
-
         void show(bool b);
 	bool isShown() const;
         void setTitle(const std::string &title);
@@ -57,7 +60,6 @@ class RkWidget::RkWidgetImpl {
         RkWidget* parent() const;
         RkWidget* child(const RkWindowId &id) const;
         void addChild(RkWidget* child);
-
         void setSize(const RkSize &size);
         RkSize size() const;
         int minimumWidth() const;

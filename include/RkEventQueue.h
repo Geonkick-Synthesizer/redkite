@@ -2,7 +2,7 @@
  * File name: RkEventQueue.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -36,7 +36,6 @@ class RK_EXPORT RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
-
         void addWidget(RkWidget *widget);
         void removeWidget(RkWidget *widget);
         void removeWidgetEvents(RkWidget *widget);

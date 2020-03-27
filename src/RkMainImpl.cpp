@@ -2,7 +2,7 @@
  * File name: RkMainImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor (http://geontime.com)
  *
  * This file is part of Redkite.
  *
@@ -35,7 +35,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         , topWindow(nullptr)
         , eventQueue{std::make_shared<RkEventQueue>()}
 {
-        RK_LOG_INFO("called");
+        RK_LOG_DEBUG("called");
 }
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)

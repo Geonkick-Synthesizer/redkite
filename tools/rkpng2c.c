@@ -26,7 +26,7 @@
  * It converts a PNG image to C array enconded in ARGB32 format.
  */
 
-#define RK_VERSION_STR "1.0.0"
+#define RK_VERSION_STR "0.8.0"
 
 #include <stdio.h>
 #include <libgen.h>
@@ -52,8 +52,8 @@ int main(int argc , char **argv)
         FILE *fptr;
         fptr = fopen(argv[2], "wb");
         if (fptr == NULL) {
-                printf("can't open file %s", argv[2]);
-                return 0;
+                printf("can't open file %s\n", argv[2]);
+                return 1;
         }
 
         const unsigned char *buff = cairo_image_surface_get_data(image);

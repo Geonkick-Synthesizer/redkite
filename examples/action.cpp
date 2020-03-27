@@ -68,8 +68,6 @@ class  PainterExample: public RkWidget {
                 button->show();
         }
 
-        ~PainterExample() = default;
-
   protected:
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
         {
@@ -101,6 +99,5 @@ int main(int arc, char **argv)
     widget->setTitle("Painter Example");
     widget->setSize(350, 350);
     widget->show();
-
     return app.exec();
 }

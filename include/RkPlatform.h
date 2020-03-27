@@ -2,7 +2,7 @@
  * File name: RkPlatform.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -46,7 +46,9 @@ struct RK_EXPORT RkNativeWindowInfo {
 extern std::string RK_NO_EXPORT rk_winApiClassName;
 extern HINSTANCE RK_NO_EXPORT rk_winApiInstance;
 
-RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
+RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance,
+                                                LPCSTR className,
+                                                HWND window);
 RkWindowId RK_EXPORT rk_id_from_win(HWND window);
 
 #define RK_WIN_MESSAGE_PAINT (WM_USER + 0x0001)
@@ -67,9 +69,10 @@ struct RK_EXPORT RkNativeWindowInfo
         Window window;
 };
 
-RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display, int screenNumber, Window window);
+RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display,
+                                                int screenNumber,
+                                                Window window);
 RkWindowId RK_EXPORT rk_id_from_x11(Window window);
 
 #endif // X11
-
 #endif // RK_PLATFORM_H

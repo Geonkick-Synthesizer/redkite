@@ -1,17 +1,17 @@
 cmake_minimum_required (VERSION 3.8)
 
-project(redkite VERSION 0.6.3)
+project(redkite VERSION 0.8.0)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
-  message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
+  message(FATAL_ERROR "Redkite is not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
   message(STATUS " Build Redkite for GNU/Linux")
 else()
-  message(FATAL_ERROR "Redkite not implemented yet for ${CMAKE_SYSTEM_NAME}")
+  message(FATAL_ERROR "Redkite is not implemented yet for ${CMAKE_SYSTEM_NAME}")
 endif()
 
 set(RK_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -45,7 +45,7 @@ if (NOT CMAKE_INSTALL_LIBDIR)
   set(CMAKE_INSTALL_LIBDIR /usr/lib CACHE STRING "lib dir to /usr/lib" FORCE)
 endif()
 
-option(ENABLE_EXAMPLES    "Build examples" ON)
+option(ENABLE_EXAMPLES "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")
@@ -60,7 +60,7 @@ if (NOT RK_GRAPHICS_BACKEND)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
 elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
-  find_package(Cairo REQUIRED)
+#  find_package(Cairo REQUIRED)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
 endif()
@@ -167,7 +167,6 @@ else() # defaut GNU/Linux
 endif()
 
 add_definitions(-fPIC)
-
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
 
