@@ -1,5 +1,5 @@
 /**
- * File name: WidgetContiner.cpp
+ * File name: WidgetContainer.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
@@ -23,10 +23,10 @@
 
 #include "RkMain.h"
 #include "RkWidget.h"
-#include "RkWidgetContiner.h"
+#include "RkWidgetContainer.h"
 
 /**
- * This is an exmaple of usage of RkWidgetContiner class.
+ * This is an exmaple of usage of RkWidgetContainer class.
  */
 
 int main(int arc, char **argv)
@@ -34,16 +34,16 @@ int main(int arc, char **argv)
 	RkMain app(arc, argv);
 	auto widget = new RkWidget(&app);
 	widget->setFixedSize({400, 300});
-	widget->setTitle("RkWidgetContiner example");
+	widget->setTitle("RkWidgetContainer example");
 	widget->show();
 
-	auto continer = new RkWidgetContiner(widget, Rk::Orientation::Horizontal);
-	continer->setSpacing(5);
+	auto container = new RkWidgetContainer(widget, Rk::Orientation::Horizontal);
+	container->setSpacing(5);
 	for (int i = 0; i < 10; i++) {
 		if (i == 2)
-			continer->addSpace(10);
+			container->addSpace(10);
 		if (i == 8)
-			continer->addSpace(30, Rk::Alignment::AlignRight);
+			container->addSpace(30, Rk::Alignment::AlignRight);
 		auto child = new RkWidget(widget);
 		child->setSize(10, 10);
 		child->setBackgroundColor({255, 0, 0});
@@ -54,16 +54,16 @@ int main(int arc, char **argv)
 		}
 
 		if (i > 5) {
-			continer->addWidget(child, Rk::Alignment::AlignRight);
+			container->addWidget(child, Rk::Alignment::AlignRight);
 			child->setBackgroundColor({0, 255, 0});
 		} else {
-			continer->addWidget(child);
+			container->addWidget(child);
 		}
 	}
 	auto child = new RkWidget(widget);
 	child->setBackgroundColor({0, 0, 255});
 	child->setPosition(0, widget->height() - 30);
-	child->setSize(continer->size().width(), 10);
+	child->setSize(container->size().width(), 10);
 	child->show();
 
 	return app.exec();

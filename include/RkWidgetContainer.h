@@ -1,8 +1,8 @@
 /**
- * File name: RkWidgetContiner.h
+ * File name: RkWidgetContainer.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://geontiem.com>
+ * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -21,21 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_CONTINER_H
-#define RK_CONTINER_H
+#ifndef RK_CONTAINER_H
+#define RK_CONTAINER_H
 
 #include "RkWidget.h"
 
-class RK_EXPORT RkWidgetContiner {
+class RK_EXPORT RkWidgetContainer {
   public:
-	using RkWidgetContinerSpace = size_t;
-        RkWidgetContiner(RkWidget *parent, Rk::Orientation orientation = Rk::Orientation::Horizontal);
-        virtual ~RkWidgetContiner() = default;
-        RK_DISABLE_COPY(RkWidgetContiner)
-        RK_DISABLE_MOVE(RkWidgetContiner)
+	using RkWidgetContainerSpace = size_t;
+        RkWidgetContainer(RkWidget *parent, Rk::Orientation orientation = Rk::Orientation::Horizontal);
+        virtual ~RkWidgetContainer() = default;
+        RK_DISABLE_COPY(RkWidgetContainer)
+        RK_DISABLE_MOVE(RkWidgetContainer)
 	void addWidget(RkWidget *widget, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeWidget(RkWidget *widget);
-	void addSpace(RkWidgetContinerSpace space, Rk::Alignment align = Rk::Alignment::AlignLeft);
+	void addSpace(RkWidgetContainerSpace space, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeAt(size_t index);
 	void update();
 	void clear();
@@ -58,14 +58,14 @@ class RK_EXPORT RkWidgetContiner {
 
  private:
 	RkWidget *parentWidget;
-	Rk::Orientation continerOrientation;
+	Rk::Orientation containerOrientation;
 	int idGenerator;
 	std::vector<size_t> itemsIds;
 	std::unordered_map<size_t, std::pair<int, RkWidget*>> widgets;
-	std::unordered_map<size_t, std::pair<int, RkWidgetContinerSpace>> spaces;
-	RkSize continerSize;
-	RkPoint continerPosition;
+	std::unordered_map<size_t, std::pair<int, RkWidgetContainerSpace>> spaces;
+	RkSize containerSize;
+	RkPoint containerPosition;
 	size_t widgetsSpacing;
 };
 
-#endif // RK_CONTINER_H
+#endif // RK_CONTAINER_H

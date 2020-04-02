@@ -52,7 +52,7 @@ GUI plugins apart from developing standalone applications.
 * CMake system, build/install
 * rkpng2c (a tool that converts PNG images to C array encoded in ARGB32)
 * RkTimer (a timer class)
-* Widget continer used for vertical and horizontal layout
+* Widget container used for vertical and horizontal layout
 
 ### Interface classes
 
@@ -77,7 +77,7 @@ GUI plugins apart from developing standalone applications.
 * RkLineEdit
 * RkProgressBar
 * RkWidget
-* RkWidgetContiner
+* RkWidgetContainer
 
 ### Build & Install Redkite
 
