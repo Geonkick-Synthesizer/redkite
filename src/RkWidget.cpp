@@ -393,6 +393,8 @@ void RkWidget::addChild(RkWidget* child)
         }
 }
 
+
+
 void RkWidget::enableInput()
 {
         setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
@@ -409,6 +411,33 @@ void RkWidget::disableInput()
                             | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
         for (const auto &ch: o_ptr->childWidgets())
                 ch->disableInput();
+}
+
+bool RkWidget::isInputEnabled() const
+{
+        return  static_cast<int>(widgetAttributes()) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled);
+}
+
+void RkWidget::enableGrabKey(bool b)
+{
+        // For now only for top level window.
+        if (!parent())
+                o_ptr->enableGrabKey(b);
+}
+
+bool RkWidget::grabKeyEnabled() const
+{
+        return o_ptr->grabKeyEnabled();
+}
+
+void RkWidget::propagateGrabKey(bool b)
+{
+        o_ptr->propagateGrabKey(b);
+}
+
+bool RkWidget::propagateGrabKeyEnabled() const
+{
+        return o_ptr->propagateGrabKeyEnabled();
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)

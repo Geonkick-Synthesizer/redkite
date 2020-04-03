@@ -100,6 +100,10 @@ class RkWidget::RkWidgetImpl {
         void setFont(const RkFont &font);
         void setPointerShape(Rk::PointerShape shape);
         Rk::PointerShape pointerShape() const;
+        void enableGrabKey(bool b);
+        bool grabKeyEnabled() const;
+        void propagateGrabKey(bool b);
+        bool propagateGrabKeyEnabled() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget)
@@ -125,6 +129,8 @@ class RkWidget::RkWidgetImpl {
         RkFont widgetFont;
         Rk::PointerShape widgetPointerShape;
 	bool isWidgetSown;
+        bool isGrabKeyEnabled;
+        bool isPropagateGrabKey;
 };
 
 #endif // RK_WIDGET_IMPL_H

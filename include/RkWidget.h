@@ -122,7 +122,12 @@ class RK_EXPORT RkWidget: public RkCanvas {
           Rk::WidgetAttribute widgetAttributes() const;
           void enableInput();
           void disableInput();
+          bool isInputEnabled() const;
           RkWidget* getTopWindow();
+          void enableGrabKey(bool b);
+          bool grabKeyEnabled() const;
+          void propagateGrabKey(bool b);
+          bool propagateGrabKeyEnabled() const;
           void setEventQueue(RkEventQueue *eventQueue);
           void setFocus(bool b = true);
           bool hasFocus() const;

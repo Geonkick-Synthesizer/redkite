@@ -32,6 +32,7 @@ RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
         , impl_ptr{std::static_pointer_cast<RkLineEdit::RkLineEditImpl>(o_ptr)}
 {
         setPointerShape(Rk::PointerShape::IBeam);
+        propagateGrabKey(false);
 }
 
 void RkLineEdit::setText(const std::string &text)

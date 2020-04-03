@@ -60,6 +60,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}
 	, isWidgetSown{false}
+        , isGrabKeyEnabled{false}
+        , isPropagateGrabKey{true}
 {
         platformWindow->init();
 }
@@ -86,6 +88,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}
+        , isGrabKeyEnabled{false}
 {
         platformWindow->init();
 }
@@ -155,14 +158,34 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         }
         case RkEvent::Type::KeyPressed:
+        {
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                auto topWidget = inf_ptr->getTopWindow();
+                if ( topWidget != nullptr
+                    && propagateGrabKeyEnabled()
+                    && topWidget->grabKeyEnabled()
+                    && topWidget->isInputEnabled()) {
+                        topWidget->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                }
                 break;
+        }
         case RkEvent::Type::KeyReleased:
+        {
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                auto topWidget = inf_ptr->getTopWindow();
+                if ( topWidget != nullptr
+                    && propagateGrabKeyEnabled()
+                    && topWidget->grabKeyEnabled()
+                    && topWidget->isInputEnabled()) {
+                        topWidget->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                }
                 break;
+        }
         case RkEvent::Type::FocusedIn:
+                inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
+                break;
         case RkEvent::Type::FocusedOut:
                 inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
                 break;
@@ -449,3 +472,25 @@ Rk::PointerShape RkWidget::RkWidgetImpl::pointerShape() const
 {
         return widgetPointerShape;
 }
+
+void RkWidget::RkWidgetImpl::enableGrabKey(bool b)
+{
+        isGrabKeyEnabled = b;
+}
+
+bool RkWidget::RkWidgetImpl::grabKeyEnabled() const
+{
+        return isGrabKeyEnabled;
+}
+
+void RkWidget::RkWidgetImpl::propagateGrabKey(bool b)
+{
+        isPropagateGrabKey = b;
+}
+
+bool RkWidget::RkWidgetImpl::propagateGrabKeyEnabled() const
+{
+        return isPropagateGrabKey;
+}
+
+
