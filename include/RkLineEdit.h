@@ -34,6 +34,8 @@ class RK_EXPORT RkLineEdit : public RkWidget {
     std::string text() const;
     void showCursor();
     void hideCursor();
+    void moveCursorToFront();
+    void moveCursorToEnd();
 
     RK_DECL_ACT(textEdited,
                 textEdited(const std::string &text),

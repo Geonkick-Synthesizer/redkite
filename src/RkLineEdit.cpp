@@ -194,3 +194,16 @@ void RkLineEdit::hideCursor()
         impl_ptr->showCursor(false);
         update();
 }
+
+void RkLineEdit::moveCursorToFront()
+{
+        impl_ptr->moveCursorToFront();
+        update();
+}
+
+void RkLineEdit::moveCursorToEnd()
+{
+        impl_ptr->moveCursorToBack();
+        update();
+}
+
