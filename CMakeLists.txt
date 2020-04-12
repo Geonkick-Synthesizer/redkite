@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
-project(redkite VERSION 0.8.0)
+project(redkite VERSION 0.8.1)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
