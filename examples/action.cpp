@@ -41,8 +41,9 @@ class Button: public RkWidget {
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
                 isToggled = !isToggled;
+                toggled(isToggled);
                 // Post action to be executed by the GUI main thread.
-                eventQueue()->postAction([&](){ toggled(isToggled); });
+                //                eventQueue()->postAction([&](){ toggled(isToggled); });
                 // Or just call toggled(isToggled) directly to be
                 // executed by the thread executing this method.
                 // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
@@ -65,6 +66,7 @@ class  PainterExample: public RkWidget {
                 button->setSize({30, 30});
                 button->setBackgroundColor(255, 30, 100);
                 RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool b), this, drawCircle(b));
+
                 button->show();
         }
 
@@ -96,7 +98,7 @@ int main(int arc, char **argv)
     RkMain app(arc, argv);
 
     auto widget = new PainterExample(&app);
-    widget->setTitle("Painter Example");
+    widget->setTitle("Action Example");
     widget->setSize(350, 350);
     widget->show();
     return app.exec();

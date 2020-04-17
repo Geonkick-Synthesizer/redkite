@@ -43,7 +43,7 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface,
     , beginX{0}
     , endX{0}
 {
-        RK_ACT_BIND(cursorTimer, timeout, RK_ACT_ARGS(), this, onCursorTimeout());
+        RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
         hasFocus() ? showCursor(true) : showCursor(false);
 }
 

@@ -25,6 +25,7 @@
 #define RK_WIDGET_H
 
 #include "Rk.h"
+#include "RkObject.h"
 #include "RkEventQueue.h"
 #include "RkCanvas.h"
 #include "RkRect.h"
@@ -46,7 +47,7 @@ class RkMain;
 struct RkWindowId;
 struct RkNativeWindowInfo;
 
-class RK_EXPORT RkWidget: public RkCanvas {
+class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
   public:
           RK_CLASS_INFO(style_element, "RkWidget")
           RK_CLASS_INFO(style_class, "")
@@ -157,6 +158,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           RK_DISABLE_MOVE(RkWidget)
 
           void addChild(RkWidget* child);
+          void removeChild(RkWidget* child);
           friend class RkEventQueue;
 };
 

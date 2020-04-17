@@ -99,8 +99,13 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
         // Remove all events queued for the
         // current widget from the event queue.
         eventQueue->clearEvents(inf_ptr);
-        for (auto child : widgetChildren)
-                delete child;
+
+        if (parentWidget)
+                parentWidget->removeChild(inf_ptr);
+
+        // Unbind actions
+        while (widgetChildren.size() > 0)
+                delete widgetChildren.front();
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -258,6 +263,16 @@ void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
                 widgetChildren.push_back(child);
                 if (eventQueue)
                         eventQueue->addWidget(child);
+        }
+}
+
+void RkWidget::RkWidgetImpl::removeChild(RkWidget* child)
+{
+        for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
+                if (*it == child) {
+                        widgetChildren.erase(it);
+                        return;
+                }
         }
 }
 

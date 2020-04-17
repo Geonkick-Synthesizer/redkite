@@ -435,25 +435,35 @@ namespace Rk {
 #define RK_ARG_VAL(val, ...) val, ##__VA_ARGS__
 
 #define RK_DECL_ACT(name, prot, type, val) \
+        class rk_observer_##name : public RkObserver { \
+        public: \
+                rk_observer_ ##name (RkObject *obj, const std::function<void(type)> &cb) \
+                        : RkObserver(obj), \
+                          observerCallback{cb} {} \
+                rk_observer_##name () = default; \
+                std::function<void(type)> observerCallback; \
+        }; \
+        \
         void prot \
         { \
-                for (const auto &cb: rk_actions_cb_ ##name ) \
-                        cb(val); \
+                for (auto ob: rk_get_observers()) {                     \
+                        auto observer = dynamic_cast<rk_observer_ ##name *>(ob); \
+                        if (observer) \
+                                observer->observerCallback(val); \
+                } \
         } \
-        void rk_add_action_cb_##name (const std::function<void(type)> &cb) \
+        void rk_add_action_cb_##name (RkObject *obj, const std::function<void(type)> &cb) \
         { \
-                rk_actions_cb_##name.push_back(cb); \
+                rk_add_observer(new rk_observer_##name (obj, cb)); \
         } \
-        std::vector<std::function<void(type)>> rk_actions_cb_ ##name
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->rk_add_action_cb_##act ([=](act_args){ obj2->callback; })
+        obj1->rk_add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \
+        obj2->rk_add_bound_object(obj1)
 
 // Bind lamda functions to object actions.
-#define RK_ACT_BINDL(obj1, act, act_args, lamda) \
-        obj1->rk_add_action_cb_##act (lamda)
-
-#define RK_ACT_UNBIND_ALL(obj1, act) obj1->rk_actions_cb_##act.clear();
+#define RK_ACT_BINDL(obj1, act, act_args, lamda)   \
+        obj1->rk_add_action_cb_##act (nullptr, lamda)
 
 #define action
 

@@ -393,7 +393,11 @@ void RkWidget::addChild(RkWidget* child)
         }
 }
 
-
+void RkWidget::removeChild(RkWidget* child)
+{
+        if (child)
+                o_ptr->removeChild(child);
+}
 
 void RkWidget::enableInput()
 {

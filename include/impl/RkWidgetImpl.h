@@ -35,7 +35,7 @@ class RkWindowWin;
 class RkWindowX;
 #endif // RK_WIN_OS
 
-class RkWidget::RkWidgetImpl {
+class RkWidget::RkWidgetImpl : public RkObject {
  public:
         explicit RkWidgetImpl(RkWidget* interface,
                               RkWidget* parent = nullptr,
@@ -60,6 +60,7 @@ class RkWidget::RkWidgetImpl {
         RkWidget* parent() const;
         RkWidget* child(const RkWindowId &id) const;
         void addChild(RkWidget* child);
+        void removeChild(RkWidget* child);
         void setSize(const RkSize &size);
         RkSize size() const;
         int minimumWidth() const;

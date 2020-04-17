@@ -25,10 +25,11 @@
 #define RK_TIMER_H
 
 #include "Rk.h"
+#include "RkObject.h"
 
 class RkEventQueue;
 
-class RK_EXPORT RkTimer {
+class RK_EXPORT RkTimer: public RkObject {
   public:
         explicit RkTimer(int interval = 0, RkEventQueue *queue = nullptr);
         virtual ~RkTimer();

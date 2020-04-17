@@ -67,6 +67,8 @@ endif()
 
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
+  ${RK_INCLUDE_PATH}/RkObject.h
+  ${RK_INCLUDE_PATH}/RkObserver.h
   ${RK_INCLUDE_PATH}/RkLog.h
   ${RK_INCLUDE_PATH}/RkPoint.h
   ${RK_INCLUDE_PATH}/RkRealPoint.h
@@ -126,6 +128,7 @@ set(RK_HEADERS_PLATFORM
 endif()
 
 set(RK_SOURCES
+  ${RK_SRC_PATH}/RkObject.cpp
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp
