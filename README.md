@@ -6,11 +6,11 @@ Redkite is a small free software GUI toolkit.
 It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 0.8.0
+Version: 0.8.1
+
+Note: version 1.0 not released yet
 
 License: GPLv3
-
-Author: Iurie Nistor
 
 #### The problem
 
@@ -89,7 +89,9 @@ On Debian, Ubuntu, Ubuntu Studio install:
     apt-get install cmake
     apt-get install libcairo2-dev
 
-Clone the code repository, compile and install
+Clone the code repository, compile and install.
+
+Note: it is recommended to use release versions (see repository tags)
 
         git clone https://gitlab.com/geontime/redkite.git
         mkdir redkite/build

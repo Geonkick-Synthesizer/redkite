@@ -1,8 +1,8 @@
 /**
- * File name: RkObject.h
+ * File name: RkObserver.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://yuripage.wordpress.com>
+ * Copyright (C) 2020 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -32,14 +32,8 @@ class RkObject;
 class RkObserver {
  public:
         RkObserver(RkObject *obj)
-                : observerObject{obj}
-        {
-                RK_LOG_DEBUG("called");
-        }
-        virtual ~RkObserver()
-        {
-                RK_LOG_DEBUG("called");
-        }
+                : observerObject{obj} { }
+        virtual ~RkObserver() = default;
         RkObject *object() { return observerObject; }
  private:
         RkObject *observerObject;

@@ -2,7 +2,7 @@
  * File name: RkObject.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://yuripage.wordpress.com>
+ * Copyright (C) 2020 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -27,20 +27,16 @@
 RkObject::RkObject(RkObject *parent)
 {
         RK_UNUSED(parent);
-        RK_LOG_DEBUG("called");
 }
 
 RkObject::~RkObject()
 {
         // Remove myself from bound objects.
-        RK_LOG_DEBUG("called");
-        RK_LOG_DEBUG("remove from bound objects.");
         for (auto obj: rk_bound_objects)
                 obj->rk_remove_object_observers(this);
         rk_bound_objects.clear();
 
         // Remove myself from the observers objects.
-        RK_LOG_DEBUG("remove from the observers objects");
         for (auto o: rk_observers_list) {
                 if (o->object())
                         o->object()->rk_remove_bound_object(this);
@@ -51,24 +47,17 @@ RkObject::~RkObject()
 
 void RkObject::rk_add_observer(RkObserver *observer)
 {
-        RK_LOG_DEBUG("called");
-        if (observer == nullptr) {
-                RK_LOG_DEBUG("null observer");
-        }
         rk_observers_list.push_back(observer);
 }
 
 void RkObject::rk_remove_object_observers(RkObject *obj)
 {
-        RK_LOG_DEBUG("called");
         rk_observers_list.erase(std::remove_if(rk_observers_list.begin(),
                                                rk_observers_list.end(),
                                                [obj](RkObserver *o)  {
                                                        if (o->object() == nullptr) {
-                                                               RK_LOG_DEBUG("is lamda observer");
                                                                return false;
                                                        } else if(o->object() == obj) {
-                                                               RK_LOG_DEBUG("delete observer");
                                                                delete o;
                                                                return true;
                                                        }
@@ -84,27 +73,18 @@ std::vector<RkObserver*>& RkObject::rk_get_observers()
 
 void RkObject::rk_add_bound_object(RkObject *obj)
 {
-        RK_LOG_DEBUG("called");
         auto res = std::find(std::begin(rk_bound_objects), std::end(rk_bound_objects), obj);
-        if (res != std::end(rk_bound_objects)) {
-                RK_LOG_DEBUG("bound object already exists");
+        if (res != std::end(rk_bound_objects))
                 return;
-        } else {
-                RK_LOG_DEBUG("add bound object");
-                rk_bound_objects.push_back(obj);
-        }
 }
 
 void RkObject::rk_remove_bound_object(RkObject *obj)
 {
-        RK_LOG_DEBUG("called");
         rk_bound_objects.erase(std::remove_if(rk_bound_objects.begin(),
                                               rk_bound_objects.end(),
                                               [obj](RkObject *o)  {
-                                                      if (o == obj) {
-                                                              RK_LOG_DEBUG("bound object removed");
+                                                      if (o == obj)
                                                               return true;
-                                                      }
                                                       return false;
                                               }),
                                rk_bound_objects.end());

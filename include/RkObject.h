@@ -2,7 +2,7 @@
  * File name: RkObject.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://yuripage.wordpress.com>
+ * Copyright (C) 2020 Iurie Nistor
  *
  * This file is part of Redkite.
  *
