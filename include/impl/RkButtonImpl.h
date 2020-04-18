@@ -36,15 +36,15 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
         void setPressedImage(const RkImage &img);
         void setUnpressedImage(const RkImage &img);
         bool isPressed() const;
-        bool isCheckable();
         void setPressed(bool pressed);
-        void setCheckable(bool checkable);
+        ButtonType type() const;
+        void setType(ButtonType type);
 	void drawButton(RkPainter &painter);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkButton)
+        ButtonType buttonType;
         bool is_pressed;
-        bool is_checkable;
         RkImage pressedImage;
         RkImage unpressedImage;
 };

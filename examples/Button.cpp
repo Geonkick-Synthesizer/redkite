@@ -26,6 +26,7 @@
 #include "RkPainter.h"
 #include "RkEvent.h"
 #include "RkButton.h"
+#include "RkLabel.h"
 #include "RkLog.h"
 
 RK_DECLARE_IMAGE_RC(button_up);
@@ -40,22 +41,47 @@ int main(int arc, char **argv)
     widget->setSize(350, 350);
     widget->show();
 
+    int x = 10;
     auto button1 = new RkButton(widget);
     button1->setCheckable(true);
-    button1->setPosition(10, 10);
+    button1->setPosition(x, 10);
     button1->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
     button1->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
     button1->show();
     RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b),
-                 [](bool b){ RK_LOG_INFO("Button1: " << b); });
+                 [](bool b){ RK_LOG_INFO("Button1: " << b);
+                 });
+    auto label = new RkLabel(widget, "checkable");
+    label->setSize(60, 15);
+    label->setPosition({button1->x(), button1->y() + button1->height() + 5});
+    label->show();
 
+    x += 100;
     auto button2 = new RkButton(widget);
-    button2->setPosition(70, 10);
+    button2->setPosition(x, 10);
     button2->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
     button2->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
     button2->show();
     RK_ACT_BINDL(button2, toggled, RK_ACT_ARGS(bool b),
                  [](bool b){ RK_LOG_INFO("Button2: " << b); });
+    label = new RkLabel(widget, "uncheckable");
+    label->setSize(60, 15);
+    label->setPosition({button2->x(), button2->y() + button2->height() + 5});
+    label->show();
+
+    x += 100;
+    auto button3 = new RkButton(widget);
+    button3->setType(RkButton::ButtonType::ButtonPush);
+    button3->setPosition(x, 10);
+    button3->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
+    button3->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
+    button3->show();
+    RK_ACT_BINDL(button3, toggled, RK_ACT_ARGS(bool b),
+                 [](bool b){ RK_LOG_INFO("Button3: " << b); });
+    label = new RkLabel(widget, "push");
+    label->setSize(60, 15);
+    label->setPosition({button3->x(), button3->y() + button3->height() + 5});
+    label->show();
 
     return app.exec();
 }

@@ -26,8 +26,8 @@
 RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
+    , buttonType{ButtonType::ButtonUncheckable}
     , is_pressed{false}
-    , is_checkable{false}
 {
 }
 
@@ -48,19 +48,19 @@ bool RkButton::RkButtonImpl::isPressed() const
         return is_pressed;
 }
 
-bool RkButton::RkButtonImpl::isCheckable()
-{
-        return is_checkable;
-}
-
 void RkButton::RkButtonImpl::setPressed(bool pressed)
 {
         is_pressed = pressed;
 }
 
-void RkButton::RkButtonImpl::setCheckable(bool checkable)
+void RkButton::RkButtonImpl::setType(RkButton::ButtonType type)
 {
-        is_checkable = checkable;
+        buttonType = type;
+}
+
+RkButton::ButtonType RkButton::RkButtonImpl::type(void) const
+{
+        return buttonType;
 }
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)

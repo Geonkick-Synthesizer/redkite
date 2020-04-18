@@ -30,14 +30,22 @@
 class RkButton: public RkWidget
 {
  public:
+        enum class ButtonType: int {
+                ButtonUncheckable = 0,
+                ButtonCheckable   = 1,
+                ButtonPush        = 3,
+        };
+
         explicit RkButton(RkWidget *parent);
         virtual ~RkButton() = default;
         void setPressedImage(const RkImage &img);
         void setUnpressedImage(const RkImage &img);
-        bool isPressed() const;
-        bool isCheckable() const;
         void setPressed(bool pressed);
-        void setCheckable(bool checkable);
+        bool isPressed() const;
+        ButtonType type() const;
+        void setCheckable(bool b);
+        bool isCheckable() const;
+        void setType(ButtonType type);
         RK_DECL_ACT(toggled,
                     toggled(bool pressed),
                     RK_ARG_TYPE(bool),
@@ -46,6 +54,7 @@ class RkButton: public RkWidget
  protected:
         RK_DELCATE_IMPL_PTR(RkButton)
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
+        void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) override;
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
 };
 

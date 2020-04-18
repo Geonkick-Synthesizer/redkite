@@ -48,33 +48,50 @@ bool RkButton::isPressed() const
 	return impl_ptr->isPressed();
 }
 
-bool RkButton::isCheckable() const
-{
-        return impl_ptr->isCheckable();
-}
-
 void RkButton::setPressed(bool pressed)
 {
         impl_ptr->setPressed(pressed);
         update();
 }
 
-void RkButton::setCheckable(bool checkable)
+void RkButton::setCheckable(bool b)
 {
-        impl_ptr->setCheckable(checkable);
+        setType(b ? ButtonType::ButtonCheckable : ButtonType::ButtonUncheckable);
+}
+
+bool RkButton::isCheckable() const
+{
+        return type() == ButtonType::ButtonCheckable;
+}
+
+RkButton::ButtonType RkButton::type() const
+{
+        return impl_ptr->type();
+}
+
+void RkButton::setType(RkButton::ButtonType type)
+{
+        impl_ptr->setType(type);
         update();
 }
 
 void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
         RK_UNUSED(event);
-        if (isCheckable()) {
+        if (type() == ButtonType::ButtonCheckable) {
                 setPressed(!isPressed());
                 action toggled(isPressed());
-        } else if (!isPressed()) {
+        } else if ((type() == ButtonType::ButtonUncheckable || type() == ButtonType::ButtonPush)
+                   && !isPressed()) {
                 setPressed(true);
                 action toggled(true);
         }
+}
+
+void RkButton::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
+{
+        if (type() == ButtonType::ButtonPush)
+                setPressed(false);
 }
 
 void RkButton::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
