@@ -74,8 +74,8 @@ std::vector<RkObserver*>& RkObject::rk_get_observers()
 void RkObject::rk_add_bound_object(RkObject *obj)
 {
         auto res = std::find(std::begin(rk_bound_objects), std::end(rk_bound_objects), obj);
-        if (res != std::end(rk_bound_objects))
-                return;
+        if (res == std::end(rk_bound_objects))
+                rk_bound_objects.push_back(obj);
 }
 
 void RkObject::rk_remove_bound_object(RkObject *obj)

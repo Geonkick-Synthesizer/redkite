@@ -29,6 +29,8 @@ RkButton::RkButton(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkButton::RkWidgetImpl>(std::make_shared<RkButton::RkButtonImpl>(this, parent)))
         , impl_ptr{std::static_pointer_cast<RkButton::RkButtonImpl>(o_ptr)}
 {
+        if (parent)
+                setBackgroundColor(parent->background());
 }
 
 void RkButton::setPressedImage(const RkImage &img)
