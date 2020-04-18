@@ -1,5 +1,5 @@
 /**
- * File name: RkObject.cpp
+ * File name: RkAction.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor
@@ -21,44 +21,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#ifndef RK_ACTION_H
+#define RK_ACTION_H
+
+#include "Rk.h"
 #include "RkObject.h"
-#include "RkLog.h"
-#include "RkObserver.h"
 
-RkObject::RkObject(RkObject *parent)
-        : o_ptr{std::make_unique<RkObjectImpl>(this, parent)}
-{
-        if (o_ptr->parent())
-                o_ptr->parent()->addChild(this);
-}
+class RK_EXPORT RkAction {
+ public:
+        explicit RkAction(RkObject *obj = nullptr)
+                : actionObject{obj} {}
 
-RkObject::~RkObject()
-{
-}
+        virtual ~RkAction() = default;
 
-void RkObject::setEventQueue(RkEventQueue* queue)
-{
-        o_ptr->setEventQueue(queue);
-}
+        void setCallback(const std::function<void(void)> &cb)
+        {
+                actionCallback = cb;
+        }
 
-RkEventQueue* RkObject::eventQueue()
-{
-        return o_ptr->eventQueue();
-}
+        void call()
+        {
+                if (actionCallback)
+                        actionCallback();
+        }
 
-void RkObject::event(const RkEvent *event)
-{
-}
+        RkObject *object() { return actionObject; }
 
-void RkObject::addChild(RkObject* child)
-{
-        if (child)
-                o_ptr->addChild(child);
-}
+  private:
+        RkObject *actionObject;
+        std::function<void(void)> actionCallback;
+};
 
-RkEventQueue* RkObject::eventQueue()
-{
-        return objEventQueue;
-}
-
+#endif // RK_ACTION_H
 

@@ -117,11 +117,6 @@ bool RkWidget::isClose() const
         return o_ptr->isClose();
 }
 
-void RkWidget::processEvent(const std::shared_ptr<RkEvent> &event)
-{
-        o_ptr->processEvent(event);
-}
-
 void RkWidget::setSize(int w, int h)
 {
         if (w > maximumWidth())
@@ -389,7 +384,7 @@ void RkWidget::addChild(RkWidget* child)
                 } else if (child->modality() == Rk::Modality::ModalParent) {
                         disableInput();
                 }
-                o_ptr->addChild(child);
+                RkObject::addChild(child);
         }
 }
 
@@ -514,16 +509,6 @@ void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
 void RkWidget::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 {
         update();
-}
-
-void RkWidget::setEventQueue(RkEventQueue *eventQueue)
-{
-        o_ptr->setEventQueue(eventQueue);
-}
-
-RkEventQueue* RkWidget::eventQueue()
-{
-        return o_ptr->getEventQueue();
 }
 
 void RkWidget::update()

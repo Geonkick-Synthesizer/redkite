@@ -27,19 +27,27 @@
 #include "Rk.h"
 #include "RkObserver.h"
 
-class RkObject {
+class RkEventQueue;
+
+class RK_EXPORT RkObject {
  public:
-        RkObject(RkObject *parent = nullptr);
+        explicit RkObject(RkObject *parent = nullptr);
         virtual ~RkObject();
-        void rk_add_observer(RkObserver *observer);
-        void rk_remove_object_observers(RkObject *obj);
-        std::vector<RkObserver*>& rk_get_observers();
-        void rk_add_bound_object(RkObject *obj);
-        void rk_remove_bound_object(RkObject *obj);
+        void setEventQueue(RkEventQueue* queue);
+        RkEventQueue* eventQueue();
+
+ protected:
+        virtual void event(const RkEvent *event);
+
+        void rk__add_observer(std::unique_ptr<RkObserver> observer);
+        const std::vector<std::unique_ptr<RkObserver>>& rk__observers() const;
 
  private:
-        std::vector<RkObserver*> rk_observers_list;
-        std::vector<RkObject*> rk_bound_objects;
+        RK_DECLARE_IMPL(RkObject);
+        RK_DISABLE_COPY(RkObject);
+        RK_DISABLE_MOVE(RkObject);
+        virtual void addChild(RkObject *child);
+        void removeObjectObservers(RkObject *obj);
 };
 
 #endif // RK_OBJECT_H

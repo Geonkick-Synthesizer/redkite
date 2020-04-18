@@ -68,7 +68,7 @@ endif()
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkObject.h
-  ${RK_INCLUDE_PATH}/RkObserver.h
+  ${RK_INCLUDE_PATH}/RkAction.h
   ${RK_INCLUDE_PATH}/RkLog.h
   ${RK_INCLUDE_PATH}/RkPoint.h
   ${RK_INCLUDE_PATH}/RkRealPoint.h
@@ -94,6 +94,7 @@ set(RK_HEADERS
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkObserver.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h

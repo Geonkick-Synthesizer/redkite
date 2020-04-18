@@ -25,6 +25,7 @@
 #include "RkWidget.h"
 #include "RkEventQueueImpl.h"
 #include "RkTimer.h"
+#include "RkAction.h"
 
 #ifdef RK_OS_WIN
 #include "RkEventQueueWin.h"
@@ -58,6 +59,15 @@ bool RkEventQueue::RkEventQueueImpl::widgetExists(RkWidget *widget)
                 if (w == widget)
                         return true;
     return false;
+}
+
+void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
+{
+        if (obj) {
+                if (!obj->eventQueue())
+                        obj->setEnvetQueue(inf_ptr);
+                objectList.insert(obj);
+        }
 }
 
 void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
@@ -121,9 +131,8 @@ void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
 void RkEventQueue::RkEventQueueImpl::removeWidgetEvents(RkWidget *widget)
 {
         for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
-                if (it->first.id == widget->id().id) {
+                if (it->first.id == widget->id().id)
                         it = eventsQueue.erase(it);
-                }
                 else
                         ++it;
         }
@@ -176,10 +185,10 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 processEvent(e.first, e.second);
 }
 
-void RkEventQueue::RkEventQueueImpl::postAction(const std::function<void(void)> &act)
+void RkEventQueue::RkEventQueueImpl::postAction(std::unique_ptr<RkAction> act)
 {
         std::lock_guard<std::mutex> lock(actionsQueueMutex);
-        actionsQueue.emplace_back(act);
+        actionsQueue.push_back(std::move(act));
 }
 
 void RkEventQueue::RkEventQueueImpl::processActions()
@@ -187,12 +196,11 @@ void RkEventQueue::RkEventQueueImpl::processActions()
         decltype(actionsQueue) q;
         {
                 std::lock_guard<std::mutex> lock(actionsQueueMutex);
-                q = actionsQueue;
-                actionsQueue.clear();
+                q = std::move(actionsQueue);
         }
 
         for(const auto &act: q)
-                act();
+                act->call();
 }
 
 void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)
@@ -226,6 +234,20 @@ void RkEventQueue::RkEventQueueImpl::clearEvents(const RkWidget *widget)
                 else
                         ++it;
         }
+}
+
+void RkEventQueue::RkEventQueueImpl::clearActions(const RkObject *obj)
+{
+        if (!obj)
+                return;
+
+        std::lock_guard<std::mutex> lock(actionsQueueMutex);
+        actionsQueue.erase(std::remove_if(actionsQueue.begin(), actionsQueue.end(),
+                                          [obj](const std::unique_ptr<RkAction> &act)
+                                          {
+                                                  return act->object() && act->object() == obj;
+                                          })
+                           , actionsQueue.end());
 }
 
 void RkEventQueue::RkEventQueueImpl::clearAllEvents()

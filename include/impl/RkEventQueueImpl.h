@@ -62,21 +62,22 @@ class RkEventQueue::RkEventQueueImpl {
         void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
-        void postAction(const std::function<void(void)> &act);
+        void postAction(std::unique_ptr<RkAction> act);
         void processActions();
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processTimers();
         void clearEvents(const RkWidget *widget);
+        void clearActions(const RkObject *obj);
         void clearAllEvents();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)
-        std::list<RkWidget*> widgetList;
+        std::list<RkObject*> objectsList;
         std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
-        std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
-        std::vector<std::function<void(void)>> actionsQueue;
+        std::vector<std::unique_ptr<RkEvent>>> eventsQueue;
         std::mutex actionsQueueMutex;
+        std::vector<std::unique_ptr<RkAction>> actionsQueue;
         std::vector<RkTimer*> timersList;
 
 #ifdef RK_OS_WIN

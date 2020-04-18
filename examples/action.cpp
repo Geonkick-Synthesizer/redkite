@@ -41,14 +41,16 @@ class Button: public RkWidget {
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
                 isToggled = !isToggled;
-                toggled(isToggled);
-                // Post action to be executed by the GUI main thread.
-                //                eventQueue()->postAction([&](){ toggled(isToggled); });
-                // Or just call toggled(isToggled) directly to be
-                // executed by the thread executing this method.
-                // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
-                // eventQueue()->postAction([&](){ toggled(isToggled); });
-                // can be called from a defferent thread than GUI main thread;
+                if (event->button() != RkMouseEvent::ButtonType::Left) {
+                        // Synchronous action.
+                        action toggled(isToggled);
+                } else if (event->button() != RkMouseEvent::ButtonType::Right) {
+                        // Asynchronous action.
+                        // Post action to be executed by the GUI main thread later.
+                        auto act = std::move(std::make_unique<RkAction>(this));
+                        act->setCallback([&](){ toggled(isToggled); });
+                        eventQueue()->postAction(std::move(act));
+                }
         }
 
 private:

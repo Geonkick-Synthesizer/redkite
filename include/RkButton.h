@@ -27,7 +27,7 @@
 #include "RkWidget.h"
 #include "RkImage.h"
 
-class RkButton: public RkWidget
+class RK_EXPORT RkButton: public RkWidget
 {
  public:
         enum class ButtonType: int {

@@ -1,8 +1,8 @@
 /**
- * File name: RkWidgetImpl.cpp
+ * File name: RkObjectImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -21,52 +21,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkWidgetImpl.h"
+#include "RkObjectImpl.h"
 #include "RkEvent.h"
 #include "RkPainter.h"
 
-#ifdef RK_OS_WIN
-#include "RkWindowWin.h"
-#elif RK_OS_MAC
-#include "RkWindowMac.h"
-#else // X11
-#include "RkWindowX.h"
-#undef KeyPress
-#undef KeyRelease
-#undef Paint
-#undef FocusIn
-#undef FocusOut
-#endif
-
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
-        : inf_ptr{widgetInterface}
-        , parentWidget{parent}
-#ifdef RK_OS_WIN
-        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
-#elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags)}
-#else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
-#endif
-        , widgetClosed{false}
-        , eventQueue{nullptr}
-        , widgetMinimumSize{0, 0}
-        , widgetMaximumSize{1000000, 1000000}
-        , widgetSize{platformWindow->size()}
-        , widgetBackground(platformWindow->background())
-        , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
-        , widgetTextColor{0, 0, 0}
-        , widgetDrawingColor{0, 0, 0}
-        , widgetPointerShape{Rk::PointerShape::Arrow}
-	, isWidgetSown{false}
-        , isGrabKeyEnabled{false}
-        , isPropagateGrabKey{true}
+RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface, RkObject* parent)
+        : inf_ptr{interface}
+        , parentObject{parent}
 {
-        platformWindow->init();
 }
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
+RkObject::RkObjectImpl::~RkObjectImpl()
+{
+        if (evenQueue)
+                evenQuque->clearActions(inf_ptr);
+
+        // Remove myself from bound objects.
+        for (auto &obj: boundObjects)
+                obj->removeObjectObservers(inf_ptr);
+        boundObjects.clear();
+
+        // Remove myself from the observers objects.
+        for (auto o: observersList) {
+                if (o->object())
+                        o->object()->removeBoundObject(this);
+                delete o;
+        }
+        rk_observers_list.clear();*/
+
+}
+
+
+RkObject::RkObjectImpl::RkObjectImpl(RkObject* widgetInterface,
                                      const RkNativeWindowInfo &parent,
                                      Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
@@ -93,7 +79,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         platformWindow->init();
 }
 
-RkWidget::RkWidgetImpl::~RkWidgetImpl()
+RkObject::RkObjectImpl::~RkObjectImpl()
 {
         eventQueue->removeWidget(inf_ptr);
 
@@ -112,7 +98,7 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
                 delete widgetChildren.front();
 }
 
-Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
+Rk::WidgetAttribute RkObject::RkObjectImpl::defaultWidgetAttributes()
 {
         return static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                                                 | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
@@ -120,44 +106,44 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 
 }
 
-void RkWidget::RkWidgetImpl::show(bool b)
+void RkObject::RkObjectImpl::show(bool b)
 {
 	isWidgetSown = b;
         platformWindow->show(isWidgetSown);
 }
 
-bool RkWidget::RkWidgetImpl::isShown() const
+bool RkObject::RkObjectImpl::isShown() const
 {
 	return isWidgetSown;
 }
 
-void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
+void RkObject::RkObjectImpl::setTitle(const std::string &title)
 {
         widgetTitle = title;
         platformWindow->setTitle(widgetTitle);
 }
 
-const std::string& RkWidget::RkWidgetImpl::title() const
+const std::string& RkObject::RkObjectImpl::title() const
 {
         return widgetTitle;
 }
 
-std::shared_ptr<RkNativeWindowInfo> RkWidget::RkWidgetImpl::nativeWindowInfo() const
+std::shared_ptr<RkNativeWindowInfo> RkObject::RkObjectImpl::nativeWindowInfo() const
 {
         return platformWindow->nativeWindowInfo();
 }
 
-bool RkWidget::RkWidgetImpl::isClose() const
+bool RkObject::RkObjectImpl::isClose() const
 {
         return widgetClosed;
 }
 
-RkWindowId RkWidget::RkWidgetImpl::id() const
+RkWindowId RkObject::RkObjectImpl::id() const
 {
         return platformWindow->id();
 }
 
-void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
+void RkObject::RkObjectImpl::processEvent(const std::shared_ptr<RkEvent> &event)
 {
         switch (event->type())
         {
@@ -241,12 +227,12 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
         }
 }
 
-RkWidget* RkWidget::RkWidgetImpl::parent() const
+RkObject* RkObject::RkObjectImpl::parent() const
 {
         return parentWidget;
 }
 
-RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
+RkObject* RkObject::RkObjectImpl::child(const RkWindowId &id) const
 {
         for (const auto &child : widgetChildren) {
                 if (child->id().id == id.id) {
@@ -261,16 +247,14 @@ RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
         return nullptr;
 }
 
-void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
+void RkObject::RkObjectImpl::addChild(RkObject* child)
 {
-        if (child) {
-                widgetChildren.push_back(child);
-                if (eventQueue)
-                        eventQueue->addWidget(child);
-        }
+        objectChildren.insert(child);
+        if (eventQueue)
+                eventQueue->addObject(child);
 }
 
-void RkWidget::RkWidgetImpl::removeChild(RkWidget* child)
+void RkObject::RkObjectImpl::removeChild(RkObject* child)
 {
         for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
                 if (*it == child) {
@@ -280,105 +264,105 @@ void RkWidget::RkWidgetImpl::removeChild(RkWidget* child)
         }
 }
 
-void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
+void RkObject::RkObjectImpl::setSize(const RkSize &size)
 {
         if (size.width() > 1 && size.height() > 1)
                 platformWindow->setSize(size);
         widgetSize = size;
 }
 
-RkSize RkWidget::RkWidgetImpl::size() const
+RkSize RkObject::RkObjectImpl::size() const
 {
         return  widgetSize;
 }
 
-int RkWidget::RkWidgetImpl::minimumWidth() const
+int RkObject::RkObjectImpl::minimumWidth() const
 {
         return widgetMinimumSize.width();
 }
 
-int RkWidget::RkWidgetImpl::maximumWidth() const
+int RkObject::RkObjectImpl::maximumWidth() const
 {
         return widgetMaximumSize.width();
 }
 
-int RkWidget::RkWidgetImpl::minimumHeight() const
+int RkObject::RkObjectImpl::minimumHeight() const
 {
         return widgetMinimumSize.height();
 }
 
-int RkWidget::RkWidgetImpl::maximumHeight() const
+int RkObject::RkObjectImpl::maximumHeight() const
 {
         return widgetMaximumSize.height();
 }
 
-void RkWidget::RkWidgetImpl::setMinimumWidth(int width)
+void RkObject::RkObjectImpl::setMinimumWidth(int width)
 {
         widgetMinimumSize.setWidth(width);
 }
 
-void RkWidget::RkWidgetImpl::setMaximumWidth(int width)
+void RkObject::RkObjectImpl::setMaximumWidth(int width)
 {
         widgetMaximumSize.setWidth(width);
 }
 
-void RkWidget::RkWidgetImpl::setMinimumHeight(int height)
+void RkObject::RkObjectImpl::setMinimumHeight(int height)
 {
         widgetMinimumSize.setHeight(height);
 }
 
-void RkWidget::RkWidgetImpl::setMaximumHeight(int height)
+void RkObject::RkObjectImpl::setMaximumHeight(int height)
 {
         widgetMaximumSize.setHeight(height);
 }
 
-void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)
+void RkObject::RkObjectImpl::setPosition(const RkPoint &position)
 {
         platformWindow->setPosition(position);
 }
 
-RkPoint RkWidget::RkWidgetImpl::position() const
+RkPoint RkObject::RkObjectImpl::position() const
 {
         return platformWindow->position();
 }
 
-void RkWidget::RkWidgetImpl::setBorderWidth(int width)
+void RkObject::RkObjectImpl::setBorderWidth(int width)
 {
         platformWindow->setBorderWidth(width);
 }
 
-int RkWidget::RkWidgetImpl::borderWidth() const
+int RkObject::RkObjectImpl::borderWidth() const
 {
         return platformWindow->borderWidth();
 }
 
-void RkWidget::RkWidgetImpl::setBorderColor(const RkColor &color)
+void RkObject::RkObjectImpl::setBorderColor(const RkColor &color)
 {
         platformWindow->setBorderColor(color);
 }
 
-const RkColor& RkWidget::RkWidgetImpl::borderColor() const
+const RkColor& RkObject::RkObjectImpl::borderColor() const
 {
         return platformWindow->borderColor();
 }
 
-void RkWidget::RkWidgetImpl::setBackgroundColor(const RkColor &color)
+void RkObject::RkObjectImpl::setBackgroundColor(const RkColor &color)
 {
         platformWindow->setBackgroundColor(color);
         widgetBackground = color;
 }
 
-const RkColor& RkWidget::RkWidgetImpl::background() const
+const RkColor& RkObject::RkObjectImpl::background() const
 {
         return widgetBackground;
 }
 
-RkRect RkWidget::RkWidgetImpl::rect() const
+RkRect RkObject::RkObjectImpl::rect() const
 {
         return RkRect(RkPoint(0, 0), size());
 }
 
-void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
+void RkObject::RkObjectImpl::setEventQueue(RkEventQueue *queue)
 {
         if (!eventQueue) {
                 eventQueue = queue;
@@ -388,22 +372,22 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
         }
 }
 
-RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
+RkEventQueue* RkObject::RkObjectImpl::getEventQueue()
 {
         return eventQueue;
 }
 
-std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
+std::shared_ptr<RkCanvasInfo> RkObject::RkObjectImpl::getCanvasInfo() const
 {
         return platformWindow->getCanvasInfo();
 }
 
-void RkWidget::RkWidgetImpl::update()
+void RkObject::RkObjectImpl::update()
 {
         platformWindow->update();
 }
 
-void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
+void RkObject::RkObjectImpl::deleteChild(RkObject* child)
 {
         for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
                 if (*it == child) {
@@ -414,72 +398,72 @@ void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
         }
 }
 
-Rk::Modality RkWidget::RkWidgetImpl::modality() const
+Rk::Modality RkObject::RkObjectImpl::modality() const
 {
         return widgetModality;
 }
 
-const std::list<RkWidget*>& RkWidget::RkWidgetImpl::childWidgets() const
+const std::list<RkObject*>& RkObject::RkObjectImpl::childWidgets() const
 {
         return widgetChildren;
 }
 
-void RkWidget::RkWidgetImpl::setWidgetAttribute(Rk::WidgetAttribute attribute)
+void RkObject::RkObjectImpl::setWidgetAttribute(Rk::WidgetAttribute attribute)
 {
         widgetAttributes = static_cast<Rk::WidgetAttribute>(static_cast<int>(widgetAttributes) | static_cast<int>(attribute));
 }
 
-void RkWidget::RkWidgetImpl::clearWidgetAttribute(Rk::WidgetAttribute attribute)
+void RkObject::RkObjectImpl::clearWidgetAttribute(Rk::WidgetAttribute attribute)
 {
         widgetAttributes = static_cast<Rk::WidgetAttribute>(static_cast<int>(widgetAttributes) & (~static_cast<int>(attribute)));
 }
 
-Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
+Rk::WidgetAttribute RkObject::RkObjectImpl::getWidgetAttributes() const
 {
         return widgetAttributes;
 }
 
-void RkWidget::RkWidgetImpl::setFocus(bool b)
+void RkObject::RkObjectImpl::setFocus(bool b)
 {
         platformWindow->setFocus(b);
 }
 
-bool RkWidget::RkWidgetImpl::hasFocus() const
+bool RkObject::RkObjectImpl::hasFocus() const
 {
         return platformWindow->hasFocus();
 }
 
-void RkWidget::RkWidgetImpl::setTextColor(const RkColor &color)
+void RkObject::RkObjectImpl::setTextColor(const RkColor &color)
 {
         widgetTextColor = color;
 }
 
-const RkColor& RkWidget::RkWidgetImpl::textColor() const
+const RkColor& RkObject::RkObjectImpl::textColor() const
 {
         return widgetTextColor;
 }
 
-const RkColor& RkWidget::RkWidgetImpl::color() const
+const RkColor& RkObject::RkObjectImpl::color() const
 {
         return widgetDrawingColor;
 }
 
-void RkWidget::RkWidgetImpl::setColor(const RkColor &color)
+void RkObject::RkObjectImpl::setColor(const RkColor &color)
 {
         widgetDrawingColor = color;
 }
 
-const RkFont& RkWidget::RkWidgetImpl::font() const
+const RkFont& RkObject::RkObjectImpl::font() const
 {
         return widgetFont;
 }
 
-void RkWidget::RkWidgetImpl::setFont(const RkFont &font)
+void RkObject::RkObjectImpl::setFont(const RkFont &font)
 {
         widgetFont = font;
 }
 
-void RkWidget::RkWidgetImpl::setPointerShape(Rk::PointerShape shape)
+void RkObject::RkObjectImpl::setPointerShape(Rk::PointerShape shape)
 {
         if (widgetPointerShape != shape) {
                 widgetPointerShape = shape;
@@ -487,29 +471,73 @@ void RkWidget::RkWidgetImpl::setPointerShape(Rk::PointerShape shape)
         }
 }
 
-Rk::PointerShape RkWidget::RkWidgetImpl::pointerShape() const
+Rk::PointerShape RkObject::RkObjectImpl::pointerShape() const
 {
         return widgetPointerShape;
 }
 
-void RkWidget::RkWidgetImpl::enableGrabKey(bool b)
+void RkObject::RkObjectImpl::enableGrabKey(bool b)
 {
         isGrabKeyEnabled = b;
 }
 
-bool RkWidget::RkWidgetImpl::grabKeyEnabled() const
+bool RkObject::RkObjectImpl::grabKeyEnabled() const
 {
         return isGrabKeyEnabled;
 }
 
-void RkWidget::RkWidgetImpl::propagateGrabKey(bool b)
+void RkObject::RkObjectImpl::propagateGrabKey(bool b)
 {
         isPropagateGrabKey = b;
 }
 
-bool RkWidget::RkWidgetImpl::propagateGrabKeyEnabled() const
+bool RkObject::RkObjectImpl::propagateGrabKeyEnabled() const
 {
         return isPropagateGrabKey;
 }
 
 
+void RkObject::rk_add_observer(RkObserver *observer)
+{
+        rk_observers_list.push_back(observer);
+}
+
+void RkObject::rk_remove_object_observers(RkObject *obj)
+{
+        rk_observers_list.erase(std::remove_if(rk_observers_list.begin(),
+                                               rk_observers_list.end(),
+                                               [obj](RkObserver *o)  {
+                                                       if (o->object() == nullptr) {
+                                                               return false;
+                                                       } else if(o->object() == obj) {
+                                                               delete o;
+                                                               return true;
+                                                       }
+                                                       return false;
+                                               })
+                                , rk_observers_list.end());
+}
+
+std::vector<RkObserver*>& RkObject::rk_get_observers()
+{
+        return rk_observers_list;
+}
+
+void RkObject::rk_add_bound_object(RkObject *obj)
+{
+        auto res = std::find(std::begin(rk_bound_objects), std::end(rk_bound_objects), obj);
+        if (res == std::end(rk_bound_objects))
+                rk_bound_objects.push_back(obj);
+}
+
+void RkObject::rk_remove_bound_object(RkObject *obj)
+{
+        rk_bound_objects.erase(std::remove_if(rk_bound_objects.begin(),
+                                              rk_bound_objects.end(),
+                                              [obj](RkObject *o)  {
+                                                      if (o == obj)
+                                                              return true;
+                                                      return false;
+                                              })
+                               , rk_bound_objects.end());
+}

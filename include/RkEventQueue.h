@@ -25,6 +25,8 @@
 #define RK_EVENT_QUEUE_H
 
 #include "Rk.h"
+#include "RkObject.h"
+#include "RkAction.h"
 
 struct RkWindowId;
 struct RkNativeWindowInfo;
@@ -46,7 +48,7 @@ class RK_EXPORT RkEventQueue {
         void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
-        void postAction(const std::function<void(void)> &act);
+        void postAction(std::unique_ptr<RkAction> act);
         void processActions();
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
@@ -54,6 +56,7 @@ class RK_EXPORT RkEventQueue {
         // Process all: events, actions and timers.
         void processQueue();
         void clearEvents(const RkWidget *widget);
+        void clearActions(const RkObject *obj);
         void clearAllEvents();
 
  protected:

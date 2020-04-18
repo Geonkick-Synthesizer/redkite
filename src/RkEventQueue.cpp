@@ -38,9 +38,9 @@ RkEventQueue::~RkEventQueue()
 {
 }
 
-void RkEventQueue::addWidget(RkWidget *widget)
+void RkEventQueue::addObject(RkObject *obj)
 {
-        o_ptr->addWidget(widget);
+        o_ptr->addObject(obj);
 }
 
 void RkEventQueue::removeWidget(RkWidget *widget)
@@ -94,9 +94,9 @@ void RkEventQueue::processEvents()
         o_ptr->processEvents();
 }
 
-void RkEventQueue::postAction(const std::function<void(void)> &act)
+void RkEventQueue::postAction(std::unique_ptr<RkAction> act)
 {
-        o_ptr->postAction(act);
+        o_ptr->postAction(std::move(act));
 }
 
 void RkEventQueue::processActions()
@@ -132,6 +132,11 @@ void RkEventQueue::processQueue()
 void RkEventQueue::clearEvents(const RkWidget *widget)
 {
         o_ptr->clearEvents(widget);
+}
+
+void RkEventQueue::clearActions(const RkObject *obj)
+{
+        o_ptr->clearActions(obj);
 }
 
 void RkEventQueue::clearAllEvents()

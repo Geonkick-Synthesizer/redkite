@@ -62,24 +62,24 @@
 
 #define RK_DECLARE_IMPL(Class) \
   class Class##Impl; \
-  std::shared_ptr<Class##Impl> o_ptr;
+  std::unique_ptr<Class##Impl> o_ptr
 
 #define RK_DELCATE_IMPL_PTR(Class) \
-        class Class##Impl; \
-        std::shared_ptr<Class##Impl> impl_ptr;
+  class Class##Impl; \
+  const std::unique_ptr<Class##Impl> &impl_ptr
 
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr;
 
-#define RK_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const { return std::string( #value ); }
-#define RK_SET_CLASS_INFO(name, value) virtual std::string rk_property_ ##name () const override { return std::string( #value ); }
+#define RK_CLASS_INFO(name, value) virtual std::string rk__property_ ##name () const { return std::string( #value ); }
+#define RK_SET_CLASS_INFO(name, value) virtual std::string rk__property_ ##name () const override { return std::string( #value ); }
 
 #define RK_DISABLE_COPY(Class) \
           Class(const Class &other) = delete; \
-          Class& operator=(const Class &other) = delete;
+          Class& operator=(const Class &other) = delete
 
 #define RK_DISABLE_MOVE(Class) \
           Class(Class &&other) = delete; \
-          Class& operator=(Class &&other) = delete; \
+          Class& operator=(Class &&other) = delete
 
 #if defined(RK_OS_WIN) && !defined(RK_FOR_SHARED)
 int rkMain(int, char **);
@@ -435,39 +435,39 @@ namespace Rk {
 #define RK_ARG_VAL(val, ...) val, ##__VA_ARGS__
 
 #define RK_DECL_ACT(name, prot, type, val) \
-        class rk_observer_##name : public RkObserver { \
+        class rk__observer_##name : public RkObserver { \
         public: \
-                rk_observer_ ##name (RkObject *obj, const std::function<void(type)> &cb) \
+                rk__observer_ ##name (RkObject *obj, const std::function<void(type)> &cb) \
                         : RkObserver(obj), \
                           observerCallback{cb} {} \
-                rk_observer_##name () = default; \
+                rk__observer_##name () = default; \
                 std::function<void(type)> observerCallback; \
         }; \
         \
         void prot \
         { \
-                for (auto ob: rk_get_observers()) {                     \
-                        auto observer = dynamic_cast<rk_observer_ ##name *>(ob); \
+                for (const auto& ob: getObservers()) {                  \
+                        auto observer = dynamic_cast<rk__observer_ ##name *>(ob->get()); \
                         if (observer) \
                                 observer->observerCallback(val); \
                 } \
         } \
-        void rk_add_action_cb_##name (RkObject *obj, const std::function<void(type)> &cb) \
+        void rk__add_action_cb_##name (RkObject *obj, const std::function<void(type)> &cb) \
         { \
-                rk_add_observer(new rk_observer_##name (obj, cb)); \
+                rk__add_observer(std::move(std::make_unique<rk_observer_##name >(obj, cb))); \
         } \
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->rk_add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \
-        obj2->rk_add_bound_object(obj1)
+        obj1->rk__add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \
+        obj2->rk__add_bound_object(obj1)
 
 // Bind lamda functions to object actions.
 #define RK_ACT_BINDL(obj1, act, act_args, lamda)   \
-        obj1->rk_add_action_cb_##act (nullptr, lamda)
+        obj1->rk__add_action_cb_##act (nullptr, lamda)
 
 #define action
 
-#define RK_DECLARE_IMAGE_RC(name) extern const unsigned char rk_ ## name ## _png[]
-#define RK_IMAGE_RC(name) rk_ ## name ## _png
+#define RK_DECLARE_IMAGE_RC(name) extern const unsigned char rk__ ## name ## _png[]
+#define RK_IMAGE_RC(name) rk__ ## name ## _png
 
 #endif // RK_GLOBAL_H
