@@ -456,6 +456,7 @@ namespace Rk {
         { \
                 rk__add_observer(std::move(std::make_unique<rk_observer_##name >(obj, cb))); \
         } \
+        void rk__add_bound_object(RkObject *obj) override { RkObject::rk__add_bound_object(obj); }
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
         obj1->rk__add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \

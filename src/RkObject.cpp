@@ -41,24 +41,47 @@ void RkObject::setEventQueue(RkEventQueue* queue)
         o_ptr->setEventQueue(queue);
 }
 
-RkEventQueue* RkObject::eventQueue()
+RkEventQueue* RkObject::eventQueue() const
 {
         return o_ptr->eventQueue();
 }
 
 void RkObject::event(const RkEvent *event)
 {
+        RK_UNUSED(event);
+}
+
+void RkObject::rk__add_observer(std::unique_ptr<RkObserver> observer)
+{
+        o_ptr->addObserver(std::move(observer));
+}
+
+const std::vector<std::unique_ptr<RkObserver>>& RkObject::rk__observers() const
+{
+        return o_ptr->observers();
+}
+
+void RkObject::rk__add_bound_object(RkObject* observer)
+{
+        o_ptr->addBoundObject(object);
 }
 
 void RkObject::addChild(RkObject* child)
 {
-        if (child)
-                o_ptr->addChild(child);
+        o_ptr->addChild(child);
 }
 
-RkEventQueue* RkObject::eventQueue()
+void RkObject::removeChild(RkObject *child);\
 {
-        return objEventQueue;
+        o_ptr->removeChild(child);
 }
 
+void RkObject::removeObservers(RkObserver *ob)
+{
+        o_ptr->removeObservers(RkObject *ob);
+}
 
+void RkObject::removeBoundObject(RkObject *obj)
+{
+        o_ptr->removeBoundObject(obj);
+}

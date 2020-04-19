@@ -95,6 +95,7 @@ set(RK_HEADERS
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkObserver.h
+  ${RK_INCLUDE_PATH}/impl/RkObjectImpl.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
@@ -130,6 +131,7 @@ endif()
 
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkObject.cpp
+  ${RK_SRC_PATH}/RkObjectImpl.cpp
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp

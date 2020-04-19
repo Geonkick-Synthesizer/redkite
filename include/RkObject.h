@@ -33,21 +33,23 @@ class RK_EXPORT RkObject {
  public:
         explicit RkObject(RkObject *parent = nullptr);
         virtual ~RkObject();
-        void setEventQueue(RkEventQueue* queue);
-        RkEventQueue* eventQueue();
+        virtual void setEventQueue(RkEventQueue* queue);
+        RkEventQueue* eventQueue() const;
 
  protected:
         virtual void event(const RkEvent *event);
-
         void rk__add_observer(std::unique_ptr<RkObserver> observer);
         const std::vector<std::unique_ptr<RkObserver>>& rk__observers() const;
+        virtual void rk__add_bound_object(RkObject* obj);
 
  private:
         RK_DECLARE_IMPL(RkObject);
         RK_DISABLE_COPY(RkObject);
         RK_DISABLE_MOVE(RkObject);
         virtual void addChild(RkObject *child);
-        void removeObjectObservers(RkObject *obj);
+        void removeChild(RkObject *child);
+        void removeObservers(RkObserver *ob);
+        void removeBoundObject(RkObject *obj);
 };
 
 #endif // RK_OBJECT_H
