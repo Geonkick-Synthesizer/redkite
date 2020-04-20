@@ -77,8 +77,12 @@ class RK_EXPORT RkImage : public RkCanvas {
         bool isNull() const;
 
  protected:
-        RK_DECLARE_IMPL(RkImage)
         RkImage(const std::shared_ptr<RkImageImpl> &impl);
+
+ private:
+        RK_DISABLE_COPY(RkWidget);
+        RK_DISABLE_MOVE(RkWidget);
+        RK_DECLARE_IMPL(RkImage);
 };
 
 #endif // RK_IMAGE_H

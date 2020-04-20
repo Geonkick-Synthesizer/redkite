@@ -51,7 +51,7 @@ class RkImage::RkImageImpl {
 
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkImage)
+        RK_DECALRE_INTERFACE_PTR(RkImage);
         RkImage::Format imageFormat;
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         std::unique_ptr<RkCairoImageBackendCanvas> imageBackendCanvas;

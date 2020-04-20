@@ -60,12 +60,12 @@ class RK_EXPORT RkEventQueue {
         void clearAllEvents();
 
  protected:
-        RK_DECLARE_IMPL(RkEventQueue)
         RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl);
 
  private:
-        RK_DISABLE_COPY(RkEventQueue)
-        RK_DISABLE_MOVE(RkEventQueue)
+        RK_DECLARE_IMPL(RkEventQueue);
+        RK_DISABLE_COPY(RkEventQueue);
+        RK_DISABLE_MOVE(RkEventQueue);
 };
 
 #endif // RK_EVENT_QUEUE_H

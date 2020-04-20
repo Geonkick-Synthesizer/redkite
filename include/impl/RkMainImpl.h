@@ -52,7 +52,7 @@ class RkMain::RkMainImpl
 	int exec(bool block = true);
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkMain)
+        RK_DECALRE_INTERFACE_PTR(RkMain);
         RkWidget* topWindow;
         std::shared_ptr<RkEventQueue> eventQueue;
 };

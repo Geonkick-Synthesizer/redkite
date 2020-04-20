@@ -58,12 +58,10 @@ class RK_EXPORT RkPainter {
         void rotate(rk_real angle);
         int getTextWidth(const std::string &text) const;
 
- protected:
-        RK_DECLARE_IMPL(RkPainter)
-
  private:
-        RK_DISABLE_COPY(RkPainter)
-        RK_DISABLE_MOVE(RkPainter)
+        RK_DISABLE_COPY(RkPainter);
+        RK_DISABLE_MOVE(RkPainter);
+        RK_DECLARE_IMPL(RkPainter);
 };
 
 #endif // RK_PAINTER_H

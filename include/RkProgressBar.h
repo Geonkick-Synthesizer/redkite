@@ -28,7 +28,7 @@
 
 class RK_EXPORT RkProgressBar : public RkWidget {
  public:
-    RkProgressBar(RkWidget *parent);
+    explicit RkProgressBar(RkWidget *parent);
     int beginValue() const;
     void setBeginValue(int value);
     int endValue() const;
@@ -42,8 +42,12 @@ class RK_EXPORT RkProgressBar : public RkWidget {
     void setProgressColor(const RkColor &color);
 
  protected:
-    virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
-    RK_DELCATE_IMPL_PTR(RkProgressBar)
+    virtual void paintEvent(const RkPaintEvent* event) override;
+
+ private:
+    RK_DISABLE_COPY(RkWidget);
+    RK_DISABLE_MOVE(RkWidget);
+    RK_DELCATE_IMPL_PTR(RkProgressBar);
 };
 
 #endif // RK_PROGRESS_BAR_H

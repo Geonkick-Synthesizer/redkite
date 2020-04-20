@@ -40,7 +40,6 @@
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
-        , parentWidget{parent}
 #ifdef RK_OS_WIN
         , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
 #elif RK_OS_MAC
@@ -49,7 +48,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
 #endif
         , widgetClosed{false}
-        , eventQueue{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
         , widgetSize{platformWindow->size()}
@@ -70,7 +68,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      const RkNativeWindowInfo &parent,
                                      Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
-        , parentWidget{nullptr}
 #ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
 #elif RK_OS_MAC
@@ -79,7 +76,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , platformWindow{std::make_unique<RkWindowX>(parent, flags)}
 #endif
         , widgetClosed{false}
-        , eventQueue{nullptr}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
         , widgetSize{platformWindow->size()}
@@ -95,21 +91,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
-        eventQueue->removeWidget(inf_ptr);
-
-        // Clear object actions.
-        eventQueue->clearActions(inf_ptr);
-
-        // Remove all events queued for the
-        // current widget from the event queue.
-        eventQueue->clearEvents(inf_ptr);
-
-        if (parentWidget)
-                parentWidget->removeChild(inf_ptr);
-
-        // Unbind actions
-        while (widgetChildren.size() > 0)
-                delete widgetChildren.front();
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -157,7 +138,7 @@ RkWindowId RkWidget::RkWidgetImpl::id() const
         return platformWindow->id();
 }
 
-void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
+void RkWidget::RkWidgetImpl::event(const std::shared_ptr<RkEvent> &event)
 {
         switch (event->type())
         {
@@ -238,45 +219,6 @@ void RkWidget::RkWidgetImpl::processEvent(const std::shared_ptr<RkEvent> &event)
                 break;
         default:
                 break;
-        }
-}
-
-RkWidget* RkWidget::RkWidgetImpl::parent() const
-{
-        return parentWidget;
-}
-
-RkWidget* RkWidget::RkWidgetImpl::child(const RkWindowId &id) const
-{
-        for (const auto &child : widgetChildren) {
-                if (child->id().id == id.id) {
-                        return child;
-                } else {
-                        auto ch = child->child(id);
-                        if (ch)
-                                return ch;
-                }
-        }
-
-        return nullptr;
-}
-
-void RkWidget::RkWidgetImpl::addChild(RkWidget* child)
-{
-        if (child) {
-                widgetChildren.push_back(child);
-                if (eventQueue)
-                        eventQueue->addWidget(child);
-        }
-}
-
-void RkWidget::RkWidgetImpl::removeChild(RkWidget* child)
-{
-        for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
-                if (*it == child) {
-                        widgetChildren.erase(it);
-                        return;
-                }
         }
 }
 
@@ -380,17 +322,7 @@ RkRect RkWidget::RkWidgetImpl::rect() const
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 {
-        if (!eventQueue) {
-                eventQueue = queue;
-                platformWindow->setEventQueue(eventQueue);
-                for (const auto &child : widgetChildren)
-                        eventQueue->addWidget(child);
-        }
-}
-
-RkEventQueue* RkWidget::RkWidgetImpl::getEventQueue()
-{
-        return eventQueue;
+        platformWindow->setEventQueue(inf_ptr->eventQueue());
 }
 
 std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
@@ -401,17 +333,6 @@ std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
 void RkWidget::RkWidgetImpl::update()
 {
         platformWindow->update();
-}
-
-void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
-{
-        for (auto it = widgetChildren.begin(); it != widgetChildren.end(); ++it) {
-                if (*it == child) {
-                        it = widgetChildren.erase(it);
-                        delete child;
-                        return;
-                }
-        }
 }
 
 Rk::Modality RkWidget::RkWidgetImpl::modality() const
@@ -511,5 +432,3 @@ bool RkWidget::RkWidgetImpl::propagateGrabKeyEnabled() const
 {
         return isPropagateGrabKey;
 }
-
-

@@ -44,9 +44,7 @@ class RkObject::RkObjectImpl {
         void removeChild(RkObject* child);
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkObject)
-        RK_DISABLE_COPY(RkObjectImpl)
-        RK_DISABLE_MOVE(RkObjectImpl)
+        RK_DECALRE_INTERFACE_PTR(RkObject);
 
         RkEventQueue *eventQueue;
         RkObject *parentObject;

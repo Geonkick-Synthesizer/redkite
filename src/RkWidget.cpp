@@ -65,8 +65,6 @@ RkWidget::~RkWidget()
                         } else {
                                 // Enable inputs only for parent widget and its
                                 // childs since it is modal.
-                                // TODO: Ideally the current child that are being destroyed
-                                // to be first removed from the parent.
                                 parent()->enableInput();
                         }
                 } else if (modality() == Rk::Modality::ModalParent) {
@@ -110,6 +108,16 @@ std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
 RkWindowId RkWidget::id() const
 {
         return o_ptr->id();
+}
+
+RkWidget* RkWidget::parentWidget() const
+{
+        // TODO
+}
+
+RkWidget* childWidget(const RkWindowId &id) const
+{
+        // TODO
 }
 
 bool RkWidget::isClose() const
@@ -364,11 +372,6 @@ void RkWidget::setFont(const RkFont &font)
         o_ptr->setFont(font);
 }
 
-RkWidget* RkWidget::parent() const
-{
-        return o_ptr->parent();
-}
-
 RkWidget* RkWidget::child(const RkWindowId &id) const
 {
         return o_ptr->child(id);
@@ -386,12 +389,6 @@ void RkWidget::addChild(RkWidget* child)
                 }
                 RkObject::addChild(child);
         }
-}
-
-void RkWidget::removeChild(RkWidget* child)
-{
-        if (child)
-                o_ptr->removeChild(child);
 }
 
 void RkWidget::enableInput()
@@ -437,6 +434,11 @@ void RkWidget::propagateGrabKey(bool b)
 bool RkWidget::propagateGrabKeyEnabled() const
 {
         return o_ptr->propagateGrabKeyEnabled();
+}
+
+void RkWidget::event(const std::shared_ptr<RkEvent> &event)
+{
+        o_ptr->event(event);
 }
 
 void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)

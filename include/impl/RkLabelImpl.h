@@ -41,7 +41,7 @@ class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
     void drawLabel();
 
  private:
-    RK_DECALRE_INTERFACE_PTR(RkLabel)
+    RK_DECALRE_INTERFACE_PTR(RkLabel);
     std::string labelText;
     RkImage labelImage;
 };

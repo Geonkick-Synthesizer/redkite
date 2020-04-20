@@ -44,7 +44,7 @@ class RkProgressBar::RkProgressBarImpl : public RkWidget::RkWidgetImpl {
         void drawProgressBar();
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkProgressBar)
+        RK_DECALRE_INTERFACE_PTR(RkProgressBar);
         int beginVal;
         int endVal;
         int currentVal;

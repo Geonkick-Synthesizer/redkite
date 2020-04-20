@@ -64,7 +64,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         void onCursorTimeout();
 
  private:
-    RK_DECALRE_INTERFACE_PTR(RkLineEdit)
+    RK_DECALRE_INTERFACE_PTR(RkLineEdit);
     std::string editedText;
     int cursorIndex;
     int selectionIndex;

@@ -42,7 +42,7 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
 	void drawButton(RkPainter &painter);
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkButton)
+        RK_DECALRE_INTERFACE_PTR(RkButton);
         ButtonType buttonType;
         bool is_pressed;
         RkImage pressedImage;

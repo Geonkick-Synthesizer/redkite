@@ -37,8 +37,12 @@ class RK_EXPORT RkLabel : public RkWidget {
     void setImage(const RkImage &image);
 
  protected:
-    RK_DELCATE_IMPL_PTR(RkLabel)
-    virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
+    virtual void paintEvent(const RkPaintEvent *event) override;
+
+ private:
+          RK_DISABLE_COPY(RkWidget);
+          RK_DISABLE_MOVE(RkWidget);
+          RK_DELCATE_IMPL_PTR(RkLabel);
 };
 
 #endif // RK_LABEL_H

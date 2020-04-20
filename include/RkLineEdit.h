@@ -51,12 +51,16 @@ class RK_EXPORT RkLineEdit : public RkWidget {
                 RK_ARG_VAL());
 
  protected:
-    void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
-    void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event) override;
-    void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-    void focusEvent(const std::shared_ptr<RkFocusEvent> &event) override;
-    void resizeEvent(const std::shared_ptr<RkResizeEvent> &event) override;
-    RK_DELCATE_IMPL_PTR(RkLineEdit)
+    virtual void paintEvent(const RkPaintEvent *event) override;
+    virtual void keyPressEvent(const RkKeyEvent *event) override;
+    virtual void mouseButtonPressEvent(const RkMouseEvent *event) override;
+    virtual void focusEvent(const RkFocusEvent *event) override;
+    virtual void resizeEvent(const RkResizeEvent* event) override;
+
+ private:
+    RK_DISABLE_COPY(RkWidget);
+    RK_DISABLE_MOVE(RkWidget);
+    RK_DELCATE_IMPL_PTR(RkLineEdit);
 };
 
 #endif // RK_LABEL_H

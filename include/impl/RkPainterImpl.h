@@ -53,7 +53,7 @@ class RkPainter::RkPainterImpl {
         int getTextWidth(const std::string &text) const;
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkPainter)
+        RK_DECALRE_INTERFACE_PTR(RkPainter);
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         std::unique_ptr<RkCairoGraphicsBackend> backendGraphics;
 #else

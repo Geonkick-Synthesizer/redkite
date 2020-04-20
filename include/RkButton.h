@@ -33,7 +33,7 @@ class RK_EXPORT RkButton: public RkWidget
         enum class ButtonType: int {
                 ButtonUncheckable = 0,
                 ButtonCheckable   = 1,
-                ButtonPush        = 3,
+                ButtonPush        = 3
         };
 
         explicit RkButton(RkWidget *parent);
@@ -52,10 +52,14 @@ class RK_EXPORT RkButton: public RkWidget
                     RK_ARG_VAL(pressed));
 
  protected:
-        RK_DELCATE_IMPL_PTR(RkButton)
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
+        virtual void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
+        virtual void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) override;
+        virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
+
+ private:
+        RK_DISABLE_COPY(RkWidget);
+        RK_DISABLE_MOVE(RkWidget);
+        RK_DELCATE_IMPL_PTR(RkButton);
 };
 
 #endif // RK_BUTTON_H

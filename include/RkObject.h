@@ -33,6 +33,7 @@ class RK_EXPORT RkObject {
  public:
         explicit RkObject(RkObject *parent = nullptr);
         virtual ~RkObject();
+        RkObject* parent() const;
         virtual void setEventQueue(RkEventQueue* queue);
         RkEventQueue* eventQueue() const;
 

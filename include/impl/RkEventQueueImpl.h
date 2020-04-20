@@ -72,7 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         void clearAllEvents();
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkEventQueue)
+        RK_DECALRE_INTERFACE_PTR(RkEventQueue);
         std::list<RkObject*> objectsList;
         std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
         std::vector<std::unique_ptr<RkEvent>>> eventsQueue;

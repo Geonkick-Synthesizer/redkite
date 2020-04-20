@@ -26,7 +26,6 @@
 
 #include "Rk.h"
 #include "RkObject.h"
-#include "RkEventQueue.h"
 #include "RkCanvas.h"
 #include "RkRect.h"
 #include "RkColor.h"
@@ -67,12 +66,10 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
 	  const std::string& title() const;
           std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
 	  bool isClose() const;
-          RkWidget* parent() const;
-          RkWidget* child(const RkWindowId &id) const;
-          RkEventQueue* eventQueue();
-          void processEvent(const std::shared_ptr<RkEvent> &event);
+          RkWidget* parentWidget() const;
+          RkWidget* childWidget(const RkWindowId &id) const;
+          void event(const RkEvent *event);
           RkWindowId id() const;
-
 	  void setSize(int w, int h);
 	  void setSize(const RkSize &size);
 	  RkSize size() const;
@@ -112,7 +109,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void setColor(const RkColor &color);
           const RkFont& font() const;
           void setFont(const RkFont &font);
-          std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
+          RkCanvasInfo getCanvasInfo() const override;
           RkRect rect() const;
           void update();
           void close();
@@ -124,7 +121,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void enableInput();
           void disableInput();
           bool isInputEnabled() const;
-          RkWidget* getTopWindow();
+          RkWidget* getTopWindow() const;
           void enableGrabKey(bool b);
           bool grabKeyEnabled() const;
           void propagateGrabKey(bool b);
@@ -136,30 +133,26 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           Rk::PointerShape pointerShape() const;
 
   protected:
-          RK_DECLARE_IMPL(RkWidget)
+          RK_DECLARE_IMPL(RkWidget);
           RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);
-          virtual void closeEvent(const std::shared_ptr<RkCloseEvent> &event);
-          virtual void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event);
-          virtual void keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event);
-          virtual void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event);
-          virtual void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event);
-          virtual void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event);
-          virtual void mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event);
-          virtual void wheelEvent(const std::shared_ptr<RkWheelEvent> &event);
-          virtual void moveEvent(const std::shared_ptr<RkMoveEvent> &event);
-          virtual void resizeEvent(const std::shared_ptr<RkResizeEvent> &event);
-          virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
-          virtual void showEvent(const std::shared_ptr<RkShowEvent> &event);
-          virtual void hideEvent(const std::shared_ptr<RkHideEvent> &event);
-          virtual void focusEvent(const std::shared_ptr<RkFocusEvent> &event);
+          virtual void closeEvent(const RkCloseEvent *event);
+          virtual void keyPressEvent(const RkKeyEvent *event);
+          virtual void keyReleaseEvent(const RkKeyEvent *event);
+          virtual void mouseMoveEvent(const RkMouseEvent *event);
+          virtual void mouseButtonPressEvent(const RkMouseEvent *event);
+          virtual void mouseButtonReleaseEvent(const RkMouseEvent *event);
+          virtual void mouseDoubleClickEvent(const RkMouseEvent *event);
+          virtual void wheelEvent(const RkWheelEvent *event);
+          virtual void moveEvent(const RkMoveEvent *event);
+          virtual void resizeEvent(const RkResizeEvent *event);
+          virtual void paintEvent(const RkPaintEvent *event);
+          virtual void showEvent(const RkShowEvent *event);
+          virtual void hideEvent(const RkHideEvent *event);
+          virtual void focusEvent(const RkFocusEvent *event);
 
  private:
-          RK_DISABLE_COPY(RkWidget)
-          RK_DISABLE_MOVE(RkWidget)
-
-          void addChild(RkWidget* child);
-          void removeChild(RkWidget* child);
-          friend class RkEventQueue;
+          RK_DISABLE_COPY(RkWidget);
+          RK_DISABLE_MOVE(RkWidget);
 };
 
 #endif // RK_WIDGET_H

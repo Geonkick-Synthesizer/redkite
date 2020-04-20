@@ -52,15 +52,11 @@ class RkWidget::RkWidgetImpl : public RkObject {
 	bool isShown() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
-        std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
+        RkNativeWindowInfo nativeWindowInfo() const;
         bool isClose() const;
         void processEvents();
         RkWindowId id() const;
-        void processEvent(const std::shared_ptr<RkEvent> &event);
-        RkWidget* parent() const;
-        RkWidget* child(const RkWindowId &id) const;
-        void addChild(RkWidget* child);
-        void removeChild(RkWidget* child);
+        void event(const RkEvent *event);
         void setSize(const RkSize &size);
         RkSize size() const;
         int minimumWidth() const;
@@ -81,13 +77,11 @@ class RkWidget::RkWidgetImpl : public RkObject {
         const RkColor& background() const;
         RkRect rect() const;
         void setEventQueue(RkEventQueue* queue);
-        RkEventQueue* getEventQueue();
-        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        RkCanvasInfo getCanvasInfo() const;
         void update();
-        void deleteChild(RkWidget* child);
         static Rk::WidgetAttribute defaultWidgetAttributes();
         Rk::Modality modality() const;
-        const std::list<RkWidget*>& childWidgets() const;
+        //        const std::list<RkWidget*>& childWidgets() const;
         void setWidgetAttribute(Rk::WidgetAttribute attribute);
         void clearWidgetAttribute(Rk::WidgetAttribute attribute);
         Rk::WidgetAttribute getWidgetAttributes() const;
@@ -107,8 +101,7 @@ class RkWidget::RkWidgetImpl : public RkObject {
         bool propagateGrabKeyEnabled() const;
 
  private:
-        RK_DECALRE_INTERFACE_PTR(RkWidget)
-        RkWidget *parentWidget;
+        RK_DECALRE_INTERFACE_PTR(RkWidget);
 #ifdef RK_OS_WIN
         std::unique_ptr<RkWindowWin> platformWindow;
 #elif RK_OS_MAC
@@ -116,7 +109,7 @@ class RkWidget::RkWidgetImpl : public RkObject {
         std::unique_ptr<RkWindowX> platformWindow;
 #endif // RK_WIN_OS
         std::string widgetTitle;
-        std::list<RkWidget*> widgetChildren;
+        //        std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
         RkEventQueue* eventQueue;
         RkSize widgetMinimumSize;

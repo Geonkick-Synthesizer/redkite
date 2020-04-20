@@ -31,7 +31,7 @@ class RkEventQueue;
 
 class RK_EXPORT RkTimer: public RkObject {
   public:
-        explicit RkTimer(int interval = 0, RkEventQueue *queue = nullptr);
+        explicit RkTimer(int interval = 0);
         virtual ~RkTimer();
         RK_DECL_ACT(timeout, timeout(), RK_ARG_TYPE(), RK_ARG_VAL());
         void start();
@@ -51,7 +51,6 @@ class RK_EXPORT RkTimer: public RkObject {
         long int timerInterval;
         bool timerStarted;
         long int lastTime;
-        RkEventQueue *eventQueue;
 };
 
 #endif // RK_TIMER_H
