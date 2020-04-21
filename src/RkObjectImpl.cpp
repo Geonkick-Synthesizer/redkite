@@ -33,7 +33,7 @@ RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface, RkObject* parent)
 
 RkObject::RkObjectImpl::~RkObjectImpl()
 {
-        if (evenQueue) {
+        if (eventQueue) {
                 eventQueue->removeObject(inf_ptr);
                 eventQueue->clearActions(inf_ptr);
                 eventQueue->clearEvents(inf_ptr);
@@ -48,7 +48,6 @@ RkObject::RkObjectImpl::~RkObjectImpl()
         for (auto o: observersList) {
                 if (o->object())
                         o->object()->removeBoundObject(this);
-                delete o;
         }
         observersList.clear();
 
@@ -61,6 +60,11 @@ RkObject::RkObjectImpl::~RkObjectImpl()
                 delete child;
 }
 
+RkObject* RkObject::RkObjectImpl::parent() const
+{
+        return parentObject;
+}
+
 void RkObject::RkObjectImpl::setEventQueue(RkEventQueue *queue)
 {
         eventQueue = queue;
@@ -71,11 +75,11 @@ RkEventQueue* RkObject::RkObjectImpl::getEventQueue() const
         return eventQueue;
 }
 
-void RkObject::addObserver(RkObserver *ob)
+void RkObject::addObserver(std::unique_ptr<RkObserver> ob)
 {
         auto res = std::find(observersList.begin(), observersList.end(), ob);
         if (res == std::end(observersList))
-                observersList.push_back(observer);
+                observersList.push_back(std::move(observer));
 }
 
 void RkObject::removeObjectObservers(RkObject *obj)
@@ -94,7 +98,7 @@ void RkObject::removeObjectObservers(RkObject *obj)
                                 , observersList.end());
 }
 
-const std::vector<RkObserver*>& RkObject::observers() const
+const std::vector<std::unique_ptr<RkObserver>>& RkObject::observers() const
 {
         return observersList;
 }
@@ -133,3 +137,4 @@ void RkObject::RkObjectImpl::removeChild(RkObject* child)
                         delete res;
         }
 }
+

@@ -43,65 +43,19 @@ void RkEventQueue::addObject(RkObject *obj)
         o_ptr->addObject(obj);
 }
 
-void RkEventQueue::removeWidget(RkWidget *widget)
+void RkEventQueue::removeObject(RkObject *obj)
 {
-        o_ptr->removeWidget(widget);
+        o_ptr->removeObject(obj);
 }
 
-void RkEventQueue::removeWidgetEvents(RkWidget *widget)
+void RkEventQueue::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
-        o_ptr->removeWidgetEvents(widget);
+        o_ptr->postEvent(object, std::move(event));
 }
 
-void RkEventQueue::postEvent(RkWidget *widget,
-                             const std::shared_ptr<RkEvent> &event)
-{
-        o_ptr->postEvent(widget, event);
-}
-
-void RkEventQueue::postEvent(const RkWindowId &id,
-                             const std::shared_ptr<RkEvent> &event)
-{
-        o_ptr->postEvent(id, event);
-}
-
-void RkEventQueue::postEvent(const RkNativeWindowInfo &info,
-                             const std::shared_ptr<RkEvent> &event)
-{
-        o_ptr->postEvent(info, event);
-}
-
-void RkEventQueue::processEvent(RkWidget *widget,
-                                const std::shared_ptr<RkEvent> &event)
-{
-	o_ptr->processEvent(widget, event);
-}
-
-void RkEventQueue::processEvent(const RkWindowId &id,
-                                const std::shared_ptr<RkEvent> &event)
-{
-	o_ptr->processEvent(id, event);
-}
-
-void RkEventQueue::processEvent(const RkNativeWindowInfo &info,
-                                const std::shared_ptr<RkEvent> &event)
-{
-	o_ptr->processEvent(info, event);
-}
-
-void RkEventQueue::processEvents()
-{
-        o_ptr->processEvents();
-}
-
-void RkEventQueue::postAction(std::unique_ptr<RkAction> act)
+void RkEventQueue::postAction(std::unique_ptr<RkAction> &act)
 {
         o_ptr->postAction(std::move(act));
-}
-
-void RkEventQueue::processActions()
-{
-        o_ptr->processActions();
 }
 
 void RkEventQueue::subscribeTimer(RkTimer *timer)
@@ -114,6 +68,16 @@ void RkEventQueue::unsubscribeTimer(RkTimer *timer)
 {
         if (timer)
                 o_ptr->unsubscribeTimer(timer);
+}
+
+void RkEventQueue::processEvents()
+{
+        o_ptr->processEvents();
+}
+
+void RkEventQueue::processActions()
+{
+        o_ptr->processActions();
 }
 
 void RkEventQueue::processTimers()
@@ -129,17 +93,65 @@ void RkEventQueue::processQueue()
         processEvents();
 }
 
-void RkEventQueue::clearEvents(const RkWidget *widget)
+// void RkEventQueue::postEvent(const RkWindowId &id,
+//                              const std::shared_ptr<RkEvent> &event)
+// {
+//         o_ptr->postEvent(id, event);
+// }
+
+// void RkEventQueue::postEvent(const RkNativeWindowInfo &info,
+//                              const std::shared_ptr<RkEvent> &event)
+// {
+//         o_ptr->postEvent(info, event);
+// }
+
+// void RkEventQueue::processEvent(RkObject *obj, RkEvent *event)
+// {
+// 	o_ptr->processEvent(obj, event);
+// }
+
+// void RkEventQueue::processEvent(const RkWindowId &id,
+//                                 const std::shared_ptr<RkEvent> &event)
+// {
+// 	o_ptr->processEvent(id, event);
+// }
+
+// void RkEventQueue::processEvent(const RkNativeWindowInfo &info,
+//                                 const std::shared_ptr<RkEvent> &event)
+// {
+// 	o_ptr->processEvent(info, event);
+// }
+
+void RkEventQueue::clearObjectEvents(const RkObject *obj)
 {
-        o_ptr->clearEvents(widget);
+        if (obj)
+                o_ptr->clearEvents(obj);
 }
 
-void RkEventQueue::clearActions(const RkObject *obj)
+void RkEventQueue::clearObjectActions(const RkObject *act)
 {
-        o_ptr->clearActions(obj);
+        if (act)
+                o_ptr->clearActions(act);
 }
 
-void RkEventQueue::clearAllEvents()
+void RkEventQueue::clearEvents()
 {
-        o_ptr->clearAllEvents();
+        o_ptr->clearEvents(nullptr);
+}
+
+void RkEventQueue::clearActions()
+{
+        o_ptr->clearActions(nullptr);
+}
+
+void RkEventQueue::clearTimers()
+{
+        o_ptr->clearTimers();
+}
+
+void RkEventQueue::clearQueue()
+{
+        clearEvents();
+        clearActions();
+        clearTimers();
 }

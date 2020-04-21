@@ -28,9 +28,8 @@
 #include "RkObject.h"
 #include "RkAction.h"
 
-struct RkWindowId;
-struct RkNativeWindowInfo;
-class RkWidget;
+//struct RkWindowId;
+//struct RkNativeWindowInfo;
 class RkEvent;
 class RkTimer;
 
@@ -38,32 +37,33 @@ class RK_EXPORT RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
-        void addWidget(RkWidget *widget);
-        void removeWidget(RkWidget *widget);
-        void removeWidgetEvents(RkWidget *widget);
-        void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
-        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
-        void processEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
-        void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
-        void processEvents();
+        void addObject(RkObject *obj);
+        void removeObject(RkObject *obj);
+        void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         void postAction(std::unique_ptr<RkAction> act);
-        void processActions();
+        /* void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event); */
+        /* void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event); */
+        /* void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event); */
+        /* void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event); */
+        //        void processEvent(RkObject *obj, RkEvent *event);
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
+        void processEvents();
+        void processActions();
         void processTimers();
-        // Process all: events, actions and timers.
         void processQueue();
-        void clearEvents(const RkWidget *widget);
-        void clearActions(const RkObject *obj);
-        void clearAllEvents();
+        void clearObjectEvents(const RkObject *obj);
+        void clearObjectActions(const RkObject *obj);
+        void clearEvents();
+        void clearActions();
+        void clearTimers();
+        void clearQueue();
 
  protected:
+        RK_DECLARE_IMPL(RkEventQueue);
         RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl);
 
  private:
-        RK_DECLARE_IMPL(RkEventQueue);
         RK_DISABLE_COPY(RkEventQueue);
         RK_DISABLE_MOVE(RkEventQueue);
 };

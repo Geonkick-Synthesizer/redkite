@@ -27,6 +27,7 @@
 #include "Rk.h"
 #include "RkObserver.h"
 
+class RkEvent;
 class RkEventQueue;
 
 class RK_EXPORT RkObject {
@@ -49,7 +50,7 @@ class RK_EXPORT RkObject {
         RK_DISABLE_MOVE(RkObject);
         virtual void addChild(RkObject *child);
         void removeChild(RkObject *child);
-        void removeObservers(RkObserver *ob);
+        void removeObservers(RkObject *ob);
         void removeBoundObject(RkObject *obj);
 };
 

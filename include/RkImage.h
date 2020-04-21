@@ -49,7 +49,6 @@ class RK_EXPORT RkImage : public RkCanvas {
         virtual ~RkImage() = default;
         RkImage(const RkImage &image);
         RkImage& operator=(const RkImage &other);
-        RK_DISABLE_MOVE(RkImage)
         friend  bool operator==(const RkImage &im1, const RkImage &im2)
         {
                 return im1.width() == im2.width()
@@ -77,12 +76,11 @@ class RK_EXPORT RkImage : public RkCanvas {
         bool isNull() const;
 
  protected:
+        RK_DECLARE_IMPL(RkImage);
         RkImage(const std::shared_ptr<RkImageImpl> &impl);
 
  private:
-        RK_DISABLE_COPY(RkWidget);
-        RK_DISABLE_MOVE(RkWidget);
-        RK_DECLARE_IMPL(RkImage);
+        RK_DISABLE_MOVE(RkImage);
 };
 
 #endif // RK_IMAGE_H

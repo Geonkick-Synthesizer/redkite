@@ -26,6 +26,8 @@
 
 #include "RkObject.h"
 
+#include <unordered_set>
+
 class RkEventQueue;
 
 class RkObject::RkObjectImpl {
@@ -33,11 +35,12 @@ class RkObject::RkObjectImpl {
         explicit RkObjectImpl(RkObject* interface, RkObject* parent);
         virtual ~RkObjectImpl();
 
+        RkObject* parent() const;
         void setEventQueue(RkEventQueue *queue);
         RkEventQueue* getEventQueue() const;
-        void addObserver(RkObserver *ob);
+        void addObserver(std::unique_ptr<RkObserver> ob);
         void removeObservers(RkObject *obj);
-        const std::vector<RkObserver*>& observers() const;
+        const std::vector<std::unique_ptr<RkObserver>>& observers() const;
         void addBoundObject(RkObject *obj);
         void removeBoundObject(RkObject *obj);
         void addChild(RkObject* child);
@@ -45,11 +48,10 @@ class RkObject::RkObjectImpl {
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkObject);
-
-        RkEventQueue *eventQueue;
         RkObject *parentObject;
+        RkEventQueue *eventQueue;
         std::unordered_set<RkObject*> objectChildren;
-        std::vector<RkObserver*> observersList;
+        std::vector<std::unique_ptr<RkObserver>> observersList;
         std::vector<RkObject*> boundObjects;
 };
 

@@ -45,8 +45,8 @@ class RK_EXPORT RkProgressBar : public RkWidget {
     virtual void paintEvent(const RkPaintEvent* event) override;
 
  private:
-    RK_DISABLE_COPY(RkWidget);
-    RK_DISABLE_MOVE(RkWidget);
+    RK_DISABLE_COPY(RkProgressBar);
+    RK_DISABLE_MOVE(RkProgressBar);
     RK_DELCATE_IMPL_PTR(RkProgressBar);
 };
 

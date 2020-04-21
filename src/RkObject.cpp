@@ -21,19 +21,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkObject.h"
+#include "RkObjectImpl.h"
 #include "RkLog.h"
 #include "RkObserver.h"
 
 RkObject::RkObject(RkObject *parent)
         : o_ptr{std::make_unique<RkObjectImpl>(this, parent)}
 {
-        if (o_ptr->parent())
-                o_ptr->parent()->addChild(this);
+        if (parent)
+                parent->addChild(this);
 }
 
 RkObject::~RkObject()
 {
+}
+
+RkObject* RkObject::parent() const
+{
+        return o_ptr->parent();
 }
 
 void RkObject::setEventQueue(RkEventQueue* queue)
@@ -43,7 +48,7 @@ void RkObject::setEventQueue(RkEventQueue* queue)
 
 RkEventQueue* RkObject::eventQueue() const
 {
-        return o_ptr->eventQueue();
+        return o_ptr->getEventQueue();
 }
 
 void RkObject::event(const RkEvent *event)
@@ -61,9 +66,9 @@ const std::vector<std::unique_ptr<RkObserver>>& RkObject::rk__observers() const
         return o_ptr->observers();
 }
 
-void RkObject::rk__add_bound_object(RkObject* observer)
+void RkObject::rk__add_bound_object(RkObject* obj)
 {
-        o_ptr->addBoundObject(object);
+        o_ptr->addBoundObject(obj);
 }
 
 void RkObject::addChild(RkObject* child)
@@ -71,14 +76,14 @@ void RkObject::addChild(RkObject* child)
         o_ptr->addChild(child);
 }
 
-void RkObject::removeChild(RkObject *child);\
+void RkObject::removeChild(RkObject *child)
 {
         o_ptr->removeChild(child);
 }
 
-void RkObject::removeObservers(RkObserver *ob)
+void RkObject::removeObservers(RkObject *obj)
 {
-        o_ptr->removeObservers(RkObject *ob);
+        o_ptr->removeObservers(obj);
 }
 
 void RkObject::removeBoundObject(RkObject *obj)

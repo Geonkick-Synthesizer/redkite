@@ -42,43 +42,41 @@
 
 class RkEventQueue::RkEventQueueImpl {
  public:
-        explicit RkEventQueueImpl(RkEventQueue* eventQueueInterface);
-        RkEventQueueImpl(const RkEventQueue &other) = delete;
-        RkEventQueueImpl& operator=(const RkEventQueueImpl &other) = delete;
-        RkEventQueueImpl(RkEventQueueImpl &&other) = delete;
-        RkEventQueueImpl& operator=(RkEventQueueImpl &&other) = delete;
+        explicit RkEventQueueImpl(RkEventQueue* interface);
         virtual ~RkEventQueueImpl();
 
-        bool widgetExists(RkWidget *widget);
-        void addWidget(RkWidget *widget);
-        RkWidget* findWidget(const RkWindowId &id) const;
-        RkWidget* findWidget(const RkNativeWindowInfo &info) const;
-        void removeWidget(RkWidget *widget);
-        void removeWidgetEvents(RkWidget *widget);
-        void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
-        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
-        void processEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
-        void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
+        bool objectExists(RkObject *t) const;
+        void addObject(RkObject *obj);
+        //        RkObject* findObj(const RkWindowId &id) const;
+        //        RkObject* findObj(const RkNativeWindowInfo &info) const;
+        void removeObj(RkObject *obj);
+        void removeObjEvents(RkObject *obj);
+        void postEvent(RkObject *obj, RkEvent *event);
+        //        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
+        //        void postEvent(const RkNativeWindowInfo &info, RkEvent *event);
+        void processEvent(RkObject *obj, const RkEvent *event);
+        //        void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
+        //        void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
         void postAction(std::unique_ptr<RkAction> act);
         void processActions();
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processTimers();
-        void clearEvents(const RkWidget *widget);
+        void clearEvents(const RkObject *obj);
         void clearActions(const RkObject *obj);
         void clearAllEvents();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue);
-        std::list<RkObject*> objectsList;
-        std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
-        std::vector<std::unique_ptr<RkEvent>>> eventsQueue;
-        std::mutex actionsQueueMutex;
+        RK_DISABLE_COPY(RkEventQueueImpl);
+        RK_DISABLE_MOVE(RkEventQueueImpl);
+        std::unordered_set<RkObject*> objectsList;
+        //        std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
+        std::vector<std::pair<RkObject*, std::unique_ptr<RkEvent>> eventsQueue;
         std::vector<std::unique_ptr<RkAction>> actionsQueue;
-        std::vector<RkTimer*> timersList;
+        std::unordered_set<RkTimer*> timersList;
+        std::mutex actionsQueueMutex;
 
 #ifdef RK_OS_WIN
         std::unique_ptr<RkEventQueueWin> platformEventQueue;
