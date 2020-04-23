@@ -43,32 +43,42 @@ RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::Window
 RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
         : o_ptr{std::make_shared<RkWidgetImpl>(this, parent, flags)}
 {
-        if (parent)
-                parent->addChild(this);
+        if (modality() == Rk::Modality::ModalTopWindow) {
+                auto topWidget = getTopWindow();
+                if (topWidget)
+                        topWidget->disableInput();
+                else if (parentWidget() && modality() == Rk::Modality::ModalParent)
+                        parentWidget()->disableInput();
+        }
 }
 
 RkWidget::RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl)
         : o_ptr{impl}
 {
-        if (parent)
-                parent->addChild(this);
+        if (modality() == Rk::Modality::ModalTopWindow) {
+                auto topWidget = getTopWindow();
+                if (topWidget)
+                        topWidget->disableInput();
+                else if (parentWidget() && modality() == Rk::Modality::ModalParent)
+                        parentWidget()->disableInput();
+        }
 }
 
 RkWidget::~RkWidget()
 {
-        if (parent()) {
+        if (parentWidget()) {
                 if (modality() == Rk::Modality::ModalTopWindow) {
-                        if (!parent()->isModal()) {
+                        if (!parentWidget()->isModal()) {
                                 auto topWindow = getTopWindow();
                                 if (topWindow)
                                         topWindow->enableInput();
                         } else {
                                 // Enable inputs only for parent widget and its
                                 // childs since it is modal.
-                                parent()->enableInput();
+                                parentWidget()->enableInput();
                         }
                 } else if (modality() == Rk::Modality::ModalParent) {
-                        parent()->enableInput();
+                        parentWidget()->enableInput();
                 }
         }
 }
@@ -112,12 +122,13 @@ RkWindowId RkWidget::id() const
 
 RkWidget* RkWidget::parentWidget() const
 {
-        // TODO
+        return dynamic_cast<RkWidget*>(parent());
 }
 
-RkWidget* childWidget(const RkWindowId &id) const
+RkWidget* RkWidget::childWidget(const RkWindowId &id) const
 {
         // TODO
+        return nullptr;
 }
 
 bool RkWidget::isClose() const
@@ -372,32 +383,14 @@ void RkWidget::setFont(const RkFont &font)
         o_ptr->setFont(font);
 }
 
-RkWidget* RkWidget::child(const RkWindowId &id) const
-{
-        return o_ptr->child(id);
-}
-
-void RkWidget::addChild(RkWidget* child)
-{
-        if (child) {
-                if (child->modality() == Rk::Modality::ModalTopWindow) {
-                        auto topWidget = getTopWindow();
-                        if (topWidget)
-                                topWidget->disableInput();
-                } else if (child->modality() == Rk::Modality::ModalParent) {
-                        disableInput();
-                }
-                RkObject::addChild(child);
-        }
-}
-
 void RkWidget::enableInput()
 {
         setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        for (const auto &ch: o_ptr->childWidgets())
-                ch->enableInput();
+        // TODO
+        //        for (const auto &ch: o_ptr->childWidgets())
+        //                ch->enableInput();
 }
 
 void RkWidget::disableInput()
@@ -405,8 +398,9 @@ void RkWidget::disableInput()
         clearWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                             | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                             | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        for (const auto &ch: o_ptr->childWidgets())
-                ch->disableInput();
+        // TODO
+        //        for (const auto &ch: o_ptr->childWidgets())
+        //                ch->disableInput();
 }
 
 bool RkWidget::isInputEnabled() const
@@ -417,7 +411,7 @@ bool RkWidget::isInputEnabled() const
 void RkWidget::enableGrabKey(bool b)
 {
         // For now only for top level window.
-        if (!parent())
+        if (!parentWidget())
                 o_ptr->enableGrabKey(b);
 }
 
@@ -436,79 +430,80 @@ bool RkWidget::propagateGrabKeyEnabled() const
         return o_ptr->propagateGrabKeyEnabled();
 }
 
-void RkWidget::event(const std::shared_ptr<RkEvent> &event)
+void RkWidget::event(RkEvent *event)
 {
         o_ptr->event(event);
+        RkObject::event(event);
 }
 
-void RkWidget::closeEvent(const std::shared_ptr<RkCloseEvent> &event)
+void RkWidget::closeEvent(RkCloseEvent *event)
 {
         RK_UNUSED(event);
         close();
 }
 
-void RkWidget::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
+void RkWidget::keyPressEvent(RkKeyEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::keyReleaseEvent(const std::shared_ptr<RkKeyEvent> &event)
+void RkWidget::keyReleaseEvent(RkKeyEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseMoveEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseButtonPressEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
         setFocus(true);
 }
 
-void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseButtonReleaseEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkWidget::mouseDoubleClickEvent(RkMouseEvent *event)
 {
         mouseButtonPressEvent(event);
 }
 
-void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
+void RkWidget::wheelEvent(RkWheelEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::moveEvent(const std::shared_ptr<RkMoveEvent> &event)
+void RkWidget::moveEvent(RkMoveEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
+void RkWidget::resizeEvent(RkResizeEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkWidget::paintEvent(RkPaintEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::showEvent(const std::shared_ptr<RkShowEvent> &event)
+void RkWidget::showEvent(RkShowEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::hideEvent(const std::shared_ptr<RkHideEvent> &event)
+void RkWidget::hideEvent(RkHideEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
+void RkWidget::focusEvent(RkFocusEvent *event)
 {
         update();
 }
@@ -530,8 +525,9 @@ RkRect RkWidget::rect() const
 
 void RkWidget::close()
 {
-        if (parent())
-                eventQueue()->postEvent(parent(), std::make_shared<RkDeleteChild>(parent(), this));
+        if (parentWidget())
+                eventQueue()->postEvent(parentWidget(),
+                                        std::move(std::make_unique<RkDeleteChild>(parentWidget(), this)));
 }
 
 bool RkWidget::isModal() const
@@ -561,9 +557,9 @@ Rk::WidgetAttribute RkWidget::widgetAttributes() const
 
 RkWidget* RkWidget::getTopWindow()
 {
-        if (!parent())
+        if (!parentWidget())
                 return this;
-        return parent()->getTopWindow();
+        return parentWidget()->getTopWindow();
 }
 
 void RkWidget::setFocus(bool b)

@@ -48,13 +48,13 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
 	bool setTopLevelWindow(RkWidget* widget);
         RkWidget* topLevelWindow(void);
-        std::shared_ptr<RkEventQueue> getEventQueue();
+        RkEventQueue* getEventQueue() const;
 	int exec(bool block = true);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkMain);
         RkWidget* topWindow;
-        std::shared_ptr<RkEventQueue> eventQueue;
+        std::unique_ptr<RkEventQueue> eventQueue;
 };
 
 #endif // RK_MAIN_XWIN_H

@@ -123,7 +123,8 @@ const std::string& RkWidget::RkWidgetImpl::title() const
         return widgetTitle;
 }
 
-std::shared_ptr<RkNativeWindowInfo> RkWidget::RkWidgetImpl::nativeWindowInfo() const
+std::shared_ptr<RkNativeWindowInfo>
+RkWidget::RkWidgetImpl::nativeWindowInfo() const
 {
         return platformWindow->nativeWindowInfo();
 }
@@ -138,83 +139,83 @@ RkWindowId RkWidget::RkWidgetImpl::id() const
         return platformWindow->id();
 }
 
-void RkWidget::RkWidgetImpl::event(const std::shared_ptr<RkEvent> &event)
+void RkWidget::RkWidgetImpl::event(RkEvent *event)
 {
         switch (event->type())
         {
         case RkEvent::Type::Paint:
         {
-                inf_ptr->paintEvent(std::dynamic_pointer_cast<RkPaintEvent>(event));
+                inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         }
         case RkEvent::Type::KeyPressed:
         {
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
-                        inf_ptr->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                        inf_ptr->keyPressEvent(static_cast<RkKeyEvent*>(event));
                 auto topWidget = inf_ptr->getTopWindow();
                 if ( topWidget != nullptr
                     && propagateGrabKeyEnabled()
                     && topWidget->grabKeyEnabled()
                     && topWidget->isInputEnabled()) {
-                        topWidget->keyPressEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                        topWidget->keyPressEvent(static_cast<RkKeyEvent*>(event));
                 }
                 break;
         }
         case RkEvent::Type::KeyReleased:
         {
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
-                        inf_ptr->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                        inf_ptr->keyReleaseEvent(static_cast<RkKeyEvent*>(event));
                 auto topWidget = inf_ptr->getTopWindow();
                 if ( topWidget != nullptr
                     && propagateGrabKeyEnabled()
                     && topWidget->grabKeyEnabled()
                     && topWidget->isInputEnabled()) {
-                        topWidget->keyReleaseEvent(std::dynamic_pointer_cast<RkKeyEvent>(event));
+                        topWidget->keyReleaseEvent(static_cast<RkKeyEvent*>(event));
                 }
                 break;
         }
         case RkEvent::Type::FocusedIn:
-                inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
+                inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::FocusedOut:
-                inf_ptr->focusEvent(std::dynamic_pointer_cast<RkFocusEvent>(event));
+                inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
-                        inf_ptr->mouseButtonPressEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                        inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseDoubleClick:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
-                        inf_ptr->mouseDoubleClickEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                        inf_ptr->mouseDoubleClickEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
-                        inf_ptr->mouseButtonReleaseEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                        inf_ptr->mouseButtonReleaseEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseMove:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
-                        inf_ptr->mouseMoveEvent(std::dynamic_pointer_cast<RkMouseEvent>(event));
+                        inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
                 widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
-                inf_ptr->resizeEvent(std::dynamic_pointer_cast<RkResizeEvent>(event));
+                inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
 		isWidgetSown = true;
-                inf_ptr->showEvent(std::dynamic_pointer_cast<RkShowEvent>(event));
+                inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
                 break;
 	case RkEvent::Type::Hide:
 		isWidgetSown = false;
-                inf_ptr->hideEvent(std::dynamic_pointer_cast<RkHideEvent>(event));
+                inf_ptr->hideEvent(static_cast<RkHideEvent*>(event));
                 break;
         case RkEvent::Type::DeleteChild:
-                deleteChild(std::dynamic_pointer_cast<RkDeleteChild>(event)->child());
+                delete static_cast<RkDeleteChild*>(event)->child();
                 break;
         case RkEvent::Type::Close:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)) {
                         widgetClosed = true;
-                        inf_ptr->closeEvent(std::dynamic_pointer_cast<RkCloseEvent>(event));
+                        inf_ptr->closeEvent(static_cast<RkCloseEvent*>(event));
                 }
                 break;
         default:
@@ -340,10 +341,11 @@ Rk::Modality RkWidget::RkWidgetImpl::modality() const
         return widgetModality;
 }
 
-const std::list<RkWidget*>& RkWidget::RkWidgetImpl::childWidgets() const
-{
-        return widgetChildren;
-}
+// TODO
+//const std::list<RkWidget*>& RkWidget::RkWidgetImpl::childWidgets() const
+//{
+//        return widgetChildren;
+//}
 
 void RkWidget::RkWidgetImpl::setWidgetAttribute(Rk::WidgetAttribute attribute)
 {

@@ -52,11 +52,11 @@ class RkWidget::RkWidgetImpl : public RkObject {
 	bool isShown() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
-        RkNativeWindowInfo nativeWindowInfo() const;
+        std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
         bool isClose() const;
         void processEvents();
         RkWindowId id() const;
-        void event(const RkEvent *event);
+        void event(RkEvent *event);
         void setSize(const RkSize &size);
         RkSize size() const;
         int minimumWidth() const;
@@ -77,10 +77,11 @@ class RkWidget::RkWidgetImpl : public RkObject {
         const RkColor& background() const;
         RkRect rect() const;
         void setEventQueue(RkEventQueue* queue);
-        RkCanvasInfo getCanvasInfo() const;
+        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
         void update();
         static Rk::WidgetAttribute defaultWidgetAttributes();
         Rk::Modality modality() const;
+        // TODO
         //        const std::list<RkWidget*>& childWidgets() const;
         void setWidgetAttribute(Rk::WidgetAttribute attribute);
         void clearWidgetAttribute(Rk::WidgetAttribute attribute);

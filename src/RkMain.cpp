@@ -43,7 +43,7 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
         return o_ptr->setTopLevelWindow(widget);
 }
 
-std::shared_ptr<RkEventQueue> RkMain::eventQueue()
+RkEventQueue* RkMain::eventQueue() const
 {
         return o_ptr->getEventQueue();
 }

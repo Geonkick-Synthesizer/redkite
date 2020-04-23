@@ -50,10 +50,10 @@ void RkEventQueue::removeObject(RkObject *obj)
 
 void RkEventQueue::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
-        o_ptr->postEvent(object, std::move(event));
+        o_ptr->postEvent(obj, std::move(event));
 }
 
-void RkEventQueue::postAction(std::unique_ptr<RkAction> &act)
+void RkEventQueue::postAction(std::unique_ptr<RkAction> act)
 {
         o_ptr->postAction(std::move(act));
 }
@@ -144,14 +144,8 @@ void RkEventQueue::clearActions()
         o_ptr->clearActions(nullptr);
 }
 
-void RkEventQueue::clearTimers()
-{
-        o_ptr->clearTimers();
-}
-
 void RkEventQueue::clearQueue()
 {
         clearEvents();
         clearActions();
-        clearTimers();
 }

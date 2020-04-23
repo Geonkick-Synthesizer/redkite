@@ -51,7 +51,7 @@ RkEventQueue* RkObject::eventQueue() const
         return o_ptr->getEventQueue();
 }
 
-void RkObject::event(const RkEvent *event)
+void RkObject::event(RkEvent *event)
 {
         RK_UNUSED(event);
 }

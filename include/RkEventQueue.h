@@ -56,7 +56,6 @@ class RK_EXPORT RkEventQueue {
         void clearObjectActions(const RkObject *obj);
         void clearEvents();
         void clearActions();
-        void clearTimers();
         void clearQueue();
 
  protected:

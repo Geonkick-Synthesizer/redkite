@@ -35,19 +35,19 @@ RkObject::RkObjectImpl::~RkObjectImpl()
 {
         if (eventQueue) {
                 eventQueue->removeObject(inf_ptr);
-                eventQueue->clearActions(inf_ptr);
-                eventQueue->clearEvents(inf_ptr);
+                eventQueue->clearObjectActions(inf_ptr);
+                eventQueue->clearObjectEvents(inf_ptr);
         }
 
         // Remove myself from bound objects.
         for (auto &obj: boundObjects)
-                obj->removeObjectObservers(inf_ptr);
+                obj->removeObservers(inf_ptr);
         boundObjects.clear();
 
         // Remove myself from the observers objects.
-        for (auto o: observersList) {
+        for (const auto &o: observersList) {
                 if (o->object())
-                        o->object()->removeBoundObject(this);
+                        o->object()->removeBoundObject(inf_ptr);
         }
         observersList.clear();
 
@@ -75,42 +75,38 @@ RkEventQueue* RkObject::RkObjectImpl::getEventQueue() const
         return eventQueue;
 }
 
-void RkObject::addObserver(std::unique_ptr<RkObserver> ob)
+void RkObject::RkObjectImpl::addObserver(std::unique_ptr<RkObserver> ob)
 {
         auto res = std::find(observersList.begin(), observersList.end(), ob);
         if (res == std::end(observersList))
-                observersList.push_back(std::move(observer));
+                observersList.push_back(std::move(ob));
 }
 
-void RkObject::removeObjectObservers(RkObject *obj)
+void RkObject::RkObjectImpl::removeObservers(RkObject *obj)
 {
         observersList.erase(std::remove_if(observersList.begin(),
-                                               observersList.end(),
-                                               [obj](RkObserver *o)  {
-                                                       if (o->object() == nullptr) {
-                                                               return false;
-                                                       } else if(o->object() == obj) {
-                                                               delete o;
-                                                               return true;
-                                                       }
-                                                       return false;
+                                           observersList.end(),
+                                           [obj](const std::unique_ptr<RkObserver> &o)  {
+                                                   return o->object() != nullptr
+                                                           && o->object() == obj;
                                                })
                                 , observersList.end());
 }
 
-const std::vector<std::unique_ptr<RkObserver>>& RkObject::observers() const
+const std::vector<std::unique_ptr<RkObserver>>&
+RkObject::RkObjectImpl::observers() const
 {
         return observersList;
 }
 
-void RkObject::addBoundObject(RkObject *obj)
+void RkObject::RkObjectImpl::addBoundObject(RkObject *obj)
 {
         auto res = std::find(std::begin(boundObjects), std::end(boundObjects), obj);
         if (res == std::end(boundObjects))
                 boundObjects.push_back(obj);
 }
 
-void RkObject::removeBoundObject(RkObject *obj)
+void RkObject::RkObjectImpl::removeBoundObject(RkObject *obj)
 {
         boundObjects.erase(std::remove_if(boundObjects.begin(),
                                               boundObjects.end(),
@@ -134,7 +130,7 @@ void RkObject::RkObjectImpl::removeChild(RkObject* child)
         if (!objectChildren.empty()) {
                 auto res = objectChildren.find(child);
                 if (res != objectChildren.end())
-                        delete res;
+                        delete *res;
         }
 }
 

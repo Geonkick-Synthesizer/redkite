@@ -26,10 +26,10 @@
 
 #include "RkEventQueue.h"
 #include "RkPlatform.h"
+#include "RkEvent.h"
 
-#include <list>
-#include <queue>
 #include <mutex>
+#include <unordered_set>
 
 #ifdef RK_OS_WIN
         class RkEventQueueWin;
@@ -49,9 +49,9 @@ class RkEventQueue::RkEventQueueImpl {
         void addObject(RkObject *obj);
         //        RkObject* findObj(const RkWindowId &id) const;
         //        RkObject* findObj(const RkNativeWindowInfo &info) const;
-        void removeObj(RkObject *obj);
+        void removeObject(RkObject *obj);
         void removeObjEvents(RkObject *obj);
-        void postEvent(RkObject *obj, RkEvent *event);
+        void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         //        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         //        void postEvent(const RkNativeWindowInfo &info, RkEvent *event);
         void processEvent(RkObject *obj, const RkEvent *event);
@@ -65,7 +65,6 @@ class RkEventQueue::RkEventQueueImpl {
         void processTimers();
         void clearEvents(const RkObject *obj);
         void clearActions(const RkObject *obj);
-        void clearAllEvents();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue);
@@ -73,7 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         RK_DISABLE_MOVE(RkEventQueueImpl);
         std::unordered_set<RkObject*> objectsList;
         //        std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
-        std::vector<std::pair<RkObject*, std::unique_ptr<RkEvent>> eventsQueue;
+        std::vector<std::pair<RkObject*, std::unique_ptr<RkEvent>>> eventsQueue;
         std::vector<std::unique_ptr<RkAction>> actionsQueue;
         std::unordered_set<RkTimer*> timersList;
         std::mutex actionsQueueMutex;

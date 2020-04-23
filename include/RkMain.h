@@ -36,7 +36,7 @@ class RK_EXPORT RkMain {
           ~RkMain();
           bool setTopLevelWindow(RkWidget* widget);
           int exec(bool block = true);
-          RkEventQueue* eventQueue();
+          RkEventQueue* eventQueue() const;
 
  private:
        	  RK_DECLARE_IMPL(RkMain);
