@@ -56,7 +56,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
         std::string getText(int pos, size_t n) const;
         void selectAll();
         void deleteSelection();
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event);
+        void paintEvent(RkPaintEvent *event);
         void updateSize();
 	bool hasEditFocus() const;
 
@@ -69,7 +69,7 @@ class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
     int cursorIndex;
     int selectionIndex;
     bool isSelectionMode;
-    std::unique_ptr<RkTimer> cursorTimer;
+    RkTimer *cursorTimer;
     bool isShowCursor;
     decltype(std::chrono::system_clock::now()) lastCahnges;
     RkRect contentsRect;

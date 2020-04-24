@@ -126,7 +126,6 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           bool grabKeyEnabled() const;
           void propagateGrabKey(bool b);
           bool propagateGrabKeyEnabled() const;
-          void setEventQueue(RkEventQueue *eventQueue);
           void setFocus(bool b = true);
           bool hasFocus() const;
           void setPointerShape(Rk::PointerShape shape);

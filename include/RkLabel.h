@@ -37,7 +37,7 @@ class RK_EXPORT RkLabel : public RkWidget {
     void setImage(const RkImage &image);
 
  protected:
-    virtual void paintEvent(const RkPaintEvent *event) override;
+    virtual void paintEvent(RkPaintEvent *event) override;
 
  private:
           RK_DISABLE_COPY(RkLabel);

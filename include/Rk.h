@@ -446,17 +446,16 @@ namespace Rk {
         \
         void prot \
         { \
-                for (const auto& ob: getObservers()) {                  \
-                        auto observer = dynamic_cast<rk__observer_ ##name *>(ob->get()); \
+                for (const auto& ob: rk__observers()) {                  \
+                        auto observer = dynamic_cast<rk__observer_ ##name *>(ob.get()); \
                         if (observer) \
                                 observer->observerCallback(val); \
                 } \
         } \
         void rk__add_action_cb_##name (RkObject *obj, const std::function<void(type)> &cb) \
         { \
-                rk__add_observer(std::move(std::make_unique<rk_observer_##name >(obj, cb))); \
-        } \
-        void rk__add_bound_object(RkObject *obj) override { RkObject::rk__add_bound_object(obj); }
+                rk__add_observer(std::move(std::make_unique<rk__observer_##name >(obj, cb))); \
+        }
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
         obj1->rk__add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \

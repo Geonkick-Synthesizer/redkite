@@ -51,7 +51,7 @@ RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
 }
 
-bool RkEventQueue::RkEventQueueImpl::bojectExists(RkObject *obj)
+bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const
 {
         return objectsList.find(obj) != objectsList.end();
 }
@@ -60,9 +60,15 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
 {
         if (obj) {
                 if (!obj->eventQueue())
-                        obj->setEnvetQueue(inf_ptr);
-                objectList.insert(obj);
+                        obj->setEventQueue(inf_ptr);
+                objectsList.insert(obj);
         }
+}
+
+void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
+{
+        if (objectsList.find(obj) != objectsList.end())
+                objectsList.erase(obj);
 }
 
 // void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
@@ -188,18 +194,13 @@ void RkEventQueue::RkEventQueueImpl::processActions()
 
 void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)
 {
-        timersList.push_back(timer);
+        timersList.insert(timer);
 }
 
 void RkEventQueue::RkEventQueueImpl::unsubscribeTimer(RkTimer *timer)
 {
-        std::erase(std::remove_if(timersList.begin(),
-                                  timersList.end(),
-                                  [timer](RkTimer *t)
-                                  {
-                                          return i == timer;
-                                  })
-                   , timersList.end());
+        if (timersList.find(timer) != timersList.end())
+                timersList.erase(timer);
 }
 
 void RkEventQueue::RkEventQueueImpl::processTimers()
@@ -210,7 +211,7 @@ void RkEventQueue::RkEventQueueImpl::processTimers()
         }
 }
 
-void RkEventQueue::RkEventQueueImpl::clearEvents(RkObject *obj)
+void RkEventQueue::RkEventQueueImpl::clearEvents(const RkObject *obj)
 {
         if (!obj)
                 return;
@@ -237,7 +238,3 @@ void RkEventQueue::RkEventQueueImpl::clearActions(const RkObject *obj)
                            , actionsQueue.end());
 }
 
-void RkEventQueue::RkEventQueueImpl::clearAllEvents()
-{
-        eventsQueue.clear();
-}

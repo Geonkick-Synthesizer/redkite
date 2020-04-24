@@ -38,7 +38,7 @@ class Button: public RkWidget {
         RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
 
   protected:
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseButtonPressEvent(RkMouseEvent* event) final
         {
                 isToggled = !isToggled;
                 if (event->button() != RkMouseEvent::ButtonType::Left) {
@@ -73,7 +73,7 @@ class  PainterExample: public RkWidget {
         }
 
   protected:
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
+        void paintEvent(RkPaintEvent* event) final
         {
                 RK_UNUSED(event);
                 RkPainter painter(this);

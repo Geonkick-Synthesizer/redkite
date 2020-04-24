@@ -32,7 +32,7 @@ class KeyExampleWidget: public RkWidget {
         KeyExampleWidget(RkMain *app) : RkWidget(app) {}
 
   protected:
-        void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event) final
+        void keyPressEvent(RkKeyEvent *event) final
         {
 #ifdef RK_LOG_DEBUG_LEVEL
                 int diff = event->modifiers() & static_cast<int>(Rk::KeyModifiers::Shift) ? 0x61 - 0x41 : 0;

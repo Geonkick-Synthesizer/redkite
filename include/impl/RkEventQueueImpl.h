@@ -54,7 +54,7 @@ class RkEventQueue::RkEventQueueImpl {
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         //        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         //        void postEvent(const RkNativeWindowInfo &info, RkEvent *event);
-        void processEvent(RkObject *obj, const RkEvent *event);
+        void processEvent(RkObject *obj, RkEvent *event);
         //        void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         //        void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();

@@ -35,7 +35,7 @@ class Button: public RkWidget {
         RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
 
   protected:
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseButtonPressEvent(RkMouseEvent *event) final
         {
                 isToggled = !isToggled;
                 action toggled(isToggled);
@@ -94,10 +94,10 @@ class  LineEditExample: public RkWidget {
         }
 
   protected:
-        void keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
+        void keyPressEvent(RkKeyEvent *event)
         {
         }
-        void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
+        void mouseMoveEvent(RkMouseEvent *event)
         {
         }
         void onUpdateText(const std::string &text)

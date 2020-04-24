@@ -31,8 +31,6 @@ class RK_EXPORT RkWidgetContainer {
 	using RkWidgetContainerSpace = size_t;
         RkWidgetContainer(RkWidget *parent, Rk::Orientation orientation = Rk::Orientation::Horizontal);
         virtual ~RkWidgetContainer() = default;
-        RK_DISABLE_COPY(RkWidgetContainer)
-        RK_DISABLE_MOVE(RkWidgetContainer)
 	void addWidget(RkWidget *widget, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeWidget(RkWidget *widget);
 	void addSpace(RkWidgetContainerSpace space, Rk::Alignment align = Rk::Alignment::AlignLeft);
@@ -57,6 +55,8 @@ class RK_EXPORT RkWidgetContainer {
 	int initPosition(Rk::Alignment alignment);
 
  private:
+        RK_DISABLE_COPY(RkWidgetContainer);
+        RK_DISABLE_MOVE(RkWidgetContainer);
 	RkWidget *parentWidget;
 	Rk::Orientation containerOrientation;
 	int idGenerator;

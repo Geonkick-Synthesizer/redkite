@@ -61,7 +61,7 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
               return false;
 
       topWindow = widget;
-      eventQueue->addWidget(topWindow);
+      eventQueue->addObject(topWindow);
       return true;
 }
 

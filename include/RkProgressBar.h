@@ -42,7 +42,7 @@ class RK_EXPORT RkProgressBar : public RkWidget {
     void setProgressColor(const RkColor &color);
 
  protected:
-    virtual void paintEvent(const RkPaintEvent* event) override;
+    virtual void paintEvent(RkPaintEvent* event) override;
 
  private:
     RK_DISABLE_COPY(RkProgressBar);

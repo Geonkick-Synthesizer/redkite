@@ -46,7 +46,7 @@ std::string RkLineEdit::text() const
      return impl_ptr->text();
 }
 
-void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkLineEdit::paintEvent(RkPaintEvent *event)
 {
         impl_ptr->paintEvent(event);
 }
@@ -73,7 +73,7 @@ void RkLineEdit::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
  * Ctrl+Z         // TODO: v1.0
  * Ctrl+Y         // TODO: v1.0
  */
-void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
+void RkLineEdit::keyPressEvent(RkKeyEvent *event)
 {
         if (!hasFocus())
                 return;
@@ -161,12 +161,12 @@ void RkLineEdit::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
         }
 }
 
-void RkLineEdit::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkLineEdit::mouseButtonPressEvent(RkMouseEvent* event)
 {
         setFocus(true);
 }
 
-void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
+void RkLineEdit::focusEvent(RkFocusEvent* event)
 {
         if (event->type() == RkEvent::Type::FocusedIn) {
 		showCursor();
@@ -177,7 +177,7 @@ void RkLineEdit::focusEvent(const std::shared_ptr<RkFocusEvent> &event)
 	}
 }
 
-void RkLineEdit::resizeEvent(const std::shared_ptr<RkResizeEvent> &event)
+void RkLineEdit::resizeEvent(RkResizeEvent* event)
 {
         RK_UNUSED(event);
         impl_ptr->updateSize();

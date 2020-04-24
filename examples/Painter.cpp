@@ -46,7 +46,7 @@ class  PainterExample: public RkWidget {
   protected:
         // paintEvent is re-implemented from RkWidget interface.
         // paintEvent is called every time the widget needs to be painted.
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
+        void paintEvent(RkPaintEvent *event) final
         {
                 // The event will be not used.
                 RK_UNUSED(event);
@@ -124,14 +124,14 @@ class  PainterExample: public RkWidget {
                 }
         }
 
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseButtonPressEvent(RkMouseEvent* event) final
         {
                 clickPoint = RkPoint(event->x(), event->y());
                 startDraw = !startDraw;
                 update();
         }
 
-        void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseMoveEvent(RkMouseEvent* event) final
         {
                 if (startDraw) {
                         clickPoint = RkPoint(event->x(), event->y());

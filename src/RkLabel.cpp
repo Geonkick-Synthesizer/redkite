@@ -46,7 +46,7 @@ void RkLabel::setImage(const RkImage &image)
         impl_ptr->setImage(image);
 }
 
-void RkLabel::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkLabel::paintEvent(RkPaintEvent *event)
 {
         RK_UNUSED(event);
         impl_ptr->drawLabel();

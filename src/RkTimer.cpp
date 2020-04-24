@@ -26,20 +26,20 @@
 
 #include <chrono>
 
-RkTimer::RkTimer(int interval, RkEventQueue* queue)
-        : timerInterval{interval}
+RkTimer::RkTimer(RkObject *parent, int interval)
+        : RkObject(parent)
+        , timerInterval{interval}
         , timerStarted{false}
         , lastTime{-1}
-        , eventQueue{queue}
 {
-        if (eventQueue)
-                eventQueue->subscribeTimer(this);
+        if (eventQueue())
+                eventQueue()->subscribeTimer(this);
 }
 
 RkTimer::~RkTimer()
 {
-        if (eventQueue)
-                eventQueue->unsubscribeTimer(this);
+        if (eventQueue())
+                eventQueue()->unsubscribeTimer(this);
 }
 
 void RkTimer::start()

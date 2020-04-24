@@ -37,12 +37,12 @@ class RK_EXPORT RkObject {
         RkObject* parent() const;
         virtual void setEventQueue(RkEventQueue* queue);
         RkEventQueue* eventQueue() const;
+        virtual void event(RkEvent *event);
+        void rk__add_bound_object(RkObject* obj);
 
  protected:
-        virtual void event(RkEvent *event);
         void rk__add_observer(std::unique_ptr<RkObserver> observer);
         const std::vector<std::unique_ptr<RkObserver>>& rk__observers() const;
-        virtual void rk__add_bound_object(RkObject* obj);
 
  private:
         RK_DECLARE_IMPL(RkObject);

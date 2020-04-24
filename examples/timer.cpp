@@ -41,7 +41,7 @@ class Button: public RkWidget {
         RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
 
   protected:
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseButtonPressEvent(RkMouseEvent *event) final
         {
                 isToggled = !isToggled;
                 action toggled(isToggled);
@@ -79,13 +79,13 @@ class  PainterExample: public RkWidget {
                 timerLabel->setPosition(30, 80);
                 timerLabel->show();
 
-                timer = std::make_unique<RkTimer>(1000, eventQueue());
-                RK_ACT_BIND(timer.get(), timeout, RK_ACT_ARGS(), this, onShowTime());
+                timer = new RkTimer(this, 1000);
+                RK_ACT_BIND(timer, timeout, RK_ACT_ARGS(), this, onShowTime());
                 timer->start();
         }
 
   protected:
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
+        void paintEvent(RkPaintEvent *event) final
         {
                 RK_UNUSED(event);
                 RkPainter painter(this);
@@ -113,7 +113,7 @@ class  PainterExample: public RkWidget {
         bool startDraw;
         RkLabel *timerLabel;
         int myTime;
-        std::unique_ptr<RkTimer> timer;
+        RkTimer* timer;
         RkProgressBar *progressBar;
 };
 

@@ -77,7 +77,7 @@ void RkButton::setType(RkButton::ButtonType type)
         update();
 }
 
-void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkButton::mouseButtonPressEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
         if (type() == ButtonType::ButtonCheckable) {
@@ -90,13 +90,13 @@ void RkButton::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
         }
 }
 
-void RkButton::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
+void RkButton::mouseButtonReleaseEvent(RkMouseEvent *event)
 {
         if (type() == ButtonType::ButtonPush)
                 setPressed(false);
 }
 
-void RkButton::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkButton::paintEvent(RkPaintEvent *event)
 {
 	RK_UNUSED(event);
         RkPainter painter(this);

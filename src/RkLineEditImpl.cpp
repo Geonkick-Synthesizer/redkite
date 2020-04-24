@@ -36,14 +36,14 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface,
     , cursorIndex{0}
     , selectionIndex{0}
     , isSelectionMode{false}
-    , cursorTimer{std::make_unique<RkTimer>(800, parent->eventQueue())}
+    , cursorTimer{new RkTimer(inf_ptr, 800)}
     , isShowCursor{hasFocus()}
     , lastCahnges{std::chrono::system_clock::now()}
     , contentsRect{0, 0, 0, 0}
     , beginX{0}
     , endX{0}
 {
-        RK_ACT_BIND(cursorTimer.get(), timeout, RK_ACT_ARGS(), this, onCursorTimeout());
+        RK_ACT_BIND(cursorTimer, timeout, RK_ACT_ARGS(), this, onCursorTimeout());
         hasFocus() ? showCursor(true) : showCursor(false);
 }
 
@@ -260,7 +260,7 @@ void RkLineEdit::RkLineEditImpl::deleteSelection()
         }
 }
 
-void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkLineEdit::RkLineEditImpl::paintEvent(RkPaintEvent *event)
 {
         RK_UNUSED(event);
         if (contentsRect.height() * contentsRect.width() == 0)

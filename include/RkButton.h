@@ -52,14 +52,14 @@ class RK_EXPORT RkButton: public RkWidget
                     RK_ARG_VAL(pressed));
 
  protected:
-        virtual void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        virtual void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) override;
-        virtual void paintEvent(const std::shared_ptr<RkPaintEvent> &event) override;
+        virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
+        virtual void mouseButtonReleaseEvent(RkMouseEvent *event) override;
+        virtual void paintEvent(RkPaintEvent *event) override;
 
  private:
-        RK_DISABLE_COPY(RkWidget);
-        RK_DISABLE_MOVE(RkWidget);
         RK_DELCATE_IMPL_PTR(RkButton);
+        RK_DISABLE_COPY(RkButton);
+        RK_DISABLE_MOVE(RkButton);
 };
 
 #endif // RK_BUTTON_H

@@ -94,7 +94,7 @@ void RkProgressBar::setProgressColor(const RkColor &color)
         update();
 }
 
-void RkProgressBar::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
+void RkProgressBar::paintEvent(RkPaintEvent *event)
 {
         impl_ptr->drawProgressBar();
 }
