@@ -26,11 +26,13 @@
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 
-RkMain::RkMain() : o_ptr{std::make_unique<RkMainImpl>(this)}
+RkMain::RkMain()
+        : o_ptr{std::make_unique<RkMainImpl>(this)}
 {
 }
 
-RkMain::RkMain(int argc, char **argv) : o_ptr{std::make_unique<RkMainImpl>(this, argc, argv)}
+RkMain::RkMain(int argc, char **argv)
+        : o_ptr{std::make_unique<RkMainImpl>(this, argc, argv)}
 {
 }
 
@@ -41,6 +43,11 @@ RkMain::~RkMain()
 bool RkMain::setTopLevelWindow(RkWidget *widget)
 {
         return o_ptr->setTopLevelWindow(widget);
+}
+
+RkWidget* RkMain::topLevelWindow(void) const
+{
+        return o_ptr->topLevelWindow();
 }
 
 RkEventQueue* RkMain::eventQueue() const

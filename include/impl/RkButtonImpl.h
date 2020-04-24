@@ -26,7 +26,7 @@
 
 #include "RkWidgetImpl.h"
 #include "RkButton.h"
-#include "RkImage.h"
+#include "RkImageImpl.h"
 #include "RkPainter.h"
 
 class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {

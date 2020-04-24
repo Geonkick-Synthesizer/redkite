@@ -26,8 +26,8 @@
 #include "RkPainter.h"
 
 RkButton::RkButton(RkWidget *parent)
-        : RkWidget(parent, std::static_pointer_cast<RkButton::RkWidgetImpl>(std::make_shared<RkButton::RkButtonImpl>(this, parent)))
-        , impl_ptr{std::static_pointer_cast<RkButton::RkButtonImpl>(o_ptr)}
+        : RkWidget(parent, std::move(std::make_unique<RkButtonImpl>(this, parent)))
+        , impl_ptr{static_cast<RkButtonImpl*>(o_ptr.get())}
 {
         if (parent)
                 setBackgroundColor(parent->background());

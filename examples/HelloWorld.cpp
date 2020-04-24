@@ -59,6 +59,7 @@ int main(int arc, char **argv)
      * By default exec is blocking. But can be called as
      * non-blocking, useful for GUI plugins.
      */
+    RK_LOG_DEBUG("title: " << widget->title());
     auto res = app.exec();
     return res;
 }

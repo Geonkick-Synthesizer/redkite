@@ -25,7 +25,7 @@
 #include "RkImageImpl.h"
 
 RkImage::RkImage()
-        : o_ptr{std::make_shared<RkImageImpl>(this, 0, 0, nullptr)}
+        : o_ptr{std::make_unique<RkImageImpl>(this, 0, 0, nullptr)}
 {
 }
 
@@ -33,25 +33,29 @@ RkImage::RkImage(int width,
                  int height,
                  const unsigned char *data,
                  Format format)
-        : o_ptr{std::make_shared<RkImageImpl>(this, width, height, data, format)}
+        : o_ptr{std::make_unique<RkImageImpl>(this, width, height, data, format)}
 {
 }
 
 RkImage::RkImage(const RkSize &size,
                  const unsigned char *data,
                  Format format)
-        : o_ptr{std::make_shared<RkImageImpl>(this, size.width(), size.height(), data, format)}
+        : o_ptr{std::make_unique<RkImageImpl>(this, size.width(), size.height(), data, format)}
 {
 }
 
-RkImage::RkImage(const std::shared_ptr<RkImageImpl> &impl)
-        : o_ptr{impl}
+RkImage::RkImage(std::unique_ptr<RkImageImpl> impl)
+        : o_ptr{std::move(impl)}
 {
 }
 
 RkImage::RkImage(const RkImage &image)
 {
         o_ptr->createImage({image.width(), image.height()}, image.format(), image.data());
+}
+
+RkImage::~RkImage()
+{
 }
 
 RkImage& RkImage::operator=(const RkImage &other)

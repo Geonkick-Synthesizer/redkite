@@ -25,12 +25,12 @@
 #include "RkEventQueueImpl.h"
 
 RkEventQueue::RkEventQueue()
-        : o_ptr{std::make_shared<RkEventQueueImpl>(this)}
+        : o_ptr{std::make_unique<RkEventQueueImpl>(this)}
 {
 }
 
-RkEventQueue::RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl)
-        : o_ptr{impl}
+RkEventQueue::RkEventQueue(std::unique_ptr<RkEventQueueImpl> impl)
+        : o_ptr{std::move(impl)}
 {
 }
 

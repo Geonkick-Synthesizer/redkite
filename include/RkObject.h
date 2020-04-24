@@ -41,11 +41,12 @@ class RK_EXPORT RkObject {
         void rk__add_bound_object(RkObject* obj);
 
  protected:
+        RK_DECLARE_IMPL(RkObject);
+        explicit RkObject(RkObject *parent, std::unique_ptr<RkObjectImpl> impl);
         void rk__add_observer(std::unique_ptr<RkObserver> observer);
         const std::vector<std::unique_ptr<RkObserver>>& rk__observers() const;
 
  private:
-        RK_DECLARE_IMPL(RkObject);
         RK_DISABLE_COPY(RkObject);
         RK_DISABLE_MOVE(RkObject);
         virtual void addChild(RkObject *child);

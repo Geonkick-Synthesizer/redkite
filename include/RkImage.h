@@ -46,7 +46,7 @@ class RK_EXPORT RkImage : public RkCanvas {
                          const unsigned char *data = nullptr,
                          Format format = Format::ARGB32);
 
-        virtual ~RkImage() = default;
+        virtual ~RkImage();
         RkImage(const RkImage &image);
         RkImage& operator=(const RkImage &other);
         friend  bool operator==(const RkImage &im1, const RkImage &im2)
@@ -77,7 +77,7 @@ class RK_EXPORT RkImage : public RkCanvas {
 
  protected:
         RK_DECLARE_IMPL(RkImage);
-        RkImage(const std::shared_ptr<RkImageImpl> &impl);
+        explicit RkImage(std::unique_ptr<RkImageImpl> impl);
 
  private:
         RK_DISABLE_MOVE(RkImage);

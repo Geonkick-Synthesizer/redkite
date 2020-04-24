@@ -63,12 +63,13 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
 
       topWindow = widget;
       eventQueue->addObject(topWindow);
-      RK_LOG_DEBUG("set top window");
+      RK_LOG_DEBUG("set top window: " << topWindow);
       return true;
 }
 
 RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
 {
+      RK_LOG_DEBUG(topWindow->title());
       return topWindow;
 }
 

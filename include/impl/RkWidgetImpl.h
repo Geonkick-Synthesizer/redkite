@@ -25,6 +25,7 @@
 #define RK_WIDGET_IMPL_H
 
 #include "RkWidget.h"
+#include "RkObjectImpl.h"
 
 class RkEventQueue;
 
@@ -35,7 +36,7 @@ class RkWindowWin;
 class RkWindowX;
 #endif // RK_WIN_OS
 
-class RkWidget::RkWidgetImpl : public RkObject {
+class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
  public:
         explicit RkWidgetImpl(RkWidget* interface,
                               RkWidget* parent = nullptr,

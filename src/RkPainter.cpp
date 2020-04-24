@@ -25,7 +25,7 @@
 #include "RkPainterImpl.h"
 
 RkPainter::RkPainter(RkCanvas *canvas)
-        : o_ptr{std::make_shared<RkPainterImpl>(this, canvas)}
+        : o_ptr{std::make_unique<RkPainterImpl>(this, canvas)}
 {
 }
 

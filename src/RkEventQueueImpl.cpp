@@ -78,7 +78,7 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
                 obj->setEventQueue(inf_ptr);
         objectsList.insert(obj);
         if (widget) {
-                RK_LOG_DEBUG("widget added");
+                RK_LOG_DEBUG("widget added: " << widget);
                 windowIdsMap.insert({widget->nativeWindowInfo()->window, obj});
         }
 }

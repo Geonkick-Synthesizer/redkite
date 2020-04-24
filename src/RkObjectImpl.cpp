@@ -29,10 +29,12 @@ RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface, RkObject* parent)
         , parentObject{parent}
         , eventQueue{!parentObject ? nullptr : parentObject->eventQueue()}
 {
+        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]: parent " << parent);
 }
 
 RkObject::RkObjectImpl::~RkObjectImpl()
 {
+        RK_LOG_DEBUG("["<< this << "]: interface: " << inf_ptr);
         if (eventQueue) {
                 eventQueue->removeObject(inf_ptr);
                 eventQueue->clearObjectActions(inf_ptr);
@@ -120,6 +122,7 @@ void RkObject::RkObjectImpl::removeBoundObject(RkObject *obj)
 
 void RkObject::RkObjectImpl::addChild(RkObject* child)
 {
+        RK_LOG_DEBUG("called: " << child);
         objectChildren.insert(child);
         if (eventQueue)
                 eventQueue->addObject(child);

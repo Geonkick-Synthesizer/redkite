@@ -26,8 +26,8 @@
 #include "RkLog.h"
 
 RkProgressBar::RkProgressBar(RkWidget *parent)
-        : RkWidget(parent, std::static_pointer_cast<RkProgressBar::RkWidgetImpl>(std::make_shared<RkProgressBar::RkProgressBarImpl>(this, parent)))
-        , impl_ptr{std::static_pointer_cast<RkProgressBar::RkProgressBarImpl>(o_ptr)}
+        : RkWidget(parent, std::make_unique<RkProgressBar::RkProgressBarImpl>(this, parent))
+        , impl_ptr{static_cast<RkProgressBar::RkProgressBarImpl*>(o_ptr.get())}
 {
         show();
 }

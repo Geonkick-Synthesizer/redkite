@@ -28,8 +28,8 @@
 #include "RkPainter.h"
 
 RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
-        : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkLineEdit::RkLineEditImpl>(this, parent, text)))
-        , impl_ptr{std::static_pointer_cast<RkLineEdit::RkLineEditImpl>(o_ptr)}
+        : RkWidget(parent, std::move(std::make_unique<RkLineEdit::RkLineEditImpl>(this, parent, text)))
+        , impl_ptr{static_cast<RkLineEdit::RkLineEditImpl*>(o_ptr.get())}
 {
         setPointerShape(Rk::PointerShape::IBeam);
         propagateGrabKey(false);

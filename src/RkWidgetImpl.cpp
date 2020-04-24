@@ -39,7 +39,8 @@
 #endif
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
-        : inf_ptr{widgetInterface}
+        : RkObject::RkObjectImpl(widgetInterface, parent)
+        , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
         , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
 #elif RK_OS_MAC
@@ -61,13 +62,15 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
+        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]: parent " << parent);
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      const RkNativeWindowInfo &parent,
                                      Rk::WindowFlags flags)
-        : inf_ptr{widgetInterface}
+        : RkObject::RkObjectImpl(widgetInterface, nullptr)
+        , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
 #elif RK_OS_MAC
@@ -86,13 +89,13 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
-        RK_LOG_DEBUG("called");
+        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr);
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
-        RK_LOG_DEBUG("called: " << this->title());
+        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]");
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -350,6 +353,8 @@ std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
 
 void RkWidget::RkWidgetImpl::update()
 {
+        if (platformWindow == nullptr)
+                RK_LOG_DEBUG("nuLLLLLL");
         platformWindow->update();
 }
 

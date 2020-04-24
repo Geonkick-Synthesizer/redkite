@@ -62,11 +62,11 @@
 
 #define RK_DECLARE_IMPL(Class) \
   class Class##Impl; \
-  std::shared_ptr<Class##Impl> o_ptr
+  std::unique_ptr<Class##Impl> o_ptr
 
 #define RK_DELCATE_IMPL_PTR(Class) \
   class Class##Impl; \
-  const std::shared_ptr<Class##Impl> &impl_ptr
+  Class##Impl *impl_ptr
 
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr
 

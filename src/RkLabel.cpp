@@ -26,14 +26,17 @@
 #include "RkLog.h"
 
 RkLabel::RkLabel(RkWidget *parent, const std::string &text)
-        : RkWidget(parent, std::static_pointer_cast<RkLabel::RkWidgetImpl>(std::make_shared<RkLabel::RkLabelImpl>(this, text, parent)))
-        , impl_ptr{std::static_pointer_cast<RkLabel::RkLabelImpl>(o_ptr)}
+        : RkWidget(parent, std::move(std::make_unique<RkLabel::RkLabelImpl>(this, text, parent)))
+        , impl_ptr{static_cast<RkLabel::RkLabelImpl*>(o_ptr.get())}
 {
+        //        RK_LOG_DEBUG("["<< this << "] parent: " << parent);
 }
 
 void RkLabel::setText(const std::string &text)
 {
-     impl_ptr->setText(text);
+        if (dynamic_cast<RkLabel::RkLabelImpl*>(o_ptr.get()) == nullptr)
+                RK_LOG_DEBUG("NULL");
+        impl_ptr->setText(text);
 }
 
 std::string RkLabel::text() const

@@ -60,7 +60,7 @@ class RK_EXPORT RkEventQueue {
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue);
-        RkEventQueue(const std::shared_ptr<RkEventQueueImpl> &impl);
+        RkEventQueue(std::unique_ptr<RkEventQueueImpl> impl);
 
  private:
         RK_DISABLE_COPY(RkEventQueue);

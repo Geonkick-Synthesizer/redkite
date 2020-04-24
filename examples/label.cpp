@@ -3171,10 +3171,12 @@ int main(int arc, char **argv)
         RkMain app(arc, argv);
 
         // Create main window.
+        RK_LOG_DEBUG("create main widget");
         auto widget = new RkWidget(&app);
         widget->setTitle("Label Example");
         widget->setSize(250, 250);
 
+        RK_LOG_DEBUG("create label");
         auto label = new RkLabel(widget);
         label->setTitle("Label with text"); // for debugging only, no effect on label.
         label->setText("Text");
@@ -3184,29 +3186,29 @@ int main(int arc, char **argv)
         label->setBackgroundColor(200, 200, 200);
         label->show();
 
-        label = new RkLabel(widget);
-        label->setTitle("Label with image");
-        label->setImage(RkImage(100, 94, rk_image));
-        label->setX(10 + 100 + 5);
-        label->setY(10);
-        label->setSize(100, 94);
-        label->setBackgroundColor(200, 200, 200);
-        label->show();
+        // label = new RkLabel(widget);
+        // label->setTitle("Label with image");
+        // label->setImage(RkImage(100, 94, rk_image));
+        // label->setX(10 + 100 + 5);
+        // label->setY(10);
+        // label->setSize(100, 94);
+        // label->setBackgroundColor(200, 200, 200);
+        // label->show();
 
 
-        label = new RkLabel(widget);
-        label->setTitle("Label with text & image");
-        label->setText("Text");
-        label->setImage(RkImage(100, 94, rk_image));
-        label->setX(10);
-        label->setY(10 + 94 + 5);
-        label->setSize(100, 94);
-        label->setBackgroundColor(200, 200, 200);
-        label->show();
+        // label = new RkLabel(widget);
+        // label->setTitle("Label with text & image");
+        // label->setText("Text");
+        // label->setImage(RkImage(100, 94, rk_image));
+        // label->setX(10);
+        // label->setY(10 + 94 + 5);
+        // label->setSize(100, 94);
+        // label->setBackgroundColor(200, 200, 200);
+        // label->show();
 
         widget->show();
 
-        RK_LOG_DEBUG("text: " << label->text());
+        // RK_LOG_DEBUG("text: " << label->text());
 
         int res = app.exec();
         return res;
