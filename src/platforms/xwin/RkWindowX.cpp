@@ -42,6 +42,7 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::Wind
         , canvasInfo{nullptr}
         , windowFlags{flags}
 {
+        RK_LOG_DEBUG("called, parent = " << parent);
 }
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
@@ -58,6 +59,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , canvasInfo{nullptr}
         , windowFlags{flags}
 {
+        RK_LOG_DEBUG("called");
         *parentWindowInfo.get() = parent;
 }
 
@@ -119,11 +121,13 @@ bool RkWindowX::init()
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         createCanvasInfo();
+        RK_LOG_DEBUG("window created: " << isWindowCreated());
         return true;
 }
 
 void RkWindowX::show(bool b)
 {
+        RK_LOG_DEBUG("show: " << (b ? "true" : "false"));
         if (isWindowCreated()) {
                 if (b)
                         XMapRaised(display(), xWindow);

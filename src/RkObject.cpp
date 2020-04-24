@@ -34,6 +34,7 @@ RkObject::RkObject(RkObject *parent)
 
 RkObject::~RkObject()
 {
+        RK_LOG_DEBUG(this << ": called");
 }
 
 RkObject* RkObject::parent() const
@@ -43,6 +44,7 @@ RkObject* RkObject::parent() const
 
 void RkObject::setEventQueue(RkEventQueue* queue)
 {
+        RK_LOG_DEBUG("called");
         o_ptr->setEventQueue(queue);
 }
 

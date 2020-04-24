@@ -33,16 +33,26 @@ RkEventQueueX::RkEventQueueX()
         : xDisplay(nullptr)
         , keyModifiers{0}
 {
+        RK_LOG_DEBUG("called");
 }
 
 RkEventQueueX::~RkEventQueueX()
 {
+        RK_LOG_DEBUG("called");
 }
 
 bool RkEventQueueX::pending()
 {
-        if (xDisplay)
+        if (xDisplay) {
+#ifdef RK_LOG_DEBUG_LEVEL
+        static int n = 0;
+        if (++n > 10000) {
+                RK_LOG_DEBUG("pending");
+                n = 0;
+        }
+#endif // RK_LOG_DEBUG_LEVEL
                 return XPending(xDisplay) > 0;
+        }
         return false;
 }
 
@@ -56,57 +66,60 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId,
-                              std::shared_ptr<RkEvent>>> &eventsQueue)
+std::vector<std::pair<WindowsId, std::unique_ptr<RkEvent>>> getEvents() const
 {
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
                 RkWindowId id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
-                std::shared_ptr<RkEvent> event = nullptr;
+                std::unique_ptr<RkEvent> event = nullptr;
                 switch (e.type)
                 {
                 case Expose:
-                        if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
-                                event = std::make_shared<RkPaintEvent>();
+                        //                        if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
+                        //                                event = std::make_shared<RkPaintEvent>();
                 break;
                 case KeyPress:
-                        event = processKeyEvent(&e);
+                        //                        event = processKeyEvent(&e);
                         break;
                 case KeyRelease:
-                        event = processKeyEvent(&e);
+                        //                        event = processKeyEvent(&e);
                         break;
                 case FocusIn:
                 case FocusOut:
-                        event = processFocusEvent(&e);
+                        //                        event = processFocusEvent(&e);
                         break;
                 case ButtonPress:
-                        event = processButtonPressEvent(&e);
+                        //                        event = processButtonPressEvent(&e);
                         break;
                 case ButtonRelease:
-                        event = std::make_shared<RkMouseEvent>();
-                        event->setType(RkEvent::Type::MouseButtonRelease);
+                        //                        event = srd::move(std::make_unique<RkMouseEvent>());
+                        //                        event->setType(RkEvent::Type::MouseButtonRelease);
                         break;
                 case MotionNotify:
-                        event = processMouseMove(&e);
+                        //                        event = processMouseMove(&e);
                         break;
                 case ConfigureNotify:
-                        event = std::make_shared<RkResizeEvent>();
+                        //                        event = std::move(std::make_unique<RkResizeEvent>());
                         break;
                 case ClientMessage:
                 {
-                        auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
-                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
-                                event = std::make_shared<RkCloseEvent>();
+                        // auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
+                        // if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
+                        //         event = std::move(std::make_unique<RkCloseEvent>());
                         break;
                 }
                 default:
                         break;
                 }
 
-                if (event)
-                        eventsQueue.push_back({id, event});
+                if (event) {
+                        RK_LOG_DEBUG("add event");
+                        auto pair = std::move(std::make_pair<id, std::unique_ptr<RkEvent>>(nullptr, std::move(event)));
+                        events.push_back(std::move(pair));
+                }
         }
+        return events;
 }
 
 std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)

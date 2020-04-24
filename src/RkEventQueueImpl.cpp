@@ -45,10 +45,12 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* interface)
         , platformEventQueue{std::make_unique<RkEventQueueX>()}
 #endif
 {
+        RK_LOG_DEBUG("called");
 }
 
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
+        RK_LOG_DEBUG("called");
 }
 
 bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const
@@ -58,116 +60,76 @@ bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const
 
 void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
 {
-        if (obj) {
-                if (!obj->eventQueue())
-                        obj->setEventQueue(inf_ptr);
-                objectsList.insert(obj);
+ 	if (!obj || objectExists(obj))
+ 		return;
+
+        auto widget = dynamic_cast<RkWidget*>(obj);
+ #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
+         // Set the display from the top window.
+        if (widget && !widget->parent() && !platformEventQueue->display()) {
+                RK_LOG_DEBUG("set queue display: " << widget->nativeWindowInfo()->display);
+                platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
+        }
+ #else
+ #error platform not implemented
+ #endif
+
+        if (!obj->eventQueue())
+                obj->setEventQueue(inf_ptr);
+        objectsList.insert(obj);
+        if (widget) {
+                RK_LOG_DEBUG("widget added");
+                windowIdsMap.insert({widget->nativeWindowInfo()->id, obj});
         }
 }
 
 void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
 {
-        if (objectsList.find(obj) != objectsList.end())
+        if (objectsList.find(obj) != objectsList.end()) {
                 objectsList.erase(obj);
+                auto widget = dynamic_cast<RkWidget*>(obj);
+                if (widget) {
+                        auto id = widget->nativeWindowInfo()->id;
+                        if (windowIdsMap.find(id) != windowIdsMap.end()) {
+                                RK_LOG_DEBUG("widget removed");
+                                windowIdsMap.erase(id);
+                        }
+                }
+        }
 }
 
-// void RkEventQueue::RkEventQueueImpl::addWidget(RkWidget *widget)
-// {
-// 	if (!widget || widgetExists(widget))
-// 		return;
-// #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
-//         // Set the display from the top window.
-//         if (!widget->parent() && !platformEventQueue->display())
-//                 platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
-//         windowIdsMap.insert({widget->id().id, widget});
-// #else
-// #error platform not implemented
-// #endif
-//         widgetList.push_back(widget);
-//         if (!widget->eventQueue())
-//                 widget->setEventQueue(inf_ptr);
-// }
+RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkWindowId &id) const
+{
+        auto it = windowIdsMap.find(id.id);
+        if (it != windowIdsMap.end())
+                return it->second;
 
-// RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkWindowId &id) const
-// {
-// #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
-//         auto it = windowIdsMap.find(id.id);
-// #else
-// #error platform not implemented
-// #endif
-//         if (it != windowIdsMap.end())
-//                 return it->second;
-
-//         return nullptr;
-// }
-
-// RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkNativeWindowInfo &info) const
-// {
-// #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
-//         auto it = windowIdsMap.find(info.window);
-// #else
-// #error platform not implemented
-// #endif
-//         if (it != windowIdsMap.end())
-//                 return it->second;
-
-//         return nullptr;
-// }
-
-// void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
-// {
-//         for (auto it = widgetList.begin(); it != widgetList.end(); ++it) {
-//                 if (*it == widget) {
-//                        widgetList.erase(it);
-// #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
-//                        windowIdsMap.erase((*it)->id().id);
-// #else
-// #error platform not implemented
-// #endif
-//                        return;
-//                 }
-//         }
-// }
+        return nullptr;
+}
 
 void RkEventQueue::RkEventQueueImpl::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
         eventsQueue.push_back({obj, std::move(event)});
 }
 
-// void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id,
-//                                                const std::shared_ptr<RkEvent> &event)
-// {
-//         eventsQueue.push_back({id, event});
-// }
-
-// void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info,
-//                                                const std::shared_ptr<RkEvent> &event)
-// {
-//         //        eventsQueue.push({info.window, event});
-// }
-
 void RkEventQueue::RkEventQueueImpl::processEvent(RkObject *obj, RkEvent *event)
 {
         obj->event(event);
 }
 
-// void RkEventQueue::RkEventQueueImpl::processEvent(const RkWindowId &id,
-//                                                   const std::shared_ptr<RkEvent> &event)
-// {
-//         if (auto widget = findWidget(id); widget)
-//                 widget->processEvent(event);
-// }
-
-// void RkEventQueue::RkEventQueueImpl::processEvent(const RkNativeWindowInfo &info,
-//                                                   const std::shared_ptr<RkEvent> &event)
-// {
-//         if (auto widget = findWidget(info); widget)
-//                 widget->processEvent(event);
-// }
-
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
-        //        platformEventQueue->getEvents(eventsQueue);
+        auto events = platformEventQueue->getEvents();
+        if (!events.empty()) {
+                for (auto &event: events) {
+                        auto widget = findWidget(event.first);
+                        if (widget) {
+                                auto pair = std::make_pair<RkObject*, std::unique_ptr<RkEvent>>(widget, std::move(event));
+                                eventsQueue.push_back(std::move(pair));
+                        }
+                }
+        }
+
         decltype(eventsQueue) queue = std::move(eventsQueue);
         eventsQueue.clear();
         for (const auto &e: queue)
@@ -220,7 +182,7 @@ void RkEventQueue::RkEventQueueImpl::clearEvents(const RkObject *obj)
                                          eventsQueue.end(),
                                          [obj](std::pair<RkObject*, std::unique_ptr<RkEvent>> &ev) {
                                                  return ev.first == obj;
-                                        })
+                                         })
                           , eventsQueue.end());
 }
 

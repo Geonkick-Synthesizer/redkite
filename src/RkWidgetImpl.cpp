@@ -86,11 +86,13 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
+        RK_LOG_DEBUG("called");
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
+        RK_LOG_DEBUG("called: " << this->title());
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()

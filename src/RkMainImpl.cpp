@@ -53,6 +53,7 @@ RkMain::RkMainImpl::~RkMainImpl()
 {
         if (topWindow)
                 delete topWindow;
+        RK_LOG_DEBUG("called");
 }
 
 bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
@@ -62,6 +63,7 @@ bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
 
       topWindow = widget;
       eventQueue->addObject(topWindow);
+      RK_LOG_DEBUG("set top window");
       return true;
 }
 
@@ -82,6 +84,7 @@ int RkMain::RkMainImpl::exec(bool block)
 		return 1;
 	}
 
+        RK_LOG_DEBUG("blocking: " << (block ? "true" : "false"));
         if (!block) {
                 eventQueue->processQueue();
         } else {
@@ -91,6 +94,10 @@ int RkMain::RkMainImpl::exec(bool block)
                                 break;
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
+        }
+
+        if (block) {
+                RK_LOG_DEBUG("exit");
         }
 
         return 0;

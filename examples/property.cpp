@@ -51,17 +51,17 @@ int main(int arc, char **argv)
     widget->setTitle("Property Example");
     widget->show();
 
-    RK_LOG_DEBUG("element: " << widget->rk_property_style_element());
-    RK_LOG_DEBUG("class: " << widget->rk_property_style_class());
-    RK_LOG_DEBUG("id: " << widget->rk_property_style_id());
+    RK_LOG_DEBUG("element: " << widget->rk__property_style_element());
+    RK_LOG_DEBUG("class: " << widget->rk__property_style_class());
+    RK_LOG_DEBUG("id: " << widget->rk__property_style_id());
 
     auto widgetOverride = new OverrideMyProperty(widget);
     widgetOverride->setTitle("OverrideMyProperty Example");
     widgetOverride->show();
 
-    RK_LOG_DEBUG("child element: " << widgetOverride->rk_property_style_element());
-    RK_LOG_DEBUG("child class: " << widgetOverride->rk_property_style_class());
-    RK_LOG_DEBUG("child id: " << widgetOverride->rk_property_style_id());
+    RK_LOG_DEBUG("child element: " << widgetOverride->rk__property_style_element());
+    RK_LOG_DEBUG("child class: " << widgetOverride->rk__property_style_class());
+    RK_LOG_DEBUG("child id: " << widgetOverride->rk__property_style_id());
 
     int res = app.exec();
     return res;

@@ -47,16 +47,11 @@ class RkEventQueue::RkEventQueueImpl {
 
         bool objectExists(RkObject *t) const;
         void addObject(RkObject *obj);
-        //        RkObject* findObj(const RkWindowId &id) const;
-        //        RkObject* findObj(const RkNativeWindowInfo &info) const;
         void removeObject(RkObject *obj);
+        RkWidget* findWidget(const RkWindowId &id) const;
         void removeObjEvents(RkObject *obj);
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
-        //        void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        //        void postEvent(const RkNativeWindowInfo &info, RkEvent *event);
         void processEvent(RkObject *obj, RkEvent *event);
-        //        void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        //        void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvents();
         void postAction(std::unique_ptr<RkAction> act);
         void processActions();
@@ -71,7 +66,7 @@ class RkEventQueue::RkEventQueueImpl {
         RK_DISABLE_COPY(RkEventQueueImpl);
         RK_DISABLE_MOVE(RkEventQueueImpl);
         std::unordered_set<RkObject*> objectsList;
-        //        std::unordered_map<unsigned long long int, RkWidget*> windowIdsMap;
+        std::unordered_map<unsigned long long int, RkObject*> windowIdsMap;
         std::vector<std::pair<RkObject*, std::unique_ptr<RkEvent>>> eventsQueue;
         std::vector<std::unique_ptr<RkAction>> actionsQueue;
         std::unordered_set<RkTimer*> timersList;
