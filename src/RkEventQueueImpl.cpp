@@ -79,7 +79,7 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
         objectsList.insert(obj);
         if (widget) {
                 RK_LOG_DEBUG("widget added");
-                windowIdsMap.insert({widget->nativeWindowInfo()->id, obj});
+                windowIdsMap.insert({widget->nativeWindowInfo()->window, obj});
         }
 }
 
@@ -89,7 +89,7 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
                 objectsList.erase(obj);
                 auto widget = dynamic_cast<RkWidget*>(obj);
                 if (widget) {
-                        auto id = widget->nativeWindowInfo()->id;
+                        auto id = widget->nativeWindowInfo()->window;
                         if (windowIdsMap.find(id) != windowIdsMap.end()) {
                                 RK_LOG_DEBUG("widget removed");
                                 windowIdsMap.erase(id);
@@ -102,7 +102,7 @@ RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkWindowId &id) const
 {
         auto it = windowIdsMap.find(id.id);
         if (it != windowIdsMap.end())
-                return it->second;
+                return dynamic_cast<RkWidget*>(it->second);
 
         return nullptr;
 }
@@ -124,7 +124,9 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 for (auto &event: events) {
                         auto widget = findWidget(event.first);
                         if (widget) {
-                                auto pair = std::make_pair<RkObject*, std::unique_ptr<RkEvent>>(widget, std::move(event));
+                                auto pair = std::move(std::make_pair<RkObject*,
+                                                      std::unique_ptr<RkEvent>>(widget,
+                                                                                std::move(event.second)));
                                 eventsQueue.push_back(std::move(pair));
                         }
                 }

@@ -30,7 +30,7 @@
 #include <X11/XKBlib.h>
 
 RkEventQueueX::RkEventQueueX()
-        : xDisplay(nullptr)
+        : xDisplay{nullptr}
         , keyModifiers{0}
 {
         RK_LOG_DEBUG("called");
@@ -41,7 +41,7 @@ RkEventQueueX::~RkEventQueueX()
         RK_LOG_DEBUG("called");
 }
 
-bool RkEventQueueX::pending()
+bool RkEventQueueX::pending() const
 {
         if (xDisplay) {
 #ifdef RK_LOG_DEBUG_LEVEL
@@ -66,8 +66,10 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-std::vector<std::pair<WindowsId, std::unique_ptr<RkEvent>>> getEvents() const
+std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>>
+RkEventQueueX::getEvents()
 {
+        std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> events;
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
@@ -76,37 +78,37 @@ std::vector<std::pair<WindowsId, std::unique_ptr<RkEvent>>> getEvents() const
                 switch (e.type)
                 {
                 case Expose:
-                        //                        if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
-                        //                                event = std::make_shared<RkPaintEvent>();
+                        if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
+                                event = std::move(std::make_unique<RkPaintEvent>());
                 break;
                 case KeyPress:
-                        //                        event = processKeyEvent(&e);
+                        event = getKeyEvent(&e);
                         break;
                 case KeyRelease:
-                        //                        event = processKeyEvent(&e);
+                        event = getKeyEvent(&e);
                         break;
                 case FocusIn:
                 case FocusOut:
-                        //                        event = processFocusEvent(&e);
+                        event = getFocusEvent(&e);
                         break;
                 case ButtonPress:
-                        //                        event = processButtonPressEvent(&e);
+                        event = getButtonPressEvent(&e);
                         break;
                 case ButtonRelease:
-                        //                        event = srd::move(std::make_unique<RkMouseEvent>());
-                        //                        event->setType(RkEvent::Type::MouseButtonRelease);
+                        event = std::move(std::make_unique<RkMouseEvent>());
+                        event->setType(RkEvent::Type::MouseButtonRelease);
                         break;
                 case MotionNotify:
-                        //                        event = processMouseMove(&e);
+                        event = getMouseMove(&e);
                         break;
                 case ConfigureNotify:
-                        //                        event = std::move(std::make_unique<RkResizeEvent>());
+                        event = std::move(std::make_unique<RkResizeEvent>());
                         break;
                 case ClientMessage:
                 {
-                        // auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
-                        // if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
-                        //         event = std::move(std::make_unique<RkCloseEvent>());
+                        auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
+                        if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
+                                event = std::move(std::make_unique<RkCloseEvent>());
                         break;
                 }
                 default:
@@ -115,17 +117,17 @@ std::vector<std::pair<WindowsId, std::unique_ptr<RkEvent>>> getEvents() const
 
                 if (event) {
                         RK_LOG_DEBUG("add event");
-                        auto pair = std::move(std::make_pair<id, std::unique_ptr<RkEvent>>(nullptr, std::move(event)));
+                        std::pair<RkWindowId, std::unique_ptr<RkEvent>> pair(id, std::move(event));
                         events.push_back(std::move(pair));
                 }
         }
         return events;
 }
 
-std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
+std::unique_ptr<RkEvent> RkEventQueueX::getButtonPressEvent(XEvent *e)
 {
         auto buttonEvent = reinterpret_cast<XButtonEvent*>(e);
-        auto mouseEvent = std::make_shared<RkMouseEvent>();
+        auto mouseEvent = std::move(std::make_unique<RkMouseEvent>());
         mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setX(buttonEvent->x);
         mouseEvent->setY(buttonEvent->y);
@@ -159,10 +161,10 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
         return mouseEvent;
 }
 
-std::shared_ptr<RkEvent> RkEventQueueX::processMouseMove(XEvent *e)
+std::unique_ptr<RkEvent> RkEventQueueX::getMouseMove(XEvent *e)
 {
         auto buttonEvent = reinterpret_cast<XMotionEvent*>(e);
-        auto mouseEvent = std::make_shared<RkMouseEvent>();
+        auto mouseEvent = std::move(std::make_unique<RkMouseEvent>());
         mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setType(RkEvent::Type::MouseMove);
         mouseEvent->setX(buttonEvent->x);
@@ -170,9 +172,9 @@ std::shared_ptr<RkEvent> RkEventQueueX::processMouseMove(XEvent *e)
         return mouseEvent;
 }
 
-std::shared_ptr<RkEvent> RkEventQueueX::processKeyEvent(XEvent *e)
+std::unique_ptr<RkEvent> RkEventQueueX::getKeyEvent(XEvent *e)
 {
-        auto event = std::make_shared<RkKeyEvent>();
+        auto event = std::move(std::make_unique<RkKeyEvent>());
         event->setType(e->type == KeyPress ? RkEvent::Type::KeyPressed : RkEvent::Type::KeyReleased);
         auto keyCode = XkbKeycodeToKeysym(xDisplay,
                                           reinterpret_cast<XKeyEvent*>(e)->keycode,
@@ -198,7 +200,7 @@ void RkEventQueueX::updateModifiers(Rk::Key key, RkEvent::Type type)
         }
 }
 
-Rk::Key RkEventQueueX::fromKeysym(int keycode)
+Rk::Key RkEventQueueX::fromKeysym(int keycode) const
 {
         // Latine1
         if (0x00000020 <= keycode && keycode <= 0x000000ff)
@@ -250,9 +252,9 @@ Rk::Key RkEventQueueX::fromKeysym(int keycode)
         }
 }
 
-std::shared_ptr<RkEvent> RkEventQueueX::processFocusEvent(XEvent *e)
+std::unique_ptr<RkEvent> RkEventQueueX::getFocusEvent(XEvent *e)
 {
-        auto event = std::make_shared<RkFocusEvent>();
+        auto event = std::move(std::make_unique<RkFocusEvent>());
         event->setType(e->type == FocusIn ? RkEvent::Type::FocusedIn : RkEvent::Type::FocusedOut);
         return event;
 }

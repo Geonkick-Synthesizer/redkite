@@ -37,27 +37,25 @@ class RkEventQueueX
  public:
         RkEventQueueX();
 	~RkEventQueueX();
-        RkEventQueueX(const RkEventQueueX &other) = delete;
-        RkEventQueueX& operator=(const RkEventQueueX &other) = delete;
-        RkEventQueueX(RkEventQueueX &&other) = delete;
-        RkEventQueueX& operator=(RkEventQueueX &&other) = delete;
-        bool pending();
+        bool pending() const;
         void setDisplay(Display *display);
         Display* display() const;
-        std::vector<std::pair<WindowsId, std::unique_ptr<RkEvent>>> getEvents() const;
+        std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> getEvents();
 
  protected:
-        std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
-        std::shared_ptr<RkEvent> processMouseMove(XEvent *e);
-        std::shared_ptr<RkEvent> processKeyEvent(XEvent *e);
-        std::shared_ptr<RkEvent> processFocusEvent(XEvent *e);
+        std::unique_ptr<RkEvent> getButtonPressEvent(XEvent *e);
+        std::unique_ptr<RkEvent> getMouseMove(XEvent *e);
+        std::unique_ptr<RkEvent> getKeyEvent(XEvent *e);
+        std::unique_ptr<RkEvent> getFocusEvent(XEvent *e);
         void updateModifiers(Rk::Key key, RkEvent::Type type);
-        Rk::Key fromKeysym(int keycode);
+        Rk::Key fromKeysym(int keycode) const;
 
  private:
-       Display* xDisplay;
-       std::chrono::system_clock::time_point lastTimePressed;
-       int keyModifiers;
+        RK_DISABLE_COPY(RkEventQueueX);
+        RK_DISABLE_MOVE(RkEventQueueX);
+        Display* xDisplay;
+        std::chrono::system_clock::time_point lastTimePressed;
+        mutable int keyModifiers;
 };
 
 #endif // RK_EVENT_QUEUE_X_H
