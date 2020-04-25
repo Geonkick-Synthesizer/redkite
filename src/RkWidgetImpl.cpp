@@ -361,12 +361,6 @@ Rk::Modality RkWidget::RkWidgetImpl::modality() const
         return widgetModality;
 }
 
-// TODO
-//const std::list<RkWidget*>& RkWidget::RkWidgetImpl::childWidgets() const
-//{
-//        return widgetChildren;
-//}
-
 void RkWidget::RkWidgetImpl::setWidgetAttribute(Rk::WidgetAttribute attribute)
 {
         widgetAttributes = static_cast<Rk::WidgetAttribute>(static_cast<int>(widgetAttributes) | static_cast<int>(attribute));

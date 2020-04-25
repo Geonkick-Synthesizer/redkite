@@ -27,6 +27,8 @@
 #include "Rk.h"
 #include "RkObserver.h"
 
+#include <unordered_set>
+
 class RkEvent;
 class RkEventQueue;
 
@@ -36,6 +38,7 @@ class RK_EXPORT RkObject {
         virtual ~RkObject();
         Rk::ObjectType type() const;
         RkObject* parent() const;
+        const std::unordered_set<RkObject*>& children() const;
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* eventQueue() const;
         virtual void event(RkEvent *event);

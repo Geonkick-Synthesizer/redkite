@@ -59,6 +59,11 @@ RkObject* RkObject::parent() const
         return o_ptr->parent();
 }
 
+const std::unordered_set<RkObject*>& RkObject::children() const
+{
+        return o_ptr->getChildren();
+}
+
 void RkObject::setEventQueue(RkEventQueue* queue)
 {
         o_ptr->setEventQueue(queue);

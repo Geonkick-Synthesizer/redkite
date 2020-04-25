@@ -396,19 +396,26 @@ void RkWidget::enableInput()
         setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        // TODO
-        //        for (const auto &ch: impl_ptr->childWidgets())
-        //                ch->enableInput();
+        for (const auto &ch: children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget)
+                        widget->enableInput();
+        }
 }
 
 void RkWidget::disableInput()
 {
+        if (modality() == Rk::Modality::ModalParent || modality() == Rk::Modality::ModalTopWindow)
+                return;
+
         clearWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                             | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                             | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        // TODO
-        //        for (const auto &ch: impl_ptr->childWidgets())
-        //                ch->disableInput();
+        for (const auto &ch: children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget)
+                        widget->disableInput();
+        }
 }
 
 bool RkWidget::isInputEnabled() const

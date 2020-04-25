@@ -71,6 +71,12 @@ RkObject* RkObject::RkObjectImpl::parent() const
         return parentObject;
 }
 
+const std::unordered_set<RkObject*>&
+RkObject::RkObjectImpl::getChildren() const
+{
+        return objectChildren;
+}
+
 void RkObject::RkObjectImpl::setEventQueue(RkEventQueue *queue)
 {
         if (!eventQueue && queue) {
