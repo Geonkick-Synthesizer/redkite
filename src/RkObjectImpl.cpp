@@ -58,8 +58,9 @@ RkObject::RkObjectImpl::~RkObjectImpl()
 
         // Remove myself from the paren object.
         if (inf_ptr->parent())
-                inf_ptr->removeChild(inf_ptr);
+                inf_ptr->parent()->removeChild(inf_ptr);
 
+        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
         auto tmpChidlren = std::move(objectChildren);
         for (auto child: tmpChidlren)
                 delete child;
@@ -81,7 +82,6 @@ void RkObject::RkObjectImpl::setEventQueue(RkEventQueue *queue)
 
 RkEventQueue* RkObject::RkObjectImpl::getEventQueue() const
 {
-        RK_LOG_DEBUG("eventQueue: " << parent());
         return eventQueue;
 }
 
@@ -132,6 +132,7 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
 {
         RK_LOG_DEBUG("add child: " << child);
         objectChildren.insert(child);
+        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
         if (eventQueue) {
                 RK_LOG_DEBUG("add child to queue: " << child);
                 eventQueue->addObject(child);
@@ -140,10 +141,15 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
 
 void RkObject::RkObjectImpl::removeChild(RkObject* child)
 {
+        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
+        RK_LOG_DEBUG("remove child: " << child);
+        RK_LOG_DEBUG("remove child: " << objectChildren.size());
         if (!objectChildren.empty()) {
                 auto res = objectChildren.find(child);
-                if (res != objectChildren.end())
-                        delete *res;
+                if (res != objectChildren.end()) {
+                        RK_LOG_DEBUG("erase child");
+                        objectChildren.erase(child);
+                }
         }
 }
 
