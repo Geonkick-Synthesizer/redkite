@@ -65,10 +65,9 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void hide();
           void setTitle(const std::string &title);
 	  const std::string& title() const;
-          std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
+          const RkNativeWindowInfo* nativeWindowInfo() const;
 	  bool isClose() const;
           RkWidget* parentWidget() const;
-          RkWidget* childWidget(const RkWindowId &id) const;
           RkWindowId id() const;
 	  void setSize(int w, int h);
 	  void setSize(const RkSize &size);
@@ -109,7 +108,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void setColor(const RkColor &color);
           const RkFont& font() const;
           void setFont(const RkFont &font);
-          std::shared_ptr<RkCanvasInfo> getCanvasInfo() const override;
+          const RkCanvasInfo *getCanvasInfo() const override;
           RkRect rect() const;
           void update();
           void close();

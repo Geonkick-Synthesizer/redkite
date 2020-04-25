@@ -126,7 +126,7 @@ const std::string& RkWidget::RkWidgetImpl::title() const
         return widgetTitle;
 }
 
-std::shared_ptr<RkNativeWindowInfo>
+const RkNativeWindowInfo*
 RkWidget::RkWidgetImpl::nativeWindowInfo() const
 {
         return platformWindow->nativeWindowInfo();
@@ -339,20 +339,13 @@ RkRect RkWidget::RkWidgetImpl::rect() const
         return RkRect(RkPoint(0, 0), size());
 }
 
-void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
-{
-        platformWindow->setEventQueue(inf_ptr->eventQueue());
-}
-
-std::shared_ptr<RkCanvasInfo> RkWidget::RkWidgetImpl::getCanvasInfo() const
+const RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
 {
         return platformWindow->getCanvasInfo();
 }
 
 void RkWidget::RkWidgetImpl::update()
 {
-        if (platformWindow == nullptr)
-                RK_LOG_DEBUG("nuLLLLLL");
         platformWindow->update();
 }
 

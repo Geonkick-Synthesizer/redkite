@@ -27,8 +27,6 @@
 #include "RkWidget.h"
 #include "RkObjectImpl.h"
 
-class RkEventQueue;
-
 #ifdef RK_OS_WIN
 class RkWindowWin;
 #elif RK_OS_MAC
@@ -53,9 +51,8 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
 	bool isShown() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
-        std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo() const;
+        const RkNativeWindowInfo* nativeWindowInfo() const;
         bool isClose() const;
-        void processEvents();
         RkWindowId id() const;
         void event(RkEvent *event);
         void setSize(const RkSize &size);
@@ -77,13 +74,10 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         RkRect rect() const;
-        void setEventQueue(RkEventQueue* queue);
-        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        const RkCanvasInfo* getCanvasInfo() const;
         void update();
         static Rk::WidgetAttribute defaultWidgetAttributes();
         Rk::Modality modality() const;
-        // TODO
-        //        const std::list<RkWidget*>& childWidgets() const;
         void setWidgetAttribute(Rk::WidgetAttribute attribute);
         void clearWidgetAttribute(Rk::WidgetAttribute attribute);
         Rk::WidgetAttribute getWidgetAttributes() const;
@@ -113,7 +107,6 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         std::string widgetTitle;
         //        std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
-        RkEventQueue* eventQueue;
         RkSize widgetMinimumSize;
         RkSize widgetMaximumSize;
         RkSize widgetSize;

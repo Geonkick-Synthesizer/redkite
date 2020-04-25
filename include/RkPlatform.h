@@ -62,8 +62,11 @@ struct RK_EXPORT RkWindowId {
         Window id;
 };
 
-struct RK_EXPORT RkNativeWindowInfo
+class RK_EXPORT RkNativeWindowInfo
 {
+ public:
+        RkNativeWindowInfo() : display{nullptr}, screenNumber{0}, window{0} {}
+        ~RkNativeWindowInfo() = default;
         Display* display;
         int screenNumber;
         Window window;

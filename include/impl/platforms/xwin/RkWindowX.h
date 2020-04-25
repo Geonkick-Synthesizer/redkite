@@ -30,30 +30,25 @@
 #include "RkPoint.h"
 #include "RkColor.h"
 
-class RkEventQueue;
 struct RkCanvasInfo;
 
 class RkWindowX {
  public:
-        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-        explicit RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowX(const RkNativeWindowInfo *parent,
+                           Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowX(const RkNativeWindowInfo &parent,
+                           Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowX();
-        RkWindowX(const RkWindowX &other) = delete;
-        RkWindowX& operator=(const RkWindowX &other) = delete;
-        RkWindowX(RkWindowX &&other) = delete;
-        RkWindowX& operator=(RkWindowX &&other) = delete;
         bool init();
         void show(bool b);
-        std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
+        const RkNativeWindowInfo* nativeWindowInfo() const;
         void setTitle(const std::string &title);
-        Display* display();
-        RkSize& size() const;
+        Display* display() const;
+        RkSize size() const;
         void setSize(const RkSize &size);
-        RkPoint& position() const;
+        RkPoint position() const;
         void setPosition(const RkPoint &position);
         RkWindowId id() const;
-        void setEventQueue(RkEventQueue *queue);
-
         void setBorderWidth(int width);
         int borderWidth() const;
         void setBorderColor(const RkColor &color);
@@ -61,10 +56,10 @@ class RkWindowX {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         void resizeCanvas();
-        std::shared_ptr<RkCanvasInfo> getCanvasInfo();
+        const RkCanvasInfo* getCanvasInfo() const;
         void update();
         void setFocus(bool b);
-        bool hasFocus();
+        bool hasFocus() const;
         void setPointerShape(Rk::PointerShape shape);
 
  protected:
@@ -76,7 +71,9 @@ class RkWindowX {
         void freeCanvasInfo();
 
  private:
-        std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
+        RK_DISABLE_COPY(RkWindowX);
+        RK_DISABLE_MOVE(RkWindowX);
+        RkNativeWindowInfo parentWindowInfo;
         Display *xDisplay;
         int screenNumber;
         Window xWindow;
@@ -86,8 +83,8 @@ class RkWindowX {
         int winBorderWidth;
         RkColor winBorderColor;
         RkColor winBackgroundColor;
-        RkEventQueue *eventQueue;
-        std::shared_ptr<RkCanvasInfo> canvasInfo;
+        std::unique_ptr<RkCanvasInfo> canvasInfo;
+        std::unique_ptr<RkNativeWindowInfo> windowInfo;
         Rk::WindowFlags windowFlags;
 };
 

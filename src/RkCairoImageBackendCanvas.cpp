@@ -14,7 +14,7 @@ RkCairoImageBackendCanvas::RkCairoImageBackendCanvas(const RkSize &size,
 #else // X11
         auto cairoFormat = toCairoFormat(format);
         if (cairoFormat != CAIRO_FORMAT_INVALID && imageSize.width() > 0 && imageSize.height() > 0) {
-                canvasInfo = std::make_shared<RkCanvasInfo>();
+                canvasInfo = std::move(std::make_unique<RkCanvasInfo>());
                 auto stride = cairo_format_stride_for_width(cairoFormat, imageSize.width());
                 if (data == nullptr)
                         imageData = std::vector<unsigned char>(imageSize.width() * imageSize.height() * pixelLength(format), 0);
@@ -75,9 +75,9 @@ std::vector<unsigned char> RkCairoImageBackendCanvas::dataCopy() const
         return imageData;
 }
 
-std::shared_ptr<RkCanvasInfo> RkCairoImageBackendCanvas::getCanvasInfo() const
+RkCanvasInfo* RkCairoImageBackendCanvas::getCanvasInfo() const
 {
-        return canvasInfo;
+        return canvasInfo.get();
 }
 
 void RkCairoImageBackendCanvas::fill(const RkColor &color)

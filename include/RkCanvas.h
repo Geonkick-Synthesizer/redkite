@@ -32,7 +32,7 @@ class RK_EXPORT RkCanvas {
  public:
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
-        virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
+        virtual const RkCanvasInfo* getCanvasInfo() const = 0;
 };
 
 #endif // RK_CANVAS_H

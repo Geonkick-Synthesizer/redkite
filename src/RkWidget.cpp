@@ -118,7 +118,7 @@ void RkWidget::hide()
         impl_ptr->show(false);
 }
 
-std::shared_ptr<RkNativeWindowInfo> RkWidget::nativeWindowInfo() const
+const RkNativeWindowInfo* RkWidget::nativeWindowInfo() const
 {
         return impl_ptr->nativeWindowInfo();
 }
@@ -131,12 +131,6 @@ RkWindowId RkWidget::id() const
 RkWidget* RkWidget::parentWidget() const
 {
         return dynamic_cast<RkWidget*>(parent());
-}
-
-RkWidget* RkWidget::childWidget(const RkWindowId &id) const
-{
-        // TODO
-        return nullptr;
 }
 
 bool RkWidget::isClose() const
@@ -528,7 +522,7 @@ void RkWidget::update()
         impl_ptr->update();
 }
 
-std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
+const RkCanvasInfo* RkWidget::getCanvasInfo() const
 {
         return impl_ptr->getCanvasInfo();
 }

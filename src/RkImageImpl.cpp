@@ -48,7 +48,7 @@ RkImage::RkImageImpl::~RkImageImpl()
 {
 }
 
-std::shared_ptr<RkCanvasInfo> RkImage::RkImageImpl::getCanvasInfo() const
+const RkCanvasInfo* RkImage::RkImageImpl::getCanvasInfo() const
 {
         if (imageBackendCanvas)
                 return imageBackendCanvas->getCanvasInfo();

@@ -38,7 +38,7 @@ class RkCairoImageBackendCanvas {
         bool isNull() const;
         unsigned char* data();
         std::vector<unsigned char> dataCopy() const;
-        std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        RkCanvasInfo *getCanvasInfo() const;
         void fill(const RkColor &color);
 
  protected:
@@ -46,7 +46,7 @@ class RkCairoImageBackendCanvas {
         int pixelLength(RkImage::Format format) const;
 
  private:
-        std::shared_ptr<RkCanvasInfo> canvasInfo;
+        std::unique_ptr<RkCanvasInfo> canvasInfo;
         std::vector<unsigned char> imageData;
         RkSize imageSize;
 };
