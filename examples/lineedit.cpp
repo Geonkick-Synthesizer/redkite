@@ -28,7 +28,7 @@
 
 class Button: public RkWidget {
   public:
-        Button(RkWidget *parent = nullptr)
+        Button(RkWidget *parent)
                 : RkWidget(parent)
                 , isToggled{false} {}
 
@@ -51,6 +51,7 @@ class  LineEditExample: public RkWidget {
                 : RkWidget(app)
         {
                 setSize(350, 350);
+                RK_LOG_DEBUG("------ 1");
                 auto lineEdit = new RkLineEdit(this);
                 auto font = lineEdit->font();
                 font.setSize(30);
@@ -66,7 +67,7 @@ class  LineEditExample: public RkWidget {
                             RK_ACT_ARGS(const std::string &text),
                             this, onUpdateText(text));
                 lineEdit->show();
-
+                RK_LOG_DEBUG("------ 2");
                 lineEdit = new RkLineEdit(this);
                 font = lineEdit->font();
                 font.setSize(30);
@@ -83,6 +84,7 @@ class  LineEditExample: public RkWidget {
                             this, onUpdateText(text));
                 show();
                 lineEdit->show();
+                RK_LOG_DEBUG("------ 3");
                 auto button = new Button(this);
                 button->setBackgroundColor(100, 200, 100);
                 button->setFixedSize(50, 25);

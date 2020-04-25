@@ -29,12 +29,13 @@
 
 class RkTimer;
 
-class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl {
+class RkLineEdit::RkLineEditImpl : public RkWidget::RkWidgetImpl, public RkObject {
  public:
         RkLineEditImpl(RkLineEdit *interface,
                        RkWidget *parent = nullptr,
                        const std::string &text = std::string());
         virtual ~RkLineEditImpl();
+        void init();
         void setText(const std::string &text);
         void addText(const std::string& text);
         void removeText(int n, bool after);

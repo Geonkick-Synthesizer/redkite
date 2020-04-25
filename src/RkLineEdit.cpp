@@ -33,6 +33,7 @@ RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
 {
         setPointerShape(Rk::PointerShape::IBeam);
         propagateGrabKey(false);
+        impl_ptr->init();
 }
 
 void RkLineEdit::setText(const std::string &text)
@@ -163,6 +164,7 @@ void RkLineEdit::keyPressEvent(RkKeyEvent *event)
 
 void RkLineEdit::mouseButtonPressEvent(RkMouseEvent* event)
 {
+        RK_LOG_DEBUG("called");
         setFocus(true);
 }
 

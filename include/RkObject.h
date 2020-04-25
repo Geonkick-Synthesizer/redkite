@@ -34,8 +34,9 @@ class RK_EXPORT RkObject {
  public:
         explicit RkObject(RkObject *parent = nullptr);
         virtual ~RkObject();
+        Rk::ObjectType type() const;
         RkObject* parent() const;
-        virtual void setEventQueue(RkEventQueue* queue);
+        void setEventQueue(RkEventQueue* queue);
         RkEventQueue* eventQueue() const;
         virtual void event(RkEvent *event);
         void rk__add_bound_object(RkObject* obj);
@@ -49,10 +50,11 @@ class RK_EXPORT RkObject {
  private:
         RK_DISABLE_COPY(RkObject);
         RK_DISABLE_MOVE(RkObject);
-        virtual void addChild(RkObject *child);
+        void addChild(RkObject *child);
         void removeChild(RkObject *child);
         void removeObservers(RkObject *ob);
         void removeBoundObject(RkObject *obj);
+        friend class RkEventQueue;
 };
 
 #endif // RK_OBJECT_H

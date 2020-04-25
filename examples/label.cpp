@@ -3186,30 +3186,26 @@ int main(int arc, char **argv)
         label->setBackgroundColor(200, 200, 200);
         label->show();
 
-        // label = new RkLabel(widget);
-        // label->setTitle("Label with image");
-        // label->setImage(RkImage(100, 94, rk_image));
-        // label->setX(10 + 100 + 5);
-        // label->setY(10);
-        // label->setSize(100, 94);
-        // label->setBackgroundColor(200, 200, 200);
-        // label->show();
+        label = new RkLabel(widget);
+        label->setTitle("Label with image");
+        label->setImage(RkImage(100, 94, rk_image));
+        label->setX(10 + 100 + 5);
+        label->setY(10);
+        label->setSize(100, 94);
+        label->setBackgroundColor(200, 200, 200);
+        label->show();
 
-
-        // label = new RkLabel(widget);
-        // label->setTitle("Label with text & image");
-        // label->setText("Text");
-        // label->setImage(RkImage(100, 94, rk_image));
-        // label->setX(10);
-        // label->setY(10 + 94 + 5);
-        // label->setSize(100, 94);
-        // label->setBackgroundColor(200, 200, 200);
-        // label->show();
+        label = new RkLabel(widget);
+        label->setTitle("Label with text & image");
+        label->setText("Text");
+        label->setImage(RkImage(100, 94, rk_image));
+        label->setX(10);
+        label->setY(10 + 94 + 5);
+        label->setSize(100, 94);
+        label->setBackgroundColor(200, 200, 200);
+        label->show();
 
         widget->show();
-
-        // RK_LOG_DEBUG("text: " << label->text());
-
         int res = app.exec();
         return res;
 }

@@ -32,7 +32,9 @@ class RkEventQueue;
 
 class RkObject::RkObjectImpl {
  public:
-        explicit RkObjectImpl(RkObject* interface, RkObject* parent);
+        explicit RkObjectImpl(RkObject* interface,
+                              RkObject* parent,
+                              Rk::ObjectType type = Rk::ObjectType::Object);
         virtual ~RkObjectImpl();
 
         RkObject* parent() const;
@@ -45,9 +47,11 @@ class RkObject::RkObjectImpl {
         void removeBoundObject(RkObject *obj);
         void addChild(RkObject* child);
         void removeChild(RkObject* child);
+        Rk::ObjectType getObjectType() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkObject);
+        Rk::ObjectType objectType;
         RkObject *parentObject;
         RkEventQueue *eventQueue;
         std::unordered_set<RkObject*> objectChildren;

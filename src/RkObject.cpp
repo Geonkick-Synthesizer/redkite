@@ -24,11 +24,12 @@
 #include "RkObjectImpl.h"
 #include "RkLog.h"
 #include "RkObserver.h"
+#include "RkEventQueue.h"
 
 RkObject::RkObject(RkObject *parent)
         : o_ptr{std::make_unique<RkObjectImpl>(this, parent)}
 {
-        RK_LOG_DEBUG("called: " << this);
+        RK_LOG_DEBUG("PUBLIC: " << this);
         if (parent)
                 parent->addChild(this);
 }
@@ -36,7 +37,7 @@ RkObject::RkObject(RkObject *parent)
 RkObject::RkObject(RkObject *parent, std::unique_ptr<RkObjectImpl> impl)
         : o_ptr{std::move(impl)}
 {
-        RK_LOG_DEBUG("called: " << this);
+        RK_LOG_DEBUG("PRIVATE: " << this);
         if (parent)
                 parent->addChild(this);
 }
@@ -44,6 +45,13 @@ RkObject::RkObject(RkObject *parent, std::unique_ptr<RkObjectImpl> impl)
 RkObject::~RkObject()
 {
         RK_LOG_DEBUG("called: " << this);
+        if (eventQueue())
+                eventQueue()->removeObject(this);
+}
+
+Rk::ObjectType RkObject::type() const
+{
+        return o_ptr->getObjectType();
 }
 
 RkObject* RkObject::parent() const
@@ -53,7 +61,6 @@ RkObject* RkObject::parent() const
 
 void RkObject::setEventQueue(RkEventQueue* queue)
 {
-        RK_LOG_DEBUG("called");
         o_ptr->setEventQueue(queue);
 }
 

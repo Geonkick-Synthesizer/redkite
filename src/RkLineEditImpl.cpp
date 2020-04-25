@@ -36,20 +36,25 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface,
     , cursorIndex{0}
     , selectionIndex{0}
     , isSelectionMode{false}
-    , cursorTimer{new RkTimer(inf_ptr, 800)}
+    , cursorTimer{nullptr}
     , isShowCursor{hasFocus()}
     , lastCahnges{std::chrono::system_clock::now()}
     , contentsRect{0, 0, 0, 0}
     , beginX{0}
     , endX{0}
 {
-        //        RK_ACT_BIND(cursorTimer, timeout, RK_ACT_ARGS(), this, onCursorTimeout());
-        hasFocus() ? showCursor(true) : showCursor(false);
 }
 
 RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
 {
         cursorTimer->stop();
+}
+
+void RkLineEdit::RkLineEditImpl::init()
+{
+        cursorTimer = new RkTimer(inf_ptr, 800);
+        hasFocus() ? showCursor(true) : showCursor(false);
+        RK_ACT_BIND(cursorTimer, timeout, RK_ACT_ARGS(), this, onCursorTimeout());
 }
 
 void RkLineEdit::RkLineEditImpl::setText(const std::string &text)
@@ -197,6 +202,7 @@ bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 
 void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 {
+        RK_LOG_DEBUG("called");
         if (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - lastCahnges).count() > 1000) {
                 isShowCursor = !isShowCursor;
                 inf_ptr->update();
@@ -205,6 +211,7 @@ void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 
 void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
+        RK_LOG_DEBUG("b = " << b);
         isShowCursor = b;
         isShowCursor ? cursorTimer->start() : cursorTimer->stop();
         update();
@@ -333,3 +340,4 @@ bool RkLineEdit::RkLineEditImpl::hasEditFocus() const
 {
 	return cursorTimer->started();
 }
+

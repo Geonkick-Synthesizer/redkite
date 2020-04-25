@@ -22,6 +22,7 @@
  */
 
 #include "RkWidget.h"
+#include "RkWidgetImpl.h"
 #include "RkEventQueueImpl.h"
 #include "RkTimer.h"
 #include "RkAction.h"
@@ -60,26 +61,35 @@ bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const
 
 void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
 {
+        RK_LOG_DEBUG("add object: " << obj);
  	if (!obj || objectExists(obj))
  		return;
 
-        auto widget = dynamic_cast<RkWidget*>(obj);
+        if (obj->type() == Rk::ObjectType::Widget) {
+                RK_LOG_DEBUG("obj " << obj << " is widget");
+                auto widgetImpl = static_cast<RkWidget::RkWidgetImpl*>(obj->o_ptr.get());
+                if (widgetImpl == nullptr) {
+                        RK_LOG_ERROR("can't cast o_ptr to RkWidgetImpl");
+                        return;
+                }
  #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
          // Set the display from the top window.
-        if (widget && !widget->parent() && !platformEventQueue->display()) {
-                RK_LOG_DEBUG("set queue display: " << widget->nativeWindowInfo()->display);
-                platformEventQueue->setDisplay(widget->nativeWindowInfo()->display);
-        }
+                if (!widgetImpl->parent() && !platformEventQueue->display()) {
+                        RK_LOG_DEBUG("widget " << obj << " is parent window");
+                        platformEventQueue->setDisplay(widgetImpl->nativeWindowInfo()->display);
+                }
  #else
  #error platform not implemented
  #endif
 
-        if (!obj->eventQueue())
-                obj->setEventQueue(inf_ptr);
+                RK_LOG_DEBUG("add widget window id");
+                windowIdsMap.insert({widgetImpl->nativeWindowInfo()->window, obj});
+        }
+
         objectsList.insert(obj);
-        if (widget) {
-                RK_LOG_DEBUG("widget added: " << widget);
-                windowIdsMap.insert({widget->nativeWindowInfo()->window, obj});
+        if (!obj->eventQueue()) {
+                RK_LOG_DEBUG("set object " << obj << " event queue");
+                obj->setEventQueue(inf_ptr);
         }
 }
 
@@ -87,12 +97,16 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
 {
         if (objectsList.find(obj) != objectsList.end()) {
                 objectsList.erase(obj);
-                auto widget = dynamic_cast<RkWidget*>(obj);
-                if (widget) {
-                        auto id = widget->nativeWindowInfo()->window;
+                if (obj->type() == Rk::ObjectType::Widget) {
+                        auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(obj->o_ptr.get());
+                        if (!widgetImpl) {
+                                RK_LOG_ERROR("can't cast o_ptr to RkWidgetImpl");
+                                return;
+                        }
+                        auto id = widgetImpl->nativeWindowInfo()->window;
                         if (windowIdsMap.find(id) != windowIdsMap.end()) {
-                                RK_LOG_DEBUG("widget removed");
-                                windowIdsMap.erase(id);
+                                        RK_LOG_DEBUG("widget id removed");
+                                        windowIdsMap.erase(id);
                         }
                 }
         }
@@ -101,8 +115,16 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
 RkWidget* RkEventQueue::RkEventQueueImpl::findWidget(const RkWindowId &id) const
 {
         auto it = windowIdsMap.find(id.id);
-        if (it != windowIdsMap.end())
-                return dynamic_cast<RkWidget*>(it->second);
+        if (it != windowIdsMap.end()) {
+                if (it->second->type() == Rk::ObjectType::Widget) {
+                        auto widget = dynamic_cast<RkWidget*>(it->second);
+                        if (!widget) {
+                                RK_LOG_ERROR("can't cast RkObject[" << it->second << "] to RkWidget");
+                                return nullptr;
+                        }
+                        return widget;
+                }
+        }
 
         return nullptr;
 }
@@ -131,6 +153,7 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                         }
                 }
         }
+        events.clear();
 
         decltype(eventsQueue) queue = std::move(eventsQueue);
         eventsQueue.clear();

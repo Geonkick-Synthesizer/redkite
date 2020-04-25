@@ -24,11 +24,15 @@
 #include "RkObjectImpl.h"
 #include "RkEventQueue.h"
 
-RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface, RkObject* parent)
+RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface,
+                                     RkObject* parent,
+                                     Rk::ObjectType type)
         : inf_ptr{interface}
+        , objectType{type}
         , parentObject{parent}
-        , eventQueue{!parentObject ? nullptr : parentObject->eventQueue()}
+        , eventQueue{nullptr}
 {
+        RK_LOG_DEBUG("eventQueue: "<< eventQueue);
         RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]: parent " << parent);
 }
 
@@ -36,7 +40,6 @@ RkObject::RkObjectImpl::~RkObjectImpl()
 {
         RK_LOG_DEBUG("["<< this << "]: interface: " << inf_ptr);
         if (eventQueue) {
-                eventQueue->removeObject(inf_ptr);
                 eventQueue->clearObjectActions(inf_ptr);
                 eventQueue->clearObjectEvents(inf_ptr);
         }
@@ -69,11 +72,16 @@ RkObject* RkObject::RkObjectImpl::parent() const
 
 void RkObject::RkObjectImpl::setEventQueue(RkEventQueue *queue)
 {
-        eventQueue = queue;
+        if (!eventQueue && queue) {
+                eventQueue = queue;
+                for (auto child: objectChildren)
+                        child->setEventQueue(eventQueue);
+        }
 }
 
 RkEventQueue* RkObject::RkObjectImpl::getEventQueue() const
 {
+        RK_LOG_DEBUG("eventQueue: " << parent());
         return eventQueue;
 }
 
@@ -122,10 +130,12 @@ void RkObject::RkObjectImpl::removeBoundObject(RkObject *obj)
 
 void RkObject::RkObjectImpl::addChild(RkObject* child)
 {
-        RK_LOG_DEBUG("called: " << child);
+        RK_LOG_DEBUG("add child: " << child);
         objectChildren.insert(child);
-        if (eventQueue)
+        if (eventQueue) {
+                RK_LOG_DEBUG("add child to queue: " << child);
                 eventQueue->addObject(child);
+        }
 }
 
 void RkObject::RkObjectImpl::removeChild(RkObject* child)
@@ -137,3 +147,7 @@ void RkObject::RkObjectImpl::removeChild(RkObject* child)
         }
 }
 
+Rk::ObjectType RkObject::RkObjectImpl::getObjectType() const
+{
+        return objectType;
+}

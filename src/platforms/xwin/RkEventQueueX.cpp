@@ -116,7 +116,6 @@ RkEventQueueX::getEvents()
                 }
 
                 if (event) {
-                        RK_LOG_DEBUG("add event");
                         std::pair<RkWindowId, std::unique_ptr<RkEvent>> pair(id, std::move(event));
                         events.push_back(std::move(pair));
                 }

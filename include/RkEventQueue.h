@@ -41,11 +41,6 @@ class RK_EXPORT RkEventQueue {
         void removeObject(RkObject *obj);
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         void postAction(std::unique_ptr<RkAction> act);
-        /* void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event); */
-        /* void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event); */
-        /* void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event); */
-        /* void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event); */
-        //        void processEvent(RkObject *obj, RkEvent *event);
         void subscribeTimer(RkTimer *timer);
         void unsubscribeTimer(RkTimer *timer);
         void processEvents();

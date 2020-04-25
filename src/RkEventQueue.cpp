@@ -100,35 +100,6 @@ void RkEventQueue::processQueue()
         processEvents();
 }
 
-// void RkEventQueue::postEvent(const RkWindowId &id,
-//                              const std::shared_ptr<RkEvent> &event)
-// {
-//         o_ptr->postEvent(id, event);
-// }
-
-// void RkEventQueue::postEvent(const RkNativeWindowInfo &info,
-//                              const std::shared_ptr<RkEvent> &event)
-// {
-//         o_ptr->postEvent(info, event);
-// }
-
-// void RkEventQueue::processEvent(RkObject *obj, RkEvent *event)
-// {
-// 	o_ptr->processEvent(obj, event);
-// }
-
-// void RkEventQueue::processEvent(const RkWindowId &id,
-//                                 const std::shared_ptr<RkEvent> &event)
-// {
-// 	o_ptr->processEvent(id, event);
-// }
-
-// void RkEventQueue::processEvent(const RkNativeWindowInfo &info,
-//                                 const std::shared_ptr<RkEvent> &event)
-// {
-// 	o_ptr->processEvent(info, event);
-// }
-
 void RkEventQueue::clearObjectEvents(const RkObject *obj)
 {
         if (obj)

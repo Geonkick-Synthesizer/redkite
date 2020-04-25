@@ -39,7 +39,7 @@
 #endif
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
-        : RkObject::RkObjectImpl(widgetInterface, parent)
+        : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
         , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
@@ -62,14 +62,13 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
-        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]: parent " << parent);
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      const RkNativeWindowInfo &parent,
                                      Rk::WindowFlags flags)
-        : RkObject::RkObjectImpl(widgetInterface, nullptr)
+        : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
@@ -89,13 +88,12 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
-        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr);
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
-        RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]");
+        RK_LOG_DEBUG(this);
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -150,13 +148,13 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         {
         case RkEvent::Type::Paint:
         {
-                RK_LOG_DEBUG("RkEvent::Type::Paint");
+                RK_LOG_DEBUG("RkEvent::Type::Paint: " << title());
                 inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         }
         case RkEvent::Type::KeyPressed:
         {
-                RK_LOG_DEBUG("RkEvent::Type::KeyPressed");
+                RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyPressEvent(static_cast<RkKeyEvent*>(event));
                 auto topWidget = inf_ptr->getTopWindow();
@@ -170,7 +168,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         }
         case RkEvent::Type::KeyReleased:
         {
-                RK_LOG_DEBUG("RkEvent::Type::KeyReleased");
+                RK_LOG_DEBUG("RkEvent::Type::KeyReleased: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyReleaseEvent(static_cast<RkKeyEvent*>(event));
                 auto topWidget = inf_ptr->getTopWindow();
@@ -183,51 +181,51 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 break;
         }
         case RkEvent::Type::FocusedIn:
-                RK_LOG_DEBUG("RkEvent::Type::FocsedIn");
+                RK_LOG_DEBUG("RkEvent::Type::FocsedIn:" << title());
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::FocusedOut:
-                RK_LOG_DEBUG("RkEvent::Type::FocsedOut");
+                RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress");
+                RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseDoubleClick:
-                RK_LOG_DEBUG("RkEvent::Type::MouseDoubleClick");
+                RK_LOG_DEBUG("RkEvent::Type::MouseDoubleClick:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseDoubleClickEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonRelease:
-                RK_LOG_DEBUG("RkEvent::Type::MouseButtonRelease");
+                RK_LOG_DEBUG("RkEvent::Type::MouseButtonRelease:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonReleaseEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseMove:
-                RK_LOG_DEBUG("RkEvent::Type::MouseMove");
+                //                RK_LOG_DEBUG("RkEvent::Type::MouseMove");
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
-                RK_LOG_DEBUG("RkEvent::Type::Resize");
+                RK_LOG_DEBUG("RkEvent::Type::Resize:" << title());
                 widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
                 inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
-                RK_LOG_DEBUG("RkEvent::Type::Show");
+                RK_LOG_DEBUG("RkEvent::Type::Show:" << title());
 		isWidgetSown = true;
                 inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
                 break;
 	case RkEvent::Type::Hide:
-                RK_LOG_DEBUG("RkEvent::Type::Hide");
+                RK_LOG_DEBUG("RkEvent::Type::Hide:" << title());
 		isWidgetSown = false;
                 inf_ptr->hideEvent(static_cast<RkHideEvent*>(event));
                 break;
         case RkEvent::Type::DeleteChild:
-                RK_LOG_DEBUG("RkEvent::Type::DeleteChild");
+                RK_LOG_DEBUG("RkEvent::Type::DeleteChild:" << title());
                 delete static_cast<RkDeleteChild*>(event)->child();
                 break;
         case RkEvent::Type::Close:
@@ -239,7 +237,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 break;
         default:
                 break;
-                RK_LOG_DEBUG("RkEvent::Type::Unknown");
+                RK_LOG_DEBUG("RkEvent::Type::Unknown:" << title());
         }
 }
 

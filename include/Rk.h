@@ -428,6 +428,11 @@ namespace Rk {
                 Forbidden = 17,
                 Busy = 18
         };
+
+        enum class ObjectType : int {
+                Object = 0,
+                Widget = 1
+        };
 };
 
 #define RK_ACT_ARGS(arg, ...) arg, ##__VA_ARGS__

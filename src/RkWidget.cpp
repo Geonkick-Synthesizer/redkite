@@ -33,7 +33,6 @@ RkWidget::RkWidget(RkMain *mainApp, Rk::WindowFlags flags)
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        RK_LOG_DEBUG("called: " << impl_ptr->isClose());
         mainApp->setTopLevelWindow(this);
 }
 
