@@ -134,7 +134,9 @@ void RkEventQueue::RkEventQueueImpl::postEvent(RkObject *obj, std::unique_ptr<Rk
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkObject *obj, RkEvent *event)
 {
-        obj->event(event);
+        // Do not process events for objects that were removed from the event queue.
+        if (objectExists(obj))
+                obj->event(event);
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvents()
@@ -153,8 +155,13 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         }
         events.clear();
 
+        /**
+         * Moving events in a separeted queue for processing
+         * because during the processing the execution of some events
+         * may add new events into the queue and this for
+         * in some cases can lead to a infinite looping.
+         */
         decltype(eventsQueue) queue = std::move(eventsQueue);
-        eventsQueue.clear();
         for (const auto &e: queue)
                 processEvent(e.first, e.second.get());
 }
@@ -170,11 +177,20 @@ void RkEventQueue::RkEventQueueImpl::processActions()
         decltype(actionsQueue) q;
         {
                 std::lock_guard<std::mutex> lock(actionsQueueMutex);
+                /**
+                 * Moving actions in a separeted queue for processing
+                 * because during the processing the execution of some actions
+                 * may add new actions into the queue and this for
+                 * in some cases can lead to a infinite looping.
+                 */
                 q = std::move(actionsQueue);
         }
 
-        for(const auto &act: q)
-                act->call();
+        for (const auto &act: q) {
+                // Do not process actions for objects that were removed from the event queue.
+                if (!act->object() || objectExists(act->object()))
+                        act->call();
+        }
 }
 
 void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)
@@ -200,11 +216,16 @@ void RkEventQueue::RkEventQueueImpl::clearEvents(const RkObject *obj)
 {
         if (!obj)
                 return;
-
+        RK_LOG_DEBUG("clear object " << obj << " events");
         eventsQueue.erase(std::remove_if(eventsQueue.begin(),
                                          eventsQueue.end(),
                                          [obj](std::pair<RkObject*, std::unique_ptr<RkEvent>> &ev) {
-                                                 return ev.first == obj;
+                                                 if (ev.first == obj) {
+                                                         RK_LOG_DEBUG("clear: [obj: " << obj << "] ev: "
+                                                                      << ev.second.get());
+                                                         return true;
+                                                 }
+                                                 return false;
                                          })
                           , eventsQueue.end());
 }
@@ -218,7 +239,13 @@ void RkEventQueue::RkEventQueueImpl::clearActions(const RkObject *obj)
         actionsQueue.erase(std::remove_if(actionsQueue.begin(), actionsQueue.end(),
                                           [obj](const std::unique_ptr<RkAction> &act)
                                           {
-                                                  return act->object() && act->object() == obj;
+                                                  if (act->object() && act->object() == obj) {
+                                                          RK_LOG_DEBUG("clear: [obj: " << obj << "] act: "
+                                                                       << act.get());
+                                                          return true;
+
+                                                  }
+                                                  return false;
                                           })
                            , actionsQueue.end());
 }

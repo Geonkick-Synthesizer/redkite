@@ -38,11 +38,6 @@ RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface,
 RkObject::RkObjectImpl::~RkObjectImpl()
 {
         RK_LOG_DEBUG("[" << this << "]: interface: " << inf_ptr);
-        if (eventQueue) {
-                eventQueue->clearObjectActions(inf_ptr);
-                eventQueue->clearObjectEvents(inf_ptr);
-        }
-
         // Remove myself from bound objects.
         for (auto &obj: boundObjects)
                 obj->removeObservers(inf_ptr);
