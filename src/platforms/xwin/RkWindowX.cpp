@@ -109,7 +109,6 @@ bool RkWindowX::init()
                 RK_LOG_ERROR("can't create window");
                 return false;
         }
-        RK_LOG_DEBUG("window created: " << xWindow);
 
         if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent())
                 XSetTransientForHint(xDisplay, xWindow, parentWindowInfo.window);
@@ -132,7 +131,6 @@ bool RkWindowX::init()
 
 void RkWindowX::show(bool b)
 {
-        RK_LOG_DEBUG("show: " << (b ? "true" : "false"));
         if (isWindowCreated()) {
                 if (b)
                         XMapRaised(display(), xWindow);

@@ -87,10 +87,8 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
         }
 
         objectsList.insert(obj);
-        if (!obj->eventQueue()) {
-                RK_LOG_DEBUG("set object " << obj << " event queue");
+        if (!obj->eventQueue())
                 obj->setEventQueue(inf_ptr);
-        }
 }
 
 void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
@@ -105,8 +103,8 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
                         }
                         auto id = widgetImpl->nativeWindowInfo()->window;
                         if (windowIdsMap.find(id) != windowIdsMap.end()) {
-                                        RK_LOG_DEBUG("widget id removed");
-                                        windowIdsMap.erase(id);
+                                RK_LOG_DEBUG("widget id removed from queue");
+                                windowIdsMap.erase(id);
                         }
                 }
         }

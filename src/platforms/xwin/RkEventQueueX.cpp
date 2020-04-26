@@ -43,16 +43,8 @@ RkEventQueueX::~RkEventQueueX()
 
 bool RkEventQueueX::pending() const
 {
-        if (xDisplay) {
-#ifdef RK_LOG_DEBUG_LEVEL
-        static int n = 0;
-        if (++n > 10000) {
-                RK_LOG_DEBUG("pending");
-                n = 0;
-        }
-#endif // RK_LOG_DEBUG_LEVEL
+        if (xDisplay)
                 return XPending(xDisplay) > 0;
-        }
         return false;
 }
 

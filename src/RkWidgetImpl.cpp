@@ -62,6 +62,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
+        RK_LOG_DEBUG("called");
         platformWindow->init();
 }
 
@@ -88,12 +89,13 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
+        RK_LOG_DEBUG("called");
         platformWindow->init();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
-        RK_LOG_DEBUG(this);
+        RK_LOG_DEBUG("called");
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -148,7 +150,6 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         {
         case RkEvent::Type::Paint:
         {
-                RK_LOG_DEBUG("RkEvent::Type::Paint: " << title());
                 inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         }
@@ -204,23 +205,19 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                         inf_ptr->mouseButtonReleaseEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::MouseMove:
-                //                RK_LOG_DEBUG("RkEvent::Type::MouseMove");
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
-                RK_LOG_DEBUG("RkEvent::Type::Resize:" << title());
                 widgetSize = platformWindow->size();
                 platformWindow->resizeCanvas();
                 inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
-                RK_LOG_DEBUG("RkEvent::Type::Show:" << title());
 		isWidgetSown = true;
                 inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
                 break;
 	case RkEvent::Type::Hide:
-                RK_LOG_DEBUG("RkEvent::Type::Hide:" << title());
 		isWidgetSown = false;
                 inf_ptr->hideEvent(static_cast<RkHideEvent*>(event));
                 break;

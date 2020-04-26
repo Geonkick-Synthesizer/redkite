@@ -32,13 +32,12 @@ RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface,
         , parentObject{parent}
         , eventQueue{nullptr}
 {
-        RK_LOG_DEBUG("eventQueue: "<< eventQueue);
         RK_LOG_DEBUG("["<< this << "][inf: " << inf_ptr << "]: parent " << parent);
 }
 
 RkObject::RkObjectImpl::~RkObjectImpl()
 {
-        RK_LOG_DEBUG("["<< this << "]: interface: " << inf_ptr);
+        RK_LOG_DEBUG("[" << this << "]: interface: " << inf_ptr);
         if (eventQueue) {
                 eventQueue->clearObjectActions(inf_ptr);
                 eventQueue->clearObjectEvents(inf_ptr);
@@ -63,7 +62,7 @@ RkObject::RkObjectImpl::~RkObjectImpl()
 
 void RkObject::RkObjectImpl::removeChildrens()
 {
-        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
+        RK_LOG_DEBUG("size: " << objectChildren.size());
         auto tmpChidlren = std::move(objectChildren);
         for (auto child: tmpChidlren)
                 delete child;
@@ -141,7 +140,6 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
 {
         RK_LOG_DEBUG("add child: " << child);
         objectChildren.insert(child);
-        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
         if (eventQueue) {
                 RK_LOG_DEBUG("add child to queue: " << child);
                 eventQueue->addObject(child);
@@ -150,13 +148,12 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
 
 void RkObject::RkObjectImpl::removeChild(RkObject* child)
 {
-        RK_LOG_DEBUG("SIZE: " << objectChildren.size());
+        RK_LOG_DEBUG("size: " << objectChildren.size());
         RK_LOG_DEBUG("remove child: " << child);
-        RK_LOG_DEBUG("remove child: " << objectChildren.size());
         if (!objectChildren.empty()) {
                 auto res = objectChildren.find(child);
                 if (res != objectChildren.end()) {
-                        RK_LOG_DEBUG("erase child");
+                        RK_LOG_DEBUG("erase child" << child);
                         objectChildren.erase(child);
                 }
         }

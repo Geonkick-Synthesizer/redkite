@@ -29,7 +29,7 @@
 RkObject::RkObject(RkObject *parent)
         : o_ptr{std::make_unique<RkObjectImpl>(this, parent)}
 {
-        RK_LOG_DEBUG("PUBLIC: " << this);
+        RK_LOG_DEBUG("called: " << this);
         if (parent)
                 parent->addChild(this);
 }
@@ -37,7 +37,7 @@ RkObject::RkObject(RkObject *parent)
 RkObject::RkObject(RkObject *parent, std::unique_ptr<RkObjectImpl> impl)
         : o_ptr{std::move(impl)}
 {
-        RK_LOG_DEBUG("PRIVATE: " << this);
+        RK_LOG_DEBUG("called: " << this);
         if (parent)
                 parent->addChild(this);
 }

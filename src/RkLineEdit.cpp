@@ -164,7 +164,6 @@ void RkLineEdit::keyPressEvent(RkKeyEvent *event)
 
 void RkLineEdit::mouseButtonPressEvent(RkMouseEvent* event)
 {
-        RK_LOG_DEBUG("called");
         setFocus(true);
 }
 
