@@ -47,6 +47,7 @@ RkObject::~RkObject()
         RK_LOG_DEBUG("called: " << this);
         if (eventQueue())
                 eventQueue()->removeObject(this);
+        o_ptr->removeChildrens();
 }
 
 Rk::ObjectType RkObject::type() const

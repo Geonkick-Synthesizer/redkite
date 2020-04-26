@@ -26,6 +26,13 @@ int main(int arc, char **argv)
         modal->setBackgroundColor(80, 80, 80);
         modal->setSize(170, 110);
 
+        child = new RkWidget(modal);
+        child->setTitle("Child on Modal");
+        child->setBackgroundColor(80, 80, 255);
+        child->setPosition(10, 10);
+        child->setSize(50, 50);
+        child->show();
+
         mainWindow->show();
         modal->show();
 

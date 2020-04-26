@@ -59,7 +59,10 @@ RkObject::RkObjectImpl::~RkObjectImpl()
         // Remove myself from the paren object.
         if (inf_ptr->parent())
                 inf_ptr->parent()->removeChild(inf_ptr);
+}
 
+void RkObject::RkObjectImpl::removeChildrens()
+{
         RK_LOG_DEBUG("SIZE: " << objectChildren.size());
         auto tmpChidlren = std::move(objectChildren);
         for (auto child: tmpChidlren)

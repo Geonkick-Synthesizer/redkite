@@ -39,7 +39,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
          , windowInfo{nullptr}
          , windowFlags{flags}
  {
-         RK_LOG_DEBUG("called");
+         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
@@ -54,7 +54,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , windowInfo{nullptr}
         , windowFlags{flags}
 {
-        RK_LOG_DEBUG("called");
+        RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
 
 RkWindowX::~RkWindowX()
@@ -82,6 +82,7 @@ bool RkWindowX::openDisplay()
 
 bool RkWindowX::init()
 {
+        RK_LOG_DEBUG("called");
         if (!hasParent()) {
                 if (!openDisplay()) {
                         RK_LOG_ERROR("can't open display");
@@ -90,22 +91,25 @@ bool RkWindowX::init()
 	}
 
         Window parent = 0;
-        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
+        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) {
+                RK_LOG_DEBUG("is dialog, get root window");
                 parent = RootWindow(xDisplay, screenNumber);
-        else
+        } else {
                 parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
+        }
         auto pos = position();
         auto winSize = size();
+        RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);
         xWindow = XCreateSimpleWindow(xDisplay, parent,
                                       pos.x(), pos.y(),
                                       winSize.width(), winSize.height(), winBorderWidth,
                                       pixelValue(winBorderColor),
                                       pixelValue(winBackgroundColor));
-
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
                 return false;
         }
+        RK_LOG_DEBUG("window created: " << xWindow);
 
         if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent())
                 XSetTransientForHint(xDisplay, xWindow, parentWindowInfo.window);
