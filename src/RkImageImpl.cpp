@@ -109,3 +109,4 @@ void RkImage::RkImageImpl::fill(const RkColor &color)
         if (imageBackendCanvas)
                 imageBackendCanvas->fill(color);
 }
+

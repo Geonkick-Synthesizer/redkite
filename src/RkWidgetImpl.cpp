@@ -150,6 +150,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         {
         case RkEvent::Type::Paint:
         {
+                RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
                 inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         }
@@ -207,6 +208,9 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         case RkEvent::Type::MouseMove:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
+                break;
+        case RkEvent::Type::Hover:
+                inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
                 widgetSize = platformWindow->size();

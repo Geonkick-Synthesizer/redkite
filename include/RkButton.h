@@ -54,6 +54,7 @@ class RK_EXPORT RkButton: public RkWidget
  protected:
         virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
         virtual void mouseButtonReleaseEvent(RkMouseEvent *event) override;
+        virtual void hoverEvent(RkHoverEvent *event) override;
         virtual void paintEvent(RkPaintEvent *event) override;
 
  private:

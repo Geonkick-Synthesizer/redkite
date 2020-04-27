@@ -514,7 +514,13 @@ void RkWidget::hideEvent(RkHideEvent *event)
 
 void RkWidget::focusEvent(RkFocusEvent *event)
 {
+        RK_UNUSED(event);
         update();
+}
+
+void RkWidget::hoverEvent(RkHoverEvent *event)
+{
+        RK_UNUSED(event);
 }
 
 void RkWidget::update()
@@ -534,9 +540,10 @@ RkRect RkWidget::rect() const
 
 void RkWidget::close()
 {
-        if (parentWidget())
-                eventQueue()->postEvent(parentWidget(),
-                                        std::move(std::make_unique<RkDeleteChild>(parentWidget(), this)));
+        if (parentWidget()) {
+                auto event = std::move(std::make_unique<RkDeleteChild>(parentWidget(), this));
+                eventQueue()->postEvent(parentWidget(), std::move(event));
+        }
 }
 
 bool RkWidget::isModal() const

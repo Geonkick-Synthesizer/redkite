@@ -189,6 +189,11 @@ void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
         cairo_fill(context());
 }
 
+void RkCairoGraphicsBackend::applyAlpha(int alpha)
+{
+        cairo_paint_with_alpha(context(), (float) alpha / 255);
+}
+
 void RkCairoGraphicsBackend::translate(const RkPoint &offset)
 {
         cairo_translate(context(), offset.x(), offset.y());

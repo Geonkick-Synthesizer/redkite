@@ -109,6 +109,11 @@ void RkPainter::fillRect(const RkRect &rect, const RkColor &color)
                 o_ptr->fillRect(rect, color);
 }
 
+void RkPainter::applyAlpha(int alpha)
+{
+        o_ptr->applyAlpha(alpha);
+}
+
 const RkPen& RkPainter::pen() const
 {
         return o_ptr->pen();

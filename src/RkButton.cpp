@@ -24,6 +24,7 @@
 #include "RkButton.h"
 #include "RkButtonImpl.h"
 #include "RkPainter.h"
+#include "RkEvent.h"
 
 RkButton::RkButton(RkWidget *parent)
         : RkWidget(parent, std::move(std::make_unique<RkButtonImpl>(this, parent)))
@@ -94,6 +95,12 @@ void RkButton::mouseButtonReleaseEvent(RkMouseEvent *event)
 {
         if (type() == ButtonType::ButtonPush)
                 setPressed(false);
+}
+
+void RkButton::hoverEvent(RkHoverEvent *event)
+{
+        impl_ptr->setEmphasize(event->isHover());
+        update();
 }
 
 void RkButton::paintEvent(RkPaintEvent *event)

@@ -28,6 +28,8 @@ RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     , inf_ptr{interface}
     , buttonType{ButtonType::ButtonUncheckable}
     , is_pressed{false}
+    , is_emphasizeEnabled{true}
+    , is_emphasize{false}
 {
 }
 
@@ -65,8 +67,51 @@ RkButton::ButtonType RkButton::RkButtonImpl::type(void) const
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
-        if (isPressed() && !pressedImage.isNull())
-                painter.drawImage(pressedImage, 0, 0);
-	else if (!unpressedImage.isNull())
-		painter.drawImage(unpressedImage, 0, 0);
+        painter.fillRect(inf_ptr->rect(), inf_ptr->background());
+        if (isPressed() && !pressedImage.isNull()) {
+                if (isEmphasize()) {
+                        RkImage img;
+                        img = pressedImage;
+                        applyEffect(img);
+                        painter.drawImage(img, 0, 0);
+                } else {
+                        painter.drawImage(pressedImage, 0, 0);
+                }
+        } else if (!unpressedImage.isNull()) {
+                if (isEmphasize()) {
+                        RkImage img;
+                        img = unpressedImage;
+                        applyEffect(img);
+                        painter.drawImage(img, 0, 0);
+                } else {
+                        painter.drawImage(unpressedImage, 0, 0);
+                }
+        }
 }
+
+void RkButton::RkButtonImpl::applyEffect(RkImage &img)
+{
+        RkPainter paint(&img);
+        paint.applyAlpha(50);
+}
+
+void RkButton::RkButtonImpl::setEmphasize(bool b)
+{
+        is_emphasize = b;
+}
+
+bool RkButton::RkButtonImpl::isEmphasize() const
+{
+        return is_emphasizeEnabled && is_emphasize;
+}
+
+void RkButton::RkButtonImpl::enableEmphasize(bool b)
+{
+        is_emphasizeEnabled = b;
+}
+
+bool RkButton::RkButtonImpl::emphasizeEnabled() const
+{
+        return is_emphasizeEnabled;
+}
+

@@ -43,6 +43,7 @@ class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
 class RkFocusEvent;
+class RkHoverEvent;
 class RkMain;
 struct RkWindowId;
 struct RkNativeWindowInfo;
@@ -148,6 +149,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           virtual void showEvent(RkShowEvent *event);
           virtual void hideEvent(RkHideEvent *event);
           virtual void focusEvent(RkFocusEvent *event);
+          virtual void hoverEvent(RkHoverEvent *event);
 
  private:
           RK_DISABLE_COPY(RkWidget);

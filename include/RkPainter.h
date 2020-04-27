@@ -50,6 +50,7 @@ class RK_EXPORT RkPainter {
         void drawRect(const RkRect &rect);
         void drawPolyline(const std::vector<RkPoint> &points);
         void fillRect(const RkRect &rect, const RkColor &color);
+        void applyAlpha(int alpha);
         const RkPen& pen() const;
         void setPen(const RkPen &pen);
         const RkFont& font() const;

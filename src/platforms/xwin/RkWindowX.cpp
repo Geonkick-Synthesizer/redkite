@@ -116,7 +116,8 @@ bool RkWindowX::init()
         XSelectInput(xDisplay, xWindow, ExposureMask
                                         | KeyPressMask | KeyReleaseMask
                                         | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
-                                        | StructureNotifyMask | FocusChangeMask);
+                                        | StructureNotifyMask | FocusChangeMask
+                                        | EnterWindowMask | LeaveWindowMask);
 
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);

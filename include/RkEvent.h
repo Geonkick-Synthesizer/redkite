@@ -36,6 +36,7 @@ class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
 class RkHideEvent;
+class RkHoverEvent;
 class RkWidget;
 
 class RK_EXPORT RkEvent {
@@ -57,7 +58,8 @@ class RK_EXPORT RkEvent {
                 Hide = 13,
                 DeleteChild = 14,
                 FocusedIn = 15,
-                FocusedOut = 16
+                FocusedOut = 16,
+                Hover = 17
       };
 
         explicit RkEvent(Type type = Type::NoEvent)
@@ -173,6 +175,17 @@ class RkFocusEvent: public RkEvent {
  public:
       RkFocusEvent(Type type = Type::FocusedIn)
               : RkEvent(type) {};
+};
+
+class RkHoverEvent: public RkEvent {
+ public:
+      RkHoverEvent()
+              : RkEvent(Type::Hover),
+                hOver{false} {}
+      void setHover(bool b) { hOver = b; }
+      bool isHover() const { return hOver; }
+ private:
+      bool hOver;
 };
 
 #endif // RK_EVENT_H

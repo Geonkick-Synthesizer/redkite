@@ -129,7 +129,7 @@ namespace Rk {
                 NoAttributes = 0x00000000,
                 KeyInputEnabled = 0x00000001,
                 MouseInputEnabled = 0x00000002,
-                CloseInputEnabled = 0x00000004,
+                CloseInputEnabled = 0x00000004
         };
 
         enum class Key : int {

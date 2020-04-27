@@ -96,6 +96,14 @@ RkEventQueueX::getEvents()
                 case ConfigureNotify:
                         event = std::move(std::make_unique<RkResizeEvent>());
                         break;
+                case EnterNotify:
+                case LeaveNotify:
+                {
+                        auto hoveEvent = std::move(std::make_unique<RkHoverEvent>());
+                        hoveEvent->setHover(e.type == EnterNotify);
+                        event = std::move(hoveEvent);
+                        break;
+                }
                 case ClientMessage:
                 {
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);

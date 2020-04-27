@@ -49,7 +49,6 @@ class RkImage::RkImageImpl {
                          const unsigned char *data);
         void fill(const RkColor &color);
 
-
  private:
         RK_DECALRE_INTERFACE_PTR(RkImage);
         RkImage::Format imageFormat;

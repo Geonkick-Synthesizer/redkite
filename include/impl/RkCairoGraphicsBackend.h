@@ -47,6 +47,7 @@ class RkCairoGraphicsBackend {
         void drawRect(const RkRect &rect);
         void drawPolyLine(const std::vector<RkPoint> &points);
         void fillRect(const RkRect &rect, const RkColor &color);
+        void applyAlpha(int alpha);
         void setPen(const RkPen &pen);
         void setFont(const RkFont &font);
         int getTextWidth(const std::string &text) const;

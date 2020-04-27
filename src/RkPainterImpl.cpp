@@ -119,3 +119,7 @@ int RkPainter::RkPainterImpl::getTextWidth(const std::string &text) const
         return backendGraphics->getTextWidth(text);
 }
 
+void RkPainter::RkPainterImpl::applyAlpha(int alpha)
+{
+        backendGraphics->applyAlpha(alpha);
+}
