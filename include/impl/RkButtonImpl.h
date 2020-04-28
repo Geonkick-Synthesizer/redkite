@@ -33,8 +33,7 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
  public:
         RkButtonImpl(RkButton *interface, RkWidget *parent = nullptr);
         virtual ~RkButtonImpl() = default;
-        void setPressedImage(const RkImage &img);
-        void setUnpressedImage(const RkImage &img);
+        void setImage(const RkImage &img, ButtonImage type);
         bool isPressed() const;
         void setPressed(bool pressed);
         ButtonType type() const;
@@ -52,11 +51,10 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
         RK_DECALRE_INTERFACE_PTR(RkButton);
         ButtonType buttonType;
         bool is_pressed;
-        RkImage pressedImage;
-        RkImage unpressedImage;
+        std::array<RkImage, 4> buttonImages;
+        ButtonImage buttonImageState;
         bool is_emphasizeEnabled;
         bool is_emphasize;
-
 };
 
 #endif // RK_LABEL_H

@@ -28,21 +28,20 @@ RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     , inf_ptr{interface}
     , buttonType{ButtonType::ButtonUncheckable}
     , is_pressed{false}
-    , is_emphasizeEnabled{true}
-    , is_emphasize{false}
+    , buttonImageState{RkButton::ButtonImage::ImageUnpressed}
 {
 }
 
-void RkButton::RkButtonImpl::setPressedImage(const RkImage &img)
+void RkButton::RkButtonImpl::setImage(const RkImage &img, RkButton::ButtonImage type)
 {
-        pressedImage = img;
-	inf_ptr->setFixedSize(img.width(), img.height());
-}
+        if (type != RkButton::ButtonImage::ImageUnpressed
+            && type != RkButton::ButtonImage::ImageUnpressedHover
+            && type != RkButton::ButtonImage::ImagePressed
+            && type != RkButton::ButtonImage::ImagePressedHover) {
+                return;
+        }
 
-void RkButton::RkButtonImpl::setUnpressedImage(const RkImage &img)
-{
-        unpressedImage = img;
-	inf_ptr->setFixedSize(img.width(), img.height());
+        buttonImages[static_cast<size_t>(type)] = img;
 }
 
 bool RkButton::RkButtonImpl::isPressed() const
@@ -53,6 +52,7 @@ bool RkButton::RkButtonImpl::isPressed() const
 void RkButton::RkButtonImpl::setPressed(bool pressed)
 {
         is_pressed = pressed;
+        buttonImageState = pressed ? RkButton::ButtonImage::ImagePressed : RkButton::ButtonImage::ImageUnpressed;
 }
 
 void RkButton::RkButtonImpl::setType(RkButton::ButtonType type)
@@ -67,51 +67,35 @@ RkButton::ButtonType RkButton::RkButtonImpl::type(void) const
 
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
-        painter.fillRect(inf_ptr->rect(), inf_ptr->background());
-        if (isPressed() && !pressedImage.isNull()) {
-                if (isEmphasize()) {
-                        RkImage img;
-                        img = pressedImage;
-                        applyEffect(img);
-                        painter.drawImage(img, 0, 0);
-                } else {
-                        painter.drawImage(pressedImage, 0, 0);
-                }
-        } else if (!unpressedImage.isNull()) {
-                if (isEmphasize()) {
-                        RkImage img;
-                        img = unpressedImage;
-                        applyEffect(img);
-                        painter.drawImage(img, 0, 0);
-                } else {
-                        painter.drawImage(unpressedImage, 0, 0);
-                }
+        if (isPressed()) {
+                if (!buttonImages[static_cast<size_t>(buttonImageState)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(buttonImageState)], 0, 0);
+                else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImagePressed)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImagePressed)], 0, 0);
+                else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
+        } else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull()) {
+                if (!buttonImages[static_cast<size_t>(buttonImageState)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(buttonImageState)], 0, 0);
+                else
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
+        } else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull()) {
+                painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
         }
-}
-
-void RkButton::RkButtonImpl::applyEffect(RkImage &img)
-{
-        RkPainter paint(&img);
-        paint.applyAlpha(50);
 }
 
 void RkButton::RkButtonImpl::setEmphasize(bool b)
 {
-        is_emphasize = b;
-}
-
-bool RkButton::RkButtonImpl::isEmphasize() const
-{
-        return is_emphasizeEnabled && is_emphasize;
-}
-
-void RkButton::RkButtonImpl::enableEmphasize(bool b)
-{
-        is_emphasizeEnabled = b;
-}
-
-bool RkButton::RkButtonImpl::emphasizeEnabled() const
-{
-        return is_emphasizeEnabled;
+        if (isPressed()) {
+                if (b)
+                        buttonImageState = RkButton::ButtonImage::ImagePressedHover;
+                else
+                        buttonImageState = RkButton::ButtonImage::ImagePressed;
+        } else {
+                if (b)
+                        buttonImageState = RkButton::ButtonImage::ImageUnpressedHover;
+                else
+                        buttonImageState = RkButton::ButtonImage::ImageUnpressed;
+        }
 }
 

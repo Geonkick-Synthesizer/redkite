@@ -34,15 +34,9 @@ RkButton::RkButton(RkWidget *parent)
                 setBackgroundColor(parent->background());
 }
 
-void RkButton::setPressedImage(const RkImage &img)
+void RkButton::setImage(const RkImage &img, RkButton::ButtonImage type)
 {
-        impl_ptr->setPressedImage(img);
-        update();
-}
-
-void RkButton::setUnpressedImage(const RkImage &img)
-{
-        impl_ptr->setUnpressedImage(img);
+        impl_ptr->setImage(img, type);
         update();
 }
 
@@ -60,6 +54,7 @@ void RkButton::setPressed(bool pressed)
 void RkButton::setCheckable(bool b)
 {
         setType(b ? ButtonType::ButtonCheckable : ButtonType::ButtonUncheckable);
+        update();
 }
 
 bool RkButton::isCheckable() const

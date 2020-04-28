@@ -44,9 +44,24 @@ int main(int arc, char **argv)
     int x = 10;
     auto button1 = new RkButton(widget);
     button1->setCheckable(true);
+    button1->setSize(48, 48);
     button1->setPosition(x, 10);
-    button1->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
-    button1->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
+    button1->setImage(RkImage(48, 48, RK_IMAGE_RC(button_down)),
+                      RkButton::ButtonImage::ImagePressed);
+    {
+            auto hover = RkImage(48, 48, RK_IMAGE_RC(button_down));
+            RkPainter paint(&hover);
+            paint.applyAlpha(100);
+            button1->setImage(hover, RkButton::ButtonImage::ImagePressedHover);
+    }
+    button1->setImage(RkImage(48, 48, RK_IMAGE_RC(button_up)),
+                      RkButton::ButtonImage::ImageUnpressed);
+    {
+            auto hover = RkImage(48, 48, RK_IMAGE_RC(button_up));
+            RkPainter paint(&hover);
+            paint.applyAlpha(100);
+            button1->setImage(hover, RkButton::ButtonImage::ImageUnpressedHover);
+    }
     button1->show();
     RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b),
                  [](bool b){ RK_LOG_INFO("Button1: " << b);
@@ -58,9 +73,12 @@ int main(int arc, char **argv)
 
     x += 100;
     auto button2 = new RkButton(widget);
+    button2->setSize(48, 48);
     button2->setPosition(x, 10);
-    button2->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
-    button2->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
+    button2->setImage(RkImage(48, 48, RK_IMAGE_RC(button_down)),
+                      RkButton::ButtonImage::ImagePressed);
+    button2->setImage(RkImage(48, 48, RK_IMAGE_RC(button_up)),
+                      RkButton::ButtonImage::ImageUnpressed);
     button2->show();
     RK_ACT_BINDL(button2, toggled, RK_ACT_ARGS(bool b),
                  [](bool b){ RK_LOG_INFO("Button2: " << b); });
@@ -72,9 +90,12 @@ int main(int arc, char **argv)
     x += 100;
     auto button3 = new RkButton(widget);
     button3->setType(RkButton::ButtonType::ButtonPush);
+    button3->setSize(48, 48);
     button3->setPosition(x, 10);
-    button3->setPressedImage(RkImage(48, 48, RK_IMAGE_RC(button_down)));
-    button3->setUnpressedImage(RkImage(48, 48, RK_IMAGE_RC(button_up)));
+    button3->setImage(RkImage(48, 48, RK_IMAGE_RC(button_down)),
+                      RkButton::ButtonImage::ImagePressed);
+    button3->setImage(RkImage(48, 48, RK_IMAGE_RC(button_up)),
+                      RkButton::ButtonImage::ImageUnpressed);
     button3->show();
     RK_ACT_BINDL(button3, toggled, RK_ACT_ARGS(bool b),
                  [](bool b){ RK_LOG_INFO("Button3: " << b); });
