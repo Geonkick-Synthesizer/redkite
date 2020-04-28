@@ -102,5 +102,6 @@ void RkButton::paintEvent(RkPaintEvent *event)
 {
 	RK_UNUSED(event);
         RkPainter painter(this);
+        painter.fillRect(rect(), background());
         impl_ptr->drawButton(painter);
 }
