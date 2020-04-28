@@ -73,6 +73,7 @@ class RK_EXPORT RkImage : public RkCanvas {
         Format format() const;
         int width() const;
         int height() const;
+        const RkSize& size() const;
         bool isNull() const;
 
  protected:

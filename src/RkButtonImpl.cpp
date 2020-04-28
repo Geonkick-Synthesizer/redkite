@@ -42,6 +42,8 @@ void RkButton::RkButtonImpl::setImage(const RkImage &img, RkButton::ButtonImage 
         }
 
         buttonImages[static_cast<size_t>(type)] = img;
+        if (type == ButtonImage::ImageUnpressed)
+                inf_ptr->setSize(img.size());
 }
 
 bool RkButton::RkButtonImpl::isPressed() const

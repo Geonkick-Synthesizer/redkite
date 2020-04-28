@@ -43,6 +43,7 @@ class RkImage::RkImageImpl {
         Format format() const;
         int width() const;
         int height() const;
+        const RkSize& size() const;
         bool isNull() const;
         void createImage(const RkSize &size,
                          RkImage::Format format,

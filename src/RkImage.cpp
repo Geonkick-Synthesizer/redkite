@@ -99,6 +99,11 @@ int RkImage::height() const
         return o_ptr->height();
 }
 
+const RkSize& RkImage::size() const
+{
+        return o_ptr->size();
+}
+
 bool RkImage::isNull() const
 {
         return o_ptr->isNull();

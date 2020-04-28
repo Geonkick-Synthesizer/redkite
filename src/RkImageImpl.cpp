@@ -86,6 +86,12 @@ int RkImage::RkImageImpl::height() const
         return 0;
 }
 
+const RkSize& RkImage::RkImageImpl::size() const
+{
+                if (imageBackendCanvas)
+                        return imageBackendCanvas->size();
+}
+
 bool RkImage::RkImageImpl::isNull() const
 {
         return !imageBackendCanvas || imageBackendCanvas->isNull();
