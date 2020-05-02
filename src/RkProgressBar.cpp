@@ -39,8 +39,10 @@ int RkProgressBar::beginValue() const
 
 void RkProgressBar::setBeginValue(int value)
 {
-        impl_ptr->setBeginValue(value);
-        update();
+        if (beginValue() != value) {
+                impl_ptr->setBeginValue(value);
+                update();
+        }
 }
 
 int RkProgressBar::endValue() const
@@ -50,15 +52,25 @@ int RkProgressBar::endValue() const
 
 void RkProgressBar::setEndValue(int value)
 {
-        impl_ptr->setEndValue(value);
-        update();
+        if (endValue() != value) {
+                impl_ptr->setEndValue(value);
+                update();
+        }
 }
 
 void RkProgressBar::setRange(int begin, int end)
 {
-        impl_ptr->setBeginValue(begin);
-        impl_ptr->setEndValue(end);
-        update();
+        bool toUpdate = false;
+        if (beginValue() != begin) {
+                impl_ptr->setBeginValue(begin);
+                toUpdate = true;
+        }
+        if (endValue() != end) {
+                toUpdate = true;
+                impl_ptr->setEndValue(end);
+        }
+        if (toUpdate)
+                update();
 }
 
 Rk::Orientation RkProgressBar::orientation() const
@@ -68,8 +80,10 @@ Rk::Orientation RkProgressBar::orientation() const
 
 void RkProgressBar::setOrientation(Rk::Orientation orientation)
 {
-        impl_ptr->setOrientation(orientation);
-        update();
+        if (orientation != impl_ptr->orientation()) {
+                impl_ptr->setOrientation(orientation);
+                update();
+        }
 }
 
 int RkProgressBar::value() const
@@ -79,8 +93,10 @@ int RkProgressBar::value() const
 
 void RkProgressBar::setValue(int value)
 {
-        impl_ptr->setValue(value);
-        update();
+        if (value != impl_ptr->value()) {
+                impl_ptr->setValue(value);
+                update();
+        }
 }
 
 void RkProgressBar::reset()

@@ -47,14 +47,18 @@ bool RkButton::isPressed() const
 
 void RkButton::setPressed(bool pressed)
 {
-        impl_ptr->setPressed(pressed);
-        update();
+        if (isPressed() != pressed) {
+                impl_ptr->setPressed(pressed);
+                update();
+        }
 }
 
 void RkButton::setCheckable(bool b)
 {
-        setType(b ? ButtonType::ButtonCheckable : ButtonType::ButtonUncheckable);
-        update();
+        if (isCheckable() != b) {
+                setType(b ? ButtonType::ButtonCheckable : ButtonType::ButtonUncheckable);
+                update();
+        }
 }
 
 bool RkButton::isCheckable() const
@@ -69,8 +73,10 @@ RkButton::ButtonType RkButton::type() const
 
 void RkButton::setType(RkButton::ButtonType type)
 {
-        impl_ptr->setType(type);
-        update();
+        if (impl_ptr->type() != type) {
+                impl_ptr->setType(type);
+                update();
+        }
 }
 
 void RkButton::mouseButtonPressEvent(RkMouseEvent *event)
