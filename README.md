@@ -73,7 +73,9 @@ GUI plugins apart from developing standalone applications.
 * RkLineEdit
 * RkProgressBar
 * RkWidget
-* RkWidgetContainer
+* RkContainerItem
+* RkContainerWidgetItem
+* RkContainer
 
 ### Build & Install Redkite
 

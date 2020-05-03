@@ -90,7 +90,9 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkImage.h
   ${RK_INCLUDE_PATH}/RkPainter.h
   ${RK_INCLUDE_PATH}/RkMain.h
-  ${RK_INCLUDE_PATH}/RkWidgetContainer.h)
+  ${RK_INCLUDE_PATH}/RkContainerItem.h
+  ${RK_INCLUDE_PATH}/RkContainerWidgetItem.h
+  ${RK_INCLUDE_PATH}/RkContainer.h)
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
@@ -151,7 +153,7 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkImage.cpp
   ${RK_SRC_PATH}/RkImageImpl.cpp
   ${RK_SRC_PATH}/RkPainterImpl.cpp
-  ${RK_SRC_PATH}/RkWidgetContainer.cpp)
+  ${RK_SRC_PATH}/RkContainer.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   set(RK_SOURCES_PLATFORM

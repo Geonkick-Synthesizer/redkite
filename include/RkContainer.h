@@ -25,29 +25,28 @@
 #define RK_CONTAINER_H
 
 #include "RkWidget.h"
+#include "RkContainerItem.h"
 
-class RK_EXPORT RkWidgetContainer {
+class RK_EXPORT RkContainer: public RkObject, public RkContainerItem {
   public:
-	using RkWidgetContainerSpace = size_t;
-        RkWidgetContainer(RkWidget *parent, Rk::Orientation orientation = Rk::Orientation::Horizontal);
+        RkContainer(RkWidget *parent  = nullptr, Rk::Orientation orientation = Rk::Orientation::Horizontal);
         virtual ~RkWidgetContainer() = default;
+        void addContiner(RkContainer *contier, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void addWidget(RkWidget *widget, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeWidget(RkWidget *widget);
-	void addSpace(RkWidgetContainerSpace space, Rk::Alignment align = Rk::Alignment::AlignLeft);
+	void addSpace(int space, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeAt(size_t index);
 	void update();
 	void clear();
 	Rk::Orientation orientation() const;
 	Rk::Alignment alignment(RkWidget *widget) const;
 	Rk::Alignment alignment(size_t index) const;
-	void setSize(const RkSize &size);
-	RkSize size() const;
-	int width() const;
-	void setWidth(int width);
-	int height() const;
-	void setHeight(int height);
-	void setPosition(const RkPoint &position);
-	RkPoint position() const;
+	void setSize(const RkSize &size) override;
+	void setWidth(int width) override;
+	void setHeight(int height) override;
+	void setPosition(const RkPoint &position) override;
+        void setX(int val) overrride;
+        void setY(int val) overrride;
 	void setSpacing(size_t space);
 	size_t spacing() const;
 
@@ -55,17 +54,13 @@ class RK_EXPORT RkWidgetContainer {
 	int initPosition(Rk::Alignment alignment);
 
  private:
-        RK_DISABLE_COPY(RkWidgetContainer);
-        RK_DISABLE_MOVE(RkWidgetContainer);
-	RkWidget *parentWidget;
+        RK_DISABLE_COPY(RkContainer);
+        RK_DISABLE_MOVE(RkContainer);
+        std::vector<RkContinerItem*> continerItems;
 	Rk::Orientation containerOrientation;
-	int idGenerator;
-	std::vector<size_t> itemsIds;
-	std::unordered_map<size_t, std::pair<int, RkWidget*>> widgets;
-	std::unordered_map<size_t, std::pair<int, RkWidgetContainerSpace>> spaces;
 	RkSize containerSize;
 	RkPoint containerPosition;
-	size_t widgetsSpacing;
+	size_t itemSpacing;
 };
 
 #endif // RK_CONTAINER_H
