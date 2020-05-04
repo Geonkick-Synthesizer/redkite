@@ -2,7 +2,7 @@
  * File name: RkWidgetContainer.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
  *
  * This file is part of Redkite.
  *
@@ -24,61 +24,61 @@
 #include "RkContainer.h"
 #include "RkContainerWidgetItem.h"
 
-RkWidgetContainer::RkContainer(RkContinerItem *parent, Rk::Orientation orientation)
-	: RkContinerItem(parent, ItemType::ItemContiner)
+RkContainer::RkContainer(RkWidget *parent, Rk::Orientation orientation)
+	: RkContainerItem(parent, ItemType::ItemContainer)
 	, containerOrientation{orientation}
 	, itemSpacing{0}
 {
 	setSize(parent->size());
 }
 
-void RkWidgetContainer::addContiner(RkWidgetContiner *continer, Rk::Alignment align)
+void RkContainer::addContainer(RkContainer *container, Rk::Alignment align)
 {
-        continer.setAlignment(align);
-	continerItems.push_back(continer);
+        container->setAlignment(align);
+	containerItems.push_back(container);
 	update();
 }
 
-void RkWidgetContainer::addWidget(RkWidget *widget, Rk::Alignment align)
+void RkContainer::addWidget(RkWidget *widget, Rk::Alignment align)
 {
-        auto item = RkContinerWidgetItem(widget, align);
-	continerItems.push_back(item);
+        auto item = new RkContainerWidgetItem(widget, align);
+	containerItems.push_back(item);
 	update();
 }
 
-void RkWidgetContainer::removeWidget(RkWidget *widget)
+void RkContainer::removeWidget(RkWidget *widget)
 {
 }
 
-void RkWidgetContainer::addSpace(int space, Rk::Alignment align)
+void RkContainer::addSpace(int space, Rk::Alignment align)
 {
-        auto item = new RkContinerItem(this, RkContinerItem::ItemType::ItemSpace, align);
+        auto item = new RkContainerItem(this, RkContainerItem::ItemType::ItemSpace, align);
         item->setSize({space, space});
-        continerItems.push_back(item);
+        containerItems.push_back(item);
 	update();
 }
 
-void RkWidgetContainer::removeAt(size_t index)
+void RkContainer::removeAt(size_t index)
 {
-        if (index < continerItems.size()) {
-                if (continerItems[index]->parent() == this)
-                        delete continerItems[index];
-                continerItems.erase(continerItems.begin() + index);
+        if (index < containerItems.size()) {
+                if (containerItems[index]->parent() == this)
+                        delete containerItems[index];
+                containerItems.erase(containerItems.begin() + index);
         }
 }
 
-RkContinerItem* RkWidgetContainer::at(size_t index) const
+RkContainerItem* RkContainer::at(size_t index) const
 {
-        if (index < continerItems.size())
-                return continerItems[index];
+        if (index < containerItems.size())
+                return containerItems[index];
         return nullptr;
 }
 
-void RkWidgetContainer::update()
+void RkContainer::update()
 {
 	int posLeft = initPosition(Rk::Alignment::AlignLeft);
 	int posRight = initPosition(Rk::Alignment::AlignRight);
-	for (const auto &item: continerItems) {
+	for (const auto &item: containerItems) {
                 auto align = item->alignment();
                 if (orientation() == Rk::Orientation::Horizontal) {
                         (align == Rk::Alignment::AlignLeft || align == Rk::Alignment::AlignTop) ?
@@ -98,7 +98,7 @@ void RkWidgetContainer::update()
 	}
 }
 
-int RkWidgetContainer::initPosition(Rk::Alignment alignment)
+int RkContainer::initPosition(Rk::Alignment alignment)
 {
 	int pos = 0;
 	if (alignment == Rk::Alignment::AlignLeft) {
@@ -115,66 +115,63 @@ int RkWidgetContainer::initPosition(Rk::Alignment alignment)
 	return pos;
 }
 
-void RkWidgetContainer::clear()
+void RkContainer::clear()
 {
-        std::erase(std::remove_if(continerItems.begin(),
-                                  continerItems.end,
-                                  [&](RkContinerItem *item){
-                                          if (item->parent() == this)
-                                                  delete item;
-                                          return true;
-                                  }),
-                   continerItems.end());
+        for (auto &item: containerItems) {
+                if (item->parent() == this)
+                        delete item;
+        }
+        containerItems.clear();
 }
 
-Rk::Orientation RkWidgetContainer::orientation() const
+Rk::Orientation RkContainer::orientation() const
 {
 	return containerOrientation;
 }
 
-void RkWidgetContainer::setSize(const RkSize &size)
+void RkContainer::setSize(const RkSize &size)
 {
         RkContainerItem::setSize(size);
 	update();
 }
 
-void RkWidgetContainer::setWidth(int width)
+void RkContainer::setWidth(int width)
 {
 	RkContainerItem::setWidth(width);
 	update();
 }
 
-void RkWidgetContainer::setHeight(int height)
+void RkContainer::setHeight(int height)
 {
 	RkContainerItem::setHeight(height);
 	update();
 }
 
-void RkWidgetContainer::setPosition(const RkPoint &position)
+void RkContainer::setPosition(const RkPoint &position)
 {
         RkContainerItem::setPosition(position);
 	update();
 }
 
-void RkWidgetContainer::setX(int val)
+void RkContainer::setX(int val)
 {
         RkContainerItem::setX(val);
         update();
 }
 
-void RkWidgetContainer::setY(int val)
+void RkContainer::setY(int val)
 {
         RkContainerItem::setY(val);
         update();
 }
 
-void RkWidgetContainer::setSpacing(size_t space)
+void RkContainer::setSpacing(size_t space)
 {
 	itemSpacing = space;
 	update();
 }
 
-size_t RkWidgetContainer::spacing() const
+size_t RkContainer::spacing() const
 {
 	return itemSpacing;
 }

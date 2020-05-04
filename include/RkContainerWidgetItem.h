@@ -33,21 +33,22 @@ class RK_EXPORT RkContainerWidgetItem: public RkContainerItem {
        RkContainerWidgetItem(RkWidget *parent,
                             Rk::Alignment align = Rk::Alignment::AlignLeft)
                  : RkContainerItem(parent, ItemType::ItemContainer, align)
-                 , itemWidget{parent} {}
+                   , itemWidget{parent} {}
         virtual ~RkContainerWidgetItem() = default;
         void setPosition(const RkPoint &point) override { itemWidget->setPosition(point); }
         RkPoint position() const { return itemWidget->position(); }
         void setX(int val) { itemWidget->setX(val); }
         int x() const { return itemWidget->x(); }
         void setY(int val) { itemWidget->setY(val); }
-        int y() const { itemWidget->y(); }
+        int y() const { return itemWidget->y(); }
         void setSize(const RkSize &size) { itemWidget->setSize(size); }
         RkSize size() const { return itemWidget->size(); }
         void setWidth(int val) { itemWidget->setWidth(val); }
         int width() const { return itemWidget->width(); }
         void setHeight(int val) { itemWidget->setHeight(val); }
-        int height() const { itemWidget->height(); }
+        int height() const { return itemWidget->height(); }
         RkWidget* widget() const { return itemWidget; }
+
  private:
         RK_DISABLE_COPY(RkContainerWidgetItem);
         RK_DISABLE_MOVE(RkContainerWidgetItem);

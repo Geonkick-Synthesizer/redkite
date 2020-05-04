@@ -291,6 +291,11 @@ void RkWidget::setPosition(const RkPoint &p)
         impl_ptr->setPosition(p);
 }
 
+RkPoint RkWidget::position() const
+{
+        return impl_ptr->position();
+}
+
 void RkWidget::setBorderWidth(int width)
 {
         impl_ptr->setBorderWidth(width);

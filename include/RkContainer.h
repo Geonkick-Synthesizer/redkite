@@ -27,15 +27,16 @@
 #include "RkWidget.h"
 #include "RkContainerItem.h"
 
-class RK_EXPORT RkContainer: public RkObject, public RkContainerItem {
-  public:
+class RK_EXPORT RkContainer: public RkContainerItem {
+ public:
         RkContainer(RkWidget *parent  = nullptr, Rk::Orientation orientation = Rk::Orientation::Horizontal);
-        virtual ~RkWidgetContainer() = default;
-        void addContiner(RkContainer *contier, Rk::Alignment align = Rk::Alignment::AlignLeft);
+        virtual ~RkContainer() = default;
+        void addContainer(RkContainer *contaier, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void addWidget(RkWidget *widget, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeWidget(RkWidget *widget);
 	void addSpace(int space, Rk::Alignment align = Rk::Alignment::AlignLeft);
 	void removeAt(size_t index);
+        RkContainerItem* at(size_t index) const;
 	void update();
 	void clear();
 	Rk::Orientation orientation() const;
@@ -45,8 +46,8 @@ class RK_EXPORT RkContainer: public RkObject, public RkContainerItem {
 	void setWidth(int width) override;
 	void setHeight(int height) override;
 	void setPosition(const RkPoint &position) override;
-        void setX(int val) overrride;
-        void setY(int val) overrride;
+        void setX(int val) override;
+        void setY(int val) override;
 	void setSpacing(size_t space);
 	size_t spacing() const;
 
@@ -56,7 +57,7 @@ class RK_EXPORT RkContainer: public RkObject, public RkContainerItem {
  private:
         RK_DISABLE_COPY(RkContainer);
         RK_DISABLE_MOVE(RkContainer);
-        std::vector<RkContinerItem*> continerItems;
+        std::vector<RkContainerItem*> containerItems;
 	Rk::Orientation containerOrientation;
 	RkSize containerSize;
 	RkPoint containerPosition;

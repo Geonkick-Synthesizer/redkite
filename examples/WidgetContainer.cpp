@@ -23,10 +23,10 @@
 
 #include "RkMain.h"
 #include "RkWidget.h"
-#include "RkWidgetContainer.h"
+#include "RkContainer.h"
 
 /**
- * This is an exmaple of usage of RkWidgetContainer class.
+ * This is an exmaple of usage of RkContainer class.
  */
 
 int main(int arc, char **argv)
@@ -34,10 +34,10 @@ int main(int arc, char **argv)
 	RkMain app(arc, argv);
 	auto widget = new RkWidget(&app);
 	widget->setFixedSize({400, 300});
-	widget->setTitle("RkWidgetContainer example");
+	widget->setTitle("RkContainer example");
 	widget->show();
 
-	auto container = new RkWidgetContainer(widget, Rk::Orientation::Horizontal);
+	auto container = new RkContainer(widget, Rk::Orientation::Horizontal);
 	container->setSpacing(5);
 	for (int i = 0; i < 10; i++) {
 		if (i == 2)

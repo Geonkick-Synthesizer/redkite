@@ -46,23 +46,23 @@ class RK_EXPORT RkContainerItem: public RkObject {
         virtual void setX(int val) { itemPosition.setX(val); }
         virtual int x() const { return itemPosition.x(); }
         virtual void setY(int val) { itemPosition.setY(val); }
-        virtual int y() const { itemPosition.y(); }
+        virtual int y() const { return itemPosition.y(); }
         virtual void setSize(const RkSize &size) { itemSize = size; }
         virtual RkSize size() const { return itemSize; }
         virtual void setWidth(int val) { itemSize.setWidth(val); }
         virtual int width() const { return itemSize.width(); }
         virtual void setHeight(int val) { itemSize.setHeight(val); }
-        virtual int height() const { itemSize.height(); }
+        virtual int height() const { return itemSize.height(); }
         void setAlignment(Rk::Alignment align) { itemAlignment = align; }
-        Rk::Alignment alignment() const { return itemAlignment; };
+        Rk::Alignment alignment() const { return itemAlignment; }
 
  private:
         RK_DISABLE_COPY(RkContainerItem);
         RK_DISABLE_MOVE(RkContainerItem);
         RkSize itemSize;
         RkPoint itemPosition;
-        Rk::Alignment itemAlignment;
         ItemType itemType;
+        Rk::Alignment itemAlignment;
 };
 
 #endif // RK_CONTAINER_ITEM_H
