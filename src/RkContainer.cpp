@@ -103,14 +103,14 @@ int RkContainer::initPosition(Rk::Alignment alignment)
 	int pos = 0;
 	if (alignment == Rk::Alignment::AlignLeft) {
 		if (orientation() == Rk::Orientation::Horizontal)
-			pos = containerPosition.x();
+			pos = x();
 		else
-			pos = containerPosition.y();
+			pos = y();
 	} else {
 		if (orientation() == Rk::Orientation::Horizontal)
-			pos = containerPosition.x() + width();
+			pos = x() + width();
 		else
-			pos = containerPosition.y() + height();
+			pos = y() + height();
 	}
 	return pos;
 }

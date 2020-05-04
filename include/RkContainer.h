@@ -59,8 +59,6 @@ class RK_EXPORT RkContainer: public RkContainerItem {
         RK_DISABLE_MOVE(RkContainer);
         std::vector<RkContainerItem*> containerItems;
 	Rk::Orientation containerOrientation;
-	RkSize containerSize;
-	RkPoint containerPosition;
 	size_t itemSpacing;
 };
 
