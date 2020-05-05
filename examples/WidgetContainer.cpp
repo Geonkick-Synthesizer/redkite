@@ -38,33 +38,43 @@ int main(int arc, char **argv)
 	widget->show();
 
 	auto container = new RkContainer(widget, Rk::Orientation::Horizontal);
+        container->setSize(widget->size());
 	container->setSpacing(5);
 	for (int i = 0; i < 10; i++) {
-		if (i == 2)
-			container->addSpace(10);
-		if (i == 8)
-			container->addSpace(30, Rk::Alignment::AlignRight);
-		auto child = new RkWidget(widget);
-		child->setSize(10, 10);
-		child->setBackgroundColor({255, 0, 0});
-		child->show();
-		if (i == 3) {
-			child->setBackgroundColor({100, 0, 34});
-			child->hide();
-		}
+                if (i == 2)
+                        container->addSpace(10);
+                if (i == 8)
+                        container->addSpace(10, Rk::Alignment::AlignRight);
 
-		if (i > 5) {
-			container->addWidget(child, Rk::Alignment::AlignRight);
-			child->setBackgroundColor({0, 255, 0});
-		} else {
-			container->addWidget(child);
-		}
+                if (i == 7) {
+                        auto container1 = new RkContainer(widget, Rk::Orientation::Vertical);
+                        container1->setSpacing(5);
+                        container1->setSize({40, 100});
+                        auto child = new RkWidget(widget);
+                        child->setSize(10, 10);
+                        child->setBackgroundColor({0, 255, 0});
+                        child->show();
+                        container1->addWidget(child);
+                        child = new RkWidget(widget);
+                        child->setSize(10, 10);
+                        child->setBackgroundColor({0, 255, 0});
+                        child->show();
+                        container1->addWidget(child);
+                        container->addContainer(container1, Rk::Alignment::AlignRight);
+                }
+
+		auto child = new RkWidget(widget);
+                child->setSize(10, 10);
+                child->setBackgroundColor({0, 0, 255});
+                child->show();
+                if (i == 3)
+                        child->hide();
+
+                if (i > 5)
+                        container->addWidget(child, Rk::Alignment::AlignRight);
+                else
+                        container->addWidget(child);
 	}
-	auto child = new RkWidget(widget);
-	child->setBackgroundColor({0, 0, 255});
-	child->setPosition(0, widget->height() - 30);
-	child->setSize(container->size().width(), 10);
-	child->show();
 
 	return app.exec();
 }

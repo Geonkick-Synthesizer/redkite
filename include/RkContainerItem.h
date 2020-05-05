@@ -38,7 +38,8 @@ class RK_EXPORT RkContainerItem: public RkObject {
                         Rk::Alignment align = Rk::Alignment::AlignLeft)
                  : RkObject(parent)
                  , itemType{type}
-                 , itemAlignment{align} {}
+                 , itemAlignment{align}
+                 , itemHidden{false} {}
         virtual ~RkContainerItem() = default;
         ItemType type() const { return itemType; }
         virtual void setPosition(const RkPoint &point) { itemPosition = point; }
@@ -55,6 +56,8 @@ class RK_EXPORT RkContainerItem: public RkObject {
         virtual int height() const { return itemSize.height(); }
         void setAlignment(Rk::Alignment align) { itemAlignment = align; }
         Rk::Alignment alignment() const { return itemAlignment; }
+        virtual void hide(bool b) { itemHidden = b; }
+        virtual bool isHidden() const { return itemHidden; }
 
  private:
         RK_DISABLE_COPY(RkContainerItem);
@@ -63,6 +66,7 @@ class RK_EXPORT RkContainerItem: public RkObject {
         RkPoint itemPosition;
         ItemType itemType;
         Rk::Alignment itemAlignment;
+        bool itemHidden;
 };
 
 #endif // RK_CONTAINER_ITEM_H

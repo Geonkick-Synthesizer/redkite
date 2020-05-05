@@ -79,15 +79,17 @@ void RkContainer::update()
 	int posLeft = initPosition(Rk::Alignment::AlignLeft);
 	int posRight = initPosition(Rk::Alignment::AlignRight);
 	for (const auto &item: containerItems) {
+                if (item->isHidden())
+                        continue;
                 auto align = item->alignment();
                 if (orientation() == Rk::Orientation::Horizontal) {
                         (align == Rk::Alignment::AlignLeft || align == Rk::Alignment::AlignTop) ?
                                 item->setX(posLeft) : item->setX(posRight - item->width());
-                        item->setY((height() - item->height()) / 2);
+                        item->setY(y() + (height() - item->height()) / 2);
                 } else {
                         (align == Rk::Alignment::AlignLeft || align == Rk::Alignment::AlignTop) ?
                                 item->setY(posLeft) : item->setY(posRight - item->height());
-                        item->setX((width() - item->width()) / 2);
+                        item->setX(x() + (width() - item->width()) / 2);
                 }
 
                 auto w = (orientation() == Rk::Orientation::Horizontal) ? item->width() : item->height();
