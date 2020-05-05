@@ -150,7 +150,6 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         {
         case RkEvent::Type::Paint:
         {
-                RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
                 inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         }

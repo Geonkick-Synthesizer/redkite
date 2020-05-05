@@ -41,7 +41,6 @@ RkLabel::RkLabelImpl::~RkLabelImpl()
 void RkLabel::RkLabelImpl::setText(const std::string &text)
 {
         labelText = text;
-        update();
 }
 
 std::string RkLabel::RkLabelImpl::text() const

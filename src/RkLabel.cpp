@@ -29,14 +29,12 @@ RkLabel::RkLabel(RkWidget *parent, const std::string &text)
         : RkWidget(parent, std::move(std::make_unique<RkLabel::RkLabelImpl>(this, text, parent)))
         , impl_ptr{static_cast<RkLabel::RkLabelImpl*>(o_ptr.get())}
 {
-        //        RK_LOG_DEBUG("["<< this << "] parent: " << parent);
 }
 
 void RkLabel::setText(const std::string &text)
 {
-        if (dynamic_cast<RkLabel::RkLabelImpl*>(o_ptr.get()) == nullptr)
-                RK_LOG_DEBUG("NULL");
         impl_ptr->setText(text);
+        update();
 }
 
 std::string RkLabel::text() const

@@ -202,7 +202,6 @@ bool RkLineEdit::RkLineEditImpl::isCursorHidden() const
 
 void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 {
-        RK_LOG_DEBUG("called");
         if (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - lastCahnges).count() > 1000) {
                 isShowCursor = !isShowCursor;
                 inf_ptr->update();
@@ -211,10 +210,8 @@ void RkLineEdit::RkLineEditImpl::onCursorTimeout()
 
 void RkLineEdit::RkLineEditImpl::showCursor(bool b)
 {
-        RK_LOG_DEBUG("b = " << b);
         isShowCursor = b;
         isShowCursor ? cursorTimer->start() : cursorTimer->stop();
-        update();
 }
 
 void RkLineEdit::RkLineEditImpl::selectAll()

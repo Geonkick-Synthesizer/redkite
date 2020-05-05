@@ -169,9 +169,12 @@ void RkLineEdit::mouseButtonPressEvent(RkMouseEvent* event)
 
 void RkLineEdit::focusEvent(RkFocusEvent* event)
 {
+        RK_LOG_DEBUG("focus event");
         if (event->type() == RkEvent::Type::FocusedIn) {
+                RK_LOG_DEBUG("RkEvent::Type::FocusedIn");
 		showCursor();
 	} else if (event->type() == RkEvent::Type::FocusedOut) {
+                RK_LOG_DEBUG("RkEvent::Type::FocusedOut");
 		if (impl_ptr->hasEditFocus())
 			action editingFinished();
 		hideCursor();
