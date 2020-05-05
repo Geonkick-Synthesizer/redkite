@@ -50,6 +50,8 @@ class RK_EXPORT RkContainer: public RkContainerItem {
         void setY(int val) override;
 	void setSpacing(size_t space);
 	size_t spacing() const;
+        void setHiddenTakesPlace(bool b = true);
+        bool hiddenTakesPlace() const;
 
  protected:
 	int initPosition(Rk::Alignment alignment);
@@ -60,6 +62,7 @@ class RK_EXPORT RkContainer: public RkContainerItem {
         std::vector<RkContainerItem*> containerItems;
 	Rk::Orientation containerOrientation;
 	size_t itemSpacing;
+        bool isHiddenTakesPlace;
 };
 
 #endif // RK_CONTAINER_H

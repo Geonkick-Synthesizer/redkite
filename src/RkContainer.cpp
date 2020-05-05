@@ -28,6 +28,7 @@ RkContainer::RkContainer(RkWidget *parent, Rk::Orientation orientation)
 	: RkContainerItem(parent, ItemType::ItemContainer)
 	, containerOrientation{orientation}
 	, itemSpacing{0}
+        , isHiddenTakesPlace{false}
 {
 	setSize(parent->size());
 }
@@ -79,7 +80,7 @@ void RkContainer::update()
 	int posLeft = initPosition(Rk::Alignment::AlignLeft);
 	int posRight = initPosition(Rk::Alignment::AlignRight);
 	for (const auto &item: containerItems) {
-                if (item->isHidden())
+                if (!hiddenTakesPlace() && item->isHidden())
                         continue;
                 auto align = item->alignment();
                 if (orientation() == Rk::Orientation::Horizontal) {
@@ -176,4 +177,15 @@ void RkContainer::setSpacing(size_t space)
 size_t RkContainer::spacing() const
 {
 	return itemSpacing;
+}
+
+void RkContainer::setHiddenTakesPlace(bool b)
+{
+        isHiddenTakesPlace = b;
+        update();
+}
+
+bool RkContainer::hiddenTakesPlace() const
+{
+        return isHiddenTakesPlace;
 }
