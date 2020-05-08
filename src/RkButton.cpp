@@ -94,8 +94,10 @@ void RkButton::mouseButtonPressEvent(RkMouseEvent *event)
 
 void RkButton::mouseButtonReleaseEvent(RkMouseEvent *event)
 {
-        if (type() == ButtonType::ButtonPush)
+        if (type() == ButtonType::ButtonPush) {
                 setPressed(false);
+                action toggled(false);
+        }
 }
 
 void RkButton::hoverEvent(RkHoverEvent *event)
