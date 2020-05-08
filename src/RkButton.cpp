@@ -90,6 +90,7 @@ void RkButton::mouseButtonPressEvent(RkMouseEvent *event)
                 setPressed(true);
                 action toggled(true);
         }
+        action pressed();
 }
 
 void RkButton::mouseButtonReleaseEvent(RkMouseEvent *event)
@@ -98,6 +99,7 @@ void RkButton::mouseButtonReleaseEvent(RkMouseEvent *event)
                 setPressed(false);
                 action toggled(false);
         }
+        action released();
 }
 
 void RkButton::hoverEvent(RkHoverEvent *event)

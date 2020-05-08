@@ -56,6 +56,14 @@ class RK_EXPORT RkButton: public RkWidget
                     toggled(bool pressed),
                     RK_ARG_TYPE(bool),
                     RK_ARG_VAL(pressed));
+        RK_DECL_ACT(pressed,
+                    pressed(),
+                    RK_ARG_TYPE(),
+                    RK_ARG_VAL());
+        RK_DECL_ACT(released,
+                    released(),
+                    RK_ARG_TYPE(),
+                    RK_ARG_VAL());
 
  protected:
         virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
