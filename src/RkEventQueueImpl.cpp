@@ -91,6 +91,27 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
                 obj->setEventQueue(inf_ptr);
 }
 
+void RkEventQueue::RkEventQueueImpl::addShortcut(RkObject *obj,  Rk::Key key,
+                                                 Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier)
+{
+        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4) | static_cast<unsigned long long int>(modifier));
+        auto res = shortcutList.find(hasKey);
+        if (res != shortcutList.end())
+                res.second->addObject(obj);
+}
+
+void RkEventQueue::RkEventQueueImpl::removeShortcut(RkObject *obj,  Rk::Key key,
+                                                    Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier)
+{
+        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4) | static_cast<unsigned long long int>(modifier));
+        auto res = shortcutList.find(hasKey);
+        if (res != shortcutList.end()) {
+                res.second->removeObject(obj);
+                if (res.second.isEmpty())
+                        shortcutList.erase(hashKey);
+        }
+}
+
 void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
 {
         if (objectsList.find(obj) != objectsList.end()) {
@@ -162,8 +183,25 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
          * in some cases can lead to a infinite looping.
          */
         decltype(eventsQueue) queue = std::move(eventsQueue);
-        for (const auto &e: queue)
+        for (const auto &e: queue) {
                 processEvent(e.first, e.second.get());
+                if () {
+                        processShortcuts(dynamic_cast<RkKeyEvent>(e.second.get()));
+                }
+        }
+}
+
+void RkEventQueue::processShortcuts(RkKeyEvent *event)
+{
+        auto res = shortcutList.find(event->key());
+        if (res != res.end() && event->modifiers() == res.second->modifiers()) {
+                for (const auto &obj : res.second->objects()) {
+                        auto keyEvent = std::move(std::make_unique<RkKeyEvent>());
+                        keyEvent->setKey(event->key());
+                        keyEvent->setModifiers(event->modifiers());
+                        postEvent(obj, std::move(keyEvent));
+                }
+        }
 }
 
 void RkEventQueue::RkEventQueueImpl::postAction(std::unique_ptr<RkAction> act)

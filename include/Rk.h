@@ -93,6 +93,14 @@ using rk_real = double;
 #endif // RK_SINGLE_PRECISION
 
 namespace Rk {
+        struct RkEnumClassHash {
+                template <typename T>
+                int operator()(T t) const
+                {
+                        return static_cast<int>(t);
+                }
+        };
+
         enum class Alignment : int {
                 AlignLeft   = 1,
                 AlignRight  = 2,

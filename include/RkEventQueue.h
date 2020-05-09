@@ -38,6 +38,9 @@ class RK_EXPORT RkEventQueue {
         RkEventQueue();
         virtual ~RkEventQueue();
         void addObject(RkObject *obj);
+        void addShortcut(RkObject *obj,
+                         Rk::Key key,
+                         Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier);
         void removeObject(RkObject *obj);
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         void postAction(std::unique_ptr<RkAction> act);
