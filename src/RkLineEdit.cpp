@@ -28,7 +28,7 @@
 #include "RkPainter.h"
 
 RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
-        : RkWidget(parent, std::move(std::make_unique<RkLineEdit::RkLineEditImpl>(this, parent, text)))
+        : RkWidget(parent, std::make_unique<RkLineEdit::RkLineEditImpl>(this, parent, text))
         , impl_ptr{static_cast<RkLineEdit::RkLineEditImpl*>(o_ptr.get())}
 {
         setPointerShape(Rk::PointerShape::IBeam);

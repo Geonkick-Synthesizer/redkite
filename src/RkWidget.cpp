@@ -551,7 +551,7 @@ RkRect RkWidget::rect() const
 void RkWidget::close()
 {
         if (parentWidget()) {
-                auto event = std::move(std::make_unique<RkDeleteChild>(parentWidget(), this));
+                auto event = std::make_unique<RkDeleteChild>(parentWidget(), this);
                 eventQueue()->postEvent(parentWidget(), std::move(event));
         }
 }

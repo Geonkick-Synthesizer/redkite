@@ -26,7 +26,7 @@
 #include "RkLog.h"
 
 RkLabel::RkLabel(RkWidget *parent, const std::string &text)
-        : RkWidget(parent, std::move(std::make_unique<RkLabel::RkLabelImpl>(this, text, parent)))
+        : RkWidget(parent, std::make_unique<RkLabel::RkLabelImpl>(this, text, parent))
         , impl_ptr{static_cast<RkLabel::RkLabelImpl*>(o_ptr.get())}
 {
 }

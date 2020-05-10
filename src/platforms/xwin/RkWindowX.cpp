@@ -122,7 +122,7 @@ bool RkWindowX::init()
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         createCanvasInfo();
-        windowInfo = std::move(std::make_unique<RkNativeWindowInfo>());
+        windowInfo = std::make_unique<RkNativeWindowInfo>();
         windowInfo->display = xDisplay;
         windowInfo->screenNumber = screenNumber;
         windowInfo->window = xWindow;
@@ -285,7 +285,7 @@ void RkWindowX::update()
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
 void RkWindowX::createCanvasInfo()
 {
-        canvasInfo = std::move(std::make_unique<RkCanvasInfo>());
+        canvasInfo = std::make_unique<RkCanvasInfo>();
         canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
                                                               DefaultVisual(display(), screenNumber),
                                                               size().width(), size().height());

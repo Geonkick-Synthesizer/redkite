@@ -27,7 +27,7 @@
 #include "RkEvent.h"
 
 RkButton::RkButton(RkWidget *parent)
-        : RkWidget(parent, std::move(std::make_unique<RkButtonImpl>(this, parent)))
+        : RkWidget(parent, std::make_unique<RkButtonImpl>(this, parent))
         , impl_ptr{static_cast<RkButtonImpl*>(o_ptr.get())}
 {
         if (parent)

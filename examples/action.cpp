@@ -47,7 +47,7 @@ class Button: public RkWidget {
                 } else if (event->button() != RkMouseEvent::ButtonType::Right) {
                         // Asynchronous action.
                         // Post action to be executed by the GUI main thread later.
-                        auto act = std::move(std::make_unique<RkAction>(this));
+                        auto act = std::make_unique<RkAction>(this);
                         act->setCallback([&](){ toggled(isToggled); });
                         eventQueue()->postAction(std::move(act));
                 }
