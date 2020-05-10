@@ -59,7 +59,8 @@ class RK_EXPORT RkEvent {
                 DeleteChild = 14,
                 FocusedIn = 15,
                 FocusedOut = 16,
-                Hover = 17
+                Hover = 17,
+                Shortcut = 18
       };
 
         explicit RkEvent(Type type = Type::NoEvent)

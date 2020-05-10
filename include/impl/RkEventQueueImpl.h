@@ -70,7 +70,7 @@ class RkEventQueue::RkEventQueueImpl {
         void clearActions(const RkObject *obj);
 
  protected:
-        void processShortcuts(RkKeyEvent *event);
+        void processShortcuts(RkKeyEvent *event, RkObject *excludedObj);
         void removeObjectShortcuts(RkObject *obj);
 
  private:

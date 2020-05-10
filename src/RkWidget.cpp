@@ -466,6 +466,11 @@ void RkWidget::keyReleaseEvent(RkKeyEvent *event)
         RK_UNUSED(event);
 }
 
+void RkWidget::shortcutEvent(RkKeyEvent *event)
+{
+        RK_UNUSED(event);
+}
+
 void RkWidget::mouseMoveEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);

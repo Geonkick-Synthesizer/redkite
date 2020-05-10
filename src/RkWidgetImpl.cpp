@@ -149,38 +149,23 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         switch (event->type())
         {
         case RkEvent::Type::Paint:
-        {
                 inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
                 break;
-        }
         case RkEvent::Type::KeyPressed:
-        {
                 RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyPressEvent(static_cast<RkKeyEvent*>(event));
-                auto topWidget = inf_ptr->getTopWindow();
-                if ( topWidget != nullptr
-                    && propagateGrabKeyEnabled()
-                    && topWidget->grabKeyEnabled()
-                    && topWidget->isInputEnabled()) {
-                        topWidget->keyPressEvent(static_cast<RkKeyEvent*>(event));
-                }
                 break;
-        }
         case RkEvent::Type::KeyReleased:
-        {
                 RK_LOG_DEBUG("RkEvent::Type::KeyReleased: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
                         inf_ptr->keyReleaseEvent(static_cast<RkKeyEvent*>(event));
-                auto topWidget = inf_ptr->getTopWindow();
-                if ( topWidget != nullptr
-                    && propagateGrabKeyEnabled()
-                    && topWidget->grabKeyEnabled()
-                    && topWidget->isInputEnabled()) {
-                        topWidget->keyReleaseEvent(static_cast<RkKeyEvent*>(event));
-                }
                 break;
-        }
+        case RkEvent::Type::Shortcut:
+                RK_LOG_DEBUG("RkEvent::Type::Shortcut: " << title());
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled))
+                        inf_ptr->shortcutEvent(static_cast<RkKeyEvent*>(event));
+                break;
         case RkEvent::Type::FocusedIn:
                 RK_LOG_DEBUG("RkEvent::Type::FocsedIn:" << title());
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));

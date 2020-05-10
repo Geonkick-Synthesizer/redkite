@@ -99,8 +99,14 @@ void RkEventQueue::RkEventQueueImpl::addShortcut(RkObject *obj,
                                           | static_cast<unsigned long long int>(modifier));
         auto res = shortcutsList.find(hashKey);
         if (res != shortcutsList.end()) {
+                RK_LOG_DEBUG("obj: " << obj << " key: " << static_cast<int>(key)
+                             << ", modifier: " << static_cast<int>(modifier)
+                             << "  hashKey: " << hashKey);
                 res->second->addObject(obj);
         } else {
+                RK_LOG_DEBUG("new: obj : " << obj << " key: " << static_cast<int>(key)
+                             << ", modifier: " << static_cast<int>(modifier)
+                             << "  hashKey: " << hashKey);
                 auto shortcut = std::make_unique<RkShortcut>(key, modifier);
                 shortcut->addObject(obj);
                 shortcutsList.insert({hashKey, std::move(shortcut)});
@@ -202,16 +208,15 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
          */
         decltype(eventsQueue) queue = std::move(eventsQueue);
         for (const auto &e: queue) {
-                processEvent(e.first, e.second.get());
                 if (e.second->type() == RkEvent::Type::KeyPressed)
-                        processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()));
+                        processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()), e.first);
+                processEvent(e.first, e.second.get());
         }
 }
 
-void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event)
+void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event, RkObject *excludedObj)
 {
-        RK_LOG_INFO("called");
-        if (!event) {
+        if (!event || !excludedObj) {
                 RK_LOG_ERROR("wrong arguments");
                 return;
         }
@@ -219,10 +224,18 @@ void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event)
         unsigned long long int hashKey = ((static_cast<unsigned long long int>(event->key()) << 4)
                                           | static_cast<unsigned long long int>(event->modifiers()));
 
+        RK_LOG_DEBUG("key: " << static_cast<int>(event->key())
+                     << ", modifier: " << static_cast<int>(event->modifiers())
+                     << "  hashKey: " << hashKey);
+
         auto res = shortcutsList.find(hashKey);
         if (res != shortcutsList.end()) {
-                for (const auto &obj : res->second->objects())
-                        processEvent(obj, event);
+                for (const auto &obj : res->second->objects()) {
+                        if (excludedObj != obj)
+                                processEvent(obj, event);
+                }
+        } else {
+                RK_LOG_DEBUG("can't find shortcut");
         }
 }
 
