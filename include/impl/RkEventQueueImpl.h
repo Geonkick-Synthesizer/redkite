@@ -28,6 +28,7 @@
 #include "RkEventQueue.h"
 #include "RkPlatform.h"
 #include "RkEvent.h"
+#include "RkShortcut.h"
 
 #include <mutex>
 #include <unordered_set>
@@ -50,10 +51,10 @@ class RkEventQueue::RkEventQueueImpl {
         void addObject(RkObject *obj);
         void addShortcut(RkObject *obj,
                          Rk::Key key,
-                         Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier);
+                         Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
         void removeShortcut(RkObject *obj,
                             Rk::Key key,
-                            Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier);
+                            Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
         void removeObject(RkObject *obj);
         RkWidget* findWidget(const RkWindowId &id) const;
         void removeObjEvents(RkObject *obj);
@@ -67,6 +68,10 @@ class RkEventQueue::RkEventQueueImpl {
         void processTimers();
         void clearEvents(const RkObject *obj);
         void clearActions(const RkObject *obj);
+
+ protected:
+        void processShortcuts(RkKeyEvent *event);
+        void removeObjectShortcuts(RkObject *obj);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue);

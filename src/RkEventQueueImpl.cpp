@@ -91,24 +91,33 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
                 obj->setEventQueue(inf_ptr);
 }
 
-void RkEventQueue::RkEventQueueImpl::addShortcut(RkObject *obj,  Rk::Key key,
-                                                 Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier)
+void RkEventQueue::RkEventQueueImpl::addShortcut(RkObject *obj,
+                                                 Rk::Key key,
+                                                 Rk::KeyModifiers modifier)
 {
-        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4) | static_cast<unsigned long long int>(modifier));
-        auto res = shortcutList.find(hasKey);
-        if (res != shortcutList.end())
-                res.second->addObject(obj);
+        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4)
+                                          | static_cast<unsigned long long int>(modifier));
+        auto res = shortcutsList.find(hashKey);
+        if (res != shortcutsList.end()) {
+                res->second->addObject(obj);
+        } else {
+                auto shortcut = std::make_unique<RkShortcut>(key, modifier);
+                shortcut->addObject(obj);
+                shortcutsList.insert({hashKey, std::move(shortcut)});
+        }
 }
 
-void RkEventQueue::RkEventQueueImpl::removeShortcut(RkObject *obj,  Rk::Key key,
-                                                    Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier)
+void RkEventQueue::RkEventQueueImpl::removeShortcut(RkObject *obj,
+                                                    Rk::Key key,
+                                                    Rk::KeyModifiers modifier)
 {
-        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4) | static_cast<unsigned long long int>(modifier));
-        auto res = shortcutList.find(hasKey);
-        if (res != shortcutList.end()) {
-                res.second->removeObject(obj);
-                if (res.second.isEmpty())
-                        shortcutList.erase(hashKey);
+        unsigned long long int hashKey = ((static_cast<unsigned long long int>(key) << 4)
+                                          | static_cast<unsigned long long int>(modifier));
+        auto res = shortcutsList.find(hashKey);
+        if (res != shortcutsList.end()) {
+                res->second->removeObject(obj);
+                if (res->second->objects().empty())
+                        shortcutsList.erase(hashKey);
         }
 }
 
@@ -116,6 +125,7 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
 {
         if (objectsList.find(obj) != objectsList.end()) {
                 objectsList.erase(obj);
+                removeObjectShortcuts(obj);
                 if (obj->type() == Rk::ObjectType::Widget) {
                         auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(obj->o_ptr.get());
                         if (!widgetImpl) {
@@ -128,6 +138,14 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
                                 windowIdsMap.erase(id);
                         }
                 }
+        }
+}
+
+void RkEventQueue::RkEventQueueImpl::removeObjectShortcuts(RkObject *obj)
+{
+        for (auto &shortcut : shortcutsList) {
+                if (shortcut.second->hasObject(obj))
+                        shortcut.second->removeObject(obj);
         }
 }
 
@@ -185,22 +203,26 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         decltype(eventsQueue) queue = std::move(eventsQueue);
         for (const auto &e: queue) {
                 processEvent(e.first, e.second.get());
-                if () {
-                        processShortcuts(dynamic_cast<RkKeyEvent>(e.second.get()));
-                }
+                if (e.second->type() == RkEvent::Type::KeyPressed)
+                        processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()));
         }
 }
 
-void RkEventQueue::processShortcuts(RkKeyEvent *event)
+void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event)
 {
-        auto res = shortcutList.find(event->key());
-        if (res != res.end() && event->modifiers() == res.second->modifiers()) {
-                for (const auto &obj : res.second->objects()) {
-                        auto keyEvent = std::move(std::make_unique<RkKeyEvent>());
-                        keyEvent->setKey(event->key());
-                        keyEvent->setModifiers(event->modifiers());
-                        postEvent(obj, std::move(keyEvent));
-                }
+        RK_LOG_INFO("called");
+        if (!event) {
+                RK_LOG_ERROR("wrong arguments");
+                return;
+        }
+
+        unsigned long long int hashKey = ((static_cast<unsigned long long int>(event->key()) << 4)
+                                          | static_cast<unsigned long long int>(event->modifiers()));
+
+        auto res = shortcutsList.find(hashKey);
+        if (res != shortcutsList.end()) {
+                for (const auto &obj : res->second->objects())
+                        processEvent(obj, event);
         }
 }
 

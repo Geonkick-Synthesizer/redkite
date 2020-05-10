@@ -98,6 +98,7 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkObserver.h
   ${RK_INCLUDE_PATH}/impl/RkObjectImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkShortcut.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h

@@ -80,6 +80,18 @@ void RkObject::event(RkEvent *event)
         RK_UNUSED(event);
 }
 
+void RkObject::addShortcut(Rk::Key key, Rk::KeyModifiers modifier)
+{
+        if (eventQueue())
+                eventQueue()->addShortcut(this, key, modifier);
+}
+
+void RkObject::removeShortcut(Rk::Key key, Rk::KeyModifiers modifier)
+{
+        if (eventQueue())
+                eventQueue()->removeShortcut(this, key, modifier);
+}
+
 void RkObject::rk__add_observer(std::unique_ptr<RkObserver> observer)
 {
         o_ptr->addObserver(std::move(observer));

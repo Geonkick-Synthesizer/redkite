@@ -42,6 +42,8 @@ class RK_EXPORT RkObject {
         void setEventQueue(RkEventQueue* queue);
         RkEventQueue* eventQueue() const;
         virtual void event(RkEvent *event);
+        void addShortcut(Rk::Key key, Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
+        void removeShortcut(Rk::Key key, Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
         void rk__add_bound_object(RkObject* obj);
 
  protected:

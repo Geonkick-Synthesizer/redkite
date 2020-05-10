@@ -28,8 +28,6 @@
 #include "RkObject.h"
 #include "RkAction.h"
 
-//struct RkWindowId;
-//struct RkNativeWindowInfo;
 class RkEvent;
 class RkTimer;
 
@@ -40,7 +38,10 @@ class RK_EXPORT RkEventQueue {
         void addObject(RkObject *obj);
         void addShortcut(RkObject *obj,
                          Rk::Key key,
-                         Rk::KeyModifiers modifier = Rk::Modifiers::NoModifier);
+                         Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
+        void removeShortcut(RkObject *obj,
+                            Rk::Key key,
+                            Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
         void removeObject(RkObject *obj);
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
         void postAction(std::unique_ptr<RkAction> act);

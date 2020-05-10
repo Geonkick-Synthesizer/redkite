@@ -43,6 +43,20 @@ void RkEventQueue::addObject(RkObject *obj)
         o_ptr->addObject(obj);
 }
 
+void RkEventQueue::addShortcut(RkObject *obj,
+                               Rk::Key key,
+                               Rk::KeyModifiers modifier)
+{
+        o_ptr->addShortcut(obj, key, modifier);
+}
+
+void RkEventQueue::removeShortcut(RkObject *obj,
+                                  Rk::Key key,
+                                  Rk::KeyModifiers modifier)
+{
+        o_ptr->removeShortcut(obj, key, modifier);
+}
+
 void RkEventQueue::removeObject(RkObject *obj)
 {
         o_ptr->removeObject(obj);

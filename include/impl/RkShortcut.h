@@ -39,13 +39,22 @@ class RkShortcut {
         {
                 shortcutObjects.insert(obj);
         }
-        bool hasObject() const { return shortcutObjects.find(obj) != shortcutObjects.end(); }
+
+        void removeObject(RkObject *obj)
+        {
+                auto res = shortcutObjects.find(obj);
+                if (res != shortcutObjects.end())
+                        shortcutObjects.erase(obj);
+        }
+
+        bool hasObject(RkObject *obj) const { return shortcutObjects.find(obj) != shortcutObjects.end(); }
         Rk::Key key() const { return shortcutKey; }
-        Rk::KeyModifier modifiers() const { return shortcutModifier; }
+        Rk::KeyModifiers modifiers() const { return shortcutModifier; }
+        const std::unordered_set<RkObject*>& objects() const { return shortcutObjects; };
 
   private:
         Rk::Key shortcutKey;
-        Rk::KeyModifier shortcutModifier;
+        Rk::KeyModifiers shortcutModifier;
         std::unordered_set<RkObject*> shortcutObjects;
 };
 
