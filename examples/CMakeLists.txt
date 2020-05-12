@@ -12,6 +12,7 @@ set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 set(RK_EXAMPLES_SOURCES_LINEEDIT ${RK_EXAMPLES_PATH}/lineedit.cpp)
 set(RK_EXAMPLES_SOURCES_BUTTON ${RK_EXAMPLES_PATH}/Button.cpp)
 set(RK_EXAMPLES_SOURCES_CONTAINER ${RK_EXAMPLES_PATH}/WidgetContainer.cpp)
+set(RK_EXAMPLES_SOURCES_TRANSITION ${RK_EXAMPLES_PATH}/Transition.cpp)
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -187,3 +188,15 @@ add_dependencies(WidgetContainer redkite)
 target_link_libraries(WidgetContainer redkite)
 target_link_libraries(WidgetContainer "-lX11 -lrt -lm -ldl")
 target_link_libraries(WidgetContainer ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+# ------------ RkTransition example -------
+
+add_executable(Transition
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_TRANSITION})
+
+add_dependencies(Transition redkite)
+target_link_libraries(Transition redkite)
+target_link_libraries(Transition "-lX11 -lrt -lm -ldl")
+target_link_libraries(Transition ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+

@@ -66,6 +66,7 @@ int main(int arc, char **argv)
     RK_ACT_BINDL(button1, toggled, RK_ACT_ARGS(bool b),
                  [](bool b){ RK_LOG_INFO("Button1: " << b);
                  });
+
     auto label = new RkLabel(widget, "checkable");
     label->setSize(60, 15);
     label->setPosition({button1->x(), button1->y() + button1->height() + 5});

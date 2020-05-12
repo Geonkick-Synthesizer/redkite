@@ -92,7 +92,8 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkMain.h
   ${RK_INCLUDE_PATH}/RkContainerItem.h
   ${RK_INCLUDE_PATH}/RkContainerWidgetItem.h
-  ${RK_INCLUDE_PATH}/RkContainer.h)
+  ${RK_INCLUDE_PATH}/RkContainer.h
+  ${RK_INCLUDE_PATH}/RkTransition.h)
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
