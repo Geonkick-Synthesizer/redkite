@@ -98,11 +98,16 @@ bool RkWindowX::init()
                 parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
         }
 
-        XMatchVisualInfo(xDisplay, screenNumber, 32, TrueColor, &visualInfo);
+        auto res = XMatchVisualInfo(xDisplay, screenNumber, 32, TrueColor, &visualInfo);
+        if (res == 0) {
+                RK_LOG_ERROR("visual info was not found");
+                return false;
+        }
+
         XSetWindowAttributes attr;
         attr.colormap = XCreateColormap(xDisplay, parent, visualInfo.visual, AllocNone);
-        attr.border_pixel = 0;
-        attr.background_pixel = 0;
+        attr.border_pixel = winBorderColor.argb();
+        attr.background_pixel = winBackgroundColor.argb();
         auto pos = position();
         auto winSize = size();
         RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);

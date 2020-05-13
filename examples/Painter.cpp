@@ -48,7 +48,6 @@ class  PainterExample: public RkWidget {
         // paintEvent is called every time the widget needs to be painted.
         void paintEvent(RkPaintEvent *event) final
         {
-                // The event will be not used.
                 RK_UNUSED(event);
 
                 /**
