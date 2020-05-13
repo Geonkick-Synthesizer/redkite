@@ -117,10 +117,12 @@ class  PainterExample: public RkWidget {
                         painter.drawRect(RkRect(50, y, 100, 25));
 
                         // Create the RkPainter that will draw on widget.
+                        RK_LOG_INFO("-----------------> RkPainter");
                         RkPainter paint(this);
-
+                        RK_LOG_INFO("-----------------> RkPainter1");
                         // Draw the image that was create before.
                         paint.drawImage(image, 0, 0);
+                        RK_LOG_INFO("-----------------> RkPainter2");
                 }
         }
 

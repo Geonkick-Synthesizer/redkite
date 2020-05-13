@@ -25,7 +25,7 @@
 #include "RkWindowX.h"
 #include "RkCanvasInfo.h"
 
-#include "X11/cursorfont.h"
+#include <X11/cursorfont.h>
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
@@ -97,14 +97,24 @@ bool RkWindowX::init()
         } else {
                 parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
         }
+
+        XMatchVisualInfo(xDisplay, screenNumber, 32, TrueColor, &visualInfo);
+        XSetWindowAttributes attr;
+        attr.colormap = XCreateColormap(xDisplay, parent, visualInfo.visual, AllocNone);
+        attr.border_pixel = 0;
+        attr.background_pixel = 0;
         auto pos = position();
         auto winSize = size();
         RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);
-        xWindow = XCreateSimpleWindow(xDisplay, parent,
-                                      pos.x(), pos.y(),
-                                      winSize.width(), winSize.height(), winBorderWidth,
-                                      pixelValue(winBorderColor),
-                                      pixelValue(winBackgroundColor));
+        xWindow = XCreateWindow(xDisplay, parent,
+                                pos.x(), pos.y(),
+                                winSize.width(), winSize.height(),
+                                winBorderWidth,
+                                visualInfo.depth,
+                                InputOutput,
+                                visualInfo.visual,
+                                CWColormap | CWBorderPixel | CWBackPixel,
+                                &attr);
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
                 return false;
@@ -208,33 +218,11 @@ int RkWindowX::borderWidth() const
         return winBorderWidth;
 }
 
-unsigned long RkWindowX::pixelValue(const RkColor &color)
-{
-        if (!display())
-                return 0;
-
-        auto colorMap = XDefaultColormap(display(), screenNumber);
-        XColor pixelColor;
-        pixelColor.flags = DoRed | DoGreen | DoBlue;
-        constexpr const unsigned short k = 65535 / 255;
-        pixelColor.red   = k * color.red();
-        pixelColor.green = k * color.green();
-        pixelColor.blue  = k * color.blue();
-
-        auto res = XAllocColor(display(), colorMap, &pixelColor);
-        if (!res) {
-                RK_LOG_ERROR("can't allocate color");
-                return 0;
-        }
-
-        return pixelColor.pixel;
-}
-
 void RkWindowX::setBorderColor(const RkColor &color)
 {
         winBorderColor = color;
         if (isWindowCreated())
-                XSetWindowBorder(display(), xWindow, pixelValue(winBorderColor));
+                XSetWindowBorder(display(), xWindow, winBorderColor.argb());
 }
 
 const RkColor& RkWindowX::borderColor() const
@@ -246,7 +234,7 @@ void RkWindowX::setBackgroundColor(const RkColor &color)
 {
         winBackgroundColor = color;
         if (isWindowCreated())
-                XSetWindowBackground(display(), xWindow, pixelValue(winBackgroundColor));
+                XSetWindowBackground(display(), xWindow, winBackgroundColor.argb());
 }
 
 const RkColor& RkWindowX::background() const
@@ -287,7 +275,7 @@ void RkWindowX::createCanvasInfo()
 {
         canvasInfo = std::make_unique<RkCanvasInfo>();
         canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
-                                                              DefaultVisual(display(), screenNumber),
+                                                              visualInfo.visual,
                                                               size().width(), size().height());
 }
 

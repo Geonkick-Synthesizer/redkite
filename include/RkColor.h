@@ -101,6 +101,14 @@ class RK_EXPORT RkColor {
                alphaValue = alpha;
        }
 
+       unsigned long int argb() const
+       {
+               return (((unsigned long int)alphaValue) << 24)
+                       | (((unsigned long int)redValue) << 16)
+                       | (((unsigned long int)greenValue) << 8)
+                       | (((unsigned long int)blueValue));
+       }
+
  private:
         unsigned short redValue;
         unsigned short greenValue;

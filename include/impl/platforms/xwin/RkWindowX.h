@@ -30,6 +30,8 @@
 #include "RkPoint.h"
 #include "RkColor.h"
 
+#include <X11/Xutil.h>
+
 struct RkCanvasInfo;
 
 class RkWindowX {
@@ -66,7 +68,6 @@ class RkWindowX {
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
-        unsigned long pixelValue(const RkColor &color);
         void createCanvasInfo();
         void freeCanvasInfo();
 
@@ -86,6 +87,7 @@ class RkWindowX {
         std::unique_ptr<RkCanvasInfo> canvasInfo;
         std::unique_ptr<RkNativeWindowInfo> windowInfo;
         Rk::WindowFlags windowFlags;
+        XVisualInfo visualInfo;
 };
 
 #endif // RK_WIDGET_XWIN_H
