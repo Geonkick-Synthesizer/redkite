@@ -176,19 +176,22 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::FocusedOut:
-                //                if (static_cast<int>(windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup)) {
-                //                        RK_LOG_DEBUG("RkEvent::Type::FocsedOut(Popup): " << title());
-                //                        inf_ptr->close();
-                //                } else {
                         RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
                         inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
-                        //                }
                 break;
         case RkEvent::Type::MouseButtonPress:
+        {
                 RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress:" << title());
-                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                auto mouseEvent = static_cast<RkMouseEvent*>(event);
+                auto size = inf_ptr->size();
+                if ((static_cast<int>(windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup))
+                    && (mouseEvent->x() < 0 || mouseEvent->x() > size.width()
+                        || mouseEvent->y() < 0 || mouseEvent->y() > size.height())) {
+                        inf_ptr->close();
+                } else if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
+        }
         case RkEvent::Type::MouseDoubleClick:
                 RK_LOG_DEBUG("RkEvent::Type::MouseDoubleClick:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))

@@ -171,13 +171,13 @@ void RkWindowX::show(bool b)
                         if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup)) {
                                 XGrabPointer(display(),
                                               xWindow,
-                                              1,
+                                              False,
                                               ButtonPressMask | ButtonReleaseMask
                                               | ButtonMotionMask | PointerMotionMask,
-                                              GrabModeAsync,
-                                              GrabModeAsync,
-                                              None,
-                                              0,
+                                             GrabModeAsync,
+                                             GrabModeAsync,
+                                             None,
+                                             0,
                                              CurrentTime);
                                 // XGrabKeyboard(display(),
                                 //               xWindow,
