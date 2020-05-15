@@ -98,6 +98,11 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
         RK_LOG_DEBUG("called");
 }
 
+Rk::WindowFlags RkWidget::RkWidgetImpl::windowFlags() const
+{
+        return platformWindow->flags();
+}
+
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 {
         return static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
@@ -171,8 +176,13 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::FocusedOut:
-                RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
-                inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
+                //                if (static_cast<int>(windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup)) {
+                //                        RK_LOG_DEBUG("RkEvent::Type::FocsedOut(Popup): " << title());
+                //                        inf_ptr->close();
+                //                } else {
+                        RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
+                        inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
+                        //                }
                 break;
         case RkEvent::Type::MouseButtonPress:
                 RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress:" << title());
@@ -194,7 +204,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::Hover:
-                inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
+                        inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
                 widgetSize = platformWindow->size();

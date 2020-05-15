@@ -1,5 +1,5 @@
 /**
- * File name: Dialog.cpp
+ * File name: Popup.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://iuriepage.wordpress.com>
@@ -21,9 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+
 #include "RkMain.h"
 #include "RkWidget.h"
 #include "RkLog.h"
+#include "RkButton.h"
 
 #include <vector>
 
@@ -31,34 +33,29 @@ int main(int arc, char **argv)
 {
         RkMain app(arc, argv);
 
-        // Create main window.
         auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Main Window");
 	mainWindow->setPosition(180, 180);
         mainWindow->setSize(400, 500);
+        // Set background window.
+        mainWindow->setBackgroundColor({50, 100, 50});
 
-        auto child = new RkWidget(mainWindow);
-        child->setTitle("Child");
-        child->setBackgroundColor(80, 255, 80);
-        child->setPosition(10, 10);
-        child->setSize(50, 50);
-        child->show();
-
-        auto modal = new RkWidget(mainWindow, Rk::WindowFlags::Dialog);
-        modal->setTitle("Dialog");
-        modal->setBackgroundColor(80, 80, 80);
-        modal->setSize(170, 110);
-
-        child = new RkWidget(modal);
-        child->setTitle("Child on Modal");
-        child->setBackgroundColor(80, 80, 255);
-        child->setPosition(10, 10);
-        child->setSize(50, 50);
-        child->show();
+        auto button = new RkButton(mainWindow);
+        button->setTitle("Button");
+        button->setBackgroundColor({255, 0, 0});
+        button->setPosition(100, 100);
+        button->setSize(30, 30);
+        button->show();
+        RK_ACT_BINDL(button, pressed, RK_ACT_ARGS(), [mainWindow]() {
+                        auto popup = new RkWidget(mainWindow, Rk::WindowFlags::Popup);
+                        popup->setTitle("Popup");
+                        popup->setPosition(110, 110);
+                        popup->setBackgroundColor({80, 80, 80, 50});
+                        popup->setSize(170, 110);
+                        popup->show();
+                });
 
         mainWindow->show();
-        modal->show();
-
         int res = app.exec();
         return res;
 }

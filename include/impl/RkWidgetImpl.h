@@ -47,6 +47,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
         virtual ~RkWidgetImpl();
+        Rk::WindowFlags windowFlags() const;
         void show(bool b);
 	bool isShown() const;
         void setTitle(const std::string &title);

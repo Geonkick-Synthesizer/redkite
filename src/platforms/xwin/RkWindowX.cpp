@@ -26,9 +26,11 @@
 #include "RkCanvasInfo.h"
 
 #include <X11/cursorfont.h>
+#include <X11/Xatom.h>
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
+         , windowFlags{flags}
          , xDisplay{parent ? parent->display : nullptr}
          , screenNumber{parent ? parent->screenNumber : 0}
          , xWindow{0}
@@ -37,13 +39,13 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
          , winBackgroundColor{255, 255, 255}
          , canvasInfo{nullptr}
          , windowInfo{nullptr}
-         , windowFlags{flags}
  {
          RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent}
+        , windowFlags{flags}
         , xDisplay{parent.display}
         , screenNumber{parent.screenNumber}
         , xWindow{0}
@@ -52,7 +54,6 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , winBackgroundColor{255, 255, 255}
         , canvasInfo{nullptr}
         , windowInfo{nullptr}
-        , windowFlags{flags}
 {
         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
@@ -91,8 +92,9 @@ bool RkWindowX::init()
 	}
 
         Window parent = 0;
-        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) {
-                RK_LOG_DEBUG("is dialog, get root window");
+        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
+            || (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) {
+                RK_LOG_DEBUG("is dialog or popup, get root window");
                 parent = RootWindow(xDisplay, screenNumber);
         } else {
                 parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
@@ -105,9 +107,28 @@ bool RkWindowX::init()
         }
 
         XSetWindowAttributes attr;
+        unsigned long mask = CWColormap | CWBorderPixel | CWBackPixel | CWEventMask;
+        attr.background_pixmap = None;
         attr.colormap = XCreateColormap(xDisplay, parent, visualInfo.visual, AllocNone);
         attr.border_pixel = winBorderColor.argb();
         attr.background_pixel = winBackgroundColor.argb();
+
+        attr.event_mask = ExposureMask
+                          | KeyPressMask | KeyReleaseMask | KeymapStateMask | FocusChangeMask
+                          | ButtonPressMask | ButtonReleaseMask
+                          | EnterWindowMask | LeaveWindowMask | StructureNotifyMask
+                          | PropertyChangeMask
+                          | PointerMotionMask;
+
+        if (hasParent() && (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) {
+                RK_LOG_DEBUG("override_redirect = True");
+                mask |= CWOverrideRedirect;
+                attr.override_redirect = True;
+        } else {
+                RK_LOG_DEBUG("override_redirect = False");
+                attr.override_redirect = False;
+        }
+
         auto pos = position();
         auto winSize = size();
         RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);
@@ -118,21 +139,18 @@ bool RkWindowX::init()
                                 visualInfo.depth,
                                 InputOutput,
                                 visualInfo.visual,
-                                CWColormap | CWBorderPixel | CWBackPixel,
+                                mask,
                                 &attr);
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
                 return false;
         }
 
-        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent())
-                XSetTransientForHint(xDisplay, xWindow, parentWindowInfo.window);
-
-        XSelectInput(xDisplay, xWindow, ExposureMask
-                                        | KeyPressMask | KeyReleaseMask
-                                        | ButtonPressMask | ButtonReleaseMask | PointerMotionMask
-                                        | StructureNotifyMask | FocusChangeMask
-                                        | EnterWindowMask | LeaveWindowMask);
+        if (((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
+             || (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) && hasParent()) {
+                 RK_LOG_DEBUG("set WM_TRANSIENT_FOR");
+                 XSetTransientForHint(xDisplay, parentWindowInfo.window, xWindow);
+        }
 
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
@@ -148,10 +166,29 @@ bool RkWindowX::init()
 void RkWindowX::show(bool b)
 {
         if (isWindowCreated()) {
-                if (b)
+                if (b) {
                         XMapRaised(display(), xWindow);
-                else
+                        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup)) {
+                                XGrabPointer(display(),
+                                              xWindow,
+                                              1,
+                                              ButtonPressMask | ButtonReleaseMask
+                                              | ButtonMotionMask | PointerMotionMask,
+                                              GrabModeAsync,
+                                              GrabModeAsync,
+                                              None,
+                                              0,
+                                             CurrentTime);
+                                // XGrabKeyboard(display(),
+                                //               xWindow,
+                                //               AnyKey,
+                                //               GrabModeAsync,
+                                //               GrabModeAsync,
+                                //               CurrentTime);
+                        }
+                } else {
                         XUnmapWindow(display(), xWindow);
+                }
         }
 }
 
@@ -346,4 +383,9 @@ void RkWindowX::setPointerShape(Rk::PointerShape shape)
                 return;
         };
         XDefineCursor(display(), xWindow, pointer);
+}
+
+Rk::WindowFlags RkWindowX::flags() const
+{
+        return windowFlags;
 }

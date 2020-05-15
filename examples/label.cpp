@@ -3166,6 +3166,8 @@ const unsigned char rk_image[] = {
 0xc0, 0xc0, 0xae, 0xff, 0xc0, 0xc0, 0xae, 0xff, 0xc0, 0xc0, 0xae, 0xff,
 0xc0, 0xc0, 0xae, 0xff, };
 
+#include "RkPainter.h"
+
 int main(int arc, char **argv)
 {
         RkMain app(arc, argv);
@@ -3174,36 +3176,47 @@ int main(int arc, char **argv)
         RK_LOG_DEBUG("create main widget");
         auto widget = new RkWidget(&app);
         widget->setTitle("Label Example");
+        //        widget->setBackgroundColor({255, 255, 255, 255});
         widget->setSize(250, 250);
 
-        RK_LOG_DEBUG("create label");
-        auto label = new RkLabel(widget);
-        label->setTitle("Label with text"); // for debugging only, no effect on label.
-        label->setText("Text");
-        label->setX(10);
-        label->setY(10);
-        label->setSize(100, 94);
-        label->setBackgroundColor(200, 200, 200);
-        label->show();
+        // RK_LOG_DEBUG("create label");
+        // auto label = new RkLabel(widget);
+        // label->setTitle("Label with text"); // for debugging only, no effect on label.
+        // label->setText("Text");
+        // label->setX(10);
+        // label->setY(10);
+        // label->setSize(100, 94);
+        // label->setBackgroundColor(200, 200, 200);
+        // label->show();
 
-        label = new RkLabel(widget);
+        auto label = new RkLabel(widget);
+        label->setBackgroundColor({255, 255, 255, 255});
         label->setTitle("Label with image");
         label->setImage(RkImage(100, 94, rk_image));
         label->setX(10 + 100 + 5);
         label->setY(10);
         label->setSize(100, 94);
-        label->setBackgroundColor(200, 200, 200);
         label->show();
 
-        label = new RkLabel(widget);
-        label->setTitle("Label with text & image");
-        label->setText("Text");
-        label->setImage(RkImage(100, 94, rk_image));
-        label->setX(10);
-        label->setY(10 + 94 + 5);
-        label->setSize(100, 94);
-        label->setBackgroundColor(200, 200, 200);
-        label->show();
+        auto child = new RkLabel(label);
+        child->setBackgroundColor({0, 0, 0, 50});
+        child->setSize(40, 40);
+        child->setPosition(5, 5);
+        RkImage img(40, 40);// = RkImage(100, 94, rk_image);
+        RkPainter paint(&img);
+        paint.fillRect(RkRect(0, 0, 40, 40), {0, 255, 0, 100});
+        child->setImage(img);
+        child->show();
+
+        // label = new RkLabel(widget);
+        // label->setTitle("Label with text & image");
+        // label->setText("Text");
+        // label->setImage(RkImage(100, 94, rk_image));
+        // label->setX(10);
+        // label->setY(10 + 94 + 5);
+        // label->setSize(100, 94);
+        // label->setBackgroundColor(200, 200, 200);
+        // label->show();
 
         widget->show();
         int res = app.exec();

@@ -91,6 +91,10 @@ RkWidget::~RkWidget()
         }
 }
 
+Rk::WindowFlags RkWidget::windowFlags() const
+{
+        return impl_ptr->windowFlags();
+}
 
 void RkWidget::setTitle(const std::string &title)
 {
@@ -479,7 +483,7 @@ void RkWidget::mouseMoveEvent(RkMouseEvent *event)
 void RkWidget::mouseButtonPressEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
-        setFocus(true);
+        //        setFocus(true);
 }
 
 void RkWidget::mouseButtonReleaseEvent(RkMouseEvent *event)

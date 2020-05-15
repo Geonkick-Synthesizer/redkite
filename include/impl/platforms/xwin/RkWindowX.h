@@ -41,6 +41,7 @@ class RkWindowX {
         explicit RkWindowX(const RkNativeWindowInfo &parent,
                            Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowX();
+        Rk::WindowFlags flags() const;
         bool init();
         void show(bool b);
         const RkNativeWindowInfo* nativeWindowInfo() const;
@@ -75,6 +76,7 @@ class RkWindowX {
         RK_DISABLE_COPY(RkWindowX);
         RK_DISABLE_MOVE(RkWindowX);
         RkNativeWindowInfo parentWindowInfo;
+        Rk::WindowFlags windowFlags;
         Display *xDisplay;
         int screenNumber;
         Window xWindow;
@@ -86,7 +88,6 @@ class RkWindowX {
         RkColor winBackgroundColor;
         std::unique_ptr<RkCanvasInfo> canvasInfo;
         std::unique_ptr<RkNativeWindowInfo> windowInfo;
-        Rk::WindowFlags windowFlags;
         XVisualInfo visualInfo;
 };
 
