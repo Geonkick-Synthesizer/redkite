@@ -483,7 +483,6 @@ void RkWidget::mouseMoveEvent(RkMouseEvent *event)
 void RkWidget::mouseButtonPressEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
-        //        setFocus(true);
 }
 
 void RkWidget::mouseButtonReleaseEvent(RkMouseEvent *event)

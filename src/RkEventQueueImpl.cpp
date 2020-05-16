@@ -225,15 +225,17 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
 
 bool RkEventQueue::RkEventQueueImpl::isTopWidget(RkObject *obj) const
 {
-        auto widget = dynamic_cast<RkWidget*>(obj);
-        if (widget && widget->getTopWidget() == widget)
-                return true;
+        if (objectExists(obj)) {
+                auto widget = dynamic_cast<RkWidget*>(obj);
+                if (widget && widget->getTopWidget() == widget)
+                        return true;
+        }
         return false;
 }
 
 void RkEventQueue::RkEventQueueImpl::processPopup()
 {
-        if (!currentPopup)
+        if (!objectExists(currentPopup))
                 return;
 
         auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(currentPopup->o_ptr.get());
