@@ -54,7 +54,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , widgetSize{platformWindow->size()}
         , widgetBackground(platformWindow->background())
         , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}
@@ -83,7 +83,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetMaximumSize{1000000, 1000000}
         , widgetSize{platformWindow->size()}
         , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWindow : Rk::Modality::NonModal}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetTextColor{0, 0, 0}
         , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}

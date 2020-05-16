@@ -72,6 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         void processShortcuts(RkKeyEvent *event, RkObject *excludedObj);
         void processPopup();
         void removeObjectShortcuts(RkObject *obj);
+        bool isTopWidget(RkObject *obj) const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue);

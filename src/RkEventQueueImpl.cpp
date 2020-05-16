@@ -213,12 +213,22 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
          */
         decltype(eventsQueue) queue = std::move(eventsQueue);
         for (const auto &e: queue) {
-                if (e.second->type() == RkEvent::Type::KeyPressed)
+                if (e.second->type() == RkEvent::Type::KeyPressed) {
                         processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()), e.first);
-                else if (currentPopup && e.second->type() == RkEvent::Type::MouseButtonPress)
+                } else if ((currentPopup && e.second->type() == RkEvent::Type::MouseButtonPress)
+                           || (e.second->type() == RkEvent::Type::FocusedOut && isTopWidget(e.first))) {
                         processPopup();
+                }
                 processEvent(e.first, e.second.get());
         }
+}
+
+bool RkEventQueue::RkEventQueueImpl::isTopWidget(RkObject *obj) const
+{
+        auto widget = dynamic_cast<RkWidget*>(obj);
+        if (widget && widget->getTopWidget() == widget)
+                return true;
+        return false;
 }
 
 void RkEventQueue::RkEventQueueImpl::processPopup()

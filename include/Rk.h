@@ -128,9 +128,9 @@ namespace Rk {
                 ModalParent = 1,
 
                 // Disable input for all widgets hierarhy
-                // of the top window, including top window,
+                // of the top widget, including top widget,
                 // except the current modal one.
-                ModalTopWindow = 2
+                ModalTopWidget = 2
         };
 
         enum class WidgetAttribute : int {

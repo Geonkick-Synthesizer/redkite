@@ -122,7 +122,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void enableInput();
           void disableInput();
           bool isInputEnabled() const;
-          RkWidget* getTopWindow();
+          RkWidget* getTopWidget();
           void enableGrabKey(bool b);
           bool grabKeyEnabled() const;
           void propagateGrabKey(bool b);

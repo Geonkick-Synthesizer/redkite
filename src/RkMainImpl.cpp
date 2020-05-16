@@ -32,7 +32,7 @@
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
-        , topWindow(nullptr)
+        , topWidget(nullptr)
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -41,7 +41,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
-        , topWindow(nullptr)
+        , topWidget(nullptr)
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -52,26 +52,26 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
 
 RkMain::RkMainImpl::~RkMainImpl()
 {
-        if (topWindow)
-                delete topWindow;
+        if (topWidget)
+                delete topWidget;
         RK_LOG_DEBUG("called");
 }
 
-bool RkMain::RkMainImpl::setTopLevelWindow(RkWidget* widget)
+bool RkMain::RkMainImpl::setTopLevelWidget(RkWidget* widget)
 {
-      if (topWindow || !widget)
+      if (topWidget || !widget)
               return false;
 
-      RK_LOG_DEBUG("set top window: " << topWindow);
-      topWindow = widget;
-      eventQueue->addObject(topWindow);
+      RK_LOG_DEBUG("set top window: " << topWidget);
+      topWidget = widget;
+      eventQueue->addObject(topWidget);
       return true;
 }
 
-RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
+RkWidget* RkMain::RkMainImpl::topLevelWidget(void)
 {
-      RK_LOG_DEBUG(topWindow->title());
-      return topWindow;
+      RK_LOG_DEBUG(topWidget->title());
+      return topWidget;
 }
 
 RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
@@ -81,7 +81,7 @@ RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
 
 int RkMain::RkMainImpl::exec(bool block)
 {
-        if (!topLevelWindow()) {
+        if (!topLevelWidget()) {
                 RK_LOG_ERROR("top window not defined");
 		return 1;
 	}
@@ -91,7 +91,7 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         eventQueue->processQueue();
-                        if (topWindow->isClose())
+                        if (topWidget->isClose())
                                 break;
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }

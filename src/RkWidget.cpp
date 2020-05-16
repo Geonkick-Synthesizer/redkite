@@ -33,7 +33,7 @@ RkWidget::RkWidget(RkMain *mainApp, Rk::WindowFlags flags)
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        mainApp->setTopLevelWindow(this);
+        mainApp->setTopLevelWidget(this);
 }
 
 RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
@@ -41,7 +41,7 @@ RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::Window
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        mainApp->setTopLevelWindow(this);
+        mainApp->setTopLevelWidget(this);
 }
 
 RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
@@ -49,8 +49,8 @@ RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        if (modality() == Rk::Modality::ModalTopWindow) {
-                auto topWidget = getTopWindow();
+        if (modality() == Rk::Modality::ModalTopWidget) {
+                auto topWidget = getTopWidget();
                 if (topWidget)
                         topWidget->disableInput();
                 else if (parentWidget() && modality() == Rk::Modality::ModalParent)
@@ -62,8 +62,8 @@ RkWidget::RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl)
         : RkObject(parent, std::move(impl))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
-        if (modality() == Rk::Modality::ModalTopWindow) {
-                auto topWidget = getTopWindow();
+        if (modality() == Rk::Modality::ModalTopWidget) {
+                auto topWidget = getTopWidget();
                 if (topWidget)
                         topWidget->disableInput();
                 else if (parentWidget() && modality() == Rk::Modality::ModalParent)
@@ -75,11 +75,11 @@ RkWidget::~RkWidget()
 {
         RK_LOG_DEBUG("called: " << this);
         if (parentWidget()) {
-                if (modality() == Rk::Modality::ModalTopWindow) {
+                if (modality() == Rk::Modality::ModalTopWidget) {
                         if (!parentWidget()->isModal()) {
-                                auto topWindow = getTopWindow();
-                                if (topWindow)
-                                        topWindow->enableInput();
+                                auto topWidget = getTopWidget();
+                                if (topWidget)
+                                        topWidget->enableInput();
                         } else {
                                 // Enable inputs only for parent widget and its
                                 // childs since it is modal.
@@ -408,7 +408,7 @@ void RkWidget::enableInput()
 
 void RkWidget::disableInput()
 {
-        if (modality() == Rk::Modality::ModalParent || modality() == Rk::Modality::ModalTopWindow)
+        if (modality() == Rk::Modality::ModalParent || modality() == Rk::Modality::ModalTopWidget)
                 return;
 
         clearWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
@@ -585,11 +585,11 @@ Rk::WidgetAttribute RkWidget::widgetAttributes() const
         return impl_ptr->getWidgetAttributes();
 }
 
-RkWidget* RkWidget::getTopWindow()
+RkWidget* RkWidget::getTopWidget()
 {
         if (!parentWidget())
                 return this;
-        return parentWidget()->getTopWindow();
+        return parentWidget()->getTopWidget();
 }
 
 void RkWidget::setFocus(bool b)

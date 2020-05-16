@@ -40,14 +40,14 @@ RkMain::~RkMain()
 {
 }
 
-bool RkMain::setTopLevelWindow(RkWidget *widget)
+bool RkMain::setTopLevelWidget(RkWidget *widget)
 {
-        return o_ptr->setTopLevelWindow(widget);
+        return o_ptr->setTopLevelWidget(widget);
 }
 
-RkWidget* RkMain::topLevelWindow(void) const
+RkWidget* RkMain::topLevelWidget(void) const
 {
-        return o_ptr->topLevelWindow();
+        return o_ptr->topLevelWidget();
 }
 
 RkEventQueue* RkMain::eventQueue() const

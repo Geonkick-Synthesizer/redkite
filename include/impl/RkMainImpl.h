@@ -46,14 +46,14 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(const RkMainImpl &other) = delete;
         RkMainImpl(RkMainImpl &&other) = delete;
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
-	bool setTopLevelWindow(RkWidget* widget);
-        RkWidget* topLevelWindow(void);
+	bool setTopLevelWidget(RkWidget* widget);
+        RkWidget* topLevelWidget(void);
         RkEventQueue* getEventQueue() const;
 	int exec(bool block = true);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkMain);
-        RkWidget* topWindow;
+        RkWidget* topWidget;
         std::unique_ptr<RkEventQueue> eventQueue;
 };
 
