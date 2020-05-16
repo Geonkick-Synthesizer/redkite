@@ -225,8 +225,30 @@ RkPoint RkWindowX::position() const
 
 void RkWindowX::setPosition(const RkPoint &position)
 {
-        if (isWindowCreated())
-                XMoveWindow(display(), xWindow, position.x(), position.y());
+        if (isWindowCreated()) {
+                int x = position.x();
+                int y = position.y();
+                if (hasParent() && ((static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Popup))
+                                    || static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Dialog))) {
+                        XWindowAttributes parentAttributes;
+                        XGetWindowAttributes(display(), parentWindowInfo.window, &parentAttributes);
+                        int parentRootX;
+                        int parentRootY;
+                        Window child;
+                        XTranslateCoordinates(display(),
+                                              parentWindowInfo.window,
+                                              RootWindow(display(), screenNumber),
+                                              parentAttributes.x,
+                                              parentAttributes.y,
+                                              &parentRootX,
+                                              &parentRootY,
+                                              &child);
+                        RK_UNUSED(child);
+                        x += parentRootX - parentAttributes.x;
+                        y += parentRootY - parentAttributes.y;
+                }
+                XMoveWindow(display(), xWindow, x, y);
+        }
 }
 
 void RkWindowX::setBorderWidth(int width)

@@ -35,34 +35,41 @@ int main(int arc, char **argv)
 
         auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Main Window");
-	mainWindow->setPosition(180, 180);
         mainWindow->setSize(400, 500);
-        // Set background window.
         mainWindow->setBackgroundColor({50, 100, 50});
 
         auto button = new RkButton(mainWindow);
         button->setTitle("Button");
         button->setBackgroundColor({255, 0, 0});
-        button->setPosition(100, 100);
-        button->setSize(30, 30);
+        button->setPosition(400, 40);
+        button->setSize(10, 10);
         button->show();
-        RK_ACT_BINDL(button, pressed, RK_ACT_ARGS(), [mainWindow]() {
+
+        auto mainChild = new RkButton(mainWindow);
+        mainChild->setTitle("mainChild");
+        mainChild->setBackgroundColor({0, 0, 200});
+        mainChild->setPosition(0, 0);
+        mainChild->setSize(200, 200);
+        mainChild->show();
+
+        RK_ACT_BINDL(button, pressed, RK_ACT_ARGS(), [&]() {
                         auto popup = new RkWidget(mainWindow, Rk::WindowFlags::Popup);
                         popup->setTitle("Popup");
-                        popup->setPosition(100, 100);
-                        popup->setBackgroundColor({80, 80, 80, 50});
                         popup->setSize(170, 110);
+                        popup->setBackgroundColor({80, 80, 80, 50});
                         auto child = new RkWidget(popup);
                         child->setTitle("Child on Popup");
-                        child->setPosition(10, 10);
+                        child->setPosition(5, 5);
                         child->setBackgroundColor({80, 80, 80});
                         child->setSize(40, 40);
                         child->show();
                         popup->show();
+                        popup->setPosition(10, 10);
 
                 });
 
         mainWindow->show();
+        mainWindow->setPosition(120, 120);
         int res = app.exec();
         return res;
 }
