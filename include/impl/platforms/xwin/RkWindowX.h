@@ -64,6 +64,7 @@ class RkWindowX {
         void setFocus(bool b);
         bool hasFocus() const;
         void setPointerShape(Rk::PointerShape shape);
+        bool pointerIsOverWindow() const;
 
  protected:
         bool openDisplay();

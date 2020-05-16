@@ -166,29 +166,10 @@ bool RkWindowX::init()
 void RkWindowX::show(bool b)
 {
         if (isWindowCreated()) {
-                if (b) {
+                if (b)
                         XMapRaised(display(), xWindow);
-                        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup)) {
-                                XGrabPointer(display(),
-                                              xWindow,
-                                              False,
-                                              ButtonPressMask | ButtonReleaseMask
-                                              | ButtonMotionMask | PointerMotionMask,
-                                             GrabModeAsync,
-                                             GrabModeAsync,
-                                             None,
-                                             0,
-                                             CurrentTime);
-                                // XGrabKeyboard(display(),
-                                //               xWindow,
-                                //               AnyKey,
-                                //               GrabModeAsync,
-                                //               GrabModeAsync,
-                                //               CurrentTime);
-                        }
-                } else {
+                else
                         XUnmapWindow(display(), xWindow);
-                }
         }
 }
 
@@ -388,4 +369,42 @@ void RkWindowX::setPointerShape(Rk::PointerShape shape)
 Rk::WindowFlags RkWindowX::flags() const
 {
         return windowFlags;
+}
+
+bool RkWindowX::pointerIsOverWindow() const
+{
+        if (isWindowCreated()) {
+                XWindowAttributes attributes;
+                XGetWindowAttributes(display(), xWindow, &attributes);
+                int root_x = attributes.x;
+                int root_y = attributes.y;
+                Window child;
+                int proot_x;
+                int proot_y;
+                Window root_win;
+                unsigned int mask;
+                int win_x;
+                int win_y;
+                XQueryPointer(display(),
+                              xWindow,
+                              &root_win,
+                              &child,
+                              &proot_x,
+                              &proot_y,
+                              &win_x,
+                              &win_y,
+                              &mask);
+
+                RK_UNUSED(root_win);
+                RK_UNUSED(child);
+                RK_UNUSED(mask);
+                RK_UNUSED(win_x);
+                RK_UNUSED(win_y);
+
+                auto winSize = size();
+                if (proot_x >= root_x && proot_x < root_x + winSize.width()
+                    && proot_y >= root_y && proot_y < root_y + winSize.height())
+                        return true;
+        }
+        return false;
 }

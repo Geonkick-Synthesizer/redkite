@@ -176,22 +176,14 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::FocusedOut:
-                        RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
-                        inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
+                RK_LOG_DEBUG("RkEvent::Type::FocsedOut: " << title());
+                inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-        {
                 RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress:" << title());
-                auto mouseEvent = static_cast<RkMouseEvent*>(event);
-                auto size = inf_ptr->size();
-                if ((static_cast<int>(windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup))
-                    && (mouseEvent->x() < 0 || mouseEvent->x() > size.width()
-                        || mouseEvent->y() < 0 || mouseEvent->y() > size.height())) {
-                        inf_ptr->close();
-                } else if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
-        }
         case RkEvent::Type::MouseDoubleClick:
                 RK_LOG_DEBUG("RkEvent::Type::MouseDoubleClick:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
@@ -207,7 +199,8 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
         case RkEvent::Type::Hover:
-                        inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
+                RK_LOG_DEBUG("RkEvent::Type::Hover:" << title());
+                inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
                 widgetSize = platformWindow->size();
@@ -438,4 +431,9 @@ void RkWidget::RkWidgetImpl::propagateGrabKey(bool b)
 bool RkWidget::RkWidgetImpl::propagateGrabKeyEnabled() const
 {
         return isPropagateGrabKey;
+}
+
+bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
+{
+        return platformWindow->pointerIsOverWindow();
 }

@@ -49,10 +49,17 @@ int main(int arc, char **argv)
         RK_ACT_BINDL(button, pressed, RK_ACT_ARGS(), [mainWindow]() {
                         auto popup = new RkWidget(mainWindow, Rk::WindowFlags::Popup);
                         popup->setTitle("Popup");
-                        popup->setPosition(110, 110);
+                        popup->setPosition(100, 100);
                         popup->setBackgroundColor({80, 80, 80, 50});
                         popup->setSize(170, 110);
+                        auto child = new RkWidget(popup);
+                        child->setTitle("Child on Popup");
+                        child->setPosition(10, 10);
+                        child->setBackgroundColor({80, 80, 80});
+                        child->setSize(40, 40);
+                        child->show();
                         popup->show();
+
                 });
 
         mainWindow->show();

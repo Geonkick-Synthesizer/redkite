@@ -38,6 +38,7 @@
 
 RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* interface)
         : inf_ptr{interface}
+        , currentPopup{nullptr}
 #ifdef RK_OS_WIN
         , platformEventQueue{std::make_unique<RkEventQueueWin>()}
 #elif RK_OS_MAC
@@ -84,6 +85,10 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
 
                 RK_LOG_DEBUG("add widget window id");
                 windowIdsMap.insert({widgetImpl->nativeWindowInfo()->window, obj});
+                if (static_cast<int>(widgetImpl->windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup)) {
+                        currentPopup = obj;
+                        RK_LOG_DEBUG("set current poup: " << currentPopup);
+                }
         }
 
         objectsList.insert(obj);
@@ -210,7 +215,24 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         for (const auto &e: queue) {
                 if (e.second->type() == RkEvent::Type::KeyPressed)
                         processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()), e.first);
+                else if (currentPopup && e.second->type() == RkEvent::Type::MouseButtonPress)
+                        processPopup();
                 processEvent(e.first, e.second.get());
+        }
+}
+
+void RkEventQueue::RkEventQueueImpl::processPopup()
+{
+        if (!currentPopup)
+                return;
+
+        auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(currentPopup->o_ptr.get());
+        if (widgetImpl && !widgetImpl->pointerIsOverWindow()) {
+                if (auto popup = dynamic_cast<RkWidget*>(currentPopup); popup) {
+                        RK_LOG_DEBUG("close Poupup");
+                        popup->close();
+                        currentPopup = nullptr;
+                }
         }
 }
 

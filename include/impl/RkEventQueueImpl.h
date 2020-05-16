@@ -41,7 +41,6 @@
         class RkEventQueueX;
 #endif
 
-
 class RkEventQueue::RkEventQueueImpl {
  public:
         explicit RkEventQueueImpl(RkEventQueue* interface);
@@ -71,6 +70,7 @@ class RkEventQueue::RkEventQueueImpl {
 
  protected:
         void processShortcuts(RkKeyEvent *event, RkObject *excludedObj);
+        void processPopup();
         void removeObjectShortcuts(RkObject *obj);
 
  private:
@@ -84,6 +84,7 @@ class RkEventQueue::RkEventQueueImpl {
         std::vector<std::unique_ptr<RkAction>> actionsQueue;
         std::unordered_set<RkTimer*> timersList;
         std::mutex actionsQueueMutex;
+        RkObject *currentPopup;
 
 #ifdef RK_OS_WIN
         std::unique_ptr<RkEventQueueWin> platformEventQueue;
