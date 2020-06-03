@@ -38,8 +38,6 @@ GUI plugins apart from developing standalone applications.
    by the system. Avoid requiring to install additional dependencies
    for runtime that may cause versioning conflicts.
 
- * Be cross-platform
-
  * Interface (API) to be simple
 
 ### Main features
