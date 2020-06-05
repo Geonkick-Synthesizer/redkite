@@ -1,0 +1,19 @@
+### Changes from 0.8.0 to 1.0.0
+
+#### Features
+
+  - RkObject and object tree ownership
+  - RkContinerItem, now continer supports space, RkWidget and RkContainter items
+  - Popup widget
+  - Hover event
+  - RkTransition - linear transition from one value to another, useful for effects
+  - RkAction, useful to execute asyncronous actions
+
+#### Improvements
+
+  - RkContianer
+  - RkEventQueue
+  - RkWidget
+  - RkButton
+  - events, actions and objects binds
+
