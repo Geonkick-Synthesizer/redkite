@@ -6,7 +6,7 @@ Redkite is a small free software GUI toolkit.
 It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 1.0 (version 1.0 not released yet)
+Version: 1.0
 
 License: GPLv3
 
@@ -34,12 +34,13 @@ GUI plugins apart from developing standalone applications.
  * Not to add dependencies that breaks the above points. Also, maximum
    to relay on dependencies for runtime that are provided by default
    by the system. Avoid requiring to install additional dependencies
-   for runtime that may cause versioning conflicts.
+   for runtime that may cause version conflicts.
 
  * Interface (API) to be simple
 
 ### Main features
 
+* Object tree ownership
 * Widgets
 * Graphics (with Cairo backend)
 * Painter (paints RkImage and widgets)
@@ -50,32 +51,36 @@ GUI plugins apart from developing standalone applications.
 * RkTimer (a timer class)
 * Widget container used for vertical and horizontal layout
 
-### Interface classes
+### Interface
 
+* RkAction
+* RkButton
 * RkCanvas
 * RkColor
+* RkContainer
+* RkContainerItem
+* RkContainerWidgetItem
 * RkEvent
 * RkEventQueue
+* RkFont
+* Rk
 * RkImage
-* RkButton
 * RkLabel
+* RkLineEdit
 * RkLog
 * RkMain
+* RkObject
 * RkPainter
 * RkPen
-* RkFont
 * RkPlatform
 * RkPoint
+* RkProgressBar
 * RkRealPoint
 * RkRect
 * RkSize
 * RkTimer
-* RkLineEdit
-* RkProgressBar
+* RkTransition
 * RkWidget
-* RkContainerItem
-* RkContainerWidgetItem
-* RkContainer
 
 ### Build & Install Redkite
 
