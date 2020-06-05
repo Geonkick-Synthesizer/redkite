@@ -50,6 +50,7 @@ GUI plugins apart from developing standalone applications.
 * rkpng2c (a tool that converts PNG images to C array encoded in ARGB32)
 * RkTimer (a timer class)
 * Widget container used for vertical and horizontal layout
+* Shortcuts
 
 ### Interface
 
