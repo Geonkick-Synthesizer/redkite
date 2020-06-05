@@ -18,6 +18,7 @@ set(RK_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(RK_SRC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 set(RK_TOOLS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
+set(RK_DOC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/doc)
 
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "no build type selected, default to Release")

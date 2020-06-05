@@ -14,3 +14,4 @@ else()
 endif()
 
 install(TARGETS rkpng2c DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+install(FILES ${RK_DOC_PATH}/man/rkpng2c.1  DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man1)
