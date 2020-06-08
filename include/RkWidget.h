@@ -46,7 +46,7 @@ class RkFocusEvent;
 class RkHoverEvent;
 class RkMain;
 struct RkWindowId;
-struct RkNativeWindowInfo;
+class RkNativeWindowInfo;
 
 class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
   public:
@@ -135,7 +135,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
   protected:
           RK_DELCATE_IMPL_PTR(RkWidget);
           explicit RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl);
-          virtual void event(RkEvent *event);
+          virtual void event(RkEvent *event) override;
           virtual void closeEvent(RkCloseEvent *event);
           virtual void keyPressEvent(RkKeyEvent *event);
           virtual void keyReleaseEvent(RkKeyEvent *event);

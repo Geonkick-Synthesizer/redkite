@@ -36,12 +36,12 @@ struct RK_EXPORT RkWindowId {
     HWND id;
 };
 
-struct RK_EXPORT RkNativeWindowInfo {
-        RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {}
-        HINSTANCE instance;
-        std::string className;
-        HWND window;
-};
+/* struct RK_EXPORT RkNativeWindowInfo { */
+/*         RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {} */
+/*         HINSTANCE instance; */
+/*         std::string className; */
+/*         HWND window; */
+/* }; */
 
 extern std::string RK_NO_EXPORT rk_winApiClassName;
 extern HINSTANCE RK_NO_EXPORT rk_winApiInstance;

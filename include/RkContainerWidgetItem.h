@@ -36,17 +36,17 @@ class RK_EXPORT RkContainerWidgetItem: public RkContainerItem {
                    , itemWidget{parent} {}
         virtual ~RkContainerWidgetItem() = default;
         void setPosition(const RkPoint &point) override { itemWidget->setPosition(point); }
-        RkPoint position() const { return itemWidget->position(); }
-        void setX(int val) { itemWidget->setX(val); }
-        int x() const { return itemWidget->x(); }
-        void setY(int val) { itemWidget->setY(val); }
-        int y() const { return itemWidget->y(); }
-        void setSize(const RkSize &size) { itemWidget->setSize(size); }
-        RkSize size() const { return itemWidget->size(); }
-        void setWidth(int val) { itemWidget->setWidth(val); }
-        int width() const { return itemWidget->width(); }
-        void setHeight(int val) { itemWidget->setHeight(val); }
-        int height() const { return itemWidget->height(); }
+        RkPoint position() const override { return itemWidget->position(); }
+        void setX(int val) override { itemWidget->setX(val); }
+        int x() const override  { return itemWidget->x(); }
+        void setY(int val) override  { itemWidget->setY(val); }
+        int y() const override { return itemWidget->y(); }
+        void setSize(const RkSize &size) override { itemWidget->setSize(size); }
+        RkSize size() const override { return itemWidget->size(); }
+        void setWidth(int val) override { itemWidget->setWidth(val); }
+        int width() const override { return itemWidget->width(); }
+        void setHeight(int val) override { itemWidget->setHeight(val); }
+        int height() const override { return itemWidget->height(); }
         RkWidget* widget() const { return itemWidget; }
         void hide(bool b) override { return b ? itemWidget->hide() : itemWidget->show(); }
         bool isHidden() const override { return !itemWidget->isShown(); }

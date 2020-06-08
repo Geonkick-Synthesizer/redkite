@@ -196,9 +196,8 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 for (auto &event: events) {
                         auto widget = findWidget(event.first);
                         if (widget) {
-                                auto pair = std::move(std::make_pair<RkObject*,
-                                                      std::unique_ptr<RkEvent>>(widget,
-                                                                                std::move(event.second)));
+                                auto pair = std::make_pair<RkObject*,
+                                            std::unique_ptr<RkEvent>>(widget, std::move(event.second));
                                 eventsQueue.push_back(std::move(pair));
                         }
                 }
