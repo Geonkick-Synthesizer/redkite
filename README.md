@@ -83,6 +83,25 @@ GUI plugins apart from developing standalone applications.
 * RkTransition
 * RkWidget
 
+### Technical limitations
+
+* It is not mature, generally doesn't support many feature that mature GUI toolkits support
+* It is not cross-plafrom, supports only GNU/Linux (X11/Xlib)
+* Does not support dynamic layout (only static one)
+* Popup widget is not fully compliant with the standard behaviour
+* RkLineEdit is limited, doesn't implement all standard features
+* Doesn't have many standard widgets:
+     combo box, popup menus, file dialog,
+     list view, tree view, grid view, multi-line edit
+* Supports only Cairo graphics backend
+* Doesn't support copy/paste
+* Dosen't support unicode
+
+### For what Redkite is recommended
+
+* Standalone applications with relative simple UI
+* GUI Plugins with relative simple UI
+
 ### Build & Install Redkite
 
 In order to build Redkite there is a need to install the following development packages:
