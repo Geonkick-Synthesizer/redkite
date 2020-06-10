@@ -18,7 +18,7 @@ of the same or different GUI toolkit. Using well known GUI toolkits for this
 purpose can cause a lot of conflicts. For example, often these conflicts arise
 in music software when a Digital Audio Workstation as a host is loading GUI
 audio plugins. The Redkite GUI toolkit is developed to address
-this issue, and provide a way to develop easily self-sufficiency
+this issue, and provide a way to develop easily self-sufficient
 GUI plugins apart from developing standalone applications.
 
 ### Goals
