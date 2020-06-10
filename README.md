@@ -95,7 +95,7 @@ GUI plugins apart from developing standalone applications.
      list view, tree view, grid view, multi-line edit
 * Supports only Cairo graphics backend
 * Doesn't support copy/paste
-* Dosen't support unicode
+* Doesn't support unicode
 
 ### For what Redkite is recommended
 
