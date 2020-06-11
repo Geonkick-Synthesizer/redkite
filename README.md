@@ -6,7 +6,7 @@ Redkite is a small free software GUI toolkit.
 It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 1.0
+Version: 1.0.0
 
 License: GPLv3
 
@@ -118,7 +118,7 @@ Clone the code repository, compile and install.
 
 Note: it is recommended to use release versions (see repository tags)
 
-        git clone https://gitlab.com/geontime/redkite.git
+        git clone https://gitlab.com/iurie-sw/redkite.git
         mkdir redkite/build
         cd redkite/build
         cmake ../
@@ -127,4 +127,4 @@ Note: it is recommended to use release versions (see repository tags)
 
 ### What applications were developed with Redkite?
 
-* [Geonkick](https://gitlab.com/geontime/geonkick) - a percussion synthesizer.
+* [Geonkick](https://gitlab.com/iurie-sw/geonkick) - a percussion synthesizer.
