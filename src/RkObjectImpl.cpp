@@ -23,6 +23,7 @@
 
 #include "RkObjectImpl.h"
 #include "RkEventQueue.h"
+#include "RkObserver.h"
 
 RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface,
                                      RkObject* parent,

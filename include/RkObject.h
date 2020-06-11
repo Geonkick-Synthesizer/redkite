@@ -26,7 +26,6 @@
 
 #include "Rk.h"
 #include "RkObserver.h"
-
 #include <unordered_set>
 
 class RkEvent;

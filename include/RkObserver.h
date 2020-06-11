@@ -29,7 +29,7 @@
 
 class RkObject;
 
-class RkObserver {
+class RK_EXPORT RkObserver {
  public:
         RkObserver(RkObject *obj)
                 : observerObject{obj} { }

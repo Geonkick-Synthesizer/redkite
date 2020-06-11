@@ -23,7 +23,6 @@
 
 #include "RkObjectImpl.h"
 #include "RkLog.h"
-#include "RkObserver.h"
 #include "RkEventQueue.h"
 
 RkObject::RkObject(RkObject *parent)
