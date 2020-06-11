@@ -7,7 +7,7 @@
   - Popup widget
   - Hover event
   - RkTransition - linear transition from one value to another, useful for effects
-  - RkAction, useful to execute asyncronous actions
+  - RkAction, useful to execute synchronous actions
   - Shortcuts
 
 #### Improvements
