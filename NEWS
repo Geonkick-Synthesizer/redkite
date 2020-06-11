@@ -3,7 +3,7 @@
 #### Features
 
   - RkObject and object tree ownership
-  - RkContinerItem, now continer supports space, RkWidget and RkContainter items
+  - RkContainerItem, now continer supports space, RkWidget and RkContainter items
   - Popup widget
   - Hover event
   - RkTransition - linear transition from one value to another, useful for effects
