@@ -32,7 +32,7 @@
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
-        , topWidget(nullptr)
+        , topWidget{nullptr}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -41,7 +41,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
-        , topWidget(nullptr)
+        , topWidget{nullptr}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -52,8 +52,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
 
 RkMain::RkMainImpl::~RkMainImpl()
 {
-        if (topWidget)
-                delete topWidget;
+        delete topWidget;
         RK_LOG_DEBUG("called");
 }
 
