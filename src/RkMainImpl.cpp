@@ -69,7 +69,6 @@ bool RkMain::RkMainImpl::setTopLevelWidget(RkWidget* widget)
 
 RkWidget* RkMain::RkMainImpl::topLevelWidget(void)
 {
-      RK_LOG_DEBUG(topWidget->title());
       return topWidget;
 }
 
