@@ -49,7 +49,8 @@ RkImage::RkImage(std::unique_ptr<RkImageImpl> impl)
 {
 }
 
-RkImage::RkImage(const RkImage &image)
+RkImage::RkImage(const RkImage &image) :
+        o_ptr{std::make_unique<RkImageImpl>(this, 0, 0, nullptr)}
 {
         o_ptr->createImage({image.width(), image.height()}, image.format(), image.data());
 }
