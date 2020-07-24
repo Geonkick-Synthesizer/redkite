@@ -6,7 +6,7 @@ Redkite is a small free software GUI toolkit.
 It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 1.0.0
+Version: 1.0.1
 
 License: GPLv3
 
@@ -36,7 +36,7 @@ GUI plugins apart from developing standalone applications.
    by the system. Avoid requiring to install additional dependencies
    for runtime that may cause version conflicts.
 
- * Interface (API) to be simple
+ * Interface to be simple
 
 ### Main features
 
@@ -44,9 +44,9 @@ GUI plugins apart from developing standalone applications.
 * Widgets
 * Graphics (with Cairo backend)
 * Painter (paints RkImage and widgets)
+* Events
 * Actions (a binding mechanism between objects)
 * GNU/Linux (XLib/X11)
-* CMake system, build/install
 * rkpng2c (a tool that converts PNG images to C array encoded in ARGB32)
 * RkTimer (a timer class)
 * Widget container used for vertical and horizontal layout
@@ -85,14 +85,13 @@ GUI plugins apart from developing standalone applications.
 
 ### Technical limitations
 
-* It is not mature, generally doesn't support many feature that mature GUI toolkits support
 * It is not cross-plafrom, supports only GNU/Linux (X11/Xlib)
-* Does not support dynamic layout (only static one)
+* Does not support dynamic layout
 * Popup widget is not fully compliant with the standard behaviour
 * RkLineEdit is limited, doesn't implement all standard features
 * Doesn't have many standard widgets:
      combo box, popup menus, file dialog,
-     list view, tree view, grid view, multi-line edit
+     list view, tree view, grid view, multi-line edit etc.
 * Supports only Cairo graphics backend
 * Doesn't support copy/paste
 * Doesn't support unicode
