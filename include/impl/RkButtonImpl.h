@@ -40,12 +40,10 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
         void setType(ButtonType type);
 	void drawButton(RkPainter &painter);
         void setEmphasize(bool b);
-        bool isEmphasize() const;
-        void enableEmphasize(bool b);
-        bool emphasizeEnabled() const;
 
  protected:
         void applyEffect(RkImage &img);
+        void updateButtonState();
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkButton);
@@ -53,8 +51,7 @@ class RkButton::RkButtonImpl : public RkWidget::RkWidgetImpl {
         bool is_pressed;
         std::array<RkImage, 4> buttonImages;
         ButtonImage buttonImageState;
-        bool is_emphasizeEnabled;
-        bool is_emphasize;
+        bool isEmphasizeEnabled;
 };
 
 #endif // RK_LABEL_H

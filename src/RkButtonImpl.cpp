@@ -29,6 +29,7 @@ RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     , buttonType{ButtonType::ButtonUncheckable}
     , is_pressed{false}
     , buttonImageState{RkButton::ButtonImage::ImageUnpressed}
+    , isEmphasizeEnabled{false}
 {
 }
 
@@ -54,7 +55,7 @@ bool RkButton::RkButtonImpl::isPressed() const
 void RkButton::RkButtonImpl::setPressed(bool pressed)
 {
         is_pressed = pressed;
-        buttonImageState = pressed ? RkButton::ButtonImage::ImagePressed : RkButton::ButtonImage::ImageUnpressed;
+        updateButtonState();
 }
 
 void RkButton::RkButtonImpl::setType(RkButton::ButtonType type)
@@ -88,13 +89,19 @@ void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 
 void RkButton::RkButtonImpl::setEmphasize(bool b)
 {
+        isEmphasizeEnabled = b;
+        updateButtonState();
+}
+
+void RkButton::RkButtonImpl::updateButtonState()
+{
         if (isPressed()) {
-                if (b)
+                if (isEmphasizeEnabled)
                         buttonImageState = RkButton::ButtonImage::ImagePressedHover;
                 else
                         buttonImageState = RkButton::ButtonImage::ImagePressed;
         } else {
-                if (b)
+                if (isEmphasizeEnabled)
                         buttonImageState = RkButton::ButtonImage::ImageUnpressedHover;
                 else
                         buttonImageState = RkButton::ButtonImage::ImageUnpressed;
