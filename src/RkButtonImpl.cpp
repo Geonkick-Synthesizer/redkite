@@ -55,12 +55,14 @@ bool RkButton::RkButtonImpl::isPressed() const
 void RkButton::RkButtonImpl::setPressed(bool pressed)
 {
         is_pressed = pressed;
+        isEmphasizeEnabled = false;
         updateButtonState();
 }
 
 void RkButton::RkButtonImpl::setType(RkButton::ButtonType type)
 {
         buttonType = type;
+        updateButtonState();
 }
 
 RkButton::ButtonType RkButton::RkButtonImpl::type(void) const
