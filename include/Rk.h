@@ -37,6 +37,9 @@
 #include <thread>
 #include <chrono>
 #include <functional>
+#include <unordered_map>
+#include <unordered_set>
+#include <mutex>
 
 #define RK_UNUSED(expr) (void)expr
 

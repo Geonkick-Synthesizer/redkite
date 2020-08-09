@@ -26,8 +26,6 @@
 
 #include "RkObject.h"
 
-#include <unordered_set>
-
 class RkEventQueue;
 
 class RkObject::RkObjectImpl {

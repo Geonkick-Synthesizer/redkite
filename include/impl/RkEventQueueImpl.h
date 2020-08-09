@@ -30,10 +30,6 @@
 #include "RkEvent.h"
 #include "RkShortcut.h"
 
-#include <mutex>
-#include <unordered_set>
-#include <unordered_map>
-
 #ifdef RK_OS_WIN
         class RkEventQueueWin;
 #elif RK_OS_MAC
