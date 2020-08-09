@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.8)
 
 project(redkite VERSION 1.0.1)
 
+option(ENABLE_EXAMPLES "Build examples" ON)
+
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
@@ -45,8 +47,6 @@ if (NOT CMAKE_INSTALL_LIBDIR)
   message(STATUS "setting the default lib dir path to /usr/lib")
   set(CMAKE_INSTALL_LIBDIR /usr/lib CACHE STRING "lib dir to /usr/lib" FORCE)
 endif()
-
-option(ENABLE_EXAMPLES "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")

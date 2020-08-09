@@ -1,9 +1,15 @@
+### Changes from 1.0.1 to 1.0.2
+
+#### Fixes:
+
+  - some fixes for potential clang compile errors
+
 ### Changes from 1.0.0 to 1.0.1
 
 Fixes:
 
- - fix for copy constructor of RkImage
- - some cleanup of useless code
+  - fix for copy constructor of RkImage
+  - some cleanup of useless code
 
 ### Changes from 0.8.1 to 1.0.0
 
