@@ -441,7 +441,7 @@ namespace Rk {
                 Object = 0,
                 Widget = 1
         };
-};
+}
 
 #define RK_ACT_ARGS(arg, ...) arg, ##__VA_ARGS__
 #define RK_ARG_TYPE(type, ...) type, ##__VA_ARGS__
