@@ -40,9 +40,9 @@ class RK_EXPORT RkLabel : public RkWidget {
     virtual void paintEvent(RkPaintEvent *event) override;
 
  private:
-          RK_DISABLE_COPY(RkLabel);
-          RK_DISABLE_MOVE(RkLabel);
-          RK_DELCATE_IMPL_PTR(RkLabel);
+    RK_DISABLE_COPY(RkLabel);
+    RK_DISABLE_MOVE(RkLabel);
+    RK_DELCATE_IMPL_PTR(RkLabel);
 };
 
 #endif // RK_LABEL_H
