@@ -49,6 +49,7 @@ class RkEventQueueX
         std::unique_ptr<RkEvent> getFocusEvent(XEvent *e);
         void updateModifiers(Rk::Key key, RkEvent::Type type);
         Rk::Key fromKeysym(int keycode) const;
+        std::unique_ptr<RkEvent> processDndEvents(XEvent *e) const;
 
  private:
         RK_DISABLE_COPY(RkEventQueueX);
@@ -56,6 +57,7 @@ class RkEventQueueX
         Display* xDisplay;
         std::chrono::system_clock::time_point lastTimePressed;
         mutable int keyModifiers;
+        std::unique_ptr<DndClass> dndHandle;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

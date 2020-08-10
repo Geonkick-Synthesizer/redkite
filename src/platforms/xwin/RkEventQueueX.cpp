@@ -32,6 +32,7 @@
 RkEventQueueX::RkEventQueueX()
         : xDisplay{nullptr}
         , keyModifiers{0}
+        , dndHandle{nullptr}
 {
         RK_LOG_DEBUG("called");
 }
@@ -39,6 +40,8 @@ RkEventQueueX::RkEventQueueX()
 RkEventQueueX::~RkEventQueueX()
 {
         RK_LOG_DEBUG("called");
+        if (dndHandle)
+                xdnd_shut(dndHandle.get());
 }
 
 bool RkEventQueueX::pending() const
@@ -51,6 +54,22 @@ bool RkEventQueueX::pending() const
 void RkEventQueueX::setDisplay(Display *display)
 {
         xDisplay = display;
+        if (!dndHandle) {
+                constexpr char *dndMimeTypes[] = {
+                 "audio/ogg",
+                 "audio/x-wav",
+                 "image/jpeg",
+                 "image/png",
+                 "text/plain",
+                 "audio/flac"
+                 };
+                 auto dndTypes = new Atom[6 + 1];
+                 XInternAtoms(display, (char **)m_dndMimeTypes, 6, 0, dndTypes);
+                // dndTypes[6] = 0;
+                RK_LOG_DEBUG("xdnd_init");
+                dndHandle = std::make_unique<DndClass>();
+                xdnd_init(dndHandle.get(), xDisplay);
+        }
 }
 
 Display* RkEventQueueX::display() const
@@ -104,11 +123,19 @@ RkEventQueueX::getEvents()
                         event = std::move(hoveEvent);
                         break;
                 }
+                case SelectionNotify:
+                        event = processDndEvents(&e);
+                        RK_LOG_DEBUG("SelectionNotify");
+                        break;
                 case ClientMessage:
                 {
+                        RK_LOG_DEBUG("ClientMessage");
+
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
                         if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
                                 event = std::make_unique<RkCloseEvent>();
+                        else
+                                event = processDndEvents(&e);
                         break;
                 }
                 default:
@@ -256,5 +283,24 @@ std::unique_ptr<RkEvent> RkEventQueueX::getFocusEvent(XEvent *e)
         auto event = std::make_unique<RkFocusEvent>();
         event->setType(e->type == FocusIn ? RkEvent::Type::FocusedIn : RkEvent::Type::FocusedOut);
         return event;
+}
+
+std::unique_ptr<RkEvent> RkEventQueueX::processDndEvents(XEvent *e) const
+{
+        if (xdnd_handle_drop_events(dndHandle.get(), e) != 1)
+                return nullptr;
+
+        RK_LOG_DEBUG("get dnd drop data");
+        unsigned char *dropData = nullptr;
+        int x = 0;
+        int y = 0;
+        int dataLenght = 0;
+        Atom dtopType;
+        xdnd_get_drop(xDisplay, e, nullptr, nullptr, &dropData, &dataLenght, &dtopType, &x, &y);
+        if (dropData && dataLenght > 0) {
+                RK_LOG_DEBUG("DND data legnth: " << dataLenght);
+                RK_LOG_DEBUG("x " << x << ", y: "<< y);
+        }
+        return nullptr;
 }
 
