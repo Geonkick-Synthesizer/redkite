@@ -76,8 +76,10 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
  #if !defined(RK_OS_WIN) && !defined(RK_OS_MAC)
          // Set the display from the top window.
                 if (!widgetImpl->parent() && !platformEventQueue->display()) {
-                        RK_LOG_DEBUG("widget " << obj << " is parent window");
+                        RK_LOG_DEBUG("widget " << obj << " is top window");
                         platformEventQueue->setDisplay(widgetImpl->nativeWindowInfo()->display);
+                        if (widgetImpl->nativeWindowInfo()->dndHandle)
+                                platformEventQueue->setDndHandle(widgetImpl->nativeWindowInfo()->dndHandle.get());
                 }
  #else
  #error platform not implemented

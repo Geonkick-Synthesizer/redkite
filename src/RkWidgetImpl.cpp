@@ -198,6 +198,11 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
+        case RkEvent::Type::Drop:
+                RK_LOG_DEBUG("RkEvent::Type::Drop:" << title());
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->dropEvent(static_cast<RkDropEvent*>(event));
+                break;
         case RkEvent::Type::Hover:
                 RK_LOG_DEBUG("RkEvent::Type::Hover:" << title());
                 inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));

@@ -500,6 +500,11 @@ void RkWidget::wheelEvent(RkWheelEvent *event)
         RK_UNUSED(event);
 }
 
+void RkWidget::dropEvent(RkDropEvent *event)
+{
+        RK_UNUSED(event);
+}
+
 void RkWidget::moveEvent(RkMoveEvent *event)
 {
         RK_UNUSED(event);

@@ -60,7 +60,8 @@ class RK_EXPORT RkEvent {
                 FocusedIn = 15,
                 FocusedOut = 16,
                 Hover = 17,
-                Shortcut = 18
+                Shortcut = 18,
+                Drop = 19
       };
 
         explicit RkEvent(Type type = Type::NoEvent)
@@ -126,13 +127,31 @@ class RkMouseEvent: public RkEvent {
       int x() const { return mouseCoordinates.x(); }
       void setX(int x) { mouseCoordinates.setX(x); }
       int y() const { return mouseCoordinates.y(); }
-      void setY(int x) { mouseCoordinates.setY(x); }
+      void setY(int y) { mouseCoordinates.setY(y); }
       ButtonType button() const { return buttonType; }
       void setButton(ButtonType type) { buttonType = type; }
 
  private:
         RkPoint mouseCoordinates;
         ButtonType buttonType;
+};
+
+class RkDropEvent: public RkEvent {
+  public:
+
+      RkDropEvent()
+              : RkEvent(Type::Drop) {}
+
+      int x() const { return position.x(); }
+      void setX(int x) { position.setX(x); }
+      int y() const { return position.y(); }
+      void setY(int y) { position.setY(y); }
+      void setFilePath(const std::string &path) { filePath = path; }
+      std::string getFilePath() const { return filePath; }
+
+ private:
+      RkPoint position;
+      std::string filePath;
 };
 
 class RkWheelEvent: public RkEvent {

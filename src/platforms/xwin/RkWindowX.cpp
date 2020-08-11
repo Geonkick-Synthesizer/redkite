@@ -28,6 +28,8 @@
 #include <X11/cursorfont.h>
 #include <X11/Xatom.h>
 
+#include "xdnd.h"
+
 RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
          , windowFlags{flags}
@@ -62,6 +64,10 @@ RkWindowX::~RkWindowX()
 {
         RK_LOG_DEBUG("called");
         if (xDisplay) {
+                if (!hasParent() && windowInfo->dndHandle) {
+                        RK_LOG_DEBUG("shut DND for top window: " << xWindow);
+                        xdnd_shut(windowInfo->dndHandle.get());
+                }
                 freeCanvasInfo();
                 XDestroyWindow(xDisplay, xWindow);
                 if (!hasParent())
@@ -156,9 +162,20 @@ bool RkWindowX::init()
         XSetWMProtocols(xDisplay, xWindow, &deleteWindowAtom, 1);
         createCanvasInfo();
         windowInfo = std::make_unique<RkNativeWindowInfo>();
-        windowInfo->display = xDisplay;
+        windowInfo->display      = xDisplay;
         windowInfo->screenNumber = screenNumber;
-        windowInfo->window = xWindow;
+        windowInfo->window       = xWindow;
+        windowInfo->dndHandle    = parentWindowInfo.dndHandle;
+
+        if (!windowInfo->dndHandle) {
+                RK_LOG_DEBUG("is it top window, create DND handle");
+                windowInfo->dndHandle = std::make_shared<DndClass>();
+                xdnd_init(windowInfo->dndHandle.get(), xDisplay);
+        }
+
+        RK_LOG_DEBUG("set DND aware for window: " << xWindow);
+        xdnd_set_dnd_aware(windowInfo->dndHandle.get(), xWindow, 0);
+
         RK_LOG_DEBUG("window created");
         return true;
 }

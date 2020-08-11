@@ -40,8 +40,6 @@ RkEventQueueX::RkEventQueueX()
 RkEventQueueX::~RkEventQueueX()
 {
         RK_LOG_DEBUG("called");
-        if (dndHandle)
-                xdnd_shut(dndHandle.get());
 }
 
 bool RkEventQueueX::pending() const
@@ -54,22 +52,12 @@ bool RkEventQueueX::pending() const
 void RkEventQueueX::setDisplay(Display *display)
 {
         xDisplay = display;
-        if (!dndHandle) {
-                constexpr char *dndMimeTypes[] = {
-                 "audio/ogg",
-                 "audio/x-wav",
-                 "image/jpeg",
-                 "image/png",
-                 "text/plain",
-                 "audio/flac"
-                 };
-                 auto dndTypes = new Atom[6 + 1];
-                 XInternAtoms(display, (char **)m_dndMimeTypes, 6, 0, dndTypes);
-                // dndTypes[6] = 0;
-                RK_LOG_DEBUG("xdnd_init");
-                dndHandle = std::make_unique<DndClass>();
-                xdnd_init(dndHandle.get(), xDisplay);
-        }
+}
+
+void RkEventQueueX::setDndHandle(DndClass *handle)
+{
+        RK_LOG_DEBUG("set DND handle:" << handle);
+        dndHandle = handle;
 }
 
 Display* RkEventQueueX::display() const
@@ -124,7 +112,8 @@ RkEventQueueX::getEvents()
                         break;
                 }
                 case SelectionNotify:
-                        event = processDndEvents(&e);
+                        if (dndHandle)
+                                event = processDndEvents(&e);
                         RK_LOG_DEBUG("SelectionNotify");
                         break;
                 case ClientMessage:
@@ -134,7 +123,7 @@ RkEventQueueX::getEvents()
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
                         if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
                                 event = std::make_unique<RkCloseEvent>();
-                        else
+                        else if (dndHandle)
                                 event = processDndEvents(&e);
                         break;
                 }
@@ -287,19 +276,38 @@ std::unique_ptr<RkEvent> RkEventQueueX::getFocusEvent(XEvent *e)
 
 std::unique_ptr<RkEvent> RkEventQueueX::processDndEvents(XEvent *e) const
 {
-        if (xdnd_handle_drop_events(dndHandle.get(), e) != 1)
-                return nullptr;
-
-        RK_LOG_DEBUG("get dnd drop data");
         unsigned char *dropData = nullptr;
         int x = 0;
         int y = 0;
         int dataLenght = 0;
         Atom dtopType;
         xdnd_get_drop(xDisplay, e, nullptr, nullptr, &dropData, &dataLenght, &dtopType, &x, &y);
-        if (dropData && dataLenght > 0) {
-                RK_LOG_DEBUG("DND data legnth: " << dataLenght);
-                RK_LOG_DEBUG("x " << x << ", y: "<< y);
+        if (dataLenght > 0) {
+                std::string dropFilePath(reinterpret_cast<char*>(dropData), dataLenght);
+                free(dropData);
+
+                std::string prefix("file://");
+                /**
+                 * For some reason there is added an additional data of lengh of 16 bytes after the file path.
+                 * This might be an buffer overrflow in the xdnd library, but not sure.
+                 * Let's suppose that this length is constant and is 16.
+                 */
+                size_t endingSize = 16;
+
+                if (dropFilePath.find(prefix) != std::string::npos
+                    && dropFilePath.size() > endingSize + prefix.size()) {
+                        // Remove the unecessary ending.
+                        dropFilePath.erase(dropFilePath.size() - endingSize);
+                        // Remove the prefix from the file path.
+                        dropFilePath.erase(0, prefix.size());
+                        if (!dropFilePath.empty()) {
+                                auto event = std::make_unique<RkDropEvent>();
+                                event->setX(x);
+                                event->setY(y);
+                                event->setFilePath(dropFilePath);
+                                return event;
+                        }
+                }
         }
         return nullptr;
 }

@@ -29,6 +29,8 @@
 
 #include <queue>
 
+#include "xdnd.h"
+
 class RkEvent;
 class RkObject;
 
@@ -39,6 +41,7 @@ class RkEventQueueX
 	~RkEventQueueX();
         bool pending() const;
         void setDisplay(Display *display);
+        void setDndHandle(DndClass *handle);
         Display* display() const;
         std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> getEvents();
 
@@ -57,7 +60,7 @@ class RkEventQueueX
         Display* xDisplay;
         std::chrono::system_clock::time_point lastTimePressed;
         mutable int keyModifiers;
-        std::unique_ptr<DndClass> dndHandle;
+        DndClass *dndHandle;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

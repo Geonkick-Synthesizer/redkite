@@ -28,20 +28,27 @@
 #include "RkLog.h"
 
 #include <X11/Xlib.h>
-#include "xdnd.h"
 
 struct RK_EXPORT RkWindowId {
         Window id;
 };
 
+struct _DndClass;
+
 class RK_EXPORT RkNativeWindowInfo
 {
  public:
-        RkNativeWindowInfo() : display{nullptr}, screenNumber{0}, window{0} {}
+
+ RkNativeWindowInfo() :
+        display{nullptr}
+        , screenNumber{0}
+        , window{0}
+        , dndHandle{nullptr} {}
         ~RkNativeWindowInfo() = default;
         Display* display;
         int screenNumber;
         Window window;
+        std::shared_ptr<_DndClass> dndHandle;
 };
 
 RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display,
