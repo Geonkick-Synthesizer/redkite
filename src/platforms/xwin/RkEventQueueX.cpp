@@ -296,6 +296,7 @@ std::unique_ptr<RkEvent> RkEventQueueX::processDndEvents(XEvent *e) const
                         dropFilePath.erase(dropFilePath.size() - endingSize);
                         // Remove the prefix from the file path.
                         dropFilePath.erase(0, prefix.size());
+                        dropFilePath = decodeUri(dropFilePath);
                         if (!dropFilePath.empty()) {
                                 auto event = std::make_unique<RkDropEvent>();
                                 event->setX(x);
@@ -306,5 +307,11 @@ std::unique_ptr<RkEvent> RkEventQueueX::processDndEvents(XEvent *e) const
                 }
         }
         return nullptr;
+}
+
+std::string RkEventQueueX::decodeUri(const std::string &dropFilePath)
+{
+        // TODO: use proper URI parser.
+        return std::regex_replace(dropFilePath, std::regex("\\%20"), " ");
 }
 

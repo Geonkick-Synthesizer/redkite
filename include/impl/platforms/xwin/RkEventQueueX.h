@@ -28,6 +28,7 @@
 #include "RkPlatform.h"
 
 #include <queue>
+#include <regex>
 
 #include "xdnd.h"
 
@@ -53,6 +54,7 @@ class RkEventQueueX
         void updateModifiers(Rk::Key key, RkEvent::Type type);
         Rk::Key fromKeysym(int keycode) const;
         std::unique_ptr<RkEvent> processDndEvents(XEvent *e) const;
+        static std::string decodeUri(const std::string &dropFilePath);
 
  private:
         RK_DISABLE_COPY(RkEventQueueX);
