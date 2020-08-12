@@ -1,3 +1,9 @@
+### Changes from 1.0.2 to 1.0.3
+
+#### Fixes:
+
+  - include <array> in the Rk.h file (a potential clang compile error)
+
 ### Changes from 1.0.1 to 1.0.2
 
 #### Fixes:
