@@ -24,10 +24,10 @@
 #ifndef RK_GLOBAL_H
 #define RK_GLOBAL_H
 
-#define RK_VERSION 0x010002
+#define RK_VERSION 0x010003
 #define RK_MAJOR   0x01
 #define RK_MINOR   0x00
-#define RK_PATCH   0x02
+#define RK_PATCH   0x03
 
 #include <memory>
 #include <vector>
