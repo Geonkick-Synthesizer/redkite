@@ -174,7 +174,7 @@ bool RkWindowX::init()
         }
 
         RK_LOG_DEBUG("set DND aware for window: " << xWindow);
-        xdnd_set_dnd_aware(windowInfo->dndHandle.get(), xWindow, 0);
+        xdnd_set_dnd_aware(windowInfo->dndHandle.get(), xWindow, nullptr);
 
         RK_LOG_DEBUG("window created");
         return true;

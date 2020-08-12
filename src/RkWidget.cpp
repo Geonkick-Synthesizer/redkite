@@ -502,7 +502,8 @@ void RkWidget::wheelEvent(RkWheelEvent *event)
 
 void RkWidget::dropEvent(RkDropEvent *event)
 {
-        RK_UNUSED(event);
+        if (parentWidget())
+                getTopWidget()->dropEvent(event);
 }
 
 void RkWidget::moveEvent(RkMoveEvent *event)

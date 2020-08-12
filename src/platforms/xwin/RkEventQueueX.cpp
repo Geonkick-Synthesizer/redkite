@@ -56,7 +56,6 @@ void RkEventQueueX::setDisplay(Display *display)
 
 void RkEventQueueX::setDndHandle(DndClass *handle)
 {
-        RK_LOG_DEBUG("set DND handle:" << handle);
         dndHandle = handle;
 }
 
@@ -72,7 +71,6 @@ RkEventQueueX::getEvents()
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
-                RkWindowId id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
                 std::unique_ptr<RkEvent> event = nullptr;
                 switch (e.type)
                 {
@@ -114,12 +112,9 @@ RkEventQueueX::getEvents()
                 case SelectionNotify:
                         if (dndHandle)
                                 event = processDndEvents(&e);
-                        RK_LOG_DEBUG("SelectionNotify");
                         break;
                 case ClientMessage:
                 {
-                        RK_LOG_DEBUG("ClientMessage");
-
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
                         if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
                                 event = std::make_unique<RkCloseEvent>();
@@ -132,6 +127,7 @@ RkEventQueueX::getEvents()
                 }
 
                 if (event) {
+                        auto id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
                         std::pair<RkWindowId, std::unique_ptr<RkEvent>> pair(id, std::move(event));
                         events.push_back(std::move(pair));
                 }
