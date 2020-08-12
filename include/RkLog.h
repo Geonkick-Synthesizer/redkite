@@ -26,9 +26,6 @@
 
 #include "Rk.h"
 
-#include <iostream>
-#include <sstream>
-
 enum class RkLogLevel : int {
         Debug,
         Info,

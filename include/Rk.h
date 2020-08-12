@@ -40,6 +40,9 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <mutex>
+#include <array>
+#include <iostream>
+#include <sstream>
 
 #define RK_UNUSED(expr) (void)expr
 
