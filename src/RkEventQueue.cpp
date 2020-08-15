@@ -141,3 +141,8 @@ void RkEventQueue::clearQueue()
         clearEvents();
         clearActions();
 }
+
+RkObject* RkEventQueue::findObjectByName(const std::string &name) const
+{
+        return o_ptr->findObjectByName(name);
+}

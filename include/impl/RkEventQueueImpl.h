@@ -64,6 +64,7 @@ class RkEventQueue::RkEventQueueImpl {
         void processTimers();
         void clearEvents(const RkObject *obj);
         void clearActions(const RkObject *obj);
+        RkObject* findObjectByName(const std::string &name) const;
 
  protected:
         void processShortcuts(RkKeyEvent *event, RkObject *excludedObj);

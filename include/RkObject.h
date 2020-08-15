@@ -42,6 +42,9 @@ class RK_EXPORT RkObject {
         virtual void event(RkEvent *event);
         void addShortcut(Rk::Key key, Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
         void removeShortcut(Rk::Key key, Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
+        RkObject* findObject(const std::string &name) const;
+        void setName(const std::string &name);
+        std::string name() const;
         void rk__add_bound_object(RkObject* obj);
 
  protected:

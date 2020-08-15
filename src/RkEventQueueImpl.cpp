@@ -356,3 +356,12 @@ void RkEventQueue::RkEventQueueImpl::clearActions(const RkObject *obj)
                            , actionsQueue.end());
 }
 
+RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &name) const
+{
+        for (auto it = objectsList.cbegin(); it != objectsList.cend(); ++it) {
+                if ((*it)->name() == name)
+                        return *it;
+        }
+        return nullptr;
+}
+

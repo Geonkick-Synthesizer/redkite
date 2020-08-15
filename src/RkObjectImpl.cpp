@@ -159,3 +159,13 @@ Rk::ObjectType RkObject::RkObjectImpl::getObjectType() const
 {
         return objectType;
 }
+
+void RkObject::RkObjectImpl::setName(const std::string &name)
+{
+        objectName = name;
+}
+
+std::string RkObject::RkObjectImpl::name() const
+{
+        return objectName;
+}

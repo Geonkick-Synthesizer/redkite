@@ -47,6 +47,8 @@ class RkObject::RkObjectImpl {
         void addChild(RkObject* child);
         void removeChild(RkObject* child);
         Rk::ObjectType getObjectType() const;
+        void setName(const std::string &name);
+        std::string name() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkObject);
@@ -56,6 +58,7 @@ class RkObject::RkObjectImpl {
         std::unordered_set<RkObject*> objectChildren;
         std::vector<std::unique_ptr<RkObserver>> observersList;
         std::vector<RkObject*> boundObjects;
+        std::string objectName;
 };
 
 #endif // RK_OBJECT_IMPL_H

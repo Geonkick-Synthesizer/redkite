@@ -56,6 +56,7 @@ class RK_EXPORT RkEventQueue {
         void clearEvents();
         void clearActions();
         void clearQueue();
+        RkObject* findObjectByName(const std::string &name) const;
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue);
