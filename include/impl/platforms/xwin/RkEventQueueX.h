@@ -28,6 +28,9 @@
 #include "RkPlatform.h"
 
 #include <queue>
+#include <regex>
+
+#include "xdnd.h"
 
 class RkEvent;
 class RkObject;
@@ -39,6 +42,7 @@ class RkEventQueueX
 	~RkEventQueueX();
         bool pending() const;
         void setDisplay(Display *display);
+        void setDndHandle(DndClass *handle);
         Display* display() const;
         std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> getEvents();
 
@@ -49,6 +53,8 @@ class RkEventQueueX
         std::unique_ptr<RkEvent> getFocusEvent(XEvent *e);
         void updateModifiers(Rk::Key key, RkEvent::Type type);
         Rk::Key fromKeysym(int keycode) const;
+        std::unique_ptr<RkEvent> processDndEvents(XEvent *e) const;
+        static std::string decodeUri(const std::string &dropFilePath);
 
  private:
         RK_DISABLE_COPY(RkEventQueueX);
@@ -56,6 +62,7 @@ class RkEventQueueX
         Display* xDisplay;
         std::chrono::system_clock::time_point lastTimePressed;
         mutable int keyModifiers;
+        DndClass *dndHandle;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

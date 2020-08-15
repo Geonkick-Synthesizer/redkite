@@ -180,7 +180,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress:" << title());
+                RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
@@ -197,6 +197,11 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         case RkEvent::Type::MouseMove:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
+                break;
+        case RkEvent::Type::Drop:
+                RK_LOG_DEBUG("RkEvent::Type::Drop:" << title());
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->dropEvent(static_cast<RkDropEvent*>(event));
                 break;
         case RkEvent::Type::Hover:
                 RK_LOG_DEBUG("RkEvent::Type::Hover:" << title());

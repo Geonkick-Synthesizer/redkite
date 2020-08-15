@@ -32,6 +32,7 @@
 RkEventQueueX::RkEventQueueX()
         : xDisplay{nullptr}
         , keyModifiers{0}
+        , dndHandle{nullptr}
 {
         RK_LOG_DEBUG("called");
 }
@@ -53,6 +54,11 @@ void RkEventQueueX::setDisplay(Display *display)
         xDisplay = display;
 }
 
+void RkEventQueueX::setDndHandle(DndClass *handle)
+{
+        dndHandle = handle;
+}
+
 Display* RkEventQueueX::display() const
 {
         return xDisplay;
@@ -65,7 +71,6 @@ RkEventQueueX::getEvents()
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
-                RkWindowId id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
                 std::unique_ptr<RkEvent> event = nullptr;
                 switch (e.type)
                 {
@@ -104,11 +109,17 @@ RkEventQueueX::getEvents()
                         event = std::move(hoveEvent);
                         break;
                 }
+                case SelectionNotify:
+                        if (dndHandle)
+                                event = processDndEvents(&e);
+                        break;
                 case ClientMessage:
                 {
                         auto atom = XInternAtom(xDisplay, "WM_DELETE_WINDOW", True);
                         if (static_cast<Atom>(e.xclient.data.l[0]) == atom)
                                 event = std::make_unique<RkCloseEvent>();
+                        else if (dndHandle)
+                                event = processDndEvents(&e);
                         break;
                 }
                 default:
@@ -116,6 +127,7 @@ RkEventQueueX::getEvents()
                 }
 
                 if (event) {
+                        auto id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
                         std::pair<RkWindowId, std::unique_ptr<RkEvent>> pair(id, std::move(event));
                         events.push_back(std::move(pair));
                 }
@@ -256,5 +268,50 @@ std::unique_ptr<RkEvent> RkEventQueueX::getFocusEvent(XEvent *e)
         auto event = std::make_unique<RkFocusEvent>();
         event->setType(e->type == FocusIn ? RkEvent::Type::FocusedIn : RkEvent::Type::FocusedOut);
         return event;
+}
+
+std::unique_ptr<RkEvent> RkEventQueueX::processDndEvents(XEvent *e) const
+{
+        unsigned char *dropData = nullptr;
+        int x = 0;
+        int y = 0;
+        int dataLenght = 0;
+        Atom dtopType;
+        xdnd_get_drop(xDisplay, e, nullptr, nullptr, &dropData, &dataLenght, &dtopType, &x, &y);
+        if (dataLenght > 0) {
+                std::string dropFilePath(reinterpret_cast<char*>(dropData), dataLenght);
+                free(dropData);
+
+                std::string prefix("file://");
+                /**
+                 * For some reason there is added an additional data of lengh of 16 bytes after the file path.
+                 * This might be an buffer overrflow in the xdnd library, but not sure.
+                 * Let's suppose that this length is constant and is 16.
+                 */
+                size_t endingSize = 16;
+
+                if (dropFilePath.find(prefix) != std::string::npos
+                    && dropFilePath.size() > endingSize + prefix.size()) {
+                        // Remove the unecessary ending.
+                        dropFilePath.erase(dropFilePath.size() - endingSize);
+                        // Remove the prefix from the file path.
+                        dropFilePath.erase(0, prefix.size());
+                        dropFilePath = decodeUri(dropFilePath);
+                        if (!dropFilePath.empty()) {
+                                auto event = std::make_unique<RkDropEvent>();
+                                event->setX(x);
+                                event->setY(y);
+                                event->setFilePath(dropFilePath);
+                                return event;
+                        }
+                }
+        }
+        return nullptr;
+}
+
+std::string RkEventQueueX::decodeUri(const std::string &dropFilePath)
+{
+        // TODO: use proper URI parser.
+        return std::regex_replace(dropFilePath, std::regex("\\%20"), " ");
 }
 
