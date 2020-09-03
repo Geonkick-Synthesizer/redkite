@@ -360,6 +360,7 @@ void RkEventQueue::RkEventQueueImpl::clearActions(const RkObject *obj)
 
 RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &name) const
 {
+        // TODO: use less complexity O(1) with hashtable.
         for (auto it = objectsList.cbegin(); it != objectsList.cend(); ++it) {
                 if ((*it)->name() == name)
                         return *it;

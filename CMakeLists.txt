@@ -71,6 +71,7 @@ endif()
 
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
+  ${RK_INCLUDE_PATH}/RkVariant.h
   ${RK_INCLUDE_PATH}/RkObserver.h
   ${RK_INCLUDE_PATH}/RkObject.h
   ${RK_INCLUDE_PATH}/RkAction.h
