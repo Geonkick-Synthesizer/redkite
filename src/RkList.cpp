@@ -24,9 +24,11 @@
 #include "RkList.h"
 #include "RkListImpl.h"
 #include "RkLog.h"
+#include "RkPainter.h"
+#include "RkEvent.h"
 
-RkList::RkList(RkWidget *parent)
-        : RkWidget(parent, std::make_unique<RkList::RkListImpl>(this, parent))
+RkList::RkList(RkWidget *parent, RkModel *model)
+        : RkWidget(parent, std::make_unique<RkList::RkListImpl>(this, parent, model))
         , impl_ptr{static_cast<RkList::RkListImpl*>(o_ptr.get())}
 {
 }

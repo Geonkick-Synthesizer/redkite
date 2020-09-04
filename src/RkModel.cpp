@@ -1,5 +1,5 @@
 /**
- * File name: RkVariant.h
+ * File name: RkModel.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
@@ -21,13 +21,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_VARIANT_H
-#define RK_VARIANT_H
+#include "RkModel.h"
 
-#include "RkImage.h"
-
-#include <variant>
-
-using RkVariant = std::variant<std::string, RkColor, RkSize>;
-
-#endif // RK_VARIANT_H
+RkModel::RkModel(RkObject *parent)
+        : RkObject(parent)
+{
+}

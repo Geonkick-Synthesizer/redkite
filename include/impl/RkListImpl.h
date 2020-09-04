@@ -1,5 +1,5 @@
 /**
- * File name: RkVariant.h
+ * File name: RkListImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
@@ -21,13 +21,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_VARIANT_H
-#define RK_VARIANT_H
+#ifndef RK_LIST_IMPL_H
+#define RK_LIST_IMPL_H
 
-#include "RkImage.h"
+#include "RkList.h"
+#include "RkWidgetImpl.h"
+#include "RkPainter.h"
 
-#include <variant>
+class RkModel;
 
-using RkVariant = std::variant<std::string, RkColor, RkSize>;
+class RkList::RkListImpl : public RkWidget::RkWidgetImpl {
+        public:
+            RkListImpl(RkList *interface, RkWidget *parent, RkModel *model);
+            virtual ~RkListImpl() = default;
+            void drawList(RkPainter &painter);
+ private:
+            RK_DECALRE_INTERFACE_PTR(RkList);
+            RkModel* listModel;
+};
 
-#endif // RK_VARIANT_H
+#endif // RK_LIST_IMPL_H

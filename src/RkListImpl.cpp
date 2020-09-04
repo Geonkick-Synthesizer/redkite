@@ -22,37 +22,39 @@
  */
 
 #include "RkListImpl.h"
-#include "RkPainter.h"
 #include "RkLog.h"
+#include "RkModel.h"
 
 RkList::RkListImpl::RkListImpl(RkList *interface,
-                               RkWidget *parent)
+                               RkWidget *parent, RkModel *model)
     : RkWidgetImpl(static_cast<RkWidget*>(interface), parent)
     , inf_ptr{interface}
+    , listModel{model}
 {
 }
 
 void RkList::RkListImpl::drawList(RkPainter &painter)
 {
-        int y = 0;
+        if (!listModel)
+                return;
+
+        int y = 20;
         size_t i = 0;
         while (i < listModel->itemsNumber()) {
-                const RkVariant itemData = listModel->itemData(i, RkModel::DataType::RkColor);
+                RkVariant itemData = listModel->itemData(i, static_cast<int>(RkModelItem::DataType::Color));
                 if (std::holds_alternative<RkColor>(itemData)) {
                         RkPen pen = painter.pen();
                         pen.setColor(std::get<RkColor>(itemData));
                         painter.setPen(pen);
                 }
 
-                itemData = listModel->itemData(i, RkModel::DataType::String);
+                itemData = listModel->itemData(i, static_cast<int>(RkModelItem::DataType::String));
                 if (std::holds_alternative<std::string>(itemData))
-                        painter.drawText(0, y, std::get<std::string>(itemData));
+                        painter.drawText(10, y, std::get<std::string>(itemData));
 
-                itemData = listModel->itemData(i, RkModel::DataType::Size);
-                if (std::holds_alternative<RkSize>(itemData)) {
-                        painter.drawText(0, y, std::get<RkSize>(itemData));
+                itemData = listModel->itemData(i, static_cast<int>(RkModelItem::DataType::Size));
+                if (std::holds_alternative<RkSize>(itemData))
                         y += std::get<RkSize>(itemData).height();
-                }
                 i++;
         }
 }

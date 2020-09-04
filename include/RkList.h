@@ -27,9 +27,11 @@
 #include "RkWidget.h"
 #include "RkImage.h"
 
+class RkModel;
+
 class RK_EXPORT RkList : public RkWidget {
  public:
-        RkList(RkWidget *parent);
+        RkList(RkWidget *parent, RkModel *model = nullptr);
         virtual ~RkList() = default;
 
  protected:
@@ -41,6 +43,8 @@ class RK_EXPORT RkList : public RkWidget {
         virtual void mouseButtonReleaseEvent(RkMouseEvent *event) override;
         virtual void mouseDoubleClickEvent(RkMouseEvent *event) override;
         virtual void wheelEvent(RkWheelEvent *event) override;
+
+ protected:
 
  private:
     RK_DISABLE_COPY(RkList);

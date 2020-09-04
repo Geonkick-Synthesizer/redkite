@@ -91,11 +91,13 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkButton.h
   ${RK_INCLUDE_PATH}/RkLineEdit.h
+  ${RK_INCLUDE_PATH}/RkList.h
   ${RK_INCLUDE_PATH}/RkProgressBar.h
   ${RK_INCLUDE_PATH}/RkCanvas.h
   ${RK_INCLUDE_PATH}/RkImage.h
   ${RK_INCLUDE_PATH}/RkPainter.h
   ${RK_INCLUDE_PATH}/RkMain.h
+  ${RK_INCLUDE_PATH}/RkModel.h
   ${RK_INCLUDE_PATH}/RkContainerItem.h
   ${RK_INCLUDE_PATH}/RkContainerWidgetItem.h
   ${RK_INCLUDE_PATH}/RkContainer.h
@@ -108,6 +110,7 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkListImpl.h
   ${RK_INCLUDE_PATH}/impl/RkButtonImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
@@ -149,12 +152,15 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkTimer.cpp
   ${RK_SRC_PATH}/RkEventQueueImpl.cpp
   ${RK_SRC_PATH}/RkMainImpl.cpp
+  ${RK_SRC_PATH}/RkModel.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
   ${RK_SRC_PATH}/RkButton.cpp
   ${RK_SRC_PATH}/RkButtonImpl.cpp
   ${RK_SRC_PATH}/RkLineEdit.cpp
   ${RK_SRC_PATH}/RkLineEditImpl.cpp
+  ${RK_SRC_PATH}/RkList.cpp
+  ${RK_SRC_PATH}/RkListImpl.cpp
   ${RK_SRC_PATH}/RkProgressBar.cpp
   ${RK_SRC_PATH}/RkProgressBarImpl.cpp
   ${RK_SRC_PATH}/RkPainter.cpp
