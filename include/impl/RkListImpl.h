@@ -31,13 +31,17 @@
 class RkModel;
 
 class RkList::RkListImpl : public RkWidget::RkWidgetImpl {
-        public:
-            RkListImpl(RkList *interface, RkWidget *parent, RkModel *model);
-            virtual ~RkListImpl() = default;
-            void drawList(RkPainter &painter);
+ public:
+        RkListImpl(RkList *interface, RkWidget *parent, RkModel *model);
+        virtual ~RkListImpl() = default;
+        void drawList(RkPainter &painter);
+        RkModel* getModel() const;
+        size_t getIndex(int y) const;
  private:
-            RK_DECALRE_INTERFACE_PTR(RkList);
-            RkModel* listModel;
+        RK_DECALRE_INTERFACE_PTR(RkList);
+        RkModel* listModel;
+        int topMargin;
+        int leftMargin;
 };
 
 #endif // RK_LIST_IMPL_H

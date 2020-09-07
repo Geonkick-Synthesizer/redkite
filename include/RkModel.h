@@ -28,16 +28,31 @@
 #include "RkObject.h"
 #include "RkVariant.h"
 
+class RK_EXPORT RkModel;
+
 class RK_EXPORT RkModelItem {
  public:
         enum class DataType : int {
                 String   = 0,
                 Color    = 1,
                 Size     = 2,
-                UserType = 3,
+                Font     = 4,
+                UserType = 5,
         };
 
+        RkModelItem(RkModel *model, size_t index)
+                : itemModel{model}
+                , itemIndex{index}
+        {
+        }
+
         RkVariant data(int dataType = static_cast<int>(RkModelItem::DataType::String)) const;
+        size_t getIndex() const { return itemIndex; }
+        RkModel *model() const { return itemModel; }
+
+ private:
+        RkModel *itemModel;
+        size_t itemIndex;
 };
 
 class RK_EXPORT RkModel: public RkObject {
@@ -45,8 +60,16 @@ class RK_EXPORT RkModel: public RkObject {
         explicit RkModel(RkObject *parent);
         virtual ~RkModel() = default;
         RK_DECL_ACT(modelChanged, modelChanged(), RK_ARG_TYPE(), RK_ARG_VAL());
+        RK_DECL_ACT(itemSelected, itemSelected(RkModelItem item), RK_ARG_TYPE(RkModelItem), RK_ARG_VAL(item));
         virtual RkVariant itemData(size_t index, int dataType = static_cast<int>(RkModelItem::DataType::String)) const = 0;
         virtual size_t itemsNumber() const = 0;
+        virtual int itemSpan() const = 0;
+        void selectItem(size_t index);
+        bool isItemSelected(size_t index) const;
+        bool isValidIndex(size_t index) const;
+
+ protected:
+        RK_DELCATE_IMPL_PTR(RkModel);
 
  private:
         RK_DISABLE_COPY(RkModel);

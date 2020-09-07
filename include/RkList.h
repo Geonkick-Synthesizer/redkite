@@ -33,6 +33,7 @@ class RK_EXPORT RkList : public RkWidget {
  public:
         RkList(RkWidget *parent, RkModel *model = nullptr);
         virtual ~RkList() = default;
+        RkModel* getModel() const;
 
  protected:
         virtual void paintEvent(RkPaintEvent *event) override;

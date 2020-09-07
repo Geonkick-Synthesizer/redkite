@@ -22,8 +22,35 @@
  */
 
 #include "RkModel.h"
+#include "RkModelImpl.h"
+
+RkVariant RkModelItem::data(int dataType) const
+{
+        return itemModel->itemData(getIndex(), dataType);
+}
 
 RkModel::RkModel(RkObject *parent)
-        : RkObject(parent)
+        : RkObject(parent, std::make_unique<RkModel::RkModelImpl>(this, parent))
+        , impl_ptr{static_cast<RkModel::RkModelImpl*>(o_ptr.get())}
 {
 }
+
+bool RkModel::isItemSelected(size_t index) const
+{
+        return impl_ptr->isItemSelected(index);
+}
+
+void RkModel::selectItem(size_t index)
+{
+        if (isValidIndex(index)) {
+                impl_ptr->selectItem(index);
+                action modelChanged();
+                action itemSelected(RkModelItem(this, index));
+        }
+}
+
+bool RkModel::isValidIndex(size_t index) const
+{
+        return index < itemsNumber();
+}
+

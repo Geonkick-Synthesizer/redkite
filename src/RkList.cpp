@@ -22,6 +22,7 @@
  */
 
 #include "RkList.h"
+#include "RkModel.h"
 #include "RkListImpl.h"
 #include "RkLog.h"
 #include "RkPainter.h"
@@ -31,6 +32,12 @@ RkList::RkList(RkWidget *parent, RkModel *model)
         : RkWidget(parent, std::make_unique<RkList::RkListImpl>(this, parent, model))
         , impl_ptr{static_cast<RkList::RkListImpl*>(o_ptr.get())}
 {
+        RK_ACT_BIND(getModel(), modelChanged, RK_ACT_ARGS(), this, update());
+}
+
+RkModel* RkList::getModel() const
+{
+        return impl_ptr->getModel();
 }
 
 void RkList::paintEvent(RkPaintEvent *event)
@@ -57,6 +64,8 @@ void RkList::mouseMoveEvent(RkMouseEvent *event)
 
 void RkList::mouseButtonPressEvent(RkMouseEvent *event)
 {
+        if (event->button() == RkMouseEvent::ButtonType::Left)
+                getModel()->selectItem(impl_ptr->getIndex(event->y()));
 }
 
 void RkList::mouseButtonReleaseEvent(RkMouseEvent *event)
