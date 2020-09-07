@@ -1,5 +1,5 @@
 /**
- * File name: RkVariant.h
+ * File name: RkModel.cpp
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
@@ -21,17 +21,36 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_VARIANT_H
-#define RK_VARIANT_H
+#include "RkModel.h"
+#include "RkModelImpl.h"
 
-#include "Rk.h"
-#include "RkColor.h"
-#include "RkSize.h"
-#include "RkFont.h"
+RkVariant RkModelItem::data(int dataType) const
+{
+        return itemModel->itemData(getIndex(), dataType);
+}
 
-#include <variant>
-#include <string>
+RkModel::RkModel(RkObject *parent)
+        : RkObject(parent, std::make_unique<RkModel::RkModelImpl>(this, parent))
+        , impl_ptr{static_cast<RkModel::RkModelImpl*>(o_ptr.get())}
+{
+}
 
-using RkVariant = std::variant<std::string, RkColor, RkSize, RkFont>;
+bool RkModel::isItemSelected(size_t index) const
+{
+        return impl_ptr->isItemSelected(index);
+}
 
-#endif // RK_VARIANT_H
+void RkModel::selectItem(size_t index)
+{
+        if (isValidIndex(index)) {
+                impl_ptr->selectItem(index);
+                action modelChanged();
+                action itemSelected(RkModelItem(this, index));
+        }
+}
+
+bool RkModel::isValidIndex(size_t index) const
+{
+        return index < itemsNumber();
+}
+

@@ -22,17 +22,32 @@
  */
 
 #include "RkList.h"
+#include "RkModel.h"
 #include "RkListImpl.h"
 #include "RkLog.h"
+#include "RkPainter.h"
+#include "RkEvent.h"
 
-RkList::RkList(RkWidget *parent)
-        : RkWidget(parent, std::make_unique<RkList::RkListImpl>(this, parent))
+RkList::RkList(RkWidget *parent, RkModel *model)
+        : RkWidget(parent, std::make_unique<RkList::RkListImpl>(this, parent, model))
         , impl_ptr{static_cast<RkList::RkListImpl*>(o_ptr.get())}
 {
+        RK_ACT_BIND(getModel(), modelChanged, RK_ACT_ARGS(), this, update());
+}
+
+RkModel* RkList::getModel() const
+{
+        return impl_ptr->getModel();
 }
 
 void RkList::paintEvent(RkPaintEvent *event)
 {
+        RkImage img(size());
+        RkPainter painter(&img);
+        painter.fillRect(rect(), background());
+        impl_ptr->drawList(painter);
+        RkPainter paint(this);
+        paint.drawImage(img, 0, 0);
 }
 
 void RkList::keyPressEvent(RkKeyEvent *event)
@@ -49,6 +64,8 @@ void RkList::mouseMoveEvent(RkMouseEvent *event)
 
 void RkList::mouseButtonPressEvent(RkMouseEvent *event)
 {
+        if (event->button() == RkMouseEvent::ButtonType::Left)
+                getModel()->selectItem(impl_ptr->getIndex(event->y()));
 }
 
 void RkList::mouseButtonReleaseEvent(RkMouseEvent *event)

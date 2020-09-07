@@ -1,5 +1,5 @@
 /**
- * File name: RkVariant.h
+ * File name: RkModelImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
@@ -21,17 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_VARIANT_H
-#define RK_VARIANT_H
+#include "RkModelImpl.h"
 
-#include "Rk.h"
-#include "RkColor.h"
-#include "RkSize.h"
-#include "RkFont.h"
+RkModel::RkModelImpl::RkModelImpl(RkModel* interface, RkObject* parent)
+        : RkObjectImpl(interface, parent)
+        , inf_ptr{interface}
+        , selectedIndex(-1)
+{
+}
 
-#include <variant>
-#include <string>
+bool RkModel::RkModelImpl::isItemSelected(size_t index) const
+{
+        return selectedIndex < inf_ptr->itemsNumber() && index == selectedIndex;
+}
 
-using RkVariant = std::variant<std::string, RkColor, RkSize, RkFont>;
-
-#endif // RK_VARIANT_H
+void RkModel::RkModelImpl::selectItem(size_t index)
+{
+        selectedIndex = index;
+}
