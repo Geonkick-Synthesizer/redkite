@@ -26,8 +26,8 @@
 
 #define RK_VERSION 0x010003
 #define RK_MAJOR   0x01
-#define RK_MINOR   0x00
-#define RK_PATCH   0x03
+#define RK_MINOR   0x01
+#define RK_PATCH   0x00
 
 #include <utility>
 #include <memory>
