@@ -95,7 +95,7 @@ GUI plugins apart from developing standalone applications.
 * RkLineEdit is limited, doesn't implement all standard features
 * Doesn't have many standard widgets:
      combo box, popup menus, file dialog,
-     list view, tree view, grid view, multi-line edit etc.
+     tree view, grid view, multi-line edit etc.
 * Supports only Cairo graphics backend
 * Doesn't support copy/paste
 * Doesn't support unicode
