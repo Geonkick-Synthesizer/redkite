@@ -6,7 +6,7 @@ Redkite is a small free software GUI toolkit.
 It is developed in C++ and inspired from other
 well known GUI toolkits.
 
-Version: 1.1.0 (not released yet)
+Version: 1.1.0
 
 License: GPLv3
 
@@ -54,34 +54,38 @@ GUI plugins apart from developing standalone applications.
 
 ### Interface
 
-* RkAction
-* RkButton
-* RkCanvas
-* RkColor
-* RkContainer
-* RkContainerItem
-* RkContainerWidgetItem
-* RkEvent
-* RkEventQueue
-* RkFont
-* Rk
-* RkImage
-* RkLabel
-* RkLineEdit
-* RkLog
-* RkMain
-* RkObject
-* RkPainter
-* RkPen
-* RkPlatform
-* RkPoint
-* RkProgressBar
-* RkRealPoint
-* RkRect
-* RkSize
-* RkTimer
-* RkTransition
-* RkWidget
+* RkAction.h
+* RkButton.h
+* RkCanvas.h
+* RkColor.h
+* RkContainer.h
+* RkContainerItem.h
+* RkContainerWidgetItem.h
+* RkEvent.h
+* RkEventQueue.h
+* RkFont.h
+* Rk.h
+* RkImage.h
+* RkLabel.h
+* RkLineEdit.h
+* RkList.h
+* RkLog.h
+* RkMain.h
+* RkModel.h
+* RkObject.h
+* RkObserver.h
+* RkPainter.h
+* RkPen.h
+* RkPlatform.h
+* RkPoint.h
+* RkProgressBar.h
+* RkRealPoint.h
+* RkRect.h
+* RkSize.h
+* RkTimer.h
+* RkTransition.h
+* RkVariant.h
+* RkWidget.h
 
 ### Technical limitations
 

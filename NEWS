@@ -1,3 +1,11 @@
+### 1.1.0
+
+#### Features:
+
+  - RkList - a list view (still not supporting scroll)
+  - RkModel - a simple abstract class for creating models
+  - RkVariant - just type def of std::vaiant that supports std::string, RkColor, RkSize and RkFont
+
 ### Changes from 1.0.2 to 1.0.3
 
 #### Fixes:
