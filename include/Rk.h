@@ -24,7 +24,7 @@
 #ifndef RK_GLOBAL_H
 #define RK_GLOBAL_H
 
-#define RK_VERSION 0x010003
+#define RK_VERSION 0x010100
 #define RK_MAJOR   0x01
 #define RK_MINOR   0x01
 #define RK_PATCH   0x00
