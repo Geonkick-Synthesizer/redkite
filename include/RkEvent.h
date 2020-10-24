@@ -61,7 +61,8 @@ class RK_EXPORT RkEvent {
                 FocusedOut = 16,
                 Hover = 17,
                 Shortcut = 18,
-                Drop = 19
+                Drop = 19,
+                ScaleFactor = 20
       };
 
         explicit RkEvent(Type type = Type::NoEvent)
@@ -206,6 +207,17 @@ class RkHoverEvent: public RkEvent {
       bool isHover() const { return hOver; }
  private:
       bool hOver;
+};
+
+class RkScaleFactorEvent: public RkEvent {
+ public:
+      RkScaleFactorEvent()
+              : RkEvent(Type::ScaleFactor),
+                scaleFactor{1.0} {}
+      void setFactor(double f) { scaleFactor = f; }
+      double factor() const { return scaleFactor; }
+ private:
+      double scaleFactor;
 };
 
 #endif // RK_EVENT_H

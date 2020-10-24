@@ -65,6 +65,7 @@ class RkWindowX {
         bool hasFocus() const;
         void setPointerShape(Rk::PointerShape shape);
         bool pointerIsOverWindow() const;
+        void setScaleFactor(double factor);
 
  protected:
         bool openDisplay();
@@ -90,6 +91,7 @@ class RkWindowX {
         std::unique_ptr<RkCanvasInfo> canvasInfo;
         std::unique_ptr<RkNativeWindowInfo> windowInfo;
         XVisualInfo visualInfo;
+        double scaleFactor;
 };
 
 #endif // RK_WIDGET_XWIN_H

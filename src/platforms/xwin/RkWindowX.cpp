@@ -41,6 +41,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
          , winBackgroundColor{255, 255, 255}
          , canvasInfo{nullptr}
          , windowInfo{nullptr}
+         , scaleFactor{1}
  {
          RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
@@ -56,6 +57,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , winBackgroundColor{255, 255, 255}
         , canvasInfo{nullptr}
         , windowInfo{nullptr}
+        , scaleFactor{1}
 {
         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
@@ -140,7 +142,7 @@ bool RkWindowX::init()
         RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);
         xWindow = XCreateWindow(xDisplay, parent,
                                 pos.x(), pos.y(),
-                                winSize.width(), winSize.height(),
+                                winSize.width() * scaleFactor, winSize.height() * scaleFactor,
                                 winBorderWidth,
                                 visualInfo.depth,
                                 InputOutput,
@@ -216,7 +218,7 @@ RkSize RkWindowX::size() const
         if (isWindowCreated()) {
                 XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                return RkSize(attributes.width, attributes.height);
+                return RkSize(attributes.width / scaleFactor, attributes.height / scaleFactor);
         }
 
         return {250, 250};
@@ -226,7 +228,8 @@ void RkWindowX::setSize(const RkSize &size)
 {
         if (size.width() > 0 && size.height() > 0) {
                 if (isWindowCreated())
-                        XResizeWindow(display(), xWindow, size.width(), size.height());
+                        XResizeWindow(display(), xWindow, size.width() * scaleFactor,
+                                      size.height() * scaleFactor);
         }
 }
 
@@ -235,7 +238,8 @@ RkPoint RkWindowX::position() const
         if (isWindowCreated()) {
                 XWindowAttributes attributes;
                 XGetWindowAttributes(xDisplay, xWindow, &attributes);
-                return RkPoint(attributes.x, attributes.y);
+                return RkPoint(attributes.x / scaleFactor,
+                               attributes.y / scaleFactor);
         }
         return {0, 0};
 }
@@ -264,20 +268,20 @@ void RkWindowX::setPosition(const RkPoint &position)
                         x += parentRootX - parentAttributes.x;
                         y += parentRootY - parentAttributes.y;
                 }
-                XMoveWindow(display(), xWindow, x, y);
+                XMoveWindow(display(), xWindow, x * scaleFactor, y * scaleFactor);
         }
 }
 
 void RkWindowX::setBorderWidth(int width)
 {
-        winBorderWidth = width;
+        winBorderWidth = width * scaleFactor;
         if (isWindowCreated())
                 XSetWindowBorderWidth(display(), xWindow, winBorderWidth);
 }
 
 int RkWindowX::borderWidth() const
 {
-        return winBorderWidth;
+        return winBorderWidth / scaleFactor;
 }
 
 void RkWindowX::setBorderColor(const RkColor &color)
@@ -321,8 +325,8 @@ void RkWindowX::update()
                 event.window     = xWindow;
                 event.x          = 0;
                 event.y          = 0;
-                event.width      = size().width();
-                event.height     = size().height();
+                event.width      = size().width() * scaleFactor;
+                event.height     = size().height() * scaleFactor;
                 event.count      = 0;
                 XSendEvent(display(),
                            xWindow,
@@ -338,14 +342,16 @@ void RkWindowX::createCanvasInfo()
         canvasInfo = std::make_unique<RkCanvasInfo>();
         canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
                                                               visualInfo.visual,
-                                                              size().width(), size().height());
+                                                              size().width() * scaleFactor, size().height() * scaleFactor);
+        cairo_surface_set_device_scale(canvasInfo->cairo_surface, scaleFactor, scaleFactor);
 }
 
 void RkWindowX::resizeCanvas()
 {
         cairo_xlib_surface_set_size(canvasInfo->cairo_surface,
-                                    size().width(),
-                                    size().height());
+                                    size().width() * scaleFactor,
+                                    size().height() * scaleFactor);
+        cairo_surface_set_device_scale(canvasInfo->cairo_surface, scaleFactor, scaleFactor);
 }
 
 const RkCanvasInfo* RkWindowX::getCanvasInfo() const
@@ -446,4 +452,14 @@ bool RkWindowX::pointerIsOverWindow() const
                         return true;
         }
         return false;
+}
+
+void RkWindowX::setScaleFactor(double factor)
+{
+        auto p = position();
+        auto z = size();
+        scaleFactor = factor;
+        setPosition(p);
+        setSize(z);
+        resizeCanvas();
 }

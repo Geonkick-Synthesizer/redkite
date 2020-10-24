@@ -33,6 +33,7 @@ RkEventQueueX::RkEventQueueX()
         : xDisplay{nullptr}
         , keyModifiers{0}
         , dndHandle{nullptr}
+        , scaleFactor{1}
 {
         RK_LOG_DEBUG("called");
 }
@@ -140,8 +141,8 @@ std::unique_ptr<RkEvent> RkEventQueueX::getButtonPressEvent(XEvent *e)
         auto buttonEvent = reinterpret_cast<XButtonEvent*>(e);
         auto mouseEvent = std::make_unique<RkMouseEvent>();
         mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
-        mouseEvent->setX(buttonEvent->x);
-        mouseEvent->setY(buttonEvent->y);
+        mouseEvent->setX(buttonEvent->x / scaleFactor);
+        mouseEvent->setY(buttonEvent->y / scaleFactor);
 
         switch (buttonEvent->button)
         {
@@ -178,8 +179,8 @@ std::unique_ptr<RkEvent> RkEventQueueX::getMouseMove(XEvent *e)
         auto mouseEvent = std::make_unique<RkMouseEvent>();
         mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setType(RkEvent::Type::MouseMove);
-        mouseEvent->setX(buttonEvent->x);
-        mouseEvent->setY(buttonEvent->y);
+        mouseEvent->setX(buttonEvent->x / scaleFactor);
+        mouseEvent->setY(buttonEvent->y / scaleFactor);
         return mouseEvent;
 }
 
@@ -315,3 +316,7 @@ std::string RkEventQueueX::decodeUri(const std::string &dropFilePath)
         return std::regex_replace(dropFilePath, std::regex("\\%20"), " ");
 }
 
+void RkEventQueueX::setScaleFactor(double factor)
+{
+        scaleFactor = factor;
+}

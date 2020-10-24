@@ -45,6 +45,7 @@ class RkEventQueueX
         void setDndHandle(DndClass *handle);
         Display* display() const;
         std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> getEvents();
+        void setScaleFactor(double factor);
 
  protected:
         std::unique_ptr<RkEvent> getButtonPressEvent(XEvent *e);
@@ -63,6 +64,7 @@ class RkEventQueueX
         std::chrono::system_clock::time_point lastTimePressed;
         mutable int keyModifiers;
         DndClass *dndHandle;
+        double scaleFactor;
 };
 
 #endif // RK_EVENT_QUEUE_X_H

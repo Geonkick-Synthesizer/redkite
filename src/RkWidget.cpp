@@ -616,3 +616,17 @@ Rk::PointerShape RkWidget::pointerShape() const
 {
         return impl_ptr->pointerShape();
 }
+
+void RkWidget::setScaleFactor(double factor)
+{
+        impl_ptr->setScaleFactor(factor);
+        for (const auto &ch: children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget)
+                        widget->setScaleFactor(factor);
+        }
+
+        if (this == getTopWidget())
+            eventQueue()->setScaleFactor(factor);
+        update();
+}

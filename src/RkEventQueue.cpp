@@ -146,3 +146,8 @@ RkObject* RkEventQueue::findObjectByName(const std::string &name) const
 {
         return o_ptr->findObjectByName(name);
 }
+
+void RkEventQueue::setScaleFactor(double factor)
+{
+        o_ptr->setScaleFactor(factor);
+}

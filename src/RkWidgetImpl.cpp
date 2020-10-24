@@ -442,3 +442,8 @@ bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
 {
         return platformWindow->pointerIsOverWindow();
 }
+
+void RkWidget::RkWidgetImpl::setScaleFactor(double factor)
+{
+        platformWindow->setScaleFactor(factor);
+}

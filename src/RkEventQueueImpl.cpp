@@ -368,3 +368,7 @@ RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &na
         return nullptr;
 }
 
+void RkEventQueue::RkEventQueueImpl::setScaleFactor(double factor)
+{
+        platformEventQueue->setScaleFactor(factor);
+}

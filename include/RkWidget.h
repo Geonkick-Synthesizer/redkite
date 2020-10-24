@@ -132,6 +132,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           bool hasFocus() const;
           void setPointerShape(Rk::PointerShape shape);
           Rk::PointerShape pointerShape() const;
+          void setScaleFactor(double factor);
 
   protected:
           RK_DELCATE_IMPL_PTR(RkWidget);
