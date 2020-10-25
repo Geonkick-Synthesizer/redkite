@@ -98,6 +98,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         bool propagateGrabKeyEnabled() const;
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
+        double scaleFactor() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget);

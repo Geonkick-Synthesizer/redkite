@@ -43,12 +43,14 @@ class RK_EXPORT RkNativeWindowInfo
         display{nullptr}
         , screenNumber{0}
         , window{0}
-        , dndHandle{nullptr} {}
+        , dndHandle{nullptr}
+        , scaleFactor{1}{}
         ~RkNativeWindowInfo() = default;
         Display* display;
         int screenNumber;
         Window window;
         std::shared_ptr<_DndClass> dndHandle;
+        double scaleFactor;
 };
 
 RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display,

@@ -630,3 +630,8 @@ void RkWidget::setScaleFactor(double factor)
             eventQueue()->setScaleFactor(factor);
         update();
 }
+
+double RkWidget::scaleFactor() const
+{
+        return impl_ptr->scaleFactor();
+}

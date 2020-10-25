@@ -133,6 +133,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void setPointerShape(Rk::PointerShape shape);
           Rk::PointerShape pointerShape() const;
           void setScaleFactor(double factor);
+          double scaleFactor() const;
 
   protected:
           RK_DELCATE_IMPL_PTR(RkWidget);

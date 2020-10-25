@@ -66,6 +66,7 @@ class RkWindowX {
         void setPointerShape(Rk::PointerShape shape);
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
+        double getScaleFactor() const;
 
  protected:
         bool openDisplay();

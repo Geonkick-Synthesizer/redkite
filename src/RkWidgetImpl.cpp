@@ -447,3 +447,9 @@ void RkWidget::RkWidgetImpl::setScaleFactor(double factor)
 {
         platformWindow->setScaleFactor(factor);
 }
+
+double RkWidget::RkWidgetImpl::scaleFactor() const
+{
+        return platformWindow->getScaleFactor();
+}
+

@@ -41,7 +41,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
          , winBackgroundColor{255, 255, 255}
          , canvasInfo{nullptr}
          , windowInfo{nullptr}
-         , scaleFactor{1}
+         , scaleFactor{parent ? parent->scaleFactor : 1}
  {
          RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
@@ -57,7 +57,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , winBackgroundColor{255, 255, 255}
         , canvasInfo{nullptr}
         , windowInfo{nullptr}
-        , scaleFactor{1}
+        , scaleFactor{parent.scaleFactor}
 {
         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
@@ -168,6 +168,7 @@ bool RkWindowX::init()
         windowInfo->screenNumber = screenNumber;
         windowInfo->window       = xWindow;
         windowInfo->dndHandle    = parentWindowInfo.dndHandle;
+        windowInfo->scaleFactor  = scaleFactor;
 
         if (!windowInfo->dndHandle) {
                 RK_LOG_DEBUG("is it top window, create DND handle");
@@ -459,7 +460,14 @@ void RkWindowX::setScaleFactor(double factor)
         auto p = position();
         auto z = size();
         scaleFactor = factor;
+        windowInfo->scaleFactor = scaleFactor;
         setPosition(p);
         setSize(z);
         resizeCanvas();
 }
+
+double RkWindowX::getScaleFactor() const
+{
+        return scaleFactor;
+}
+
