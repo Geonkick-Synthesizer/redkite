@@ -51,6 +51,7 @@ GUI plugins apart from developing standalone applications.
 * RkTimer (a timer class)
 * Widget container used for vertical and horizontal layout
 * Shortcuts
+* Support to scale the UI (useful for HiDPI cases)
 
 ### Interface
 
