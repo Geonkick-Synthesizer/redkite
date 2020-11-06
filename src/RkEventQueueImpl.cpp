@@ -217,7 +217,9 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 if (e.second->type() == RkEvent::Type::KeyPressed) {
                         processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()), e.first);
                 } else if ((currentPopup && e.second->type() == RkEvent::Type::MouseButtonPress)
-                           || (e.second->type() == RkEvent::Type::FocusedOut && isTopWidget(e.first))) {
+                           || (e.second->type() == RkEvent::Type::FocusedOut
+                           && static_cast<RkWidget*>(e.first)->isTopWindow()
+                           && !static_cast<RkWidget*>(e.first)->pointerIsOverWindow())) {
                         processPopup();
                 }
                 processEvent(e.first, e.second.get());
@@ -239,13 +241,10 @@ void RkEventQueue::RkEventQueueImpl::processPopup()
         if (!objectExists(currentPopup))
                 return;
 
-        auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(currentPopup->o_ptr.get());
-        if (widgetImpl && !widgetImpl->pointerIsOverWindow()) {
-                if (auto popup = dynamic_cast<RkWidget*>(currentPopup); popup) {
-                        RK_LOG_DEBUG("close Poupup");
-                        popup->close();
-                        currentPopup = nullptr;
-                }
+        if (auto popup = static_cast<RkWidget*>(currentPopup); !popup->pointerIsOverWindow()) {
+                RK_LOG_DEBUG("close Poupup");
+                popup->close();
+                currentPopup = nullptr;
         }
 }
 

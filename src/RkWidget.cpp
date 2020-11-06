@@ -597,6 +597,11 @@ RkWidget* RkWidget::getTopWidget()
         return parentWidget()->getTopWidget();
 }
 
+bool RkWidget::isTopWindow() const
+{
+        return !parentWidget();
+}
+
 void RkWidget::setFocus(bool b)
 {
         impl_ptr->setFocus(b);
@@ -634,4 +639,10 @@ void RkWidget::setScaleFactor(double factor)
 double RkWidget::scaleFactor() const
 {
         return impl_ptr->scaleFactor();
+}
+
+
+bool RkWidget::pointerIsOverWindow() const
+{
+        return impl_ptr->pointerIsOverWindow();
 }

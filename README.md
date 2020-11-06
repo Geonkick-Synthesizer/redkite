@@ -44,6 +44,7 @@ GUI plugins apart from developing standalone applications.
 
 * Object tree ownership
 * Widgets
+* Popup and dialog widget
 * Graphics (with Cairo backend)
 * Painter (paints RkImage and widgets)
 * Events
@@ -93,7 +94,6 @@ GUI plugins apart from developing standalone applications.
 
 * It is not cross-plafrom, supports only GNU/Linux (X11/Xlib)
 * Does not support dynamic layout
-* Popup widget is not fully compliant with the standard behaviour
 * RkLineEdit is limited, doesn't implement all standard features
 * Doesn't have many standard widgets:
      combo box, popup menus, file dialog,

@@ -124,6 +124,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           void disableInput();
           bool isInputEnabled() const;
           RkWidget* getTopWidget();
+          bool isTopWindow() const;
           void enableGrabKey(bool b);
           bool grabKeyEnabled() const;
           void propagateGrabKey(bool b);
@@ -134,6 +135,7 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           Rk::PointerShape pointerShape() const;
           void setScaleFactor(double factor);
           double scaleFactor() const;
+          bool pointerIsOverWindow() const;
 
   protected:
           RK_DELCATE_IMPL_PTR(RkWidget);
