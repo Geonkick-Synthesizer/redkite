@@ -36,16 +36,18 @@ class RK_EXPORT RkButton: public RkWidget
                 ButtonPush        = 3
         };
 
-        enum class ButtonImage: int {
-                ImageUnpressed      = 0,
-                ImageUnpressedHover = 1,
-                ImagePressed        = 2,
-                ImagePressedHover   = 3
+        enum class State: int {
+                Unpressed      = 0,
+                UnpressedHover = 1,
+                Pressed        = 2,
+                PressedHover   = 3
         };
 
         explicit RkButton(RkWidget *parent);
         virtual ~RkButton() = default;
-        void setImage(const RkImage &img, ButtonImage type = ButtonImage::ImageUnpressed);
+        void setText(const std::string &text);
+        std::string text() const;
+        void setImage(const RkImage &img, State state = State::Unpressed);
         void setPressed(bool pressed);
         bool isPressed() const;
         ButtonType type() const;

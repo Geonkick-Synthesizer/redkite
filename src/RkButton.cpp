@@ -34,9 +34,20 @@ RkButton::RkButton(RkWidget *parent)
                 setBackgroundColor(parent->background());
 }
 
-void RkButton::setImage(const RkImage &img, RkButton::ButtonImage type)
+void RkButton::setText(const std::string &text)
 {
-        impl_ptr->setImage(img, type);
+        impl_ptr->setText(text);
+        update();
+}
+
+std::string RkButton::text() const
+{
+        return impl_ptr->text();
+}
+
+void RkButton::setImage(const RkImage &img, RkButton::State state)
+{
+        impl_ptr->setImage(img, state);
         update();
 }
 

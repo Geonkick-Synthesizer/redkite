@@ -28,22 +28,25 @@ RkButton::RkButtonImpl::RkButtonImpl(RkButton *interface, RkWidget *parent)
     , inf_ptr{interface}
     , buttonType{ButtonType::ButtonUncheckable}
     , is_pressed{false}
-    , buttonImageState{RkButton::ButtonImage::ImageUnpressed}
+    , buttonState{RkButton::State::Unpressed}
     , isEmphasizeEnabled{false}
 {
 }
 
-void RkButton::RkButtonImpl::setImage(const RkImage &img, RkButton::ButtonImage type)
+void RkButton::RkButtonImpl::setText(const RkString &text)
 {
-        if (type != RkButton::ButtonImage::ImageUnpressed
-            && type != RkButton::ButtonImage::ImageUnpressedHover
-            && type != RkButton::ButtonImage::ImagePressed
-            && type != RkButton::ButtonImage::ImagePressedHover) {
-                return;
-        }
+        buttonText = text;
+}
 
-        buttonImages[static_cast<size_t>(type)] = img;
-        if (type == ButtonImage::ImageUnpressed)
+RkString RkButton::RkButtonImpl::text() const
+{
+        return buttonText;
+}
+
+void RkButton::RkButtonImpl::setImage(const RkImage &img, RkButton::State state)
+{
+        buttonImages[static_cast<size_t>(state)] = img;
+        if (state == RkButton::State::Unpressed)
                 inf_ptr->setSize(img.size());
 }
 
@@ -73,19 +76,26 @@ RkButton::ButtonType RkButton::RkButtonImpl::type(void) const
 void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
 {
         if (isPressed()) {
-                if (!buttonImages[static_cast<size_t>(buttonImageState)].isNull())
-                        painter.drawImage(buttonImages[static_cast<size_t>(buttonImageState)], 0, 0);
-                else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImagePressed)].isNull())
-                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImagePressed)], 0, 0);
-                else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull())
-                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
-        } else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull()) {
-                if (!buttonImages[static_cast<size_t>(buttonImageState)].isNull())
-                        painter.drawImage(buttonImages[static_cast<size_t>(buttonImageState)], 0, 0);
+                if (!buttonImages[static_cast<size_t>(buttonState)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(buttonState)], 0, 0);
+                else if (!buttonImages[static_cast<size_t>(RkButton::State::Pressed)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::State::Pressed)], 0, 0);
+                else if (!buttonImages[static_cast<size_t>(RkButton::State::Unpressed)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::State::Unpressed)], 0, 0);
+        } else if (!buttonImages[static_cast<size_t>(RkButton::State::Unpressed)].isNull()) {
+                if (!buttonImages[static_cast<size_t>(buttonState)].isNull())
+                        painter.drawImage(buttonImages[static_cast<size_t>(buttonState)], 0, 0);
                 else
-                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
-        } else if (!buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)].isNull()) {
-                painter.drawImage(buttonImages[static_cast<size_t>(RkButton::ButtonImage::ImageUnpressed)], 0, 0);
+                        painter.drawImage(buttonImages[static_cast<size_t>(RkButton::State::Unpressed)], 0, 0);
+        } else if (!buttonImages[static_cast<size_t>(RkButton::State::Unpressed)].isNull()) {
+                painter.drawImage(buttonImages[static_cast<size_t>(RkButton::State::Unpressed)], 0, 0);
+        }
+
+        if (!buttonText.empty()) {
+                auto pen = painter.pen();
+                pen.setColor(textColor());
+                painter.setPen(pen);
+                painter.drawText(inf_ptr->rect(), buttonText);
         }
 }
 
@@ -99,14 +109,14 @@ void RkButton::RkButtonImpl::updateButtonState()
 {
         if (isPressed()) {
                 if (isEmphasizeEnabled)
-                        buttonImageState = RkButton::ButtonImage::ImagePressedHover;
+                        buttonState = RkButton::State::PressedHover;
                 else
-                        buttonImageState = RkButton::ButtonImage::ImagePressed;
+                        buttonState = RkButton::State::Pressed;
         } else {
                 if (isEmphasizeEnabled)
-                        buttonImageState = RkButton::ButtonImage::ImageUnpressedHover;
+                        buttonState = RkButton::State::UnpressedHover;
                 else
-                        buttonImageState = RkButton::ButtonImage::ImageUnpressed;
+                        buttonState = RkButton::State::Unpressed;
         }
 }
 

@@ -482,4 +482,6 @@ namespace Rk {
 #define RK_DECLARE_IMAGE_RC(name) extern const unsigned char rk__ ## name ## _png[]
 #define RK_IMAGE_RC(name) rk__ ## name ## _png
 
+using RkString = std::string;
+
 #endif // RK_GLOBAL_H

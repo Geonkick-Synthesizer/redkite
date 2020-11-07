@@ -61,7 +61,6 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           explicit RkWidget(RkWidget *parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           virtual ~RkWidget();
-
           Rk::WindowFlags windowFlags() const;
 	  void show(bool b = true);
 	  bool isShown() const;
