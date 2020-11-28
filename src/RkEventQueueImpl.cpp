@@ -38,7 +38,6 @@
 
 RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* interface)
         : inf_ptr{interface}
-        , currentPopup{nullptr}
 #ifdef RK_OS_WIN
         , platformEventQueue{std::make_unique<RkEventQueueWin>()}
 #elif RK_OS_MAC
@@ -68,8 +67,8 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
 
         if (obj->type() == Rk::ObjectType::Widget) {
                 RK_LOG_DEBUG("obj " << obj << " is widget");
-                auto widgetImpl = static_cast<RkWidget::RkWidgetImpl*>(obj->o_ptr.get());
-                if (widgetImpl == nullptr) {
+                auto widgetImpl = dynamic_cast<RkWidget::RkWidgetImpl*>(obj->o_ptr.get());
+                if (!widgetImpl) {
                         RK_LOG_ERROR("can't cast o_ptr to RkWidgetImpl");
                         return;
                 }
@@ -86,10 +85,12 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
  #endif
 
                 RK_LOG_DEBUG("add widget window id");
-                windowIdsMap.insert({widgetImpl->nativeWindowInfo()->window, obj});
-                if (static_cast<int>(widgetImpl->windowFlags()) & static_cast<int>(Rk::WindowFlags::Popup)) {
-                        currentPopup = obj;
-                        RK_LOG_DEBUG("set current poup: " << currentPopup);
+                auto id = widgetImpl->nativeWindowInfo()->window;
+                windowIdsMap.insert({id, obj});
+                if (static_cast<int>(widgetImpl->windowFlags())
+                    & static_cast<int>(Rk::WindowFlags::Popup)) {
+                        popupList.insert({id, obj});
+                        RK_LOG_DEBUG("poup added: " << obj);
                 }
         }
 
@@ -149,6 +150,8 @@ void RkEventQueue::RkEventQueueImpl::removeObject(RkObject *obj)
                         if (windowIdsMap.find(id) != windowIdsMap.end()) {
                                 RK_LOG_DEBUG("widget id removed from queue");
                                 windowIdsMap.erase(id);
+                                if (popupList.find(id) != popupList.end())
+                                        popupList.erase(id);
                         }
                 }
         }
@@ -214,16 +217,34 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
          */
         decltype(eventsQueue) queue = std::move(eventsQueue);
         for (const auto &e: queue) {
-                if (e.second->type() == RkEvent::Type::KeyPressed) {
+                if (e.second->type() == RkEvent::Type::KeyPressed)
                         processShortcuts(dynamic_cast<RkKeyEvent*>(e.second.get()), e.first);
-                } else if ((currentPopup && e.second->type() == RkEvent::Type::MouseButtonPress)
-                           || (e.second->type() == RkEvent::Type::FocusedOut
-                           && static_cast<RkWidget*>(e.first)->isTopWindow()
-                           && !static_cast<RkWidget*>(e.first)->pointerIsOverWindow())) {
-                        processPopup();
-                }
+                if (!popupList.empty() && dynamic_cast<RkWidget*>(e.first))
+                        processPopups(dynamic_cast<RkWidget*>(e.first), e.second.get());
                 processEvent(e.first, e.second.get());
         }
+}
+
+void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* event)
+{
+        if (event->type() == RkEvent::Type::FocusedOut
+            && widget->isTopWindow()
+            && !widget->pointerIsOverWindow()) {
+                for (auto &popup : popupList)
+                        static_cast<RkWidget*>(popup.second)->close();
+                popupList.clear();
+            } else if (event->type() == RkEvent::Type::MouseButtonPress) {
+                for (auto it = popupList.begin(); it != popupList.end();) {
+                        auto w = static_cast<RkWidget*>((*it).second);
+                        if (!w->pointerIsOverWindow()) {
+                                w->close();
+                                it = popupList.erase(it);
+                        } else {
+                                ++it;
+                        }
+                }
+        }
+        RK_LOG_INFO("popupList.size(): " << popupList.size());
 }
 
 bool RkEventQueue::RkEventQueueImpl::isTopWidget(RkObject *obj) const
@@ -234,18 +255,6 @@ bool RkEventQueue::RkEventQueueImpl::isTopWidget(RkObject *obj) const
                         return true;
         }
         return false;
-}
-
-void RkEventQueue::RkEventQueueImpl::processPopup()
-{
-        if (!objectExists(currentPopup))
-                return;
-
-        if (auto popup = static_cast<RkWidget*>(currentPopup); !popup->pointerIsOverWindow()) {
-                RK_LOG_DEBUG("close Poupup");
-                popup->close();
-                currentPopup = nullptr;
-        }
 }
 
 void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event, RkObject *excludedObj)

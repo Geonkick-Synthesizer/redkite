@@ -531,9 +531,8 @@ void RkWidget::hideEvent(RkHideEvent *event)
         RK_UNUSED(event);
 }
 
-void RkWidget::focusEvent(RkFocusEvent *event)
+void RkWidget::focusEvent([[maybe_unused]] RkFocusEvent *event)
 {
-        RK_UNUSED(event);
         update();
 }
 

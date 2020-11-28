@@ -69,7 +69,7 @@ class RkEventQueue::RkEventQueueImpl {
 
  protected:
         void processShortcuts(RkKeyEvent *event, RkObject *excludedObj);
-        void processPopup();
+        void processPopups(RkWidget *widget, RkEvent* event);
         void removeObjectShortcuts(RkObject *obj);
         bool isTopWidget(RkObject *obj) const;
 
@@ -83,8 +83,8 @@ class RkEventQueue::RkEventQueueImpl {
         std::vector<std::pair<RkObject*, std::unique_ptr<RkEvent>>> eventsQueue;
         std::vector<std::unique_ptr<RkAction>> actionsQueue;
         std::unordered_set<RkTimer*> timersList;
+        std::unordered_map<unsigned long long int, RkObject*> popupList;
         std::mutex actionsQueueMutex;
-        RkObject *currentPopup;
 
 #ifdef RK_OS_WIN
         std::unique_ptr<RkEventQueueWin> platformEventQueue;
