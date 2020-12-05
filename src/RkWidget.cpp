@@ -454,10 +454,12 @@ void RkWidget::event(RkEvent *event)
         RkObject::event(event);
 }
 
-void RkWidget::closeEvent(RkCloseEvent *event)
+void RkWidget::closeEvent([[maybe_unused]] RkCloseEvent *event)
 {
-        RK_UNUSED(event);
-        close();
+        if (parentWidget()) {
+                auto event = std::make_unique<RkDeleteChild>(parentWidget(), this);
+                eventQueue()->postEvent(parentWidget(), std::move(event));
+        }
 }
 
 void RkWidget::keyPressEvent(RkKeyEvent *event)
@@ -558,10 +560,7 @@ RkRect RkWidget::rect() const
 
 void RkWidget::close()
 {
-        if (parentWidget()) {
-                auto event = std::make_unique<RkDeleteChild>(parentWidget(), this);
-                eventQueue()->postEvent(parentWidget(), std::move(event));
-        }
+        eventQueue()->postEvent(this, std::make_unique<RkCloseEvent>());
 }
 
 bool RkWidget::isModal() const
