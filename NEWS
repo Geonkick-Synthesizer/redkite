@@ -15,6 +15,7 @@
 #### Features
 
   - close event programiatically
+  - RkString just a std::string defined type for now
 
 
 ### 1.2.0

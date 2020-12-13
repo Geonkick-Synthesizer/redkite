@@ -15,17 +15,17 @@ License: GPLv3
 An application that is developed in a particular GUI toolkit is loading
 in its address space GUI plugins that are developed with different versions
 of the same or different GUI toolkit. Using well known GUI toolkits for this
-purpose can cause a lot of conflicts. For example, often these conflicts arise
+purpose can cause a lot of issues. For example, often these conflicts arise
 in music software when a Digital Audio Workstation as a host is loading GUI
 audio plugins. The Redkite GUI toolkit is developed to address
 this issue, and provide a way to develop easily self-sufficient
-GUI plugins apart from developing standalone applications.
+GUI plugins that can be embedded the host GUI.
 
 ### Goals
 
  * Generally to have the same basic properties as common GUI toolkits.
 
- * Many instances of the same or different version of the toolkit must be able
+ * Many instances of the same or different versions of the toolkit must be able
    to run without problems in the same process address space.
 
  * Can be easily linked statically. Shared libraries that are developed
@@ -87,11 +87,11 @@ GUI plugins apart from developing standalone applications.
 * RkTransition
 * RkVariant
 * RkWidget
+* RkString
 
 ### Technical limitations
 
 * It is not cross-plafrom, supports only GNU/Linux (X11/Xlib)
-* Does not support dynamic layout
 * RkLineEdit is limited, doesn't implement all standard features
 * Doesn't have many standard widgets:
      combo box, popup menus, file dialog,
@@ -103,7 +103,7 @@ GUI plugins apart from developing standalone applications.
 ### For what Redkite is recommended
 
 * Standalone applications with relative simple UI
-* GUI Plugins with relative simple UI
+* GUI apps/plugins with relative simple UI that can be embedded into the host GUI
 
 ### Build & Install Redkite
 
