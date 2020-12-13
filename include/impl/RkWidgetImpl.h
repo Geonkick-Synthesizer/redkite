@@ -38,10 +38,12 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
  public:
         explicit RkWidgetImpl(RkWidget* interface,
                               RkWidget* parent = nullptr,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget,
+                              bool isTopWindow = false);
         explicit RkWidgetImpl(RkWidget* interface,
                               const RkNativeWindowInfo &parent,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget,
+                              bool isTopWindow = false);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;

@@ -30,7 +30,7 @@
 
 #include "xdnd.h"
 
-RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
+RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags, bool isTop)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
          , windowFlags{flags}
          , xDisplay{parent ? parent->display : nullptr}
@@ -42,11 +42,12 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags)
          , canvasInfo{nullptr}
          , windowInfo{nullptr}
          , scaleFactor{parent ? parent->scaleFactor : 1}
+         , isTopWindow{isTop}
  {
          RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
 
-RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags, bool isTop)
         : parentWindowInfo{parent}
         , windowFlags{flags}
         , xDisplay{parent.display}
@@ -58,6 +59,7 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         , canvasInfo{nullptr}
         , windowInfo{nullptr}
         , scaleFactor{parent.scaleFactor}
+        , isTopWindow{isTop}
 {
         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
@@ -66,13 +68,13 @@ RkWindowX::~RkWindowX()
 {
         RK_LOG_DEBUG("called");
         if (xDisplay) {
-                if (!hasParent() && windowInfo->dndHandle) {
+                if (isTopWindow && windowInfo->dndHandle) {
                         RK_LOG_DEBUG("shut DND for top window: " << xWindow);
                         xdnd_shut(windowInfo->dndHandle.get());
                 }
                 freeCanvasInfo();
                 XDestroyWindow(xDisplay, xWindow);
-                if (!hasParent())
+                if (isTopWindow)
                         XCloseDisplay(xDisplay);
         }
 }

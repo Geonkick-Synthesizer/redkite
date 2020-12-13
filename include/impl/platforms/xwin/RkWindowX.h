@@ -37,9 +37,11 @@ struct RkCanvasInfo;
 class RkWindowX {
  public:
         explicit RkWindowX(const RkNativeWindowInfo *parent,
-                           Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                           Rk::WindowFlags flags = Rk::WindowFlags::Widget,
+                           bool isTop = false);
         explicit RkWindowX(const RkNativeWindowInfo &parent,
-                           Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                           Rk::WindowFlags flags = Rk::WindowFlags::Widget,
+                           bool isTop = false);
         ~RkWindowX();
         Rk::WindowFlags flags() const;
         bool init();
@@ -93,6 +95,7 @@ class RkWindowX {
         std::unique_ptr<RkNativeWindowInfo> windowInfo;
         XVisualInfo visualInfo;
         double scaleFactor;
+        bool isTopWindow;
 };
 
 #endif // RK_WIDGET_XWIN_H

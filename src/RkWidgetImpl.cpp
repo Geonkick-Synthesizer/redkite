@@ -38,15 +38,15 @@
 #undef FocusOut
 #endif
 
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags, bool isTopWindow)
         : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
-        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
+        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags, isTopWindow)}
 #elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags)}
+        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags, isTopWindow)}
 #else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
+        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags, isTopWindow)}
 #endif
         , widgetClosed{false}
         , widgetMinimumSize{0, 0}
@@ -68,15 +68,15 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      const RkNativeWindowInfo &parent,
-                                     Rk::WindowFlags flags)
+                                     Rk::WindowFlags flags, bool isTopWindow)
         : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
 #ifdef RK_OS_WIN
-        , platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
+        , platformWindow{std::make_unique<RkWindowWin>(parent, flags, isTopWindow)}
 #elif RK_OS_MAC
-        , platformWindow{std::make_unique<RkWindowMac>(parent, flags)}
+        , platformWindow{std::make_unique<RkWindowMac>(parent, flags, isTopWindow)}
 #else // X11
-        , platformWindow{std::make_unique<RkWindowX>(parent, flags)}
+        , platformWindow{std::make_unique<RkWindowX>(parent, flags, isTopWindow)}
 #endif
         , widgetClosed{false}
         , widgetMinimumSize{0, 0}
