@@ -102,9 +102,8 @@ bool RkWindowX::init()
 	}
 
         Window parent = 0;
-        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
-            || (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) {
-                RK_LOG_DEBUG("is dialog or popup, get root window");
+        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) {
+                RK_LOG_DEBUG("is or dialog, get root window");
                 parent = RootWindow(xDisplay, screenNumber);
         } else {
                 parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
@@ -129,15 +128,7 @@ bool RkWindowX::init()
                           | EnterWindowMask | LeaveWindowMask | StructureNotifyMask
                           | PropertyChangeMask
                           | PointerMotionMask;
-
-        if (hasParent() && (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) {
-                RK_LOG_DEBUG("override_redirect = True");
-                mask |= CWOverrideRedirect;
-                attr.override_redirect = True;
-        } else {
-                RK_LOG_DEBUG("override_redirect = False");
-                attr.override_redirect = False;
-        }
+        attr.override_redirect = False;
 
         auto pos = position();
         auto winSize = size();
@@ -156,10 +147,9 @@ bool RkWindowX::init()
                 return false;
         }
 
-        if (((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog))
-             || (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))) && hasParent()) {
-                 RK_LOG_DEBUG("set WM_TRANSIENT_FOR");
-                 XSetTransientForHint(xDisplay, parentWindowInfo.window, xWindow);
+        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent()) {
+                RK_LOG_DEBUG("set WM_TRANSIENT_FOR");
+                XSetTransientForHint(xDisplay, parentWindowInfo.window, xWindow);
         }
 
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
@@ -252,8 +242,7 @@ void RkWindowX::setPosition(const RkPoint &position)
         if (isWindowCreated()) {
                 int x = position.x();
                 int y = position.y();
-                if (hasParent() && ((static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Popup))
-                                    || static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Dialog))) {
+                if (hasParent() && (static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Dialog))) {
                         XWindowAttributes parentAttributes;
                         XGetWindowAttributes(display(), parentWindowInfo.window, &parentAttributes);
                         int parentRootX;
@@ -422,10 +411,6 @@ Rk::WindowFlags RkWindowX::flags() const
 bool RkWindowX::pointerIsOverWindow() const
 {
         if (isWindowCreated()) {
-                XWindowAttributes attributes;
-                XGetWindowAttributes(display(), xWindow, &attributes);
-                int root_x = attributes.x;
-                int root_y = attributes.y;
                 Window child;
                 int proot_x;
                 int proot_y;
@@ -444,15 +429,10 @@ bool RkWindowX::pointerIsOverWindow() const
                               &mask);
 
                 RK_UNUSED(root_win);
-                RK_UNUSED(child);
                 RK_UNUSED(mask);
                 RK_UNUSED(win_x);
                 RK_UNUSED(win_y);
-
-                auto winSize = size();
-                if (proot_x >= root_x && proot_x < root_x + winSize.width()
-                    && proot_y >= root_y && proot_y < root_y + winSize.height())
-                        return true;
+                return child == xWindow;
         }
         return false;
 }

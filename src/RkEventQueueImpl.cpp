@@ -227,16 +227,10 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
 
 void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* event)
 {
-        if (event->type() == RkEvent::Type::FocusedOut
-            && widget->isTopWindow()
-            && !widget->pointerIsOverWindow()) {
-                for (auto &popup : popupList)
-                        static_cast<RkWidget*>(popup.second)->close();
-                popupList.clear();
-            } else if (event->type() == RkEvent::Type::MouseButtonPress) {
+        if (event->type() == RkEvent::Type::MouseButtonPress) {
                 for (auto it = popupList.begin(); it != popupList.end();) {
                         auto w = static_cast<RkWidget*>((*it).second);
-                        if (!w->pointerIsOverWindow()) {
+                        if (widget != w) {
                                 w->close();
                                 it = popupList.erase(it);
                         } else {
@@ -244,7 +238,6 @@ void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* ev
                         }
                 }
         }
-        RK_LOG_INFO("popupList.size(): " << popupList.size());
 }
 
 bool RkEventQueue::RkEventQueueImpl::isTopWidget(RkObject *obj) const
