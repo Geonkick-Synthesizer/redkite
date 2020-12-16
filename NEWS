@@ -10,11 +10,11 @@
 
   - improved buttons
   - improved popup
-  - close popup when focus is out of top window
+  - do not use transient for popups
 
 #### Features
 
-  - close event programiatically
+  - close event programmatically
   - RkString just a std::string defined type for now
 
 
