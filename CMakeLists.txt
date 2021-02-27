@@ -22,9 +22,6 @@ set(RK_EXAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 set(RK_TOOLS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/tools)
 set(RK_DOC_PATH ${CMAKE_CURRENT_SOURCE_DIR}/doc)
 
-# The path to external libraries used by the Redkite project.
-set(RK_EXTERN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extern)
-
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "no build type selected, default to Release")
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type Release" FORCE)
@@ -139,8 +136,7 @@ set(RK_HEADERS_PLATFORM
 else() # defaut GNU/Linux
   set(RK_HEADERS_PLATFORM
   ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkWindowX.h
-  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkEventQueueX.h
-  ${RK_EXTERN_PATH}/xdnd/xdnd.h)
+  ${RK_INCLUDE_PATH}/impl/platforms/xwin/RkEventQueueX.h)
 endif()
 
 set(RK_SOURCES
@@ -187,14 +183,12 @@ else() # defaut GNU/Linux
     ${RK_SRC_PATH}/platforms/xwin/RkLogX.cpp
     ${RK_SRC_PATH}/platforms/xwin/RkPlatformX.cpp
     ${RK_SRC_PATH}/platforms/xwin/RkWindowX.cpp
-    ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp
-    ${RK_EXTERN_PATH}/xdnd/xdnd.c)
+    ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
 endif()
 
 add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
-include_directories(${RK_EXTERN_PATH}/xdnd)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/win)

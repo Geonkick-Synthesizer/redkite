@@ -28,8 +28,6 @@
 #include <X11/cursorfont.h>
 #include <X11/Xatom.h>
 
-#include "xdnd.h"
-
 RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags, bool isTop)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
          , windowFlags{flags}
@@ -68,10 +66,6 @@ RkWindowX::~RkWindowX()
 {
         RK_LOG_DEBUG("called");
         if (xDisplay) {
-                if (isTopWindow && windowInfo->dndHandle) {
-                        RK_LOG_DEBUG("shut DND for top window: " << xWindow);
-                        xdnd_shut(windowInfo->dndHandle.get());
-                }
                 freeCanvasInfo();
                 XDestroyWindow(xDisplay, xWindow);
                 if (isTopWindow)
@@ -159,18 +153,7 @@ bool RkWindowX::init()
         windowInfo->display      = xDisplay;
         windowInfo->screenNumber = screenNumber;
         windowInfo->window       = xWindow;
-        windowInfo->dndHandle    = parentWindowInfo.dndHandle;
         windowInfo->scaleFactor  = scaleFactor;
-
-        if (!windowInfo->dndHandle) {
-                RK_LOG_DEBUG("is it top window, create DND handle");
-                windowInfo->dndHandle = std::make_shared<DndClass>();
-                xdnd_init(windowInfo->dndHandle.get(), xDisplay);
-        }
-
-        RK_LOG_DEBUG("set DND aware for window: " << xWindow);
-        xdnd_set_dnd_aware(windowInfo->dndHandle.get(), xWindow, nullptr);
-
         RK_LOG_DEBUG("window created");
         return true;
 }

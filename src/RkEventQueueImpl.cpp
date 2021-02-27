@@ -77,8 +77,6 @@ void RkEventQueue::RkEventQueueImpl::addObject(RkObject *obj)
                 if (!widgetImpl->parent() && !platformEventQueue->display()) {
                         RK_LOG_DEBUG("widget " << obj << " is top window");
                         platformEventQueue->setDisplay(widgetImpl->nativeWindowInfo()->display);
-                        if (widgetImpl->nativeWindowInfo()->dndHandle)
-                                platformEventQueue->setDndHandle(widgetImpl->nativeWindowInfo()->dndHandle.get());
                 }
  #else
  #error platform not implemented
