@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
-project(redkite VERSION 1.3.0)
+project(redkite VERSION 1.3.1)
 
 option(ENABLE_EXAMPLES "Build examples" ON)
 
