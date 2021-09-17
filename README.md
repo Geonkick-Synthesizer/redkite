@@ -1,3 +1,5 @@
+This project is not more developed or maintained.
+
 # Redkite
 
 #### Description
