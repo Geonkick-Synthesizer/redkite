@@ -1,4 +1,4 @@
-This project is not more developed or maintained.
+This project is no more developed or maintained.
 
 # Redkite
 
