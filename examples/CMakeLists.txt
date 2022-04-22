@@ -14,6 +14,8 @@ set(RK_EXAMPLES_SOURCES_BUTTON ${RK_EXAMPLES_PATH}/Button.cpp)
 set(RK_EXAMPLES_SOURCES_CONTAINER ${RK_EXAMPLES_PATH}/WidgetContainer.cpp)
 set(RK_EXAMPLES_SOURCES_TRANSITION ${RK_EXAMPLES_PATH}/Transition.cpp)
 set(RK_EXAMPLES_SOURCES_POPUP ${RK_EXAMPLES_PATH}/Popup.cpp)
+set(RK_EXAMPLES_SOURCES_TAB ${RK_EXAMPLES_PATH}/Tab.cpp)
+
 
 if (MSVC)
   set(RK_EXEC_OPTION WIN32)
@@ -211,5 +213,17 @@ add_dependencies(Popup redkite)
 target_link_libraries(Popup redkite)
 target_link_libraries(Popup "-lX11 -lrt -lm -ldl")
 target_link_libraries(Popup ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
+# ------------ Tab example -------
+
+add_executable(Tab
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_TAB})
+
+add_dependencies(Tab redkite)
+target_link_libraries(Tab redkite)
+target_link_libraries(Tab "-lX11 -lrt -lm -ldl")
+target_link_libraries(Tab ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+
 
 

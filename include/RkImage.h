@@ -39,11 +39,6 @@ class RK_EXPORT RkImage : public RkCanvas {
         RkImage();
         explicit RkImage(int width,
                          int height,
-                         Format format = Format::ARGB32);
-        explicit RkImage(const RkSize &size,
-                         Format format = Format::ARGB32);
-        explicit RkImage(int width,
-                         int height,
                          const unsigned char *data = nullptr,
                          Format format = Format::ARGB32);
 

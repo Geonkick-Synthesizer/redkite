@@ -21,8 +21,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkMain.h"
-#include "RkTabs.h"
+#include <RkMain.h>
+#include <RkWidget.h>
+#include <RkImage.h>
+//#include "RkTabs.h"
+
+using RkTab = RkWidget;
 
 int main(int arc, char **argv)
 {
@@ -31,7 +35,7 @@ int main(int arc, char **argv)
         // Create main window.
         auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Widget Tabs");
-        mainWindow->setSize(400, 500);
+        mainWindow->setSize(500, 400);
 
         // Create the tabs widget.
         auto widgetTabs = new RkTab(mainWindow);
@@ -40,18 +44,18 @@ int main(int arc, char **argv)
         RkImage tabButton(24, 64);
         auto tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({255, 0, 0});
-        tabButton->fill({255, 0, 0});
-        widgetTabs->addTabs(tab, tabButton);
+        tabButton.fill({255, 0, 0});
+        //widgetTabs->addTabs(tab, tabButton);
 
         tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({0, 255, 0});
-        tabButton->fill({0, 255, 0});
-        widgetTabs->addTabs(tab, tabButton);
+        tabButton.fill({0, 255, 0});
+        //widgetTabs->addTabs(tab, tabButton);
 
         tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({0, 0, 255});
-        tabButton->fill({0, 0, 255});
-        widgetTabs->addTabs(tab, tabButton);
+        tabButton.fill({0, 0, 255});
+        //widgetTabs->addTabs(tab, tabButton);
 
         mainWindow->show();
         return app.exec();

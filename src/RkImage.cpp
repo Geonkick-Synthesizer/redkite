@@ -31,19 +31,6 @@ RkImage::RkImage()
 
 RkImage::RkImage(int width,
                  int height,
-                 Format format = Format::ARGB32)
-        : o_ptr{std::make_unique<RkImageImpl>(this, width, height, format}
-{
-}
-
-RkImage::RkImage(const RkSize &size,
-                 Format format = Format::ARGB32)
-                : o_ptr{std::make_unique<RkImageImpl>(this, size, format}
-{
-}
-
-RkImage::RkImage(int width,
-                 int height,
                  const unsigned char *data,
                  Format format)
         : o_ptr{std::make_unique<RkImageImpl>(this, width, height, data, format)}
