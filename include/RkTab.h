@@ -1,8 +1,8 @@
 /**
- * File name: RkLabelImpl.h
+ * File name: RkTab.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2022 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -21,29 +21,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_LABEL_IMPL_H
-#define RK_LABEL_IMPL_H
+#ifndef RK_TAB_H
+#define RK_TAB_H
 
-#include "RkWidgetImpl.h"
-#include "RkLabel.h"
+#include "RkWidget.h"
 #include "RkImage.h"
 
-class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
+class RK_EXPORT RkTab : public RkWidget {
  public:
-    RkLabelImpl(RkLabel *interface,
-                const std::string &text,
-                RkWidget *parent = nullptr);
-
-    virtual ~RkLabelImpl();
-    void setText(const std::string &text);
-    std::string text() const;
-    void setImage(const RkImage &image);
-    void drawLabel();
-
+        RkTab(RkWidget *parent);
+        virtual ~RkTab() = default;
+        void addTab(RkWidget *tab, const RkImage &tabButton);
+        RkWidget* tab(size_t index) const;
+        void showTab(size_t index);
+        void showTab(RkWidget *tab);
+        RK_DECL_ACT(tabChanged,
+                    tabChanged(RkWidget* tab),
+                    RK_ARG_TYPE(RkWidget *),
+                    RK_ARG_VAL(tab));
  private:
-    RK_DECALRE_INTERFACE_PTR(RkLabel);
-    std::string labelText;
-    RkImage labelImage;
+        RK_DISABLE_COPY(RkTab);
+        RK_DISABLE_MOVE(RkTab);
+        RK_DELCATE_IMPL_PTR(RkTab);
 };
 
-#endif // RK_LABEL_IMPL_H
+#endif // RK_TAB_H

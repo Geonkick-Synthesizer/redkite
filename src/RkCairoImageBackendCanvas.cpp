@@ -84,9 +84,9 @@ void RkCairoImageBackendCanvas::fill(const RkColor &color)
 {
         unsigned char *data = imageData.data();
         for (decltype(imageData.size()) i = 0; i < imageData.size() - 4; i += 4) {
-                *(data + i)     = color.red();
+                *(data + i)     = color.blue();
                 *(data + i + 1) = color.green();
-                *(data + i + 2) = color.blue();
+                *(data + i + 2) = color.red();
                 *(data + i + 3) = color.alpha();
         }
 }

@@ -24,9 +24,7 @@
 #include <RkMain.h>
 #include <RkWidget.h>
 #include <RkImage.h>
-//#include "RkTabs.h"
-
-using RkTab = RkWidget;
+#include "RkTab.h"
 
 int main(int arc, char **argv)
 {
@@ -36,28 +34,32 @@ int main(int arc, char **argv)
         auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Widget Tabs");
         mainWindow->setSize(500, 400);
+        mainWindow->show();
 
         // Create the tabs widget.
         auto widgetTabs = new RkTab(mainWindow);
+        widgetTabs->setBackgroundColor(23, 45, 66);
+        widgetTabs->setFixedSize(300, 300);
+        widgetTabs->setPosition(30, 30);
 
         // Create and add tabs.
-        RkImage tabButton(24, 64);
+        RkImage tabButton(64, 24);
         auto tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({255, 0, 0});
         tabButton.fill({255, 0, 0});
-        //widgetTabs->addTabs(tab, tabButton);
+        widgetTabs->addTab(tab, tabButton);
 
         tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({0, 255, 0});
         tabButton.fill({0, 255, 0});
-        //widgetTabs->addTabs(tab, tabButton);
+        widgetTabs->addTab(tab, tabButton);
 
         tab = new RkWidget(widgetTabs);
         tab->setBackgroundColor({0, 0, 255});
         tabButton.fill({0, 0, 255});
-        //widgetTabs->addTabs(tab, tabButton);
+        widgetTabs->addTab(tab, tabButton);
+        widgetTabs->showTab(1);
 
-        mainWindow->show();
         return app.exec();
 }
 

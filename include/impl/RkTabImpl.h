@@ -1,5 +1,5 @@
 /**
- * File name: RkLabelImpl.h
+ * File name: RkTabImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
@@ -21,29 +21,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_LABEL_IMPL_H
-#define RK_LABEL_IMPL_H
+#ifndef RK_TAB_IMPL_H
+#define RK_TAB_IMPL_H
 
 #include "RkWidgetImpl.h"
-#include "RkLabel.h"
+#include "RkTab.h"
 #include "RkImage.h"
 
-class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
+class RkContainer;
+class RkButton;
+
+class RkTab::RkTabImpl : public RkWidget::RkWidgetImpl {
  public:
-    RkLabelImpl(RkLabel *interface,
-                const std::string &text,
-                RkWidget *parent = nullptr);
-
-    virtual ~RkLabelImpl();
-    void setText(const std::string &text);
-    std::string text() const;
-    void setImage(const RkImage &image);
-    void drawLabel();
-
+        RkTabImpl(RkTab *interface, RkWidget *parent);
+        virtual ~RkTabImpl() = default;
+        void initLayout();
+        void addTab(RkWidget *tab, const RkImage &tabButton);
+        RkWidget* tab(size_t index) const;
+        void showTab(size_t index);
+        void showTab(RkWidget *tab);
+        
  private:
-    RK_DECALRE_INTERFACE_PTR(RkLabel);
-    std::string labelText;
-    RkImage labelImage;
+        RK_DECALRE_INTERFACE_PTR(RkTab);
+        RkContainer *mainContainer;
+        RkContainer *buttonsContainer;
+        std::vector<std::pair<RkButton*, RkWidget*>> tabsList;
 };
 
-#endif // RK_LABEL_IMPL_H
+#endif // RK_TAB_IMPL_H

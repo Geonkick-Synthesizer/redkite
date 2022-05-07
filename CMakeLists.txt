@@ -98,7 +98,8 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkContainerItem.h
   ${RK_INCLUDE_PATH}/RkContainerWidgetItem.h
   ${RK_INCLUDE_PATH}/RkContainer.h
-  ${RK_INCLUDE_PATH}/RkTransition.h)
+  ${RK_INCLUDE_PATH}/RkTransition.h
+  ${RK_INCLUDE_PATH}/RkTab.h)
 
 set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
@@ -114,7 +115,8 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
   ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
-  ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
+  ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkTabImpl.h)
 
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
   set(RK_GRAPHICS_BACKEND_HEADRES
@@ -165,7 +167,9 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkImage.cpp
   ${RK_SRC_PATH}/RkImageImpl.cpp
   ${RK_SRC_PATH}/RkPainterImpl.cpp
-  ${RK_SRC_PATH}/RkContainer.cpp)
+  ${RK_SRC_PATH}/RkContainer.cpp
+  ${RK_SRC_PATH}/RkTab.cpp
+  ${RK_SRC_PATH}/RkTabImpl.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   set(RK_SOURCES_PLATFORM
