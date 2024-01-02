@@ -59,10 +59,10 @@ Display* RkEventQueueX::display() const
         return xDisplay;
 }
 
-std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>>
+std::vector<std::unique_ptr<RkEvent>>
 RkEventQueueX::getEvents()
 {
-        std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> events;
+        std::vector<std::unique_ptr<RkEvent>>> events;
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);

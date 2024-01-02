@@ -61,7 +61,8 @@ class RK_EXPORT RkEvent {
                 FocusedOut = 16,
                 Hover = 17,
                 Drop = 18,
-                ScaleFactor = 19
+                ScaleFactor = 19,
+                Action = 20
       };
 
         explicit RkEvent(Type type = Type::NoEvent)

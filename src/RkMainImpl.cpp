@@ -56,13 +56,9 @@ RkMain::RkMainImpl::~RkMainImpl()
         RK_LOG_DEBUG("called");
 }
 
-bool RkMain::RkMainImpl::setTopLevelWidget(RkWidget* widget)
+bool RkMain::RkMainImpl::setSystemWindow(RkSystemWindow* widget)
 {
-      if (topWidget || !widget)
-              return false;
-
-      RK_LOG_DEBUG("set top window: " << topWidget);
-      topWidget = widget;
+      sistemWindow = widget;
       eventQueue->addObject(topWidget);
       return true;
 }
@@ -85,13 +81,11 @@ int RkMain::RkMainImpl::exec(bool block)
 	}
 
         if (!block) {
-                eventQueue->dispatchEvents();
                 eventQueue->processQueue();
         } else {
                 for (; block ;) {
-                        eventQueue->dispatchEvents();
                         eventQueue->processQueue();
-                        if (topWidget->isClose()) {
+                        if (sistemWindow->isClosed()) {
                                 RK_LOG_DEBUG("exit");
                                 break;
                         }

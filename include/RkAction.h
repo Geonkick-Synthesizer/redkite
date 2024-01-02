@@ -25,13 +25,15 @@
 #define RK_ACTION_H
 
 #include "Rk.h"
+#include "RkEvent.h"
 #include "RkObject.h"
 
-class RK_EXPORT RkAction {
+class RkAction : public RkEvent {
  public:
         explicit RkAction(RkObject *obj = nullptr, const std::string &name = std::string())
-                : actionObject{obj}
-        , actionName{name} {}
+                : RkAction(Type::Action)
+                , actionObject{obj}
+                , actionName{name} {}
 
         virtual ~RkAction() = default;
 
@@ -58,4 +60,3 @@ class RK_EXPORT RkAction {
 };
 
 #endif // RK_ACTION_H
-
