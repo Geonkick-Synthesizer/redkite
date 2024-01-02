@@ -55,8 +55,8 @@ class RK_EXPORT RkWidget: public RkObject, public RkCanvas {
           RK_CLASS_INFO(style_class, "")
           RK_CLASS_INFO(style_id, "")
 
-          explicit RkWidget(RkMain *mainApp, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-          explicit RkWidget(RkMain *mainApp,
+          explicit RkWidget(RkMain &mainApp, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+          explicit RkWidget(RkMain &mainApp,
                             const RkNativeWindowInfo &parent,
                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
           explicit RkWidget(RkWidget *parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
