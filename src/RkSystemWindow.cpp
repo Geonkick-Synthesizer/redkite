@@ -1,8 +1,8 @@
 /**
- * File name: RkWidget.cpp
- * Project: Redkite (A small GUI toolkit)
+ * File name: RkSystemWindow.cpp
+ * Project: Redkite (A lightweight graphics widget toolkit for embedded GUI)
  *
- * Copyright (C) 2019 Iurie Nistor
+ * Copyright (C) 2023 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -22,127 +22,107 @@
  */
 
 #include "RkLog.h"
-#include "RkWidget.h"
+#include "RkSystemWindow.h"
 #include "RkEvent.h"
-#include "RkWidgetImpl.h"
+#include "RkSystemWindowImpl.h"
 #include "RkPlatform.h"
 #include "RkMain.h"
 
-RkWidget::RkWidget(RkMain *mainApp, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, nullptr, flags, true))
-        , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
+RkSystemWindow::RkSystemWindow(RkMain& mainApp, Rk::WindowFlags flags)
+        :
+#ifdef RK_OS_WIN
+        platformWindow{std::make_unique<RkWindowWin>(nullptr, flags)}
+#else // X11
+        platformWindow{std::make_unique<RkWindowX>(nullptr, flags)}
+#endif // X11
+        , windowSize{platformWindow->size()}
+        , windowBackground(platformWindow->background())
+        , windowAttributes{defaultWindowAttributes()}
+        , windowTextColor{0, 0, 0}
+        , windowDrawingColor{0, 0, 0}
+        , windowPointerShape{Rk::PointerShape::Arrow}
+        , isGrabKeyEnabled{false}
+        , isPropagateGrabKey{true}
 {
-        RK_LOG_DEBUG("called: " << this);
         mainApp->setTopLevelWidget(this);
 }
 
-RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, parent, flags, true))
-        , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
+RkSystemWindow::RkSystemWindow(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+        :
+#ifdef RK_OS_WIN
+        platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
+#else // X11
+        platformWindow{std::make_unique<RkWindowX>(parent, flags)}
+#endif // X11
+        , windowSize{platformWindow->size()}
+        , windowBackground(platformWindow->background())
+        , windowAttributes{defaultWindowAttributes()}
+        , windowTextColor{0, 0, 0}
+        , windowDrawingColor{0, 0, 0}
+        , windowPointerShape{Rk::PointerShape::Arrow}
+        , isGrabKeyEnabled{false}
+        , isPropagateGrabKey{true}
 {
-        RK_LOG_DEBUG("called: " << this);
         mainApp->setTopLevelWidget(this);
 }
 
-RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
-        : RkObject(parent, std::make_unique<RkWidgetImpl>(this, parent, flags))
-        , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
+RkSystemWindow::~RkSystemWindow()
 {
-        RK_LOG_DEBUG("called: " << this);
-        if (modality() == Rk::Modality::ModalTopWidget) {
-                auto topWidget = getTopWidget();
-                if (topWidget)
-                        topWidget->disableInput();
-                else if (parentWidget() && modality() == Rk::Modality::ModalParent)
-                        parentWidget()->disableInput();
-        }
 }
 
-RkWidget::RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl)
-        : RkObject(parent, std::move(impl))
-        , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
-{
-        if (modality() == Rk::Modality::ModalTopWidget) {
-                auto topWidget = getTopWidget();
-                if (topWidget)
-                        topWidget->disableInput();
-                else if (parentWidget() && modality() == Rk::Modality::ModalParent)
-                        parentWidget()->disableInput();
-        }
-}
-
-RkWidget::~RkWidget()
-{
-        RK_LOG_DEBUG("called: " << this);
-        if (parentWidget()) {
-                if (modality() == Rk::Modality::ModalTopWidget) {
-                        if (!parentWidget()->isModal()) {
-                                auto topWidget = getTopWidget();
-                                if (topWidget)
-                                        topWidget->enableInput();
-                        } else {
-                                // Enable inputs only for parent widget and its
-                                // childs since it is modal.
-                                parentWidget()->enableInput();
-                        }
-                } else if (modality() == Rk::Modality::ModalParent) {
-                        parentWidget()->enableInput();
-                }
-        }
-}
-
-Rk::WindowFlags RkWidget::windowFlags() const
+Rk::WindowFlags RkSystemWindow::windowFlags() const
 {
         return impl_ptr->windowFlags();
 }
 
-void RkWidget::setTitle(const std::string &title)
+void RkSystemWindow::setTitle(const std::string &title)
 {
-        impl_ptr->setTitle(title);
+        windowTitle = title;
+        platformWindow->setTitle(windowTitle);
 }
 
-const std::string& RkWidget::title() const
+const std::string& RkSystemWindow::title() const
 {
-        return impl_ptr->title();
+        return windowTitle;
 }
 
 
-void RkWidget::show(bool b)
+void RkSystemWindow::show(bool b)
 {
         impl_ptr->show(b);
 }
 
-bool RkWidget::isShown() const
+bool RkSystemWindow::isShown() const
 {
 	return impl_ptr->isShown();
 }
 
-void RkWidget::hide()
+void RkSystemWindow::hide()
 {
         impl_ptr->show(false);
 }
 
-const RkNativeWindowInfo* RkWidget::nativeWindowInfo() const
+const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
 {
         return impl_ptr->nativeWindowInfo();
 }
 
-RkWindowId RkWidget::id() const
+RkWindowId RkSystemWindow::id() const
 {
         return impl_ptr->id();
 }
 
-RkWidget* RkWidget::parentWidget() const
+RkSystemWindow* RkSystemWindow::parentWidget() const
 {
-        return dynamic_cast<RkWidget*>(parent());
+        return dynamic_cast<RkSystemWindow*>(parent());
 }
 
-bool RkWidget::isClose() const
+bool RkSystemWindow::isClose() const
 {
         return impl_ptr->isClose();
 }
 
-void RkWidget::setSize(int w, int h)
+void RkSystemWindow::setSize(int w, int h)
 {
         if (w > maximumWidth())
                 w = maximumWidth();
@@ -157,17 +137,17 @@ void RkWidget::setSize(int w, int h)
         impl_ptr->setSize(RkSize(w, h));
 }
 
-void RkWidget::setSize(const RkSize &size)
+void RkSystemWindow::setSize(const RkSize &size)
 {
         impl_ptr->setSize(size);
 }
 
-RkSize RkWidget::size() const
+RkSize RkSystemWindow::size() const
 {
         return impl_ptr->size();
 }
 
-void RkWidget::setWidth(int w)
+void RkSystemWindow::setWidth(int w)
 {
         if (w > maximumWidth())
                 impl_ptr->setSize(RkSize(maximumWidth(), impl_ptr->size().height()));
@@ -177,22 +157,22 @@ void RkWidget::setWidth(int w)
                 impl_ptr->setSize(RkSize(w, impl_ptr->size().height()));
 }
 
-int RkWidget::width() const
+int RkSystemWindow::width() const
 {
         return impl_ptr->size().width();
 }
 
-int RkWidget::minimumWidth() const
+int RkSystemWindow::minimumWidth() const
 {
         return impl_ptr->minimumWidth();
 }
 
-int RkWidget::maximumWidth() const
+int RkSystemWindow::maximumWidth() const
 {
         return impl_ptr->maximumWidth();
 }
 
-void RkWidget::setHeight(int h)
+void RkSystemWindow::setHeight(int h)
 {
         if (h > maximumHeight())
                 impl_ptr->setSize(RkSize(impl_ptr->size().width(),  maximumHeight()));
@@ -202,56 +182,56 @@ void RkWidget::setHeight(int h)
                 impl_ptr->setSize(RkSize(impl_ptr->size().width(),  h));
 }
 
-int RkWidget::height() const
+int RkSystemWindow::height() const
 {
         return impl_ptr->size().height();
 }
 
-int RkWidget::minimumHeight() const
+int RkSystemWindow::minimumHeight() const
 {
         return impl_ptr->minimumHeight();
 }
 
-int RkWidget::maximumHeight() const
+int RkSystemWindow::maximumHeight() const
 {
         return impl_ptr->maximumHeight();
 }
 
-void RkWidget::setMinimumWidth(int width)
+void RkSystemWindow::setMinimumWidth(int width)
 {
         impl_ptr->setMinimumWidth(width);
 }
 
-void RkWidget::setMinimumHeight(int height)
+void RkSystemWindow::setMinimumHeight(int height)
 {
         impl_ptr->setMinimumHeight(height);
 }
 
-void RkWidget::setMaximumWidth(int width)
+void RkSystemWindow::setMaximumWidth(int width)
 {
         impl_ptr->setMaximumWidth(width);
 }
 
-void RkWidget::setMaximumHeight(int height)
+void RkSystemWindow::setMaximumHeight(int height)
 {
         impl_ptr->setMaximumHeight(height);
 }
 
-void RkWidget::setFixedWidth(int width)
+void RkSystemWindow::setFixedWidth(int width)
 {
         setMinimumWidth(width);
         setMaximumWidth(width);
         setWidth(width);
 }
 
-void RkWidget::setFixedHeight(int height)
+void RkSystemWindow::setFixedHeight(int height)
 {
         setMinimumHeight(height);
         setMaximumHeight(height);
         setHeight(height);
 }
 
-void RkWidget::setFixedSize(const RkSize &size)
+void RkSystemWindow::setFixedSize(const RkSize &size)
 {
         setMinimumWidth(size.width());
         setMaximumWidth(size.width());
@@ -260,57 +240,57 @@ void RkWidget::setFixedSize(const RkSize &size)
         setSize(size);
 }
 
-void RkWidget::setFixedSize(int width, int height)
+void RkSystemWindow::setFixedSize(int width, int height)
 {
         setFixedSize(RkSize(width, height));
 }
 
-int RkWidget::x() const
+int RkSystemWindow::x() const
 {
         return impl_ptr->position().x();
 }
 
-void RkWidget::setX(int x)
+void RkSystemWindow::setX(int x)
 {
         impl_ptr->setPosition(RkPoint(x, impl_ptr->position().y()));
 }
 
-int RkWidget::y() const
+int RkSystemWindow::y() const
 {
         return impl_ptr->position().y();
 }
 
-void RkWidget::setY(int y)
+void RkSystemWindow::setY(int y)
 {
         return impl_ptr->setPosition(RkPoint(impl_ptr->position().x(), y));
 }
 
-void RkWidget::setPosition(int x, int y)
+void RkSystemWindow::setPosition(int x, int y)
 {
         impl_ptr->setPosition(RkPoint(x, y));
 }
 
-void RkWidget::setPosition(const RkPoint &p)
+void RkSystemWindow::setPosition(const RkPoint &p)
 {
         impl_ptr->setPosition(p);
 }
 
-RkPoint RkWidget::position() const
+RkPoint RkSystemWindow::position() const
 {
         return impl_ptr->position();
 }
 
-void RkWidget::setBorderWidth(int width)
+void RkSystemWindow::setBorderWidth(int width)
 {
         impl_ptr->setBorderWidth(width);
 }
 
-int RkWidget::borderWidth() const
+int RkSystemWindow::borderWidth() const
 {
         return impl_ptr->borderWidth();
 }
 
-void RkWidget::setBorderColor(int red, int green, int blue)
+void RkSystemWindow::setBorderColor(int red, int green, int blue)
 {
         if (red > 255)
                 red = 255;
@@ -329,12 +309,12 @@ void RkWidget::setBorderColor(int red, int green, int blue)
         impl_ptr->setBorderColor(RkColor(red, green, blue));
 }
 
-const RkColor& RkWidget::borderColor() const
+const RkColor& RkSystemWindow::borderColor() const
 {
         return impl_ptr->borderColor();
 }
 
-void RkWidget::setBackgroundColor(int red, int green, int blue)
+void RkSystemWindow::setBackgroundColor(int red, int green, int blue)
 {
         if (red > 255)
                 red = 255;
@@ -354,59 +334,59 @@ void RkWidget::setBackgroundColor(int red, int green, int blue)
         impl_ptr->setBackgroundColor(RkColor(red, green, blue));
 }
 
-void RkWidget::setBackgroundColor(const RkColor &color)
+void RkSystemWindow::setBackgroundColor(const RkColor &color)
 {
         impl_ptr->setBackgroundColor(color);
 }
 
-const RkColor& RkWidget::background() const
+const RkColor& RkSystemWindow::background() const
 {
         return impl_ptr->background();
 }
 
-void RkWidget::setTextColor(const RkColor &color)
+void RkSystemWindow::setTextColor(const RkColor &color)
 {
         return impl_ptr->setTextColor(color);
 }
 
-const RkColor& RkWidget::textColor() const
+const RkColor& RkSystemWindow::textColor() const
 {
         return impl_ptr->textColor();
 }
 
-const RkColor& RkWidget::color() const
+const RkColor& RkSystemWindow::color() const
 {
         return impl_ptr->color();
 }
 
-void RkWidget::setColor(const RkColor &color)
+void RkSystemWindow::setColor(const RkColor &color)
 {
         return impl_ptr->setColor(color);
 }
 
-const RkFont& RkWidget::font() const
+const RkFont& RkSystemWindow::font() const
 {
         return impl_ptr->font();
 }
 
-void RkWidget::setFont(const RkFont &font)
+void RkSystemWindow::setFont(const RkFont &font)
 {
         impl_ptr->setFont(font);
 }
 
-void RkWidget::enableInput()
+void RkSystemWindow::enableInput()
 {
         setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                            | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
         for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkWidget*>(ch);
+                auto widget = dynamic_cast<RkSystemWindow*>(ch);
                 if (widget)
                         widget->enableInput();
         }
 }
 
-void RkWidget::disableInput()
+void RkSystemWindow::disableInput()
 {
         if (modality() == Rk::Modality::ModalParent || modality() == Rk::Modality::ModalTopWidget)
                 return;
@@ -415,46 +395,46 @@ void RkWidget::disableInput()
                             | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
                             | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
         for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkWidget*>(ch);
+                auto widget = dynamic_cast<RkSystemWindow*>(ch);
                 if (widget)
                         widget->disableInput();
         }
 }
 
-bool RkWidget::isInputEnabled() const
+bool RkSystemWindow::isInputEnabled() const
 {
         return  static_cast<int>(widgetAttributes()) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled);
 }
 
-void RkWidget::enableGrabKey(bool b)
+void RkSystemWindow::enableGrabKey(bool b)
 {
         // For now only for top level window.
         if (!parentWidget())
                 impl_ptr->enableGrabKey(b);
 }
 
-bool RkWidget::grabKeyEnabled() const
+bool RkSystemWindow::grabKeyEnabled() const
 {
         return impl_ptr->grabKeyEnabled();
 }
 
-void RkWidget::propagateGrabKey(bool b)
+void RkSystemWindow::propagateGrabKey(bool b)
 {
         impl_ptr->propagateGrabKey(b);
 }
 
-bool RkWidget::propagateGrabKeyEnabled() const
+bool RkSystemWindow::propagateGrabKeyEnabled() const
 {
         return impl_ptr->propagateGrabKeyEnabled();
 }
 
-void RkWidget::event(RkEvent *event)
+void RkSystemWindow::event(RkEvent *event)
 {
         impl_ptr->event(event);
         RkObject::event(event);
 }
 
-void RkWidget::closeEvent([[maybe_unused]] RkCloseEvent *event)
+void RkSystemWindow::closeEvent([[maybe_unused]] RkCloseEvent *event)
 {
         if (parentWidget()) {
                 auto event = std::make_unique<RkDeleteChild>(parentWidget(), this);
@@ -462,174 +442,174 @@ void RkWidget::closeEvent([[maybe_unused]] RkCloseEvent *event)
         }
 }
 
-void RkWidget::keyPressEvent(RkKeyEvent *event)
+void RkSystemWindow::keyPressEvent(RkKeyEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::keyReleaseEvent(RkKeyEvent *event)
+void RkSystemWindow::keyReleaseEvent(RkKeyEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::shortcutEvent(RkKeyEvent *event)
+void RkSystemWindow::shortcutEvent(RkKeyEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseMoveEvent(RkMouseEvent *event)
+void RkSystemWindow::mouseMoveEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseButtonPressEvent(RkMouseEvent *event)
+void RkSystemWindow::mouseButtonPressEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseButtonReleaseEvent(RkMouseEvent *event)
+void RkSystemWindow::mouseButtonReleaseEvent(RkMouseEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::mouseDoubleClickEvent(RkMouseEvent *event)
+void RkSystemWindow::mouseDoubleClickEvent(RkMouseEvent *event)
 {
         mouseButtonPressEvent(event);
 }
 
-void RkWidget::wheelEvent(RkWheelEvent *event)
+void RkSystemWindow::wheelEvent(RkWheelEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::dropEvent(RkDropEvent *event)
+void RkSystemWindow::dropEvent(RkDropEvent *event)
 {
         if (parentWidget())
                 getTopWidget()->dropEvent(event);
 }
 
-void RkWidget::moveEvent(RkMoveEvent *event)
+void RkSystemWindow::moveEvent(RkMoveEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::resizeEvent(RkResizeEvent *event)
+void RkSystemWindow::resizeEvent(RkResizeEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::paintEvent(RkPaintEvent *event)
+void RkSystemWindow::paintEvent(RkPaintEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::showEvent(RkShowEvent *event)
+void RkSystemWindow::showEvent(RkShowEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::hideEvent(RkHideEvent *event)
+void RkSystemWindow::hideEvent(RkHideEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::focusEvent([[maybe_unused]] RkFocusEvent *event)
+void RkSystemWindow::focusEvent([[maybe_unused]] RkFocusEvent *event)
 {
         update();
 }
 
-void RkWidget::hoverEvent(RkHoverEvent *event)
+void RkSystemWindow::hoverEvent(RkHoverEvent *event)
 {
         RK_UNUSED(event);
 }
 
-void RkWidget::update()
+void RkSystemWindow::update()
 {
         impl_ptr->update();
 }
 
-const RkCanvasInfo* RkWidget::getCanvasInfo() const
+const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
 {
         return impl_ptr->getCanvasInfo();
 }
 
-void RkWidget::freeCanvasInfo()
+void RkSystemWindow::freeCanvasInfo()
 {
         return impl_ptr->freeCanvasInfo();
 }
 
-RkRect RkWidget::rect() const
+RkRect RkSystemWindow::rect() const
 {
         return impl_ptr->rect();
 }
 
-void RkWidget::close()
+void RkSystemWindow::close()
 {
         eventQueue()->postEvent(this, std::make_unique<RkCloseEvent>());
 }
 
-bool RkWidget::isModal() const
+bool RkSystemWindow::isModal() const
 {
         return modality() != Rk::Modality::NonModal;
 }
 
-Rk::Modality RkWidget::modality() const
+Rk::Modality RkSystemWindow::modality() const
 {
         return impl_ptr->modality();
 }
 
-void RkWidget::setWidgetAttribute(Rk::WidgetAttribute attribute)
+void RkSystemWindow::setWidgetAttribute(Rk::WidgetAttribute attribute)
 {
         impl_ptr->setWidgetAttribute(attribute);
 }
 
-void RkWidget::clearWidgetAttribute(Rk::WidgetAttribute attribute)
+void RkSystemWindow::clearWidgetAttribute(Rk::WidgetAttribute attribute)
 {
         impl_ptr->clearWidgetAttribute(attribute);
 }
 
-Rk::WidgetAttribute RkWidget::widgetAttributes() const
+Rk::WidgetAttribute RkSystemWindow::widgetAttributes() const
 {
         return impl_ptr->getWidgetAttributes();
 }
 
-RkWidget* RkWidget::getTopWidget()
+RkSystemWindow* RkSystemWindow::getTopWidget()
 {
         if (!parentWidget())
                 return this;
         return parentWidget()->getTopWidget();
 }
 
-bool RkWidget::isTopWindow() const
+bool RkSystemWindow::isTopWindow() const
 {
         return !parentWidget();
 }
 
-void RkWidget::setFocus(bool b)
+void RkSystemWindow::setFocus(bool b)
 {
         impl_ptr->setFocus(b);
 }
 
-bool RkWidget::hasFocus() const
+bool RkSystemWindow::hasFocus() const
 {
         return impl_ptr->hasFocus();
 }
 
-void RkWidget::setPointerShape(Rk::PointerShape shape)
+void RkSystemWindow::setPointerShape(Rk::PointerShape shape)
 {
         impl_ptr->setPointerShape(shape);
 }
 
-Rk::PointerShape RkWidget::pointerShape() const
+Rk::PointerShape RkSystemWindow::pointerShape() const
 {
         return impl_ptr->pointerShape();
 }
 
-void RkWidget::setScaleFactor(double factor)
+void RkSystemWindow::setScaleFactor(double factor)
 {
         impl_ptr->setScaleFactor(factor);
         for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkWidget*>(ch);
+                auto widget = dynamic_cast<RkSystemWindow*>(ch);
                 if (widget)
                         widget->setScaleFactor(factor);
         }
@@ -639,21 +619,21 @@ void RkWidget::setScaleFactor(double factor)
         update();
 }
 
-double RkWidget::scaleFactor() const
+double RkSystemWindow::scaleFactor() const
 {
         return impl_ptr->scaleFactor();
 }
 
 
-bool RkWidget::pointerIsOverWindow() const
+bool RkSystemWindow::pointerIsOverWindow() const
 {
         return impl_ptr->pointerIsOverWindow();
 }
 
-bool RkWidget::isChild(RkWidget *widget)
+bool RkSystemWindow::isChild(RkSystemWindow *widget)
 {
         for (const auto &child: children()) {
-                if (widget == dynamic_cast<RkWidget*>(child))
+                if (widget == dynamic_cast<RkSystemWindow*>(child))
                         return true;
         }
         return false;

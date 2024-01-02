@@ -51,15 +51,15 @@ class RkNativeWindowInfo;
 
 #ifdef RK_OS_WIN
 class RkWindowWin;
-#elif RK_OS_MAC
-#else
+#else // GNU/Linux
 class RkWindowX;
-#endif
+#endif // GNU/Linux
 
 class RkSystemWindow {
 public:
-        explicit RkSystemWindow(RkMain *mainApp, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-        explicit RkSystemWindow(RkMain *mainApp,
+        explicit RkSystemWindow(RkMain& mainApp,
+                                Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkSystemWindow(RkMain& mainApp,
                                 const RkNativeWindowInfo &parent,
                                 Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         virtual ~RkWidget();
@@ -125,10 +125,9 @@ public:
 private:
 #ifdef RK_OS_WIN
         std::unique_ptr<RkWindowWin> platformWindow;
-#elif RK_OS_MAC
-#else
+#else // GNU/Linux
         std::unique_ptr<RkWindowX> platformWindow;
-#endif // RK_WIN_OS
+#endif // GNU/Linux
         std::string windowTitle;
         RkSize windowSize;
         RkColor windowBackground;
