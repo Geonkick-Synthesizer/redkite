@@ -28,20 +28,18 @@
 #include "RkPlatform.h"
 #include "RkMain.h"
 
-RkWidget::RkWidget(RkMain *mainApp, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, nullptr, flags, true))
+RkWidget::RkWidget(RkMain& mainApp, Rk::WindowFlags flags)
+        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, nullptr, flags, true))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        mainApp->setTopLevelWidget(this);
 }
 
-RkWidget::RkWidget(RkMain *mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, parent, flags, true))
+RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
+        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, parent, flags, true))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
-        mainApp->setTopLevelWidget(this);
 }
 
 RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)

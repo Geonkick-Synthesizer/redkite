@@ -29,6 +29,8 @@
 #include "RkEvent.h"
 #include "RkShortcut.h"
 
+class RkSystemWindow;
+
 #ifdef RK_OS_WIN
         class RkEventQueueWin;
 #elif RK_OS_MAC
@@ -42,7 +44,7 @@ class RkEventQueue::RkEventQueueImpl {
         using EventQueueWindowId = unsigned long long int;
         explicit RkEventQueueImpl(RkEventQueue* queueInterface);
         virtual ~RkEventQueueImpl();
-
+        void setTopWidget(RkWidget *widget);
         bool objectExists(RkObject *t) const;
         void addObject(RkObject *obj);
         void addShortcut(RkObject *obj,
@@ -81,6 +83,7 @@ class RkEventQueue::RkEventQueueImpl {
         RK_DECALRE_INTERFACE_PTR(RkEventQueue);
         RK_DISABLE_COPY(RkEventQueueImpl);
         RK_DISABLE_MOVE(RkEventQueueImpl);
+        std::unique_ptr<RkSystemWindow> systemWindow;
         std::unordered_set<RkObject*> objectsList;
         std::unordered_map<EventQueueWindowId, RkObject*> windowIdsMap;
         std::unordered_map<int, std::unique_ptr<RkShortcut>> shortcutsList;

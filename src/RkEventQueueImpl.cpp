@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkWidget.h"
+#include "RkSystemWindow.h"
 #include "RkWidgetImpl.h"
 #include "RkEventQueueImpl.h"
 #include "RkTimer.h"
@@ -38,6 +38,7 @@
 
 RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* queueInterface)
         : inf_ptr{queueInterface}
+        , systemWindow{nullptr}
 #ifdef RK_OS_WIN
         , platformEventQueue{std::make_unique<RkEventQueueWin>()}
 #elif RK_OS_MAC
@@ -52,6 +53,13 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* queueInterface)
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
 {
         RK_LOG_DEBUG("called");
+}
+
+void RkEventQueue::RkEventQueueImpl::setTopWidget(RkWidget *widget,
+                                                  const RkNativeWindowInfo* parent)
+{
+        if (!systemWindow)
+                systemWindow = std::make_unique<RkSystemWindow>(widget, parent);
 }
 
 bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const

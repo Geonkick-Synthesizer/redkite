@@ -32,7 +32,6 @@
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
-        , topWidget{nullptr}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -41,7 +40,6 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
 
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
-        , topWidget{nullptr}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -52,20 +50,12 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
 
 RkMain::RkMainImpl::~RkMainImpl()
 {
-        delete topWidget;
         RK_LOG_DEBUG("called");
 }
 
-bool RkMain::RkMainImpl::setSystemWindow(RkSystemWindow* widget)
+void RkMain::RkMainImpl::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
 {
-      sistemWindow = widget;
-      eventQueue->addObject(topWidget);
-      return true;
-}
-
-RkWidget* RkMain::RkMainImpl::topLevelWidget(void)
-{
-      return topWidget;
+        RK_IMPL_PTR(eventQueue)->setTopWidget(widget, parent);
 }
 
 RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
@@ -75,8 +65,8 @@ RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
 
 int RkMain::RkMainImpl::exec(bool block)
 {
-        if (!topLevelWidget()) {
-                RK_LOG_ERROR("top window not defined");
+        if (!RK_IMPL_PTR(eventQueue)->systemWindow()) {
+                RK_LOG_ERROR("the system window not defined");
 		return 1;
 	}
 
@@ -85,7 +75,7 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         eventQueue->processQueue();
-                        if (sistemWindow->isClosed()) {
+                        if (RK_IMPL_PTR(eventQueue)->systemWindow()->isClosed()) {
                                 RK_LOG_DEBUG("exit");
                                 break;
                         }

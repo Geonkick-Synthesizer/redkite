@@ -25,29 +25,12 @@
 #include "RkEvent.h"
 #include "RkPainter.h"
 
-#ifdef RK_OS_WIN
-#include "RkWindowWin.h"
-#elif RK_OS_MAC
-#include "RkWindowMac.h"
-#else // X11
-#include "RkWindowX.h"
-#undef KeyPress
-#undef KeyRelease
-#undef Paint
-#undef FocusIn
-#undef FocusOut
-#endif
-
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags, bool isTopWindow)
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
+                                     RkMain* mainApp,
+                                     RkWidget* parent,
+                                     Rk::WindowFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
-#ifdef RK_OS_WIN
-        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags, isTopWindow)}
-#elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags, isTopWindow)}
-#else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags, isTopWindow)}
-#endif
         , widgetClosed{false}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
@@ -63,21 +46,15 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
-        platformWindow->init();
+        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr);
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
+                                     RkMain* mainApp,
                                      const RkNativeWindowInfo &parent,
-                                     Rk::WindowFlags flags, bool isTopWindow)
+                                     Rk::WindowFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
-#ifdef RK_OS_WIN
-        , platformWindow{std::make_unique<RkWindowWin>(parent, flags, isTopWindow)}
-#elif RK_OS_MAC
-        , platformWindow{std::make_unique<RkWindowMac>(parent, flags, isTopWindow)}
-#else // X11
-        , platformWindow{std::make_unique<RkWindowX>(parent, flags, isTopWindow)}
-#endif
         , widgetClosed{false}
         , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
@@ -90,7 +67,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isGrabKeyEnabled{false}
 {
         RK_LOG_DEBUG("called");
-        platformWindow->init();
+        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, &parent);
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
@@ -101,9 +78,6 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
 {
         RkObjectImpl::setEventQueue(queue);
-#ifdef RK_OS_WIN
-        platformWindow->setEventQueue(queue);
-#endif // RK_OS_WIN
 }
 
 Rk::WindowFlags RkWidget::RkWidgetImpl::windowFlags() const

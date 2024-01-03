@@ -27,6 +27,8 @@
 #include "RkWidget.h"
 #include "RkObjectImpl.h"
 
+class RkMain;
+
 #ifdef RK_OS_WIN
 class RkWindowWin;
 #elif RK_OS_MAC
@@ -37,10 +39,12 @@ class RkWindowX;
 class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
  public:
         explicit RkWidgetImpl(RkWidget* interface,
+                              RkMain *mainApp,
                               RkWidget* parent = nullptr,
                               Rk::WindowFlags flags = Rk::WindowFlags::Widget,
                               bool isTopWindow = false);
         explicit RkWidgetImpl(RkWidget* interface,
+                              RkMain *mainApp,
                               const RkNativeWindowInfo &parent,
                               Rk::WindowFlags flags = Rk::WindowFlags::Widget,
                               bool isTopWindow = false);

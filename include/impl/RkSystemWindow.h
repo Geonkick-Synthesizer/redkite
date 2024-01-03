@@ -48,6 +48,7 @@ class RkHoverEvent;
 class RkMain;
 struct RkWindowId;
 class RkNativeWindowInfo;
+class RkWidgetImpl;
 
 #ifdef RK_OS_WIN
 class RkWindowWin;
@@ -57,13 +58,9 @@ class RkWindowX;
 
 class RkSystemWindow {
 public:
-        explicit RkSystemWindow(RkMain& mainApp,
-                                Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-        explicit RkSystemWindow(RkMain& mainApp,
-                                const RkNativeWindowInfo &parent,
-                                Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkSystemWindow(RkWidgetImpl *widget,
+                                const RkNativeWindowInfo *parent);
         virtual ~RkWidget();
-        Rk::WindowFlags windowFlags() const;
         void show(bool b = true);
         bool isShown() const;
         void hide();
@@ -123,6 +120,7 @@ public:
         void hoverEvent(RkHoverEvent *event);
 
 private:
+        RkWidgetImpl *topWidget;
 #ifdef RK_OS_WIN
         std::unique_ptr<RkWindowWin> platformWindow;
 #else // GNU/Linux

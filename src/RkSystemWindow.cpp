@@ -28,34 +28,28 @@
 #include "RkPlatform.h"
 #include "RkMain.h"
 
-RkSystemWindow::RkSystemWindow(RkMain& mainApp, Rk::WindowFlags flags)
-        :
 #ifdef RK_OS_WIN
-        platformWindow{std::make_unique<RkWindowWin>(nullptr, flags)}
+#include "RkWindowWin.h"
+#elif RK_OS_MAC
+#include "RkWindowMac.h"
 #else // X11
-        platformWindow{std::make_unique<RkWindowX>(nullptr, flags)}
-#endif // X11
-        , windowSize{platformWindow->size()}
-        , windowBackground(platformWindow->background())
-        , windowAttributes{defaultWindowAttributes()}
-        , windowTextColor{0, 0, 0}
-        , windowDrawingColor{0, 0, 0}
-        , windowPointerShape{Rk::PointerShape::Arrow}
-        , isGrabKeyEnabled{false}
-        , isPropagateGrabKey{true}
-{
-        mainApp->setTopLevelWidget(this);
-}
+#include "RkWindowX.h"
+#undef KeyPress
+#undef KeyRelease
+#undef Paint
+#undef FocusIn
+#undef FocusOut
+#endif
 
-RkSystemWindow::RkSystemWindow(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        :
+RkSystemWindow::RkSystemWindow(RkWidgetImpl *widget, const RkNativeWindowInfo* parent)
+        : topWidget{widget}
 #ifdef RK_OS_WIN
-        platformWindow{std::make_unique<RkWindowWin>(parent, flags)}
+        platformWindow{std::make_unique<RkWindowWin>(parent)}
 #else // X11
-        platformWindow{std::make_unique<RkWindowX>(parent, flags)}
+        platformWindow{std::make_unique<RkWindowX>(parent)}
 #endif // X11
         , windowSize{platformWindow->size()}
-        , windowBackground(platformWindow->background())
+        , windowBackground{platformWindow->background()}
         , windowAttributes{defaultWindowAttributes()}
         , windowTextColor{0, 0, 0}
         , windowDrawingColor{0, 0, 0}
@@ -63,21 +57,14 @@ RkSystemWindow::RkSystemWindow(RkMain& mainApp, const RkNativeWindowInfo &parent
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
-        mainApp->setTopLevelWidget(this);
 }
 
 RkSystemWindow::~RkSystemWindow()
 {
 }
 
-Rk::WindowFlags RkSystemWindow::windowFlags() const
-{
-        return impl_ptr->windowFlags();
-}
-
 void RkSystemWindow::setTitle(const std::string &title)
 {
-        windowTitle = title;
         platformWindow->setTitle(windowTitle);
 }
 
