@@ -37,33 +37,9 @@ class RK_EXPORT RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
-        void addObject(RkObject *obj);
-        void addShortcut(RkObject *obj,
-                         Rk::Key key,
-                         Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
-        void removeShortcut(RkObject *obj,
-                            Rk::Key key,
-                            Rk::KeyModifiers modifier = Rk::KeyModifiers::NoModifier);
-        void removeObject(RkObject *obj);
         void postEvent(RkObject *obj, std::unique_ptr<RkEvent> event);
-        void postEvent(const RkWindowId &id, std::unique_ptr<RkEvent> event);
         void postAction(std::unique_ptr<RkAction> act);
-        void subscribeTimer(RkTimer *timer);
-        void unsubscribeTimer(RkTimer *timer);
-        void processEvents();
-        void processActions();
-        void processTimers();
         void processQueue();
-        void clearObjectEvents(const RkObject *obj);
-        void clearObjectActions(const RkObject *obj);
-        void clearEvents();
-        void clearActions();
-        void clearQueue();
-        RkObject* findObjectByName(const std::string &name) const;
-        void setScaleFactor(double factor);
-        double getScaleFactor() const;
-        RkWidget* getWidget(const RkWindowId &id) const;
-        void dispatchEvents();
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue);

@@ -201,7 +201,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         case WM_DESTROY:
         {
                 KillTimer(hWnd, RK_MAIN_WINDOW_TIMER_ID);
-		eventQueue->processEvent(std::make_unique<RkCloseEvent>());
+		eventQueue->processSystemEvent(std::make_unique<RkCloseEvent>());
                 return 0;
         }
         case WM_TIMER:
@@ -232,7 +232,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                         RK_LOG_DEBUG("WM_MBUTTONDOWN");
                         event->setButton(RkMouseEvent::ButtonType::Middle);
                 }
-		eventQueue->processEvent(std::move(event));
+		eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_LBUTTONUP:
@@ -256,7 +256,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                         RK_LOG_DEBUG("WM_MBUTTONUP");
                         event->setButton(RkMouseEvent::ButtonType::Middle);
                 }
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_MOUSEMOVE:
@@ -275,7 +275,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto scaledX = static_cast<double>(x) / eventQueue->getScaleFactor();
                 auto scaledY = static_cast<double>(y) / eventQueue->getScaleFactor();
                 event->setGlobalPosition(scaledX, scaledY);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_LBUTTONDBLCLK:
@@ -289,7 +289,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto scaledX = static_cast<double>(x) / eventQueue->getScaleFactor();
                 auto scaledY = static_cast<double>(y) / eventQueue->getScaleFactor();
                 event->setGlobalPosition(scaledX, scaledY);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
 
@@ -304,7 +304,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto scaledX = static_cast<double>(x) / eventQueue->getScaleFactor();
                 auto scaledY = static_cast<double>(y) / eventQueue->getScaleFactor();
                 event->setGlobalPosition(scaledX, scaledY);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
 
@@ -319,7 +319,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto scaledX = static_cast<double>(x) / eventQueue->getScaleFactor();
                 auto scaledY = static_cast<double>(y) / eventQueue->getScaleFactor();
                 event->setGlobalPosition(scaledX, scaledY);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_MOUSEWHEEL:
@@ -332,7 +332,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto scaledX = static_cast<double>(x) / eventQueue->getScaleFactor();
                 auto scaledY = static_cast<double>(y) / eventQueue->getScaleFactor();
                 event->setGlobalPosition(scaledX, scaledY);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_KEYDOWN:
@@ -343,7 +343,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 rkUpdateModifiers(event->key(), event->type());
                 if (rkKeyModifiers != static_cast<int>(Rk::KeyModifiers::NoModifier))
                         event->setModifiers(rkKeyModifiers);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
 
@@ -355,19 +355,19 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 rkUpdateModifiers(event->key(), event->type());
                 if (rkKeyModifiers != static_cast<int>(Rk::KeyModifiers::NoModifier))
                         event->setModifiers(rkKeyModifiers);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_SIZE:
 	{
-                eventQueue->processEvent(std::make_unique<RkResizeEvent>());
+                eventQueue->processSystemEvent(std::make_unique<RkResizeEvent>());
                 return 0;
         }
         case WM_PAINT:
         {
                 PAINTSTRUCT ps;
                 BeginPaint(hWnd, &ps);
-                eventQueue->processEvent(std::make_unique<RkPaintEvent>());
+                eventQueue->processSystemEvent(std::make_unique<RkPaintEvent>());
                 EndPaint(hWnd, &ps);
                 return 0;
         }
@@ -376,14 +376,14 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 auto event = std::make_unique<RkFocusEvent>();
                 event->setType(RkEvent::Type::FocusedIn);
                 eventQueue->clearQueue();
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         case WM_KILLFOCUS:
         {
                 auto event = std::make_unique<RkFocusEvent>();
                 event->setType(RkEvent::Type::FocusedOut);
-                eventQueue->processEvent(std::move(event));
+                eventQueue->processSystemEvent(std::move(event));
                 return 0;
         }
         

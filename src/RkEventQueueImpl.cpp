@@ -127,17 +127,48 @@ void RkEventQueue::RkEventQueueImpl::removeObjectShortcuts(RkObject *obj)
 
 void RkEventQueue::RkEventQueueImpl::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
+        std::lock_guard<std::mutex> lock(eventsQueueMutex);
         eventsQueue.push_back({obj, std::move(event)});
 }
 
-void RkEventQueue::RkEventQueueImpl::processEvent(std::unique_ptr<RkEvent> event)
+void RkEventQueue::RkEventQueueImpl::processSystemEvent(std::unique_ptr<RkEvent> event)
 {
-        systemWindow->event(event.get());
+        if (systemWindow)
+                systemWindow->event(event.get());
+}
+
+void RkEventQueue::RkEventQueueImpl::processEvents()
+{
+        /**
+         * Moving events in a separeted queue for processing
+         * because during the processing the execution of some events
+         * may add new events into the queue and this for
+         * in some cases can lead to a infinite looping.
+         */
+        decltype(eventsQueue) queue;
+        {
+                std::lock_guard<std::mutex> lock(eventsQueueMutex);
+                queue = std::move(eventsQueue);
+        }
+        
+        for (const auto &e: queue) {
+                if (e.first->type() == Rk::ObjectType::Widget && systemWindow)
+                        systemWindow->event(e.second.get());
+                else
+                        e.first->event(e.second.get());
+        }
+
+        // Process system windows events.
+        if (systemWindow) {
+                auto events = platformEventQueue->getEvents();
+                for (auto &event: events)
+                        systemWindow->event(event);
+        }
 }
 
 void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* event)
 {
-        if (event->type() == RkEvent::Type::MouseButtonPress) {
+        /*        if (event->type() == RkEvent::Type::MouseButtonPress) {
                 for (auto it = popupList.begin(); it != popupList.end();) {
                         auto w = static_cast<RkWidget*>((*it).second);
                         if (widget != w && !w->isChild(widget)) {
@@ -148,12 +179,12 @@ void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* ev
                                 ++it;
                         }
                 }
-        }
+                }*/
 }
 
 void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event)
 {
-        if (!event) {
+        /*        if (!event) {
                 RK_LOG_ERROR("wrong arguments");
                 return;
         }
@@ -178,7 +209,7 @@ void RkEventQueue::RkEventQueueImpl::processShortcuts(RkKeyEvent *event)
                 }
         } else {
                 RK_LOG_DEBUG("can't find shortcut");
-        }
+                }*/
 }
 
 void RkEventQueue::RkEventQueueImpl::postAction(std::unique_ptr<RkAction> act)
@@ -206,22 +237,12 @@ void RkEventQueue::RkEventQueueImpl::processTimers()
         }
 }
 
-void RkEventQueue::RkEventQueueImpl::clearEvents(const RkObject *obj)
+void RkEventQueue::RkEventQueueImpl::processQueue()
 {
-        if (!obj)
-                return;
-        RK_LOG_DEBUG("clear object " << obj << " events");
-        eventsQueue.clear()erase(std::remove_if(eventsQueue.begin(),
-                                         eventsQueue.end(),
-                                         [obj](std::pair<RkObject*, std::unique_ptr<RkEvent>> &ev) {
-                                                 if (ev.first == obj) {
-                                                         RK_LOG_DEBUG("clear: [obj: " << obj << "] ev: "
-                                                                      << ev.second.get());
-                                                         return true;
-                                                 }
-                                                 return false;
-                                         })
-                          , eventsQueue.end());
+        // The order is important.
+        processTimers();
+        processActions();
+        processEvents();
 }
 
 RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &name) const
@@ -232,23 +253,4 @@ RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &na
                         return *it;
         }
         return nullptr;
-}
-
-void RkEventQueue::RkEventQueueImpl::setScaleFactor(double factor)
-{
-        platformEventQueue->setScaleFactor(factor);
-}
-
-double RkEventQueue::RkEventQueueImpl::getScaleFactor() const
-{
-        return platformEventQueue->getScaleFactor();
-}
-
-void RkEventQueue::RkEventQueueImpl::dispatchEvents()
-{
-#ifdef RK_OS_WIN
-        platformEventQueue->dispatchEvents();
-#elif RK_OS_MAC
-#else
-#endif
 }
