@@ -28,53 +28,38 @@
 #include "RkObjectImpl.h"
 
 class RkMain;
-
-#ifdef RK_OS_WIN
-class RkWindowWin;
-#elif RK_OS_MAC
-#else
-class RkWindowX;
-#endif // RK_WIN_OS
+class RkSystemWindow;
 
 class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
  public:
         explicit RkWidgetImpl(RkWidget* interface,
                               RkMain *mainApp,
-                              RkWidget* parent = nullptr,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget,
-                              bool isTopWindow = false);
+                              const RkNativeWindowInfo* parent = nullptr,
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         explicit RkWidgetImpl(RkWidget* interface,
-                              RkMain *mainApp,
-                              const RkNativeWindowInfo &parent,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget,
-                              bool isTopWindow = false);
+                              RkWidget* parent,
+                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
         virtual ~RkWidgetImpl();
+        void setSystemWindow(RkSystemWindow *window);
+        RkSystemWindow* getSystemWindow() const;
         void setEventQueue(RkEventQueue *queue) override;
-        Rk::WindowFlags windowFlags() const;
+        Rk::WidgetFlags getWidgetFlags() const;
         void show(bool b);
 	bool isShown() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
-        const RkNativeWindowInfo* nativeWindowInfo() const;
         bool isClose() const;
-        RkWindowId id() const;
         void event(RkEvent *event);
         void setSize(const RkSize &size);
-        RkSize size() const;
-        int minimumWidth() const;
-        int maximumWidth() const;
-        int minimumHeight() const;
-        int maximumHeight() const;
-        void setMinimumWidth(int width);
-        void setMaximumWidth(int widht);
-        void setMinimumHeight(int heigth);
-        void setMaximumHeight(int heigth);
+        const RkSize& size() const;
+        const RkSize& minimumSize() const;
+        const RkSize& maximumSize() const;
         void setPosition(const RkPoint &position);
-        RkPoint position() const;
+        const RkPoint& position() const;
         void setBorderWidth(int width);
         int borderWidth() const;
         void setBorderColor(const RkColor &color);
@@ -82,8 +67,6 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         RkRect rect() const;
-        const RkCanvasInfo* getCanvasInfo() const;
-        void freeCanvasInfo();
         void update();
         static Rk::WidgetAttribute defaultWidgetAttributes();
         Rk::Modality modality() const;
@@ -110,18 +93,15 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget);
-#ifdef RK_OS_WIN
-        std::unique_ptr<RkWindowWin> platformWindow;
-#elif RK_OS_MAC
-#else
-        std::unique_ptr<RkWindowX> platformWindow;
-#endif // RK_WIN_OS
+        RkSystemWindow* systemWindow;
         std::string widgetTitle;
-        //        std::list<RkWidget*> widgetChildren;
         bool widgetClosed;
         RkSize widgetMinimumSize;
         RkSize widgetMaximumSize;
         RkSize widgetSize;
+        RkPoint widgetPosition;
+        int widgetBorderWidth;
+        RkColor widgetBorderColor;
         RkColor widgetBackground;
         Rk::WidgetAttribute widgetAttributes;
         Rk::Modality widgetModality;
@@ -129,7 +109,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         RkColor widgetDrawingColor;
         RkFont widgetFont;
         Rk::PointerShape widgetPointerShape;
-	bool isWidgetSown;
+	bool isWidgetShown;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
 };

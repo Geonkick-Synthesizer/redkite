@@ -36,7 +36,7 @@ RkWidget::RkWidget(RkMain& mainApp, Rk::WindowFlags flags)
 }
 
 RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, parent, flags, true))
+        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, &parent, flags, true))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
@@ -89,9 +89,9 @@ RkWidget::~RkWidget()
         }
 }
 
-Rk::WindowFlags RkWidget::windowFlags() const
+Rk::WidgetFlags RkWidget::widgetFalgs() const
 {
-        return impl_ptr->windowFlags();
+        return impl_ptr->widgetFlags();
 }
 
 void RkWidget::setTitle(const std::string &title)
@@ -117,17 +117,7 @@ bool RkWidget::isShown() const
 
 void RkWidget::hide()
 {
-        impl_ptr->show(false);
-}
-
-const RkNativeWindowInfo* RkWidget::nativeWindowInfo() const
-{
-        return impl_ptr->nativeWindowInfo();
-}
-
-RkWindowId RkWidget::id() const
-{
-        return impl_ptr->id();
+        show(false);
 }
 
 RkWidget* RkWidget::parentWidget() const
@@ -142,22 +132,14 @@ bool RkWidget::isClose() const
 
 void RkWidget::setSize(int w, int h)
 {
-        if (w > maximumWidth())
-                w = maximumWidth();
-        else if (w < minimumWidth())
-                w = minimumWidth();
-
-        if (h > maximumHeight())
-                h = maximumHeight();
-        else if (h < minimumHeight())
-                h = minimumHeight();
-
+        w = std::clamp(w, minimumWidth(), maximumWidth());
+        h = std::clamp(w, minimumHeight(), maximumHeight());
         impl_ptr->setSize(RkSize(w, h));
 }
 
 void RkWidget::setSize(const RkSize &size)
 {
-        impl_ptr->setSize(size);
+        setSize(size.width(), size.height()));
 }
 
 RkSize RkWidget::size() const
@@ -167,52 +149,42 @@ RkSize RkWidget::size() const
 
 void RkWidget::setWidth(int w)
 {
-        if (w > maximumWidth())
-                impl_ptr->setSize(RkSize(maximumWidth(), impl_ptr->size().height()));
-        else if (w < minimumWidth())
-                impl_ptr->setSize(RkSize(minimumWidth(), impl_ptr->size().height()));
-        else
-                impl_ptr->setSize(RkSize(w, impl_ptr->size().height()));
+        setSize(RkSize(w, impl_ptr->size().height()));
 }
 
 int RkWidget::width() const
 {
-        return impl_ptr->size().width();
+        size().width();
 }
 
 int RkWidget::minimumWidth() const
 {
-        return impl_ptr->minimumWidth();
+        return impl_ptr->minimumSize.width();
 }
 
 int RkWidget::maximumWidth() const
 {
-        return impl_ptr->maximumWidth();
+        return impl_ptr->maximumSize.width();
 }
 
 void RkWidget::setHeight(int h)
 {
-        if (h > maximumHeight())
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  maximumHeight()));
-        else if (h < minimumHeight())
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  minimumHeight()));
-        else
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  h));
+        setSize(RkSize(impl_ptr->size().width(),  h)));
 }
 
 int RkWidget::height() const
 {
-        return impl_ptr->size().height();
+        size().height();
 }
 
 int RkWidget::minimumHeight() const
 {
-        return impl_ptr->minimumHeight();
+        return impl_ptr->minimumSize().height();
 }
 
 int RkWidget::maximumHeight() const
 {
-        return impl_ptr->maximumHeight();
+        return impl_ptr->maximumSize().height();
 }
 
 void RkWidget::setMinimumWidth(int width)

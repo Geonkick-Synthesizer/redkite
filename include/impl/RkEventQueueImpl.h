@@ -43,7 +43,7 @@ class RkEventQueue::RkEventQueueImpl {
  public:
         explicit RkEventQueueImpl(RkEventQueue* queueInterface);
         virtual ~RkEventQueueImpl();
-        void setTopWidget(RkWidget *widget);
+        void setTopWidget(RkWidget *widget, const RkNativeWindowInfo *parent = nullptr);
         bool objectExists(RkObject *t) const;
         void addObject(RkObject *obj);
         void addShortcut(RkObject *obj,

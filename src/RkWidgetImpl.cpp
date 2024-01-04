@@ -27,42 +27,16 @@
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      RkMain* mainApp,
-                                     RkWidget* parent,
-                                     Rk::WindowFlags flags)
-        : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
-        , inf_ptr{widgetInterface}
-        , widgetClosed{false}
-        , widgetMinimumSize{0, 0}
-        , widgetMaximumSize{1000000, 1000000}
-        , widgetSize{platformWindow->size()}
-        , widgetBackground(platformWindow->background())
-        , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
-        , widgetTextColor{0, 0, 0}
-        , widgetDrawingColor{0, 0, 0}
-        , widgetPointerShape{Rk::PointerShape::Arrow}
-	, isWidgetSown{false}
-        , isGrabKeyEnabled{false}
-        , isPropagateGrabKey{true}
-{
-        RK_LOG_DEBUG("called");
-        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr);
-}
-
-RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
-                                     RkMain* mainApp,
-                                     const RkNativeWindowInfo &parent,
+                                     const RkNativeWindowInfo *parent,
                                      Rk::WindowFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
+        , systemWindow{nullptr}
         , widgetClosed{false}
-        , widgetMinimumSize{0, 0}
         , widgetMaximumSize{1000000, 1000000}
-        , widgetSize{platformWindow->size()}
+        , widgetBorderWidth{0}
         , widgetAttributes{defaultWidgetAttributes()}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
-        , widgetTextColor{0, 0, 0}
-        , widgetDrawingColor{0, 0, 0}
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
@@ -70,9 +44,39 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, &parent);
 }
 
+RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
+                                     RkWidget* parent,
+                                     Rk::WindowFlags flags)
+        : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
+        , inf_ptr{widgetInterface}
+        , systemWindow{nullptr}
+        , widgetClosed{false}
+        , widgetMaximumSize{1000000, 1000000}
+        , widgetBorderWidth{0}
+        , widgetAttributes{defaultWidgetAttributes()}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
+        , widgetPointerShape{Rk::PointerShape::Arrow}
+	, isWidgetShown{false}
+        , isGrabKeyEnabled{false}
+        , isPropagateGrabKey{true}
+{
+        RK_LOG_DEBUG("called");
+        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr);
+}
+
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
 {
         RK_LOG_DEBUG("called");
+}
+
+void RkWidget::RkWidgetImpl::setSystemWindow(RkSystemWindow *window)
+{
+        systemWindow = window;
+}
+
+RkSystemWindow* RkWidget::RkWidgetImpl::getSystemWindow() const
+{
+        return systemWindow;
 }
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
@@ -80,9 +84,9 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
         RkObjectImpl::setEventQueue(queue);
 }
 
-Rk::WindowFlags RkWidget::RkWidgetImpl::windowFlags() const
+Rk::WidgetFlags RkWidget::RkWidgetImpl::getWidgetsFlags() const
 {
-        return platformWindow->flags();
+        return widgetFlags;
 }
 
 Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
@@ -95,8 +99,9 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 
 void RkWidget::RkWidgetImpl::show(bool b)
 {
-	isWidgetSown = b;
-        platformWindow->show(isWidgetSown);
+	isWidgetShown = b;
+        if (systemWindow)
+                systemWindow->show(isWidgetShown);
 }
 
 bool RkWidget::RkWidgetImpl::isShown() const
@@ -107,7 +112,8 @@ bool RkWidget::RkWidgetImpl::isShown() const
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
 {
         widgetTitle = title;
-        platformWindow->setTitle(widgetTitle);
+        if (systemWindow)
+                systemWindow->setTitle(widgetTitle);
 }
 
 const std::string& RkWidget::RkWidgetImpl::title() const
@@ -115,20 +121,9 @@ const std::string& RkWidget::RkWidgetImpl::title() const
         return widgetTitle;
 }
 
-const RkNativeWindowInfo*
-RkWidget::RkWidgetImpl::nativeWindowInfo() const
-{
-        return platformWindow->nativeWindowInfo();
-}
-
 bool RkWidget::RkWidgetImpl::isClose() const
 {
         return widgetClosed;
-}
-
-RkWindowId RkWidget::RkWidgetImpl::id() const
-{
-        return platformWindow->id();
 }
 
 void RkWidget::RkWidgetImpl::event(RkEvent *event)
@@ -226,9 +221,9 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 
 void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
 {
-        if (size.width() > 1 && size.height() > 1)
-                platformWindow->setSize(size);
         widgetSize = size;
+        if (systemWindow)
+                systemWindow->setSize(widgetSize);
 }
 
 RkSize RkWidget::RkWidgetImpl::size() const
@@ -236,80 +231,63 @@ RkSize RkWidget::RkWidgetImpl::size() const
         return  widgetSize;
 }
 
-int RkWidget::RkWidgetImpl::minimumWidth() const
+const RkSize& RkWidget::RkWidgetImpl::minimumSize() const
 {
-        return widgetMinimumSize.width();
+        return widgetMinimumSize;
 }
 
-int RkWidget::RkWidgetImpl::maximumWidth() const
+const RkSize& RkWidget::RkWidgetImpl::maximumSize() const
 {
-        return widgetMaximumSize.width();
+        return widgetMaximumSize;
 }
 
-int RkWidget::RkWidgetImpl::minimumHeight() const
+void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
 {
-        return widgetMinimumSize.height();
+        widgetMinimumSize = size;
 }
 
-int RkWidget::RkWidgetImpl::maximumHeight() const
+const RkSize& RkWidget::RkWidgetImpl::minimumSize() const
 {
-        return widgetMaximumSize.height();
-}
-
-void RkWidget::RkWidgetImpl::setMinimumWidth(int width)
-{
-        widgetMinimumSize.setWidth(width);
-}
-
-void RkWidget::RkWidgetImpl::setMaximumWidth(int width)
-{
-        widgetMaximumSize.setWidth(width);
-}
-
-void RkWidget::RkWidgetImpl::setMinimumHeight(int height)
-{
-        widgetMinimumSize.setHeight(height);
-}
-
-void RkWidget::RkWidgetImpl::setMaximumHeight(int height)
-{
-        widgetMaximumSize.setHeight(height);
+        return widgetMinimumSize = size;
 }
 
 void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)
 {
-        platformWindow->setPosition(position);
+        widgetPosition = position;
+        if (systemWindow)
+                systemWindow->setPosition(widgetPosition);
 }
 
-RkPoint RkWidget::RkWidgetImpl::position() const
+const RkPoint& RkWidget::RkWidgetImpl::position() const
 {
-        return platformWindow->position();
+        return widgetPosition();
 }
 
 void RkWidget::RkWidgetImpl::setBorderWidth(int width)
 {
-        platformWindow->setBorderWidth(width);
+        widgetBorderWidth = width;
 }
 
 int RkWidget::RkWidgetImpl::borderWidth() const
 {
-        return platformWindow->borderWidth();
+        return widgetBorderWidth;
 }
 
 void RkWidget::RkWidgetImpl::setBorderColor(const RkColor &color)
 {
-        platformWindow->setBorderColor(color);
+        widgetBorderColor = color;
 }
 
 const RkColor& RkWidget::RkWidgetImpl::borderColor() const
 {
-        return platformWindow->borderColor();
+        return widgetBorderColor;
 }
 
 void RkWidget::RkWidgetImpl::setBackgroundColor(const RkColor &color)
 {
-        platformWindow->setBackgroundColor(color);
         widgetBackground = color;
+        if (systemWindow)
+                systemWindow->setBackgroundColor(widgetBackground);
 }
 
 const RkColor& RkWidget::RkWidgetImpl::background() const
@@ -322,19 +300,9 @@ RkRect RkWidget::RkWidgetImpl::rect() const
         return RkRect(RkPoint(0, 0), size());
 }
 
-const RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
-{
-        return platformWindow->getCanvasInfo();
-}
-
-void RkWidget::RkWidgetImpl::freeCanvasInfo()
-{
-        platformWindow->freeCanvasInfo();
-}
-
 void RkWidget::RkWidgetImpl::update()
 {
-        platformWindow->update();
+        // TODO: implement
 }
 
 Rk::Modality RkWidget::RkWidgetImpl::modality() const
@@ -359,12 +327,13 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 
 void RkWidget::RkWidgetImpl::setFocus(bool b)
 {
-        platformWindow->setFocus(b);
+        // TODO: implement?
 }
 
 bool RkWidget::RkWidgetImpl::hasFocus() const
 {
-        return platformWindow->hasFocus();
+        // TODO: implement?
+        return false;
 }
 
 void RkWidget::RkWidgetImpl::setTextColor(const RkColor &color)
@@ -399,10 +368,9 @@ void RkWidget::RkWidgetImpl::setFont(const RkFont &font)
 
 void RkWidget::RkWidgetImpl::setPointerShape(Rk::PointerShape shape)
 {
-        if (widgetPointerShape != shape) {
-                widgetPointerShape = shape;
-                platformWindow->setPointerShape(widgetPointerShape);
-        }
+        widgetPointerShape = shape;
+        if (systemWindow)
+                systemWindow->setPointerShape(widgetPointerShape);
 }
 
 Rk::PointerShape RkWidget::RkWidgetImpl::pointerShape() const
@@ -432,16 +400,7 @@ bool RkWidget::RkWidgetImpl::propagateGrabKeyEnabled() const
 
 bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
 {
-        return platformWindow->pointerIsOverWindow();
-}
-
-void RkWidget::RkWidgetImpl::setScaleFactor(double factor)
-{
-        platformWindow->setScaleFactor(factor);
-}
-
-double RkWidget::RkWidgetImpl::scaleFactor() const
-{
-        return platformWindow->getScaleFactor();
+        // TODO: implement?
+        return false;
 }
 

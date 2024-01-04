@@ -48,7 +48,7 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
         void setSystemWindow(RkSystemWidow* window);
         RkSystemWidow* setSystemWindow(void) const;
-        void setTopWidget(RkWidget* widget);
+        void setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent = nullptr);
         RkWidget* topWidget() const;
         RkEventQueue* getEventQueue() const;
 	int exec(bool block = true);
