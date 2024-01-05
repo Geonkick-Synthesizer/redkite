@@ -189,22 +189,22 @@ int RkWidget::maximumHeight() const
 
 void RkWidget::setMinimumWidth(int width)
 {
-        impl_ptr->setMinimumWidth(width);
+        impl_ptr->setMinimumSize({width, minimumSize().height()});
 }
 
 void RkWidget::setMinimumHeight(int height)
 {
-        impl_ptr->setMinimumHeight(height);
+        impl_ptr->setMinimumSize({minimumSize().width(), height});
 }
 
 void RkWidget::setMaximumWidth(int width)
 {
-        impl_ptr->setMaximumWidth(width);
+        impl_ptr->setMaximumSize({width, maximumSize().height()});
 }
 
 void RkWidget::setMaximumHeight(int height)
 {
-        impl_ptr->setMaximumHeight(height);
+        impl_ptr->setMaximumSize({ maximumSize().width(), height});
 }
 
 void RkWidget::setFixedWidth(int width)
@@ -282,20 +282,9 @@ int RkWidget::borderWidth() const
 
 void RkWidget::setBorderColor(int red, int green, int blue)
 {
-        if (red > 255)
-                red = 255;
-        if (red < 0)
-                red = 0;
-
-        if (green > 255)
-                green = 255;
-        if (green < 0)
-                green = 0;
-
-        if (blue > 255)
-                blue = 255;
-        if (blue < 0)
-                blue = 0;
+        red   = std::clamp(red, 0, 255);
+        green = std::clamp(green, 0, 255);
+        blue  = std::clamp(blue, 0, 255);
         impl_ptr->setBorderColor(RkColor(red, green, blue));
 }
 
@@ -306,21 +295,9 @@ const RkColor& RkWidget::borderColor() const
 
 void RkWidget::setBackgroundColor(int red, int green, int blue)
 {
-        if (red > 255)
-                red = 255;
-        if (red < 0)
-                red = 0;
-
-        if (green > 255)
-                green = 255;
-        if (green < 0)
-                green = 0;
-
-        if (blue > 255)
-                blue = 255;
-        if (blue < 0)
-                blue = 0;
-
+        red   = std::clamp(red, 0, 255);
+        green = std::clamp(green, 0, 255);
+        blue  = std::clamp(blue, 0, 255);
         impl_ptr->setBackgroundColor(RkColor(red, green, blue));
 }
 
@@ -518,16 +495,6 @@ void RkWidget::update()
         impl_ptr->update();
 }
 
-const RkCanvasInfo* RkWidget::getCanvasInfo() const
-{
-        return impl_ptr->getCanvasInfo();
-}
-
-void RkWidget::freeCanvasInfo()
-{
-        return impl_ptr->freeCanvasInfo();
-}
-
 RkRect RkWidget::rect() const
 {
         return impl_ptr->rect();
@@ -594,26 +561,6 @@ Rk::PointerShape RkWidget::pointerShape() const
 {
         return impl_ptr->pointerShape();
 }
-
-void RkWidget::setScaleFactor(double factor)
-{
-        impl_ptr->setScaleFactor(factor);
-        for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkWidget*>(ch);
-                if (widget)
-                        widget->setScaleFactor(factor);
-        }
-
-        if (this == getTopWidget())
-            eventQueue()->setScaleFactor(factor);
-        update();
-}
-
-double RkWidget::scaleFactor() const
-{
-        return impl_ptr->scaleFactor();
-}
-
 
 bool RkWidget::pointerIsOverWindow() const
 {

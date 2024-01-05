@@ -48,6 +48,7 @@ class RkHoverEvent;
 class RkMain;
 struct RkWindowId;
 class RkNativeWindowInfo;
+class RkWidget;
 class RkWidgetImpl;
 
 #ifdef RK_OS_WIN
@@ -60,7 +61,7 @@ class RkSystemWindow {
 public:
         explicit RkSystemWindow(RkWidgetImpl *widget,
                                 const RkNativeWindowInfo *parent);
-        virtual ~RkWidget();
+        virtual ~RkSystemWindow();
         void show(bool b = true);
         bool isShown() const;
         void hide();
@@ -85,9 +86,6 @@ public:
         RkRect rect() const;
         void update();
         void close();
-        void setWidgetAttribute(Rk::WidgetAttribute attribute);
-        void clearWidgetAttribute(Rk::WidgetAttribute attribute);
-        Rk::WidgetAttribute widgetAttributes() const;
         void setTopWidget(RkWidget *widget);
         RkWidget* getTopWidget() const;
         void enableGrabKey(bool b);
@@ -129,7 +127,6 @@ private:
         std::string windowTitle;
         RkSize windowSize;
         RkColor windowBackground;
-        Rk::WidgetAttribute windowAttributes;
         RkColor windowTextColor;
         RkColor windowDrawingColor;
         RkFont windowFont;

@@ -75,6 +75,8 @@
   class Class##Impl; \
   Class##Impl *impl_ptr
 
+#define RK_IMPL_PTR(obj) obj->o_ptr
+
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr
 
 #define RK_CLASS_INFO(name, value) virtual std::string rk__property_ ##name () const { return std::string( #value ); }

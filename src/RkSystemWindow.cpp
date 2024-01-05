@@ -24,7 +24,6 @@
 #include "RkLog.h"
 #include "RkSystemWindow.h"
 #include "RkEvent.h"
-#include "RkSystemWindowImpl.h"
 #include "RkPlatform.h"
 #include "RkMain.h"
 
@@ -44,16 +43,12 @@
 RkSystemWindow::RkSystemWindow(RkWidgetImpl *widget, const RkNativeWindowInfo* parent)
         : topWidget{widget}
 #ifdef RK_OS_WIN
-        platformWindow{std::make_unique<RkWindowWin>(parent)}
+        , platformWindow{std::make_unique<RkWindowWin>(parent)}
 #else // X11
-        platformWindow{std::make_unique<RkWindowX>(parent)}
+        , platformWindow{std::make_unique<RkWindowX>(parent)}
 #endif // X11
         , windowSize{platformWindow->size()}
         , windowBackground{platformWindow->background()}
-        , windowAttributes{defaultWindowAttributes()}
-        , windowTextColor{0, 0, 0}
-        , windowDrawingColor{0, 0, 0}
-        , windowPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
@@ -77,269 +72,72 @@ const std::string& RkSystemWindow::title() const
 
 void RkSystemWindow::show(bool b)
 {
-        impl_ptr->show(b);
+        platformWindow->show(b);
 }
 
 bool RkSystemWindow::isShown() const
 {
-	return impl_ptr->isShown();
+	return platformWindow->isShown();
 }
 
 void RkSystemWindow::hide()
 {
-        impl_ptr->show(false);
+        platformWindow->show(false);
 }
 
 const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
 {
-        return impl_ptr->nativeWindowInfo();
+        return platformWindow->nativeWindowInfo();
 }
 
 RkWindowId RkSystemWindow::id() const
 {
-        return impl_ptr->id();
-}
-
-RkSystemWindow* RkSystemWindow::parentWidget() const
-{
-        return dynamic_cast<RkSystemWindow*>(parent());
+        return platformWindow->id();
 }
 
 bool RkSystemWindow::isClose() const
 {
-        return impl_ptr->isClose();
-}
-
-void RkSystemWindow::setSize(int w, int h)
-{
-        if (w > maximumWidth())
-                w = maximumWidth();
-        else if (w < minimumWidth())
-                w = minimumWidth();
-
-        if (h > maximumHeight())
-                h = maximumHeight();
-        else if (h < minimumHeight())
-                h = minimumHeight();
-
-        impl_ptr->setSize(RkSize(w, h));
+        return platformWindow->isClose();
 }
 
 void RkSystemWindow::setSize(const RkSize &size)
 {
-        impl_ptr->setSize(size);
+        platformWindow->setSize(size);
 }
 
 RkSize RkSystemWindow::size() const
 {
-        return impl_ptr->size();
-}
-
-void RkSystemWindow::setWidth(int w)
-{
-        if (w > maximumWidth())
-                impl_ptr->setSize(RkSize(maximumWidth(), impl_ptr->size().height()));
-        else if (w < minimumWidth())
-                impl_ptr->setSize(RkSize(minimumWidth(), impl_ptr->size().height()));
-        else
-                impl_ptr->setSize(RkSize(w, impl_ptr->size().height()));
-}
-
-int RkSystemWindow::width() const
-{
-        return impl_ptr->size().width();
-}
-
-int RkSystemWindow::minimumWidth() const
-{
-        return impl_ptr->minimumWidth();
-}
-
-int RkSystemWindow::maximumWidth() const
-{
-        return impl_ptr->maximumWidth();
-}
-
-void RkSystemWindow::setHeight(int h)
-{
-        if (h > maximumHeight())
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  maximumHeight()));
-        else if (h < minimumHeight())
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  minimumHeight()));
-        else
-                impl_ptr->setSize(RkSize(impl_ptr->size().width(),  h));
-}
-
-int RkSystemWindow::height() const
-{
-        return impl_ptr->size().height();
-}
-
-int RkSystemWindow::minimumHeight() const
-{
-        return impl_ptr->minimumHeight();
-}
-
-int RkSystemWindow::maximumHeight() const
-{
-        return impl_ptr->maximumHeight();
-}
-
-void RkSystemWindow::setMinimumWidth(int width)
-{
-        impl_ptr->setMinimumWidth(width);
-}
-
-void RkSystemWindow::setMinimumHeight(int height)
-{
-        impl_ptr->setMinimumHeight(height);
-}
-
-void RkSystemWindow::setMaximumWidth(int width)
-{
-        impl_ptr->setMaximumWidth(width);
-}
-
-void RkSystemWindow::setMaximumHeight(int height)
-{
-        impl_ptr->setMaximumHeight(height);
-}
-
-void RkSystemWindow::setFixedWidth(int width)
-{
-        setMinimumWidth(width);
-        setMaximumWidth(width);
-        setWidth(width);
-}
-
-void RkSystemWindow::setFixedHeight(int height)
-{
-        setMinimumHeight(height);
-        setMaximumHeight(height);
-        setHeight(height);
-}
-
-void RkSystemWindow::setFixedSize(const RkSize &size)
-{
-        setMinimumWidth(size.width());
-        setMaximumWidth(size.width());
-        setMinimumHeight(size.height());
-        setMaximumHeight(size.height());
-        setSize(size);
-}
-
-void RkSystemWindow::setFixedSize(int width, int height)
-{
-        setFixedSize(RkSize(width, height));
-}
-
-int RkSystemWindow::x() const
-{
-        return impl_ptr->position().x();
-}
-
-void RkSystemWindow::setX(int x)
-{
-        impl_ptr->setPosition(RkPoint(x, impl_ptr->position().y()));
-}
-
-int RkSystemWindow::y() const
-{
-        return impl_ptr->position().y();
-}
-
-void RkSystemWindow::setY(int y)
-{
-        return impl_ptr->setPosition(RkPoint(impl_ptr->position().x(), y));
-}
-
-void RkSystemWindow::setPosition(int x, int y)
-{
-        impl_ptr->setPosition(RkPoint(x, y));
+        return platformWindow->size();
 }
 
 void RkSystemWindow::setPosition(const RkPoint &p)
 {
-        impl_ptr->setPosition(p);
+        platformWindow->setPosition(p);
 }
 
 RkPoint RkSystemWindow::position() const
 {
-        return impl_ptr->position();
-}
-
-void RkSystemWindow::setBorderWidth(int width)
-{
-        impl_ptr->setBorderWidth(width);
-}
-
-int RkSystemWindow::borderWidth() const
-{
-        return impl_ptr->borderWidth();
-}
-
-void RkSystemWindow::setBorderColor(int red, int green, int blue)
-{
-        if (red > 255)
-                red = 255;
-        if (red < 0)
-                red = 0;
-
-        if (green > 255)
-                green = 255;
-        if (green < 0)
-                green = 0;
-
-        if (blue > 255)
-                blue = 255;
-        if (blue < 0)
-                blue = 0;
-        impl_ptr->setBorderColor(RkColor(red, green, blue));
-}
-
-const RkColor& RkSystemWindow::borderColor() const
-{
-        return impl_ptr->borderColor();
-}
-
-void RkSystemWindow::setBackgroundColor(int red, int green, int blue)
-{
-        if (red > 255)
-                red = 255;
-        if (red < 0)
-                red = 0;
-
-        if (green > 255)
-                green = 255;
-        if (green < 0)
-                green = 0;
-
-        if (blue > 255)
-                blue = 255;
-        if (blue < 0)
-                blue = 0;
-
-        impl_ptr->setBackgroundColor(RkColor(red, green, blue));
+        return platformWindow->position();
 }
 
 void RkSystemWindow::setBackgroundColor(const RkColor &color)
 {
-        impl_ptr->setBackgroundColor(color);
+        platformWindow->setBackgroundColor(color);
 }
 
 const RkColor& RkSystemWindow::background() const
 {
-        return impl_ptr->background();
+        return platformWindow->background();
 }
 
 void RkSystemWindow::setTextColor(const RkColor &color)
 {
-        return impl_ptr->setTextColor(color);
+        return platformWindow->setTextColor(color);
 }
 
 const RkColor& RkSystemWindow::textColor() const
 {
-        return impl_ptr->textColor();
+        return platformWindow->textColor();
 }
 
 const RkColor& RkSystemWindow::color() const
@@ -354,80 +152,38 @@ void RkSystemWindow::setColor(const RkColor &color)
 
 const RkFont& RkSystemWindow::font() const
 {
-        return impl_ptr->font();
+        return windowFont;
 }
 
 void RkSystemWindow::setFont(const RkFont &font)
 {
-        impl_ptr->setFont(font);
-}
-
-void RkSystemWindow::enableInput()
-{
-        setWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
-                           | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
-                           | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkSystemWindow*>(ch);
-                if (widget)
-                        widget->enableInput();
-        }
-}
-
-void RkSystemWindow::disableInput()
-{
-        if (modality() == Rk::Modality::ModalParent || modality() == Rk::Modality::ModalTopWidget)
-                return;
-
-        clearWidgetAttribute(static_cast<Rk::WidgetAttribute>(static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled)
-                            | static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)
-                            | static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)));
-        for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkSystemWindow*>(ch);
-                if (widget)
-                        widget->disableInput();
-        }
-}
-
-bool RkSystemWindow::isInputEnabled() const
-{
-        return  static_cast<int>(widgetAttributes()) & static_cast<int>(Rk::WidgetAttribute::KeyInputEnabled);
+        windowFont = font;
 }
 
 void RkSystemWindow::enableGrabKey(bool b)
 {
-        // For now only for top level window.
-        if (!parentWidget())
-                impl_ptr->enableGrabKey(b);
 }
 
 bool RkSystemWindow::grabKeyEnabled() const
 {
-        return impl_ptr->grabKeyEnabled();
+        return false; 
 }
 
 void RkSystemWindow::propagateGrabKey(bool b)
 {
-        impl_ptr->propagateGrabKey(b);
 }
 
 bool RkSystemWindow::propagateGrabKeyEnabled() const
 {
-        return impl_ptr->propagateGrabKeyEnabled();
+        return false;
 }
 
 void RkSystemWindow::event(RkEvent *event)
 {
-        impl_ptr->event(event);
-        RkObject::event(event);
 }
 
 void RkSystemWindow::closeEvent([[maybe_unused]] RkCloseEvent *event)
 {
-        if (parentWidget()) {
-                auto event = std::make_unique<RkDeleteChild>(parentWidget(), this);
-                eventQueue()->postEvent(parentWidget(), std::move(event));
-        }
 }
 
 void RkSystemWindow::keyPressEvent(RkKeyEvent *event)
@@ -513,52 +269,26 @@ void RkSystemWindow::hoverEvent(RkHoverEvent *event)
 
 void RkSystemWindow::update()
 {
-        impl_ptr->update();
+        platformWindow->update();
 }
 
 const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
 {
-        return impl_ptr->getCanvasInfo();
+        return platformWindow->getCanvasInfo();
 }
 
 void RkSystemWindow::freeCanvasInfo()
 {
-        return impl_ptr->freeCanvasInfo();
+        return platformWindow->freeCanvasInfo();
 }
 
 RkRect RkSystemWindow::rect() const
 {
-        return impl_ptr->rect();
+        return platformWindow->rect();
 }
 
 void RkSystemWindow::close()
 {
-        eventQueue()->postEvent(this, std::make_unique<RkCloseEvent>());
-}
-
-bool RkSystemWindow::isModal() const
-{
-        return modality() != Rk::Modality::NonModal;
-}
-
-Rk::Modality RkSystemWindow::modality() const
-{
-        return impl_ptr->modality();
-}
-
-void RkSystemWindow::setWidgetAttribute(Rk::WidgetAttribute attribute)
-{
-        impl_ptr->setWidgetAttribute(attribute);
-}
-
-void RkSystemWindow::clearWidgetAttribute(Rk::WidgetAttribute attribute)
-{
-        impl_ptr->clearWidgetAttribute(attribute);
-}
-
-Rk::WidgetAttribute RkSystemWindow::widgetAttributes() const
-{
-        return impl_ptr->getWidgetAttributes();
 }
 
 RkSystemWindow* RkSystemWindow::getTopWidget()
@@ -566,11 +296,6 @@ RkSystemWindow* RkSystemWindow::getTopWidget()
         if (!parentWidget())
                 return this;
         return parentWidget()->getTopWidget();
-}
-
-bool RkSystemWindow::isTopWindow() const
-{
-        return !parentWidget();
 }
 
 void RkSystemWindow::setFocus(bool b)
@@ -595,34 +320,9 @@ Rk::PointerShape RkSystemWindow::pointerShape() const
 
 void RkSystemWindow::setScaleFactor(double factor)
 {
-        impl_ptr->setScaleFactor(factor);
-        for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkSystemWindow*>(ch);
-                if (widget)
-                        widget->setScaleFactor(factor);
-        }
-
-        if (this == getTopWidget())
-            eventQueue()->setScaleFactor(factor);
-        update();
 }
 
 double RkSystemWindow::scaleFactor() const
 {
-        return impl_ptr->scaleFactor();
-}
-
-
-bool RkSystemWindow::pointerIsOverWindow() const
-{
-        return impl_ptr->pointerIsOverWindow();
-}
-
-bool RkSystemWindow::isChild(RkSystemWindow *widget)
-{
-        for (const auto &child: children()) {
-                if (widget == dynamic_cast<RkSystemWindow*>(child))
-                        return true;
-        }
-        return false;
+        return 1.0;
 }

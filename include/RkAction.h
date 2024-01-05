@@ -28,11 +28,10 @@
 #include "RkEvent.h"
 #include "RkObject.h"
 
-class RkAction : public RkEvent {
+class RkAction {
  public:
         explicit RkAction(RkObject *obj = nullptr, const std::string &name = std::string())
-                : RkAction(Type::Action)
-                , actionObject{obj}
+                : actionObject{obj}
                 , actionName{name} {}
 
         virtual ~RkAction() = default;

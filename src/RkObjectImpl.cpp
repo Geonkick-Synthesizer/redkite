@@ -22,7 +22,7 @@
  */
 
 #include "RkObjectImpl.h"
-#include "RkEventQueue.h"
+#include "RkEventQueueImpl.h"
 #include "RkObserver.h"
 
 RkObject::RkObjectImpl::RkObjectImpl(RkObject* interface,
@@ -138,7 +138,7 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
         objectChildren.insert(child);
         if (eventQueue) {
                 RK_LOG_DEBUG("add child to queue: " << child);
-                eventQueue->addObject(child);
+                RK_IMPL_PTR(eventQueue)->addObject(child);
         }
 }
 

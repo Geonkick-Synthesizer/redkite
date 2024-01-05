@@ -29,7 +29,9 @@
 #include "RkEvent.h"
 #include "RkShortcut.h"
 
+class RkWidget;
 class RkSystemWindow;
+class RkTimer;
 
 #ifdef RK_OS_WIN
         class RkEventQueueWin;

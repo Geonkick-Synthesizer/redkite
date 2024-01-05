@@ -25,15 +25,12 @@
 #define RK_EVENT_QUEUE_H
 
 #include "Rk.h"
-#include "RkObject.h"
-#include "RkAction.h"
 
+class RkObject;
 class RkEvent;
-class RkTimer;
-class RkWindowId;
-class RkWidget;
+class RkAction;
 
-class RK_EXPORT RkEventQueue {
+class RkEventQueue {
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
@@ -48,6 +45,7 @@ class RK_EXPORT RkEventQueue {
  private:
         RK_DISABLE_COPY(RkEventQueue);
         RK_DISABLE_MOVE(RkEventQueue);
+        friend class RkObject;
 };
 
 #endif // RK_EVENT_QUEUE_H
