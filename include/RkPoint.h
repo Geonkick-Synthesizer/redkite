@@ -26,9 +26,8 @@
 
 #include "Rk.h"
 
-class RK_EXPORT RkPoint {
+class RkPoint {
  public:
-
        constexpr RkPoint() : xValue{0}, yValue{0}
        {
        }

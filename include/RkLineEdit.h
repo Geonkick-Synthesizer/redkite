@@ -26,7 +26,8 @@
 
 #include "RkWidget.h"
 
-class RK_EXPORT RkLineEdit : public RkWidget {
+class RkLineEdit : public RkWidget {
+ RK_DECLARE_INERFACE(RkLineEdit)
  public:
     RkLineEdit(RkWidget *parent, const std::string &text = std::string());
     virtual ~RkLineEdit() = default;
@@ -60,11 +61,6 @@ class RK_EXPORT RkLineEdit : public RkWidget {
     virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
     virtual void focusEvent(RkFocusEvent *event) override;
     virtual void resizeEvent(RkResizeEvent* event) override;
-
- private:
-    RK_DISABLE_COPY(RkLineEdit);
-    RK_DISABLE_MOVE(RkLineEdit);
-    RK_DELCATE_IMPL_PTR(RkLineEdit);
 };
 
 #endif // RK_LABEL_H

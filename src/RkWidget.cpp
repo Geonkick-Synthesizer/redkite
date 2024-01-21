@@ -28,21 +28,21 @@
 #include "RkPlatform.h"
 #include "RkMain.h"
 
-RkWidget::RkWidget(RkMain& mainApp, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, nullptr, flags, true))
+RkWidget::RkWidget(RkMain& mainApp, Rk::WidgetFlags flags)
+        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, nullptr, flags))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
 }
 
-RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, &parent, flags, true))
+RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WidgetFlags flags)
+        : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, &parent, flags))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
 }
 
-RkWidget::RkWidget(RkWidget *parent, Rk::WindowFlags flags)
+RkWidget::RkWidget(RkWidget *parent, Rk::WidgetFlags flags)
         : RkObject(parent, std::make_unique<RkWidgetImpl>(this, parent, flags))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
@@ -89,9 +89,9 @@ RkWidget::~RkWidget()
         }
 }
 
-Rk::WidgetFlags RkWidget::widgetFalgs() const
+Rk::WidgetFlags RkWidget::widgetFlags() const
 {
-        return impl_ptr->widgetFlags();
+        return impl_ptr->getWidgetFlags();
 }
 
 void RkWidget::setTitle(const std::string &title)
@@ -139,12 +139,32 @@ void RkWidget::setSize(int w, int h)
 
 void RkWidget::setSize(const RkSize &size)
 {
-        setSize(size.width(), size.height()));
+        setSize(size.width(), size.height());
 }
 
-RkSize RkWidget::size() const
+const RkSize& RkWidget::size() const
 {
         return impl_ptr->size();
+}
+
+void RkWidget::setMinimumSize(const RkSize &size)
+{
+        impl_ptr->setMinimumSize(size);
+}
+
+const RkSize& RkWidget::minimumSize() const
+{
+        return impl_ptr->minimumSize();
+}
+
+void RkWidget::setMaximumSize(const RkSize & size)
+{
+        return impl_ptr->setMaximumSize(size);
+}
+
+const RkSize& RkWidget::maximumSize() const
+{
+        return impl_ptr->maximumSize();
 }
 
 void RkWidget::setWidth(int w)
@@ -154,27 +174,27 @@ void RkWidget::setWidth(int w)
 
 int RkWidget::width() const
 {
-        size().width();
+        return size().width();
 }
 
 int RkWidget::minimumWidth() const
 {
-        return impl_ptr->minimumSize.width();
+        return impl_ptr->minimumSize().width();
 }
 
 int RkWidget::maximumWidth() const
 {
-        return impl_ptr->maximumSize.width();
+        return impl_ptr->maximumSize().width();
 }
 
 void RkWidget::setHeight(int h)
 {
-        setSize(RkSize(impl_ptr->size().width(),  h)));
+        setSize(RkSize(impl_ptr->size().width(),  h));
 }
 
 int RkWidget::height() const
 {
-        size().height();
+        return size().height();
 }
 
 int RkWidget::minimumHeight() const
@@ -265,7 +285,7 @@ void RkWidget::setPosition(const RkPoint &p)
         impl_ptr->setPosition(p);
 }
 
-RkPoint RkWidget::position() const
+const RkPoint& RkWidget::position() const
 {
         return impl_ptr->position();
 }

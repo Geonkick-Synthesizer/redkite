@@ -55,7 +55,8 @@ class RK_EXPORT RkModelItem {
         size_t itemIndex;
 };
 
-class RK_EXPORT RkModel: public RkObject {
+class RkModel: public RkObject {
+  RK_DECLARE_INTERFACE(RkModel)
   public:
         explicit RkModel(RkObject *parent);
         virtual ~RkModel() = default;
@@ -67,13 +68,6 @@ class RK_EXPORT RkModel: public RkObject {
         void selectItem(size_t index);
         bool isItemSelected(size_t index) const;
         bool isValidIndex(size_t index) const;
-
- protected:
-        RK_DELCATE_IMPL_PTR(RkModel);
-
- private:
-        RK_DISABLE_COPY(RkModel);
-        RK_DISABLE_MOVE(RkModel);
 };
 
 #endif // RK_MODEL_H

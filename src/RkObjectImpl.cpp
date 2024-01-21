@@ -138,7 +138,7 @@ void RkObject::RkObjectImpl::addChild(RkObject* child)
         objectChildren.insert(child);
         if (eventQueue) {
                 RK_LOG_DEBUG("add child to queue: " << child);
-                RK_IMPL_PTR(eventQueue)->addObject(child);
+                RK_O_PTR(eventQueue)->addObject(child);
         }
 }
 

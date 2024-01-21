@@ -33,7 +33,8 @@
 
 class RkCanvas;
 
-class RK_EXPORT RkPainter {
+class RkPainter {
+ RK_DECLARE_INTERFACE(RkPainter)
  public:
         RkPainter(RkCanvas *canvas);
         ~RkPainter();
@@ -58,11 +59,6 @@ class RK_EXPORT RkPainter {
         void translate(const RkPoint &offset);
         void rotate(rk_real angle);
         int getTextWidth(const std::string &text) const;
-
- private:
-        RK_DISABLE_COPY(RkPainter);
-        RK_DISABLE_MOVE(RkPainter);
-        RK_DECLARE_IMPL(RkPainter);
 };
 
 #endif // RK_PAINTER_H

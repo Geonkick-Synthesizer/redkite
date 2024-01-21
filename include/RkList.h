@@ -29,7 +29,8 @@
 
 class RkModel;
 
-class RK_EXPORT RkList : public RkWidget {
+class RkList : public RkWidget {
+ RK_DECLARE_INTERFACE(RkList)
  public:
         RkList(RkWidget *parent, RkModel *model = nullptr);
         virtual ~RkList() = default;

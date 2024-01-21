@@ -26,7 +26,8 @@
 
 #include "RkWidget.h"
 
-class RK_EXPORT RkProgressBar : public RkWidget {
+class RkProgressBar : public RkWidget {
+ RK_DECLARE_INTERFACE(RkProgressBar)
  public:
     explicit RkProgressBar(RkWidget *parent);
     int beginValue() const;
@@ -43,11 +44,6 @@ class RK_EXPORT RkProgressBar : public RkWidget {
 
  protected:
     virtual void paintEvent(RkPaintEvent* event) override;
-
- private:
-    RK_DISABLE_COPY(RkProgressBar);
-    RK_DISABLE_MOVE(RkProgressBar);
-    RK_DELCATE_IMPL_PTR(RkProgressBar);
 };
 
 #endif // RK_PROGRESS_BAR_H

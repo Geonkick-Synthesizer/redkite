@@ -49,6 +49,7 @@ class RkMain;
 class RkNativeWindowInfo;
 
 class RkWidget: public RkObject, public RkCanvas {
+        RK_DECLARE_INTERFACE(RkWidget)
  public:
         explicit RkWidget(RkMain &mainApp, Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
         explicit RkWidget(RkMain &mainApp,
@@ -68,6 +69,10 @@ class RkWidget: public RkObject, public RkCanvas {
         void setSize(int w, int h);
         void setSize(const RkSize &size);
         const RkSize& size() const;
+        void setMinimumSize(const RkSize &size);
+        const RkSize& minimumSize() const;
+        void setMaximumSize(const RkSize & size);
+        const RkSize& maximumSize() const;
         void setWidth(int w);
         int width() const;
         int minimumWidth() const;
@@ -127,9 +132,8 @@ class RkWidget: public RkObject, public RkCanvas {
         Rk::PointerShape pointerShape() const;
         bool pointerIsOverWindow() const;
         bool isChild(RkWidget *widget);
-
+        
  protected:
-        RK_DELCATE_IMPL_PTR(RkWidget);
         RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl);
         void event(RkEvent *event) override;
         virtual void closeEvent(RkCloseEvent *event);
@@ -151,8 +155,6 @@ class RkWidget: public RkObject, public RkCanvas {
         virtual void hoverEvent(RkHoverEvent *event);
 
  private:
-        RK_DISABLE_COPY(RkWidget);
-        RK_DISABLE_MOVE(RkWidget);
         friend class RkEventQueue;
 };
 

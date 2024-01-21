@@ -25,7 +25,7 @@
 #include "RkWindowWin.h"
 #include "RkCanvasInfo.h"
 
-RkWindowWin::RkWindowWin(const RkNativeWindowInfo *parent, Rk::WindowFlags flags, bool isTop)
+RkWindowWin::RkWindowWin(const RkNativeWindowInfo *parent)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
 	, windowInfo{nullptr}
         , windowHandle{0}
@@ -34,23 +34,18 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo *parent, Rk::WindowFlags flags
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
-        , windowFlags{flags}
-	, isTopWindow{isTop}
         , scaleFactor{parent ? parent->scaleFactor : 1.0}
 {
 }
 
-RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent, Rk::WindowFlags flags, bool isTop)
+RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
         : parentWindowInfo{parent}
-	, windowInfo{nullptr}
         , windowHandle{0}
         , winBorderWidth{0}
         , winBorderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
         , canvasInfo{nullptr}
-        , windowFlags{flags}
-	, isTopWindow{isTop}
         , scaleFactor{parent.scaleFactor}
 {
 }
@@ -100,10 +95,7 @@ bool RkWindowWin::init()
                 return false;
         }
 
-        if (isTopWindow) {
-                SetTimer(windowHandle.id, RK_MAIN_WINDOW_TIMER_ID, 1, nullptr);
-                RK_LOG_DEBUG("timer created for top window");
-        }
+        SetTimer(windowHandle.id, RK_MAIN_WINDOW_TIMER_ID, 1, nullptr);
 
         if (eventQueue)
                 SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));

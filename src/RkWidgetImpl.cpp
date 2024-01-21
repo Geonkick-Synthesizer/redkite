@@ -24,11 +24,13 @@
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
 #include "RkPainter.h"
+#include "RkMainImpl.h"
+#include "RkSystemWindow.h"
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      RkMain* mainApp,
                                      const RkNativeWindowInfo *parent,
-                                     Rk::WindowFlags flags)
+                                     Rk::WidgetFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
         , systemWindow{nullptr}
@@ -36,17 +38,18 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetMaximumSize{1000000, 1000000}
         , widgetBorderWidth{0}
         , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
+        , widgetFlags{flags}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
         , isGrabKeyEnabled{false}
 {
         RK_LOG_DEBUG("called");
-        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, &parent);
+        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      RkWidget* parent,
-                                     Rk::WindowFlags flags)
+                                     Rk::WidgetFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
         , systemWindow{nullptr}
@@ -54,14 +57,14 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetMaximumSize{1000000, 1000000}
         , widgetBorderWidth{0}
         , widgetAttributes{defaultWidgetAttributes()}
-        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WindowFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
+        , widgetFlags{flags}
+        , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
 	, isWidgetShown{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
-        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr);
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
@@ -84,7 +87,7 @@ void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
         RkObjectImpl::setEventQueue(queue);
 }
 
-Rk::WidgetFlags RkWidget::RkWidgetImpl::getWidgetsFlags() const
+Rk::WidgetFlags RkWidget::RkWidgetImpl::getWidgetFlags() const
 {
         return widgetFlags;
 }
@@ -231,16 +234,6 @@ RkSize RkWidget::RkWidgetImpl::size() const
         return  widgetSize;
 }
 
-const RkSize& RkWidget::RkWidgetImpl::minimumSize() const
-{
-        return widgetMinimumSize;
-}
-
-const RkSize& RkWidget::RkWidgetImpl::maximumSize() const
-{
-        return widgetMaximumSize;
-}
-
 void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
 {
         widgetMinimumSize = size;
@@ -248,7 +241,17 @@ void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
 
 const RkSize& RkWidget::RkWidgetImpl::minimumSize() const
 {
-        return widgetMinimumSize = size;
+        return widgetMinimumSize;
+}
+
+void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
+{
+        widgetMinimumSize = size;
+}
+
+const RkSize& RkWidget::RkWidgetImpl::maximumSize() const
+{
+        return widgetMaximumSize;
 }
 
 void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)

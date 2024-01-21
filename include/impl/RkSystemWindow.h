@@ -49,7 +49,6 @@ class RkMain;
 struct RkWindowId;
 class RkNativeWindowInfo;
 class RkWidget;
-class RkWidgetImpl;
 
 #ifdef RK_OS_WIN
 class RkWindowWin;
@@ -59,16 +58,13 @@ class RkWindowX;
 
 class RkSystemWindow {
 public:
-        explicit RkSystemWindow(RkWidgetImpl *widget,
+        explicit RkSystemWindow(RkWidget *widget,
                                 const RkNativeWindowInfo *parent);
         virtual ~RkSystemWindow();
         void show(bool b = true);
-        bool isShown() const;
-        void hide();
         void setTitle(const std::string &title);
         const std::string& title() const;
         const RkNativeWindowInfo* nativeWindowInfo() const;
-        bool isClose() const;
         RkWidget* parentWidget() const;
         RkWindowId id() const;
         void setSize(const RkSize &size);
@@ -77,12 +73,6 @@ public:
         RkPoint position() const;
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
-        void setTextColor(const RkColor &color);
-        const RkColor& textColor() const;
-        const RkColor& color() const;
-        void setColor(const RkColor &color);
-        const RkFont& font() const;
-        void setFont(const RkFont &font);
         RkRect rect() const;
         void update();
         void close();
@@ -118,7 +108,7 @@ public:
         void hoverEvent(RkHoverEvent *event);
 
 private:
-        RkWidgetImpl *topWidget;
+        RkWidget *topWidget;
 #ifdef RK_OS_WIN
         std::unique_ptr<RkWindowWin> platformWindow;
 #else // GNU/Linux

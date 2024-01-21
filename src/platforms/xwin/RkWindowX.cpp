@@ -28,9 +28,8 @@
 #include <X11/cursorfont.h>
 #include <X11/Xatom.h>
 
-RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags, bool isTop)
+RkWindowX::RkWindowX(const RkNativeWindowInfo *parent)
         : parentWindowInfo{parent ? *parent : RkNativeWindowInfo() }
-         , windowFlags{flags}
          , xDisplay{parent ? parent->display : nullptr}
          , screenNumber{parent ? parent->screenNumber : 0}
          , xWindow{0}
@@ -40,12 +39,11 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent, Rk::WindowFlags flags, bo
          , canvasInfo{nullptr}
          , windowInfo{nullptr}
          , scaleFactor{parent ? parent->scaleFactor : 1.0}
-         , isTopWindow{isTop}
  {
          RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
  }
 
-RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags, bool isTop)
+RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         : parentWindowInfo{parent}
         , windowFlags{flags}
         , xDisplay{parent.display}
@@ -57,7 +55,6 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags, bo
         , canvasInfo{nullptr}
         , windowInfo{nullptr}
         , scaleFactor{parent.scaleFactor}
-        , isTopWindow{isTop}
 {
         RK_LOG_DEBUG("called: d: " << xDisplay << ", s: " << screenNumber);
 }
@@ -68,7 +65,7 @@ RkWindowX::~RkWindowX()
         if (xDisplay) {
                 freeCanvasInfo();
                 XDestroyWindow(xDisplay, xWindow);
-                if (isTopWindow)
+                if (!hasParent())
                         XCloseDisplay(xDisplay);
         }
 }

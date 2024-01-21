@@ -67,15 +67,19 @@
 #endif
 #endif
 
+#define RK_DECLARE_INTERFACE(Class) \
+  public: \
+      class Class##Impl; \
+      Class##Impl *impl_ptr; \
+  private:
+
 #define RK_DECLARE_IMPL(Class) \
-  class Class##Impl; \
-  std::unique_ptr<Class##Impl> o_ptr
+  protected: \
+      std::unique_ptr<Class##Impl> o_ptr; \
+  private:
 
-#define RK_DELCATE_IMPL_PTR(Class) \
-  class Class##Impl; \
-  Class##Impl *impl_ptr
-
-#define RK_IMPL_PTR(obj) obj->o_ptr
+#define RK_O_PTR(obj) obj->o_ptr
+#define RK_IMPL_PTR(obj) obj->impl_ptr
 
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr
 
@@ -115,7 +119,7 @@ namespace Rk {
                 Vertical = 1
         };
 
-        enum class WindowFlags: int {
+        enum class WidgetFlags: int {
                 Widget = 0x00000000,
                 Dialog = 0x00000001,
                 Popup  = 0x00000002
@@ -484,12 +488,11 @@ namespace Rk {
         }
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->rk__add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \
+        obj1->rk__add_action_cb_##act (obj2, [=, this](act_args){ obj2->callback; }); \
         obj2->rk__add_bound_object(obj1)
 
-// Bind lamda functions to object actions.
-#define RK_ACT_BINDL(obj1, act, act_args, lamda)   \
-        obj1->rk__add_action_cb_##act (nullptr, lamda)
+#define RK_ACT_BINDL(obj1, act, act_args, ...) \
+    obj1->rk__add_action_cb_##act (nullptr, __VA_ARGS__)
 
 #define action
 

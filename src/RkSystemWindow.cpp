@@ -26,6 +26,7 @@
 #include "RkEvent.h"
 #include "RkPlatform.h"
 #include "RkMain.h"
+#include "RkWidgetImpl.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
@@ -40,7 +41,7 @@
 #undef FocusOut
 #endif
 
-RkSystemWindow::RkSystemWindow(RkWidgetImpl *widget, const RkNativeWindowInfo* parent)
+RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* parent)
         : topWidget{widget}
 #ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent)}
@@ -52,7 +53,7 @@ RkSystemWindow::RkSystemWindow(RkWidgetImpl *widget, const RkNativeWindowInfo* p
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
-        topWidget->setSystemWindow(this);
+        RK_IMPL_PTR(topWidget)->setSystemWindow(this);
 }
 
 RkSystemWindow::~RkSystemWindow()
@@ -75,16 +76,6 @@ void RkSystemWindow::show(bool b)
         platformWindow->show(b);
 }
 
-bool RkSystemWindow::isShown() const
-{
-	return platformWindow->isShown();
-}
-
-void RkSystemWindow::hide()
-{
-        platformWindow->show(false);
-}
-
 const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
 {
         return platformWindow->nativeWindowInfo();
@@ -93,11 +84,6 @@ const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
 RkWindowId RkSystemWindow::id() const
 {
         return platformWindow->id();
-}
-
-bool RkSystemWindow::isClose() const
-{
-        return platformWindow->isClose();
 }
 
 void RkSystemWindow::setSize(const RkSize &size)
@@ -130,36 +116,6 @@ const RkColor& RkSystemWindow::background() const
         return platformWindow->background();
 }
 
-void RkSystemWindow::setTextColor(const RkColor &color)
-{
-        return platformWindow->setTextColor(color);
-}
-
-const RkColor& RkSystemWindow::textColor() const
-{
-        return platformWindow->textColor();
-}
-
-const RkColor& RkSystemWindow::color() const
-{
-        return impl_ptr->color();
-}
-
-void RkSystemWindow::setColor(const RkColor &color)
-{
-        return impl_ptr->setColor(color);
-}
-
-const RkFont& RkSystemWindow::font() const
-{
-        return windowFont;
-}
-
-void RkSystemWindow::setFont(const RkFont &font)
-{
-        windowFont = font;
-}
-
 void RkSystemWindow::enableGrabKey(bool b)
 {
 }
@@ -176,10 +132,6 @@ void RkSystemWindow::propagateGrabKey(bool b)
 bool RkSystemWindow::propagateGrabKeyEnabled() const
 {
         return false;
-}
-
-void RkSystemWindow::event(RkEvent *event)
-{
 }
 
 void RkSystemWindow::closeEvent([[maybe_unused]] RkCloseEvent *event)
@@ -228,8 +180,8 @@ void RkSystemWindow::wheelEvent(RkWheelEvent *event)
 
 void RkSystemWindow::dropEvent(RkDropEvent *event)
 {
-        if (parentWidget())
-                getTopWidget()->dropEvent(event);
+        //        if (parentWidget())
+        //                getTopWidget()->dropEvent(event);
 }
 
 void RkSystemWindow::moveEvent(RkMoveEvent *event)
@@ -272,50 +224,53 @@ void RkSystemWindow::update()
         platformWindow->update();
 }
 
-const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
-{
-        return platformWindow->getCanvasInfo();
-}
+//const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
+//{
+//       return platformWindow->getCanvasInfo();
+//}
 
-void RkSystemWindow::freeCanvasInfo()
-{
-        return platformWindow->freeCanvasInfo();
-}
+//void RkSystemWindow::freeCanvasInfo()
+//{
+//       return platformWindow->freeCanvasInfo();
+//}
 
 RkRect RkSystemWindow::rect() const
 {
-        return platformWindow->rect();
+        return RkRect(0, 0, 200, 200);//  return platformWindow->rect();
 }
 
 void RkSystemWindow::close()
 {
 }
 
-RkSystemWindow* RkSystemWindow::getTopWidget()
+void RkSystemWindow::setTopWidget(RkWidget *widget)
 {
-        if (!parentWidget())
-                return this;
-        return parentWidget()->getTopWidget();
+        topWidget = widget;
+}
+
+RkWidget* RkSystemWindow::getTopWidget() const
+{
+        return topWidget;
 }
 
 void RkSystemWindow::setFocus(bool b)
 {
-        impl_ptr->setFocus(b);
+        //impl_ptr->setFocus(b);
 }
 
 bool RkSystemWindow::hasFocus() const
 {
-        return impl_ptr->hasFocus();
+        return true;// return impl_ptr->hasFocus();
 }
 
 void RkSystemWindow::setPointerShape(Rk::PointerShape shape)
 {
-        impl_ptr->setPointerShape(shape);
+        //impl_ptr->setPointerShape(shape);
 }
 
 Rk::PointerShape RkSystemWindow::pointerShape() const
 {
-        return impl_ptr->pointerShape();
+        return Rk::PointerShape::NoShape;//impl_ptr->pointerShape();
 }
 
 void RkSystemWindow::setScaleFactor(double factor)

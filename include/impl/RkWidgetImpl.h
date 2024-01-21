@@ -35,10 +35,10 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         explicit RkWidgetImpl(RkWidget* interface,
                               RkMain *mainApp,
                               const RkNativeWindowInfo* parent = nullptr,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                              Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
         explicit RkWidgetImpl(RkWidget* interface,
                               RkWidget* parent,
-                              Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+                              Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
@@ -56,7 +56,9 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void event(RkEvent *event);
         void setSize(const RkSize &size);
         const RkSize& size() const;
+        void setMinimumSize(const RkSize& size);
         const RkSize& minimumSize() const;
+        void setMaximumSize(const RkSize& size);
         const RkSize& maximumSize() const;
         void setPosition(const RkPoint &position);
         const RkPoint& position() const;
@@ -104,6 +106,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         RkColor widgetBorderColor;
         RkColor widgetBackground;
         Rk::WidgetAttribute widgetAttributes;
+        Rk::WidgetFlags widgetFlags;
         Rk::Modality widgetModality;
         RkColor widgetTextColor;
         RkColor widgetDrawingColor;

@@ -30,6 +30,8 @@ class RkWidget;
 class RkEventQueue;
 
 class RK_EXPORT RkMain {
+  RK_DECLARE_INTERFACE(RkMain)
+  RK_DECLARE_IMPL(RkMain)
   public:
           RkMain();
           RkMain(int argc, char **argv);
@@ -38,11 +40,6 @@ class RK_EXPORT RkMain {
           RkWidget* topLevelWidget(void) const;
           int exec(bool block = true);
           RkEventQueue* eventQueue() const;
-
- private:
-       	  RK_DECLARE_IMPL(RkMain);
-          RK_DISABLE_COPY(RkMain);
-          RK_DISABLE_MOVE(RkMain);
 };
 
 #endif // RK_MAIN_H
