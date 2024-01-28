@@ -31,8 +31,6 @@ class RkEvent;
 class RkAction;
 
 class RkEventQueue {
-        RK_DECLARE_INTERFACE(RkEventQueue)
-        RK_DECLARE_IMPL(RkEventQueue)
  public:
         RkEventQueue();
         virtual ~RkEventQueue();
@@ -41,6 +39,7 @@ class RkEventQueue {
         void processQueue();
 
  protected:
+        RK_DECLARE_O_PTR(RkEventQueue);
         RkEventQueue(std::unique_ptr<RkEventQueueImpl> impl);
 
  private:

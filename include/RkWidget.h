@@ -49,7 +49,6 @@ class RkMain;
 class RkNativeWindowInfo;
 
 class RkWidget: public RkObject, public RkCanvas {
-        RK_DECLARE_INTERFACE(RkWidget)
  public:
         explicit RkWidget(RkMain &mainApp, Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
         explicit RkWidget(RkMain &mainApp,
@@ -134,6 +133,7 @@ class RkWidget: public RkObject, public RkCanvas {
         bool isChild(RkWidget *widget);
         
  protected:
+        RK_DECLARE_IMPL_PTR(RkWidget);
         RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl);
         void event(RkEvent *event) override;
         virtual void closeEvent(RkCloseEvent *event);

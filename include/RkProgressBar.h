@@ -27,7 +27,6 @@
 #include "RkWidget.h"
 
 class RkProgressBar : public RkWidget {
- RK_DECLARE_INTERFACE(RkProgressBar)
  public:
     explicit RkProgressBar(RkWidget *parent);
     int beginValue() const;
@@ -43,6 +42,7 @@ class RkProgressBar : public RkWidget {
     void setProgressColor(const RkColor &color);
 
  protected:
+    RK_DECLARE_IMPL_PTR(RkProgressBar);
     virtual void paintEvent(RkPaintEvent* event) override;
 };
 

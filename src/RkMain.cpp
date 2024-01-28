@@ -28,13 +28,11 @@
 
 RkMain::RkMain()
         : o_ptr{std::make_unique<RkMainImpl>(this)}
-        , impl_ptr{static_cast<RkMainImpl*>(o_ptr.get())}
 {
 }
 
 RkMain::RkMain(int argc, char **argv)
         : o_ptr{std::make_unique<RkMainImpl>(this, argc, argv)}
-        , impl_ptr{static_cast<RkMainImpl*>(o_ptr.get())}
 {
 }
 

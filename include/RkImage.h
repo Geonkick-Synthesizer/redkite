@@ -30,8 +30,6 @@
 #include "RkColor.h"
 
 class RkImage : public RkCanvas {
-  RK_DECLARE_INTERFACE(RkImage)
-  RK_DECLARE_IMPL(RkImage)
  public:
         enum class Format : int {
                 ARGB32 = 0,
@@ -80,6 +78,7 @@ class RkImage : public RkCanvas {
         void freeCanvasInfo() override;
 
  protected:
+        RK_DECLARE_O_PTR(RkImage);
         explicit RkImage(std::unique_ptr<RkImageImpl> impl);
 };
 

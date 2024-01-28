@@ -28,6 +28,7 @@
 
 RkPainter::RkPainter(RkCanvas *canvas)
         : o_ptr{std::make_unique<RkPainterImpl>(this, canvas)}
+        , impl_ptr{static_cast<RkPainterImpl*>(o_ptr.get())}
 {
 }
 
@@ -38,7 +39,7 @@ RkPainter::~RkPainter()
 void RkPainter::drawText(int x, int y, const std::string &text)
 {
         if (!text.empty())
-                o_ptr->drawText(text, x, y);
+                impl_ptr->drawText(text, x, y);
 }
 
 void RkPainter::drawText(const RkPoint &p,  const std::string &text)
@@ -56,9 +57,9 @@ void RkPainter::drawText(const RkRect &rect,
                 if (alignment == Rk::Alignment::AlignLeft)
                         x = rect.left();
                 else if (alignment == Rk::Alignment::AlignCenter)
-                        x = rect.left() + (rect.width() - o_ptr->getTextWidth(text)) / 2;
+                        x = rect.left() + (rect.width() - impl_ptr->getTextWidth(text)) / 2;
                 else
-                        x = rect.right() - o_ptr->getTextWidth(text);
+                        x = rect.right() - impl_ptr->getTextWidth(text);
                 int y = rect.top() + f.size() + (rect.height() - f.size()) / 2;
                 drawText(x, y, text);
         }
@@ -68,19 +69,19 @@ void RkPainter::drawImage(const RkImage &image, int x, int y)
 {
         RK_LOG_DEBUG("called");
         if (!image.isNull())
-                o_ptr->drawImage(image, x, y);
+                impl_ptr->drawImage(image, x, y);
 }
 
 void RkPainter::drawCircle(int x, int y, int radius)
 {
         if (radius > 0)
-                o_ptr->drawEllipse(RkPoint(x, y), 2 * radius, 2 * radius);
+                impl_ptr->drawEllipse(RkPoint(x, y), 2 * radius, 2 * radius);
 }
 
 void RkPainter::drawCircle(const RkPoint &p, int radius)
 {
         if (radius > 0)
-                o_ptr->drawEllipse(p, 2 * radius, 2 * radius);
+                impl_ptr->drawEllipse(p, 2 * radius, 2 * radius);
 }
 
 void RkPainter::drawLine(int x1, int y1, int x2, int y2)
@@ -92,62 +93,62 @@ void RkPainter::drawLine(int x1, int y1, int x2, int y2)
 void RkPainter::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
         if (p1 != p2)
-                o_ptr->drawLine(p1, p2);
+                impl_ptr->drawLine(p1, p2);
 }
 
 void RkPainter::drawRect(const RkRect &rect)
 {
-        o_ptr->drawRect(rect);
+        impl_ptr->drawRect(rect);
 }
 
 void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
 {
         if (points.size() > 1)
-                o_ptr->drawPolyline(points);
+                impl_ptr->drawPolyline(points);
 }
 
 void RkPainter::fillRect(const RkRect &rect, const RkColor &color)
 {
         if (rect.area() > 0)
-                o_ptr->fillRect(rect, color);
+                impl_ptr->fillRect(rect, color);
 }
 
 void RkPainter::applyAlpha(int alpha)
 {
-        o_ptr->applyAlpha(alpha);
+        impl_ptr->applyAlpha(alpha);
 }
 
 const RkPen& RkPainter::pen() const
 {
-        return o_ptr->pen();
+        return impl_ptr->pen();
 }
 
 void RkPainter::setPen(const RkPen &pen)
 {
-        return o_ptr->setPen(pen);
+        return impl_ptr->setPen(pen);
 }
 
 const RkFont& RkPainter::font() const
 {
-        return o_ptr->font();
+        return impl_ptr->font();
 }
 
 void RkPainter::setFont(const RkFont &font)
 {
-        o_ptr->setFont(font);
+        impl_ptr->setFont(font);
 }
 
 void RkPainter::translate(const RkPoint &offset)
 {
-        o_ptr->translate(offset);
+        impl_ptr->translate(offset);
 }
 
 void RkPainter::rotate(rk_real angle)
 {
-        o_ptr->rotate(angle);
+        impl_ptr->rotate(angle);
 }
 
 int RkPainter::getTextWidth(const std::string &text) const
 {
-        return o_ptr->getTextWidth(text);
+        return impl_ptr->getTextWidth(text);
 }

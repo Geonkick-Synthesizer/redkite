@@ -45,7 +45,7 @@ RkObject::~RkObject()
 {
         RK_LOG_DEBUG("called: " << this);
         if (eventQueue())
-                RK_O_PTR(eventQueue())->removeObject(this);
+                RK_IMPL_PTR(eventQueue())->removeObject(this);
         o_ptr->removeChildrens();
 }
 
@@ -82,13 +82,13 @@ void RkObject::event(RkEvent *event)
 void RkObject::addShortcut(Rk::Key key, Rk::KeyModifiers modifier)
 {
         if (eventQueue())
-                RK_O_PTR(eventQueue())->addShortcut(this, key, modifier);
+                RK_IMPL_PTR(eventQueue())->addShortcut(this, key, modifier);
 }
 
 void RkObject::removeShortcut(Rk::Key key, Rk::KeyModifiers modifier)
 {
         if (eventQueue())
-                RK_O_PTR(eventQueue())->removeShortcut(this, key, modifier);
+                RK_IMPL_PTR(eventQueue())->removeShortcut(this, key, modifier);
 }
 
 void RkObject::rk__add_observer(std::unique_ptr<RkObserver> observer)
