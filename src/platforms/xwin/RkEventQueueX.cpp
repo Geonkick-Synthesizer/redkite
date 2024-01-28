@@ -62,7 +62,7 @@ Display* RkEventQueueX::display() const
 std::vector<std::unique_ptr<RkEvent>>
 RkEventQueueX::getEvents()
 {
-        std::vector<std::unique_ptr<RkEvent>>> events;
+        std::vector<std::unique_ptr<RkEvent>> events;
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
@@ -115,11 +115,8 @@ RkEventQueueX::getEvents()
                         break;
                 }
 
-                if (event) {
-                        auto id = rk_id_from_x11(reinterpret_cast<XAnyEvent*>(&e)->window);
-                        std::pair<RkWindowId, std::unique_ptr<RkEvent>> pair(id, std::move(event));
-                        events.push_back(std::move(pair));
-                }
+                if (event)
+                        events.emplace_back(std::move(event));
         }
         return events;
 }

@@ -40,14 +40,14 @@ RkMain::~RkMain()
 {
 }
 
-bool RkMain::setTopLevelWidget(RkWidget *widget)
+void RkMain::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
 {
-        return o_ptr->setTopLevelWidget(widget);
+        return o_ptr->setTopWidget(widget, parent);
 }
 
 RkWidget* RkMain::topLevelWidget(void) const
 {
-        return o_ptr->topLevelWidget();
+        return o_ptr->topWidget();
 }
 
 RkEventQueue* RkMain::eventQueue() const

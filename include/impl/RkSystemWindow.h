@@ -89,6 +89,7 @@ public:
         void setScaleFactor(double factor);
         double scaleFactor() const;
 
+        void event(RkEvent *event);
         void closeEvent(RkCloseEvent *event);
         void keyPressEvent(RkKeyEvent *event);
         void keyReleaseEvent(RkKeyEvent *event);

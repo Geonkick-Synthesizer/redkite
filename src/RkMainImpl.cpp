@@ -25,7 +25,8 @@
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 #include "RkPlatform.h"
-#include "RkEventQueue.h"
+#include "RkEventQueueImpl.h"
+#include "RkSystemWindow.h"
 
 #include <chrono>
 #include <thread>
@@ -58,6 +59,13 @@ void RkMain::RkMainImpl::setTopWidget(RkWidget* widget, const RkNativeWindowInfo
         RK_IMPL_PTR(eventQueue)->setTopWidget(widget, parent);
 }
 
+RkWidget* RkMain::RkMainImpl::topWidget() const
+{
+        if (RK_IMPL_PTR(eventQueue)->getSystemWindow())
+                return RK_IMPL_PTR(eventQueue)->getSystemWindow()->getTopWidget();
+        return nullptr;
+}
+
 RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
 {
         return eventQueue.get();
@@ -65,7 +73,7 @@ RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
 
 int RkMain::RkMainImpl::exec(bool block)
 {
-        if (!RK_IMPL_PTR(eventQueue)->systemWindow()) {
+        if (!RK_IMPL_PTR(eventQueue)->getSystemWindow()) {
                 RK_LOG_ERROR("the system window not defined");
 		return 1;
 	}
@@ -75,7 +83,7 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         eventQueue->processQueue();
-                        if (RK_IMPL_PTR(eventQueue)->systemWindow()->isClosed()) {
+                        if (/*RK_IMPL_PTR(eventQueue)->getSystemWindow()->isClosed()*/false) {
                                 RK_LOG_DEBUG("exit");
                                 break;
                         }

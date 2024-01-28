@@ -62,6 +62,13 @@ void RkEventQueue::RkEventQueueImpl::setTopWidget(RkWidget *widget,
                 systemWindow = std::make_unique<RkSystemWindow>(widget, parent);
 }
 
+RkSystemWindow* RkEventQueue::RkEventQueueImpl::getSystemWindow() const
+{
+        if (systemWindow)
+                return systemWindow.get();
+        return nullptr;
+}
+
 bool RkEventQueue::RkEventQueueImpl::objectExists(RkObject *obj) const
 {
         return objectsList.find(obj) != objectsList.end();
@@ -162,7 +169,7 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         if (systemWindow) {
                 auto events = platformEventQueue->getEvents();
                 for (auto &event: events)
-                        systemWindow->event(event);
+                        systemWindow->event(event.get());
         }
 }
 
@@ -241,11 +248,11 @@ void RkEventQueue::RkEventQueueImpl::processQueue()
 {
         // The order is important.
         processTimers();
-        processActions();
+        //        processActions();
         processEvents();
 }
 
-RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &name) const
+/*RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &name) const
 {
         // TODO: use less complexity O(1) with hashtable.
         for (auto it = objectsList.cbegin(); it != objectsList.cend(); ++it) {
@@ -253,4 +260,4 @@ RkObject* RkEventQueue::RkEventQueueImpl::findObjectByName(const std::string &na
                         return *it;
         }
         return nullptr;
-}
+        }*/

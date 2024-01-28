@@ -30,13 +30,13 @@
 class RkModel;
 
 class RkList : public RkWidget {
- RK_DECLARE_INTERFACE(RkList)
  public:
         RkList(RkWidget *parent, RkModel *model = nullptr);
         virtual ~RkList() = default;
         RkModel* getModel() const;
 
  protected:
+        RK_DECLARE_IMPL_PTR(RkList);
         virtual void paintEvent(RkPaintEvent *event) override;
         virtual void keyPressEvent(RkKeyEvent *event) override;
         virtual void keyReleaseEvent(RkKeyEvent *event) override;
@@ -46,12 +46,9 @@ class RkList : public RkWidget {
         virtual void mouseDoubleClickEvent(RkMouseEvent *event) override;
         virtual void wheelEvent(RkWheelEvent *event) override;
 
- protected:
-
  private:
     RK_DISABLE_COPY(RkList);
     RK_DISABLE_MOVE(RkList);
-    RK_DELCATE_IMPL_PTR(RkList);
 };
 
 #endif // RK_LIST_H

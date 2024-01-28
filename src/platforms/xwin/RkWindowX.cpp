@@ -45,7 +45,6 @@ RkWindowX::RkWindowX(const RkNativeWindowInfo *parent)
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent)
         : parentWindowInfo{parent}
-        , windowFlags{flags}
         , xDisplay{parent.display}
         , screenNumber{parent.screenNumber}
         , xWindow{0}
@@ -93,13 +92,7 @@ bool RkWindowX::init()
 	}
 
         Window parent = 0;
-        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) {
-                RK_LOG_DEBUG("is or dialog, get root window");
-                parent = RootWindow(xDisplay, screenNumber);
-        } else {
-                parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
-        }
-
+        parent = hasParent() ? parentWindowInfo.window : RootWindow(xDisplay, screenNumber);
         auto res = XMatchVisualInfo(xDisplay, screenNumber, 32, TrueColor, &visualInfo);
         if (res == 0) {
                 RK_LOG_ERROR("visual info was not found");
@@ -136,11 +129,6 @@ bool RkWindowX::init()
         if (!xWindow) {
                 RK_LOG_ERROR("can't create window");
                 return false;
-        }
-
-        if ((static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Dialog)) && hasParent()) {
-                RK_LOG_DEBUG("set WM_TRANSIENT_FOR");
-                XSetTransientForHint(xDisplay, parentWindowInfo.window, xWindow);
         }
 
         deleteWindowAtom = XInternAtom(display(), "WM_DELETE_WINDOW", True);
@@ -222,24 +210,6 @@ void RkWindowX::setPosition(const RkPoint &position)
         if (isWindowCreated()) {
                 int x = position.x();
                 int y = position.y();
-                if (hasParent() && (static_cast<int>(flags()) & static_cast<int>(Rk::WindowFlags::Dialog))) {
-                        XWindowAttributes parentAttributes;
-                        XGetWindowAttributes(display(), parentWindowInfo.window, &parentAttributes);
-                        int parentRootX;
-                        int parentRootY;
-                        Window child;
-                        XTranslateCoordinates(display(),
-                                              parentWindowInfo.window,
-                                              RootWindow(display(), screenNumber),
-                                              parentAttributes.x,
-                                              parentAttributes.y,
-                                              &parentRootX,
-                                              &parentRootY,
-                                              &child);
-                        RK_UNUSED(child);
-                        x += parentRootX - parentAttributes.x;
-                        y += parentRootY - parentAttributes.y;
-                }
                 XMoveWindow(display(), xWindow, x * scaleFactor, y * scaleFactor);
         }
 }
@@ -385,11 +355,6 @@ void RkWindowX::setPointerShape(Rk::PointerShape shape)
                 return;
         };
         XDefineCursor(display(), xWindow, pointer);
-}
-
-Rk::WindowFlags RkWindowX::flags() const
-{
-        return windowFlags;
 }
 
 bool RkWindowX::pointerIsOverWindow() const

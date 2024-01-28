@@ -41,7 +41,9 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetFlags{flags}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
+        , isWidgetShown{false}
         , isGrabKeyEnabled{false}
+        , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
         RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
@@ -109,7 +111,7 @@ void RkWidget::RkWidgetImpl::show(bool b)
 
 bool RkWidget::RkWidgetImpl::isShown() const
 {
-	return isWidgetSown;
+	return isWidgetShown;
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
@@ -193,16 +195,14 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
-                widgetSize = platformWindow->size();
-                platformWindow->resizeCanvas();
                 inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
-		isWidgetSown = true;
+		isWidgetShown = true;
                 inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
                 break;
 	case RkEvent::Type::Hide:
-		isWidgetSown = false;
+		isWidgetShown = false;
                 inf_ptr->hideEvent(static_cast<RkHideEvent*>(event));
                 break;
         case RkEvent::Type::DeleteChild:
@@ -229,9 +229,9 @@ void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
                 systemWindow->setSize(widgetSize);
 }
 
-RkSize RkWidget::RkWidgetImpl::size() const
+const RkSize& RkWidget::RkWidgetImpl::size() const
 {
-        return  widgetSize;
+        return widgetSize;
 }
 
 void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
@@ -244,7 +244,7 @@ const RkSize& RkWidget::RkWidgetImpl::minimumSize() const
         return widgetMinimumSize;
 }
 
-void RkWidget::RkWidgetImpl::setMinimumSize(const RkSize &size)
+void RkWidget::RkWidgetImpl::setMaximumSize(const RkSize &size)
 {
         widgetMinimumSize = size;
 }
@@ -263,7 +263,7 @@ void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)
 
 const RkPoint& RkWidget::RkWidgetImpl::position() const
 {
-        return widgetPosition();
+        return widgetPosition;
 }
 
 void RkWidget::RkWidgetImpl::setBorderWidth(int width)

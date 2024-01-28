@@ -134,6 +134,10 @@ bool RkSystemWindow::propagateGrabKeyEnabled() const
         return false;
 }
 
+void RkSystemWindow::event(RkEvent *event)
+{
+}
+
 void RkSystemWindow::closeEvent([[maybe_unused]] RkCloseEvent *event)
 {
 }

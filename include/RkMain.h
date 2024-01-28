@@ -28,13 +28,14 @@
 
 class RkWidget;
 class RkEventQueue;
+class RkNativeWindowInfo;
 
-class RK_EXPORT RkMain {
+class RkMain {
   public:
           RkMain();
           RkMain(int argc, char **argv);
           ~RkMain();
-          bool setTopLevelWidget(RkWidget* widget);
+          void setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent = nullptr);
           RkWidget* topLevelWidget(void) const;
           int exec(bool block = true);
           RkEventQueue* eventQueue() const;

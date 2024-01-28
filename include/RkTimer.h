@@ -30,7 +30,6 @@
 class RkEventQueue;
 
 class RkTimer: public RkObject {
-  RK_DECLARE_INTERFACE(RkTimer)
   public:
         explicit RkTimer(RkObject *parent, long unsigned int interval = 0);
         virtual ~RkTimer();
@@ -50,6 +49,8 @@ class RkTimer: public RkObject {
         long long unsigned int timerInterval;
         bool timerStarted;
         long long unsigned int lastTime;
+        RK_DISABLE_COPY(RkTimer);
+        RK_DISABLE_MOVE(RkTimer);
 };
 
 #endif // RK_TIMER_H

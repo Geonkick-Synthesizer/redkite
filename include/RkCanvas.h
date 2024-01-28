@@ -32,8 +32,8 @@ class RK_EXPORT RkCanvas {
  public:
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
-        virtual const RkCanvasInfo* getCanvasInfo() const = 0;
-        virtual void freeCanvasInfo() = 0;
+        virtual const RkCanvasInfo* getCanvasInfo() const { return nullptr; }
+        virtual void freeCanvasInfo() {};
 };
 
 #endif // RK_CANVAS_H

@@ -156,6 +156,8 @@ class RkWidget: public RkObject, public RkCanvas {
 
  private:
         friend class RkEventQueue;
+        RK_DISABLE_COPY(RkWidget);
+        RK_DISABLE_MOVE(RkWidget);
 };
 
 #endif // RK_WIDGET_H
