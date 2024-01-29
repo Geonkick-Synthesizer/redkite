@@ -54,9 +54,9 @@ RkMain::RkMainImpl::~RkMainImpl()
         RK_LOG_DEBUG("called");
 }
 
-void RkMain::RkMainImpl::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
+RkSystemWindow* RkMain::RkMainImpl::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
 {
-        RK_IMPL_PTR(eventQueue)->setTopWidget(widget, parent);
+        return RK_IMPL_PTR(eventQueue)->setTopWidget(widget, parent);
 }
 
 RkWidget* RkMain::RkMainImpl::topWidget() const

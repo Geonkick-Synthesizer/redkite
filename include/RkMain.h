@@ -35,7 +35,6 @@ class RkMain {
           RkMain();
           RkMain(int argc, char **argv);
           ~RkMain();
-          void setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent = nullptr);
           RkWidget* topLevelWidget(void) const;
           int exec(bool block = true);
           RkEventQueue* eventQueue() const;

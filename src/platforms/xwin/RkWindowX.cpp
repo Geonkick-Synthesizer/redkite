@@ -117,6 +117,8 @@ bool RkWindowX::init()
         auto pos = position();
         auto winSize = size();
         RK_LOG_DEBUG("create window: d: " << xDisplay << ", p: " << parent);
+        RK_LOG_DEBUG("size[" << winSize.width() * scaleFactor
+                     <<", " << winSize.height() * scaleFactor << "]");
         xWindow = XCreateWindow(xDisplay, parent,
                                 pos.x() * scaleFactor, pos.y() * scaleFactor,
                                 winSize.width() * scaleFactor, winSize.height() * scaleFactor,
@@ -145,11 +147,15 @@ bool RkWindowX::init()
 
 void RkWindowX::show(bool b)
 {
+        RK_LOG_DEBUG("called, b = " << b);
         if (isWindowCreated()) {
-                if (b)
+                if (b) {
+                        RK_LOG_DEBUG("XMapRaised");
                         XMapRaised(display(), xWindow);
-                else
+                } else {
+                        RK_LOG_DEBUG("XUnmapWindow");
                         XUnmapWindow(display(), xWindow);
+                }
         }
 }
 
@@ -189,6 +195,8 @@ RkSize RkWindowX::size() const
 void RkWindowX::setSize(const RkSize &size)
 {
         if (isWindowCreated() && size.width() > 0 && size.height() > 0) {
+                RK_LOG_DEBUG("w:" << size.width() * scaleFactor <<
+                             ", " << size.height() * scaleFactor);
                 XResizeWindow(display(), xWindow, size.width() * scaleFactor,
                               size.height() * scaleFactor);
         }

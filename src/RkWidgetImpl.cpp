@@ -46,7 +46,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
-        RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
+        systemWindow = RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,

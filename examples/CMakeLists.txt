@@ -1,7 +1,7 @@
-set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
+option(RK_EXAMPLE_HELLO "Enable Hello World example" ON)
+
 #set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
 #set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
-set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 #set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 #set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
 #set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
@@ -10,24 +10,22 @@ set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
 #set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 #set(RK_EXAMPLES_SOURCES_LINEEDIT ${RK_EXAMPLES_PATH}/lineedit.cpp)
 
-if (RK_GRAPHICS_BACKEND MATCHES Cairo)
-   set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
-endif()
+# ------------ Hello example -------
 
-# ------------ Hello exmaple -------
-
-add_executable(hello ${RK_EXEC_OPTION}
+#if (RK_EXAMPLE_HELLO)
+  set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
+  add_executable(hello ${RK_EXEC_OPTION}
 	${RK_HEADERS}
 	${RK_EXAMPLES_SOURCES})
-
-add_dependencies(hello redkite)
-target_link_libraries(hello redkite)
-#if (CMAKE_SYSTEM_NAME MATCHES Windows)
-  #target_link_libraries(hello "-mwindows -ld3d11 -ld2d1 -ldwrite -lm")
-#  target_link_libraries(hello "-mwindows -lstdc++ -lpthread -lm")
-#else()
+  add_dependencies(hello redkite)
+  target_link_libraries(hello redkite)
+  #if (CMAKE_SYSTEM_NAME MATCHES Windows)
+    #target_link_libraries(hello "-mwindows -ld3d11 -ld2d1 -ldwrite -lm")
+    #target_link_libraries(hello "-mwindows -lstdc++ -lpthread -lm")
+  #else()
   target_link_libraries(hello "-lX11 -lpthread -lcairo -lrt -lm -ldl")
-#endif()
+  #endif()
+#endif (RK_EXAMPLE_HELLO)
 
 #if (RK_ALL_EXMAPLES)
 # ------------ Child Example -------
@@ -57,17 +55,20 @@ target_link_libraries(hello redkite)
 
 # ------------ Label Example -------
 
-add_executable(label
-  ${RK_HEADERS}
-  ${RK_EXAMPLES_SOURCES_LABEL})
-add_dependencies(label redkite)
-target_link_libraries(label redkite)
-if (CMAKE_SYSTEM_NAME MATCHES Windows)
- target_link_libraries(label "-mwindows -lstdc++ -lm -lcairo")
-else ()
- target_link_libraries(label "-lX11 -lrt -lm -ldl")
- target_link_libraries(label ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-endif()
+if (RK_EXAMPLE_LABEL)
+  set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
+  add_executable(label
+    ${RK_HEADERS}
+    ${RK_EXAMPLES_SOURCES_LABEL})
+  add_dependencies(label redkite)
+  target_link_libraries(label redkite)
+  if (CMAKE_SYSTEM_NAME MATCHES Windows)
+    target_link_libraries(label "-mwindows -lstdc++ -lm -lcairo")
+  else ()
+    target_link_libraries(label "-lX11 -lrt -lm -ldl")
+    target_link_libraries(label ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+  endif()
+endif(RK_EXAMPLE_LABEL)
 
 #------------- Widget Colors --------
 

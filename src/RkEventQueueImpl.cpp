@@ -55,11 +55,18 @@ RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
         RK_LOG_DEBUG("called");
 }
 
-void RkEventQueue::RkEventQueueImpl::setTopWidget(RkWidget *widget,
+RkSystemWindow* RkEventQueue::RkEventQueueImpl::setTopWidget(RkWidget *widget,
                                                   const RkNativeWindowInfo* parent)
 {
-        if (!systemWindow)
+        if (!systemWindow) {
                 systemWindow = std::make_unique<RkSystemWindow>(widget, parent);
+#ifdef RK_OS_WIN
+#elif RK_OS_MAC
+#else
+                platformEventQueue->setDisplay(systemWindow->nativeWindowInfo()->display);
+#endif
+        }
+        return systemWindow.get();
 }
 
 RkSystemWindow* RkEventQueue::RkEventQueueImpl::getSystemWindow() const
@@ -247,7 +254,7 @@ void RkEventQueue::RkEventQueueImpl::processTimers()
 void RkEventQueue::RkEventQueueImpl::processQueue()
 {
         // The order is important.
-        processTimers();
+        //processTimers();
         //        processActions();
         processEvents();
 }

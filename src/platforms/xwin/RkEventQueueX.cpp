@@ -66,10 +66,12 @@ RkEventQueueX::getEvents()
         while (pending()) {
                 XEvent e;
                 XNextEvent(xDisplay, &e);
+                RK_LOG_DEBUG("New event");
                 std::unique_ptr<RkEvent> event = nullptr;
                 switch (e.type)
                 {
                 case Expose:
+                        RK_LOG_DEBUG("Expose");
                         if (reinterpret_cast<XExposeEvent*>(&e)->count == 0)
                                 event = std::make_unique<RkPaintEvent>();
                 break;

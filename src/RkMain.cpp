@@ -40,11 +40,6 @@ RkMain::~RkMain()
 {
 }
 
-void RkMain::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
-{
-        return o_ptr->setTopWidget(widget, parent);
-}
-
 RkWidget* RkMain::topLevelWidget(void) const
 {
         return o_ptr->topWidget();

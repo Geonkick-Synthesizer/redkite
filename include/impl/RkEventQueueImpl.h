@@ -45,7 +45,7 @@ class RkEventQueue::RkEventQueueImpl {
  public:
         explicit RkEventQueueImpl(RkEventQueue* queueInterface);
         virtual ~RkEventQueueImpl();
-        void setTopWidget(RkWidget *widget, const RkNativeWindowInfo *parent = nullptr);
+        RkSystemWindow* setTopWidget(RkWidget *widget, const RkNativeWindowInfo *parent = nullptr);
         RkSystemWindow* getSystemWindow() const;
         bool objectExists(RkObject *t) const;
         void addObject(RkObject *obj);

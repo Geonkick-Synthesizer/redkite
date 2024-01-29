@@ -26,7 +26,7 @@
 
 #include "RkMain.h"
 
-class RkSystemWidow;
+class RkSystemWindow;
 class RkWidget;
 
 #ifdef RK_OS_WIN
@@ -46,9 +46,7 @@ class RkMain::RkMainImpl
         RkMainImpl& operator=(const RkMainImpl &other) = delete;
         RkMainImpl(RkMainImpl &&other) = delete;
         RkMainImpl& operator=(RkMainImpl &&other) = delete;
-        void setSystemWindow(RkSystemWidow* window);
-        RkSystemWidow* setSystemWindow(void) const;
-        void setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent = nullptr);
+        RkSystemWindow* setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent = nullptr);
         RkWidget* topWidget() const;
         RkEventQueue* getEventQueue() const;
 	int exec(bool block = true);

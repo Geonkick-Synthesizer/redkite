@@ -53,7 +53,7 @@ RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* paren
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
-        RK_IMPL_PTR(topWidget)->setSystemWindow(this);
+        platformWindow->init();
 }
 
 RkSystemWindow::~RkSystemWindow()
