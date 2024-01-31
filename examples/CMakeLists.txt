@@ -1,6 +1,5 @@
-option(RK_EXAMPLE_HELLO "Enable Hello World example" ON)
-
-#set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
+set(RK_EXAMPLE_HELLO ON)
+set(RK_EXAMPLE_CHILD ON)
 #set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 #set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 #set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
@@ -12,35 +11,36 @@ option(RK_EXAMPLE_HELLO "Enable Hello World example" ON)
 
 # ------------ Hello example -------
 
-#if (RK_EXAMPLE_HELLO)
+if (RK_EXAMPLE_HELLO)
   set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
   add_executable(hello ${RK_EXEC_OPTION}
-	${RK_HEADERS}
-	${RK_EXAMPLES_SOURCES})
+    ${RK_HEADERS}
+    ${RK_EXAMPLES_SOURCES})
   add_dependencies(hello redkite)
   target_link_libraries(hello redkite)
-  #if (CMAKE_SYSTEM_NAME MATCHES Windows)
-    #target_link_libraries(hello "-mwindows -ld3d11 -ld2d1 -ldwrite -lm")
-    #target_link_libraries(hello "-mwindows -lstdc++ -lpthread -lm")
-  #else()
-  target_link_libraries(hello "-lX11 -lpthread -lcairo -lrt -lm -ldl")
-  #endif()
-#endif (RK_EXAMPLE_HELLO)
+  if (CMAKE_SYSTEM_NAME MATCHES Windows)
+    target_link_libraries(hello "-mwindows -ld3d11 -ld2d1 -ldwrite -lm")
+    target_link_libraries(hello "-mwindows -lstdc++ -lpthread -lm")
+  else()
+    target_link_libraries(hello "-lX11 -lpthread -lcairo -lrt -lm -ldl")
+  endif()
+endif (RK_EXAMPLE_HELLO)
 
-#if (RK_ALL_EXMAPLES)
 # ------------ Child Example -------
 
-#add_executable(child ${RK_EXEC_OPTION}
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_CHILD})
-#add_dependencies(child redkite)
-#target_link_libraries(child redkite)
-#if (CMAKE_SYSTEM_NAME MATCHES Windows)
-#  target_link_libraries(child "-mwindows -s -static -ld3d11 -ld2d1 -ldwrite -lm")
-#else()
-#  target_link_libraries(child "-lX11 -lpthread -lrt -lm -ldl")
-#  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-#endif()
+if (RK_EXAMPLE_CHILD)
+  set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
+  add_executable(child ${RK_EXEC_OPTION}
+    ${RK_HEADERS}
+    ${RK_EXAMPLES_SOURCES_CHILD})
+  add_dependencies(child redkite)
+  target_link_libraries(child redkite)
+  if (CMAKE_SYSTEM_NAME MATCHES Windows)
+    target_link_libraries(child "-mwindows -s -static -ld3d11 -ld2d1 -ldwrite -lm")
+  else()
+    target_link_libraries(child "-lX11 -lcairo -lpthread -lrt -lm -ldl")
+  endif()
+endif(RK_EXAMPLE_CHILD)
 
 # ------------ Property -------
 

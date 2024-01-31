@@ -29,6 +29,7 @@
 
 class RkMain;
 class RkSystemWindow;
+class RkPaintEvent;
 
 class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
  public:
@@ -92,6 +93,9 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
+
+protected:
+        void processPaintEvent(RkPaintEvent* event);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget);

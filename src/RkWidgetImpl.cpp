@@ -137,7 +137,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         switch (event->type())
         {
         case RkEvent::Type::Paint:
-                inf_ptr->paintEvent(static_cast<RkPaintEvent*>(event));
+                processPaintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         case RkEvent::Type::KeyPressed:
                 RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
@@ -221,6 +221,27 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         default:
                 break;
                 RK_LOG_DEBUG("RkEvent::Type::Unknown:" << title());
+        }
+}
+
+void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
+{
+        RkPainter painter(inf_ptr);
+        if (parent())
+                painter.translate(position());
+        painter.fillRect(rect(), background());
+        inf_ptr->paintEvent(event);
+        processChildrenEvents(event);
+        if (parent())
+                painter.translate({-position().x(), -position().y()});
+}
+
+void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
+{
+        for (auto &ch: inf_ptr->children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget)
+                        widget->event(event);
         }
 }
 
