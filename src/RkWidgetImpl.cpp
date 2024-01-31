@@ -133,6 +133,7 @@ bool RkWidget::RkWidgetImpl::isClose() const
 
 void RkWidget::RkWidgetImpl::event(RkEvent *event)
 {
+        RkObject::RkObjectImpl::event(event);
         switch (event->type())
         {
         case RkEvent::Type::Paint:
@@ -212,8 +213,9 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         case RkEvent::Type::Close:
                 RK_LOG_DEBUG("RkEvent::Type::Close");
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)) {
-                        widgetClosed = true;
                         inf_ptr->closeEvent(static_cast<RkCloseEvent*>(event));
+                        if (systemWindow)
+                                systemWindow->close();
                 }
                 break;
         default:

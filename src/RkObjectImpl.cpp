@@ -89,6 +89,11 @@ RkEventQueue* RkObject::RkObjectImpl::getEventQueue() const
         return eventQueue;
 }
 
+void RkObject::RkObjectImpl::event(RkEvent *event)
+{
+        inf_ptr->event(event);
+}
+
 void RkObject::RkObjectImpl::addObserver(std::unique_ptr<RkObserver> ob)
 {
         auto res = std::find(observersList.begin(), observersList.end(), ob);

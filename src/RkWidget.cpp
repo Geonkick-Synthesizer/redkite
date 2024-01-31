@@ -415,12 +415,6 @@ bool RkWidget::propagateGrabKeyEnabled() const
         return impl_ptr->propagateGrabKeyEnabled();
 }
 
-void RkWidget::event(RkEvent *event)
-{
-        impl_ptr->event(event);
-        RkObject::event(event);
-}
-
 void RkWidget::closeEvent([[maybe_unused]] RkCloseEvent *event)
 {
         if (parentWidget()) {

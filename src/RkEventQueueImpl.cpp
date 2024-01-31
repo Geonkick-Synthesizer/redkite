@@ -153,11 +153,22 @@ void RkEventQueue::RkEventQueueImpl::processSystemEvent(std::unique_ptr<RkEvent>
 
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
+#ifdef RK_OS_WIN
+#else
+        // Process system windows events.
+        if (systemWindow) {
+                auto systemEvents = platformEventQueue->getEvents();
+                for (auto &event: systemEvents) {
+                        auto [widget, widgetEvent] = systemWindow->getWidgetEvent(event.get());
+                        postEvent(widget, std::move(widgetEvent));
+                }
+        }
+#endif
         /**
-         * Moving events in a separeted queue for processing
+         * Move events in a separeted queue for processing
          * because during the processing the execution of some events
          * may add new events into the queue and this for
-         * in some cases can lead to a infinite looping.
+         * in some cases can lead to a infinite loop.
          */
         decltype(eventsQueue) queue;
         {
@@ -166,17 +177,8 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         }
         
         for (const auto &e: queue) {
-                if (e.first->type() == Rk::ObjectType::Widget && systemWindow)
-                        systemWindow->event(e.second.get());
-                else
-                        e.first->event(e.second.get());
-        }
-
-        // Process system windows events.
-        if (systemWindow) {
-                auto events = platformEventQueue->getEvents();
-                for (auto &event: events)
-                        systemWindow->event(event.get());
+                if (e.first)
+                        RK_IMPL_PTR(e.first)->event(e.second.get());
         }
 }
 

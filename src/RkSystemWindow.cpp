@@ -42,7 +42,8 @@
 #endif
 
 RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* parent)
-        : topWidget{widget}
+        : isWindowClosed{false}
+        , topWidget{widget}
 #ifdef RK_OS_WIN
         , platformWindow{std::make_unique<RkWindowWin>(parent)}
 #else // X11
@@ -134,12 +135,30 @@ bool RkSystemWindow::propagateGrabKeyEnabled() const
         return false;
 }
 
+std::tuple<RkWidget*, std::unique_ptr<RkEvent>>
+RkSystemWindow::getWidgetEvent(const RkEvent *event) const
+{
+        switch(event->type()) {
+        case RkEvent::Type::Close:
+                RK_LOG_DEBUG("RkEvent::Type::Close");
+                return {topWidget, std::make_unique<RkCloseEvent>()};
+                break;
+        default:
+                RK_LOG_DEBUG("unknown event");
+                break;
+        }
+
+        return {nullptr, std::make_unique<RkEvent>()};
+}
+
 void RkSystemWindow::event(RkEvent *event)
 {
 }
 
-void RkSystemWindow::closeEvent([[maybe_unused]] RkCloseEvent *event)
+void RkSystemWindow::closeEvent(RkCloseEvent *event)
 {
+        isWindowClosed = true;
+        topWidget->event(event);
 }
 
 void RkSystemWindow::keyPressEvent(RkKeyEvent *event)
@@ -245,6 +264,12 @@ RkRect RkSystemWindow::rect() const
 
 void RkSystemWindow::close()
 {
+        isWindowClosed = true;
+}
+
+bool RkSystemWindow::isClosed() const
+{
+        return isWindowClosed;
 }
 
 void RkSystemWindow::setTopWidget(RkWidget *widget)

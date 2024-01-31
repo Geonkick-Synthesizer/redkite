@@ -83,7 +83,7 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         eventQueue->processQueue();
-                        if (/*RK_IMPL_PTR(eventQueue)->getSystemWindow()->isClosed()*/false) {
+                        if (RK_IMPL_PTR(eventQueue)->getSystemWindow()->isClosed()) {
                                 RK_LOG_DEBUG("exit");
                                 break;
                         }

@@ -76,7 +76,6 @@ RkEventQueue* RkObject::eventQueue() const
 
 void RkObject::event(RkEvent *event)
 {
-        RK_UNUSED(event);
 }
 
 void RkObject::addShortcut(Rk::Key key, Rk::KeyModifiers modifier)

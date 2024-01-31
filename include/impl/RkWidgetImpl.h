@@ -53,7 +53,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void setTitle(const std::string &title);
         const std::string& title() const;
         bool isClose() const;
-        void event(RkEvent *event);
+        void event(RkEvent *event) override;
         void setSize(const RkSize &size);
         const RkSize& size() const;
         void setMinimumSize(const RkSize& size);

@@ -135,7 +135,6 @@ class RkWidget: public RkObject, public RkCanvas {
  protected:
         RK_DECLARE_IMPL_PTR(RkWidget);
         RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl);
-        void event(RkEvent *event) override;
         virtual void closeEvent(RkCloseEvent *event);
         virtual void keyPressEvent(RkKeyEvent *event);
         virtual void keyReleaseEvent(RkKeyEvent *event);

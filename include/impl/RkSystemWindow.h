@@ -76,6 +76,7 @@ public:
         RkRect rect() const;
         void update();
         void close();
+        bool isClosed() const;
         void setTopWidget(RkWidget *widget);
         RkWidget* getTopWidget() const;
         void enableGrabKey(bool b);
@@ -88,7 +89,7 @@ public:
         Rk::PointerShape pointerShape() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
-
+        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> getWidgetEvent(const RkEvent *event) const;
         void event(RkEvent *event);
         void closeEvent(RkCloseEvent *event);
         void keyPressEvent(RkKeyEvent *event);
@@ -109,6 +110,7 @@ public:
         void hoverEvent(RkHoverEvent *event);
 
 private:
+        bool isWindowClosed;
         RkWidget *topWidget;
 #ifdef RK_OS_WIN
         std::unique_ptr<RkWindowWin> platformWindow;
