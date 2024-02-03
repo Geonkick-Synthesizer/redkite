@@ -95,7 +95,9 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         double scaleFactor() const;
 
 protected:
+        const RkCanvasInfo* getCanvasInfo() const;
         void processPaintEvent(RkPaintEvent* event);
+        void processChildrenEvents(RkEvent *event);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget);

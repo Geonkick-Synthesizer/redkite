@@ -2,7 +2,7 @@
  * File name: RkCanvas.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor 
+ * Copyright (C) 2024 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -24,20 +24,11 @@
 #ifndef RK_CANVAS_H
 #define RK_CANVAS_H
 
-#include "Rk.h"
+#include "RkCanvas.h"
 
-struct RkCanvasInfo;
-
-class RkCanvas {
- public:
-        RkCanvas();
-        virtual ~RkCanvas() = default;
-protected:
-        RK_DECLARE_O_PTR(RkCanvas);
-
- private:
-        RK_DISABLE_COPY(RkCanvas);
-        RK_DISABLE_MOVE(RkCanvas);
-};
+RkCanvas::RkCanvas()
+        : o_ptr{std::make_unique<RkCanvasImpl>(this)}
+{
+}
 
 #endif // RK_CANVAS_H

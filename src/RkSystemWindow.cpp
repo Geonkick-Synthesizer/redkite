@@ -82,6 +82,11 @@ const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
         return platformWindow->nativeWindowInfo();
 }
 
+const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
+{
+        return platformWindow->getCanvasInfo();
+}
+
 RkWindowId RkSystemWindow::id() const
 {
         return platformWindow->id();

@@ -224,6 +224,13 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         }
 }
 
+const RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
+{
+        if (systemWindow)
+                return systemWindow->getCanvasInfo();
+        return static_cast<RkWidget*>(parent())->getCanvasInfo();
+}
+
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
         RkPainter painter(inf_ptr);
@@ -429,4 +436,3 @@ bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
         // TODO: implement?
         return false;
 }
-

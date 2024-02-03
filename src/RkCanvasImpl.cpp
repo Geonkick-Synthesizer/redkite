@@ -1,8 +1,8 @@
 /**
- * File name: RkCanvas.h
+ * File name: RkCanvasImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor 
+ * Copyright (C) 2024 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -21,23 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_CANVAS_H
-#define RK_CANVAS_H
+#include "RkCanvasImpl.h"
 
-#include "Rk.h"
-
-struct RkCanvasInfo;
-
-class RkCanvas {
+class RkCanvas::RkCanvasImpl {
  public:
-        RkCanvas();
-        virtual ~RkCanvas() = default;
-protected:
-        RK_DECLARE_O_PTR(RkCanvas);
+        explicit RkCanvasImpl(RkCanvas* interface);
+        virtual ~RkCanvasImpl();
+        RkCanvasImpl(const RkCanvas &other) = delete;
+        RkCanvasImpl& operator=(const RkCanvasImpl &other) = delete;
+        RkCanvasImpl(RkCanvasImpl &&other) = delete;
+        RkCanvasImpl& operator=(RkCanvasImpl &&other) = delete;
+        virtual const RkCanvasInfo* getCanvasInfo() const = 0;
+        virtual void freeCanvasInfo() = 0;
 
  private:
-        RK_DISABLE_COPY(RkCanvas);
-        RK_DISABLE_MOVE(RkCanvas);
+        RK_DECALRE_INTERFACE_PTR(RkCanvas);
 };
 
-#endif // RK_CANVAS_H
+#endif // RK_CANVAS_IMPL_H
