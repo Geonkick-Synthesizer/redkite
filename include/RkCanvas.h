@@ -30,14 +30,10 @@ struct RkCanvasInfo;
 
 class RkCanvas {
  public:
-        RkCanvas();
+        RkCanvas() = default;
         virtual ~RkCanvas() = default;
-protected:
-        RK_DECLARE_O_PTR(RkCanvas);
-
- private:
-        RK_DISABLE_COPY(RkCanvas);
-        RK_DISABLE_MOVE(RkCanvas);
+        virtual RkCanvasInfo* getCanvasInfo() const;
+        virtual void freeCanvasInfo();
 };
 
 #endif // RK_CANVAS_H

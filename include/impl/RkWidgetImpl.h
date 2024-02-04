@@ -40,11 +40,14 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         explicit RkWidgetImpl(RkWidget* interface,
                               RkWidget* parent,
                               Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
+        virtual ~RkWidgetImpl();
         RkWidgetImpl(const RkWidget &other) = delete;
         RkWidgetImpl& operator=(const RkWidgetImpl &other) = delete;
         RkWidgetImpl(RkWidgetImpl &&other) = delete;
         RkWidgetImpl& operator=(RkWidgetImpl &&other) = delete;
-        virtual ~RkWidgetImpl();
+        bool isTopWidget() const;
+        RkCanvasInfo* getCanvasInfo() const;
+        void freeCanvasInfo();
         void setSystemWindow(RkSystemWindow *window);
         RkSystemWindow* getSystemWindow() const;
         void setEventQueue(RkEventQueue *queue) override;
@@ -95,12 +98,12 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         double scaleFactor() const;
 
 protected:
-        const RkCanvasInfo* getCanvasInfo() const;
         void processPaintEvent(RkPaintEvent* event);
         void processChildrenEvents(RkEvent *event);
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkWidget);
+        bool topWidget;
         RkSystemWindow* systemWindow;
         std::string widgetTitle;
         bool widgetClosed;

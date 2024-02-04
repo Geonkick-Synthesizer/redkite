@@ -57,6 +57,8 @@ class RkWidget: public RkObject, public RkCanvas {
         explicit RkWidget(RkWidget *parent,
                           Rk::WidgetFlags flags = Rk::WidgetFlags::Widget);
         virtual ~RkWidget();
+        RkCanvasInfo* getCanvasInfo() const override;
+        void freeCanvasInfo() override;
         Rk::WidgetFlags widgetFlags() const;
         void show(bool b = true);
         bool isShown() const;

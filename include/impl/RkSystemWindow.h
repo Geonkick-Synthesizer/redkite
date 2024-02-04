@@ -65,7 +65,8 @@ public:
         void setTitle(const std::string &title);
         const std::string& title() const;
         const RkNativeWindowInfo* nativeWindowInfo() const;
-        const RkCanvasInfo* getCanvasInfo() const;
+        RkCanvasInfo* getCanvasInfo() const;
+        void freeCanvasInfo();
         RkWidget* parentWidget() const;
         RkWindowId id() const;
         void setSize(const RkSize &size);

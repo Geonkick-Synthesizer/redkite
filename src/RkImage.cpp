@@ -72,15 +72,6 @@ void RkImage::fill(const RkColor &color)
         o_ptr->fill(color);
 }
 
-const RkCanvasInfo* RkImage::getCanvasInfo() const
-{
-        return o_ptr->getCanvasInfo();
-}
-
-void RkImage::freeCanvasInfo()
-{
-}
-
 unsigned char* RkImage::data() const
 {
         return o_ptr->data();
@@ -114,4 +105,9 @@ RkSize RkImage::size() const
 bool RkImage::isNull() const
 {
         return o_ptr->isNull();
+}
+
+RkCanvasInfo* RkImage::getCanvasInfo() const
+{
+        return o_ptr->getCanvasInfo();
 }

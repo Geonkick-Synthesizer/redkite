@@ -82,9 +82,15 @@ const RkNativeWindowInfo* RkSystemWindow::nativeWindowInfo() const
         return platformWindow->nativeWindowInfo();
 }
 
-const RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
+RkCanvasInfo* RkSystemWindow::getCanvasInfo() const
 {
+        RK_LOG_DEBUG("called");
         return platformWindow->getCanvasInfo();
+}
+
+void RkSystemWindow::freeCanvasInfo()
+{
+        platformWindow->freeCanvasInfo();
 }
 
 RkWindowId RkSystemWindow::id() const
@@ -147,6 +153,10 @@ RkSystemWindow::getWidgetEvent(const RkEvent *event) const
         case RkEvent::Type::Close:
                 RK_LOG_DEBUG("RkEvent::Type::Close");
                 return {topWidget, std::make_unique<RkCloseEvent>()};
+                break;
+        case RkEvent::Type::Paint:
+                RK_LOG_DEBUG("RkEvent::Type::Paint");
+                return {topWidget, std::make_unique<RkPaintEvent>()};
                 break;
         default:
                 RK_LOG_DEBUG("unknown event");

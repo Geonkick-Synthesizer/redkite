@@ -21,14 +21,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_CANVAS_H
-#define RK_CANVAS_H
-
 #include "RkCanvas.h"
 
-RkCanvas::RkCanvas()
-        : o_ptr{std::make_unique<RkCanvasImpl>(this)}
+RkCanvasInfo* RkCanvas::getCanvasInfo() const
 {
+        return nullptr;
 }
 
-#endif // RK_CANVAS_H
+void RkCanvas::freeCanvasInfo()
+{
+        
+}
+

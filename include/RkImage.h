@@ -74,8 +74,7 @@ class RkImage : public RkCanvas {
         int height() const;
         RkSize size() const;
         bool isNull() const;
-        const RkCanvasInfo* getCanvasInfo() const override;
-        void freeCanvasInfo() override;
+        RkCanvasInfo *getCanvasInfo() const override;
 
  protected:
         RK_DECLARE_O_PTR(RkImage);

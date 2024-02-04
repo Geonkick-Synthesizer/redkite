@@ -249,8 +249,8 @@ const RkColor& RkWindowX::borderColor() const
 void RkWindowX::setBackgroundColor(const RkColor &color)
 {
         winBackgroundColor = color;
-        if (isWindowCreated())
-                XSetWindowBackground(display(), xWindow, winBackgroundColor.argb());
+        //if (isWindowCreated())
+        //        XSetWindowBackground(display(), xWindow, winBackgroundColor.argb());
 }
 
 const RkColor& RkWindowX::background() const
@@ -289,6 +289,7 @@ void RkWindowX::update()
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
 void RkWindowX::createCanvasInfo()
 {
+        RK_LOG_DEBUG("called");
         canvasInfo = std::make_unique<RkCanvasInfo>();
         canvasInfo->cairo_surface = cairo_xlib_surface_create(display(), xWindow,
                                                               visualInfo.visual,
@@ -308,13 +309,15 @@ void RkWindowX::resizeCanvas()
         cairo_surface_set_device_scale(canvasInfo->cairo_surface, scaleFactor, scaleFactor);
 }
 
-const RkCanvasInfo* RkWindowX::getCanvasInfo() const
+RkCanvasInfo* RkWindowX::getCanvasInfo() const
 {
+        RK_LOG_DEBUG("canvasInfo:" << (canvasInfo != nullptr));
         return canvasInfo ? canvasInfo.get() : nullptr;
 }
 
 void RkWindowX::freeCanvasInfo()
 {
+        RK_LOG_DEBUG("canvasInfo:" << (canvasInfo != nullptr));
         if (canvasInfo)
                 cairo_surface_destroy(canvasInfo->cairo_surface);
 }

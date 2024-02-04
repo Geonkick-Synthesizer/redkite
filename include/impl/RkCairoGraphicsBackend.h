@@ -59,7 +59,6 @@ class RkCairoGraphicsBackend {
 
  private:
         RkCanvas *canvas;
-        cairo_t* cairoContext;
 };
 
 #endif // RK_CAIRO_GRAPHICS_BACKEND_H

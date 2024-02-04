@@ -31,8 +31,8 @@
 #include <chrono>
 #include <thread>
 
-RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
-        : inf_ptr{interfaceMain}
+RkMain::RkMainImpl::RkMainImpl(RkMain *interface)
+        : inf_ptr{interface}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);

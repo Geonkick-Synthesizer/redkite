@@ -89,6 +89,16 @@ RkWidget::~RkWidget()
         }
 }
 
+RkCanvasInfo* RkWidget::getCanvasInfo() const
+{
+        return impl_ptr->getCanvasInfo();
+}
+
+void RkWidget::freeCanvasInfo()
+{
+        impl_ptr->freeCanvasInfo();
+}
+
 Rk::WidgetFlags RkWidget::widgetFlags() const
 {
         return impl_ptr->getWidgetFlags();

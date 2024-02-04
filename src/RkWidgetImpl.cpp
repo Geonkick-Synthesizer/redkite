@@ -33,6 +33,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      Rk::WidgetFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, nullptr, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
+        , topWidget{true}
         , systemWindow{nullptr}
         , widgetClosed{false}
         , widgetMaximumSize{1000000, 1000000}
@@ -54,7 +55,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      Rk::WidgetFlags flags)
         : RkObject::RkObjectImpl(widgetInterface, parent, Rk::ObjectType::Widget)
         , inf_ptr{widgetInterface}
-        , systemWindow{nullptr}
+        , topWidget{false}
+        , systemWindow{parent ? RK_IMPL_PTR(parent)->getSystemWindow() : nullptr}
         , widgetClosed{false}
         , widgetMaximumSize{1000000, 1000000}
         , widgetBorderWidth{0}
@@ -74,14 +76,25 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
         RK_LOG_DEBUG("called");
 }
 
-void RkWidget::RkWidgetImpl::setSystemWindow(RkSystemWindow *window)
+bool RkWidget::RkWidgetImpl::isTopWidget() const
 {
-        systemWindow = window;
+        return topWidget;
 }
 
 RkSystemWindow* RkWidget::RkWidgetImpl::getSystemWindow() const
 {
         return systemWindow;
+}
+
+RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
+{
+        RK_LOG_DEBUG("called");
+        return systemWindow->getCanvasInfo();
+}
+
+void RkWidget::RkWidgetImpl::freeCanvasInfo()
+{
+        systemWindow->freeCanvasInfo();
 }
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
@@ -105,7 +118,7 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 void RkWidget::RkWidgetImpl::show(bool b)
 {
 	isWidgetShown = b;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->show(isWidgetShown);
 }
 
@@ -117,7 +130,7 @@ bool RkWidget::RkWidgetImpl::isShown() const
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
 {
         widgetTitle = title;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->setTitle(widgetTitle);
 }
 
@@ -214,7 +227,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 RK_LOG_DEBUG("RkEvent::Type::Close");
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::CloseInputEnabled)) {
                         inf_ptr->closeEvent(static_cast<RkCloseEvent*>(event));
-                        if (systemWindow)
+                        if (isTopWidget())
                                 systemWindow->close();
                 }
                 break;
@@ -224,18 +237,12 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         }
 }
 
-const RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
-{
-        if (systemWindow)
-                return systemWindow->getCanvasInfo();
-        return static_cast<RkWidget*>(parent())->getCanvasInfo();
-}
-
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
         RkPainter painter(inf_ptr);
         if (parent())
                 painter.translate(position());
+        RK_LOG_DEBUG("called");
         painter.fillRect(rect(), background());
         inf_ptr->paintEvent(event);
         processChildrenEvents(event);
@@ -255,7 +262,7 @@ void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
 void RkWidget::RkWidgetImpl::setSize(const RkSize &size)
 {
         widgetSize = size;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->setSize(widgetSize);
 }
 
@@ -287,7 +294,7 @@ const RkSize& RkWidget::RkWidgetImpl::maximumSize() const
 void RkWidget::RkWidgetImpl::setPosition(const RkPoint &position)
 {
         widgetPosition = position;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->setPosition(widgetPosition);
 }
 
@@ -319,7 +326,7 @@ const RkColor& RkWidget::RkWidgetImpl::borderColor() const
 void RkWidget::RkWidgetImpl::setBackgroundColor(const RkColor &color)
 {
         widgetBackground = color;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->setBackgroundColor(widgetBackground);
 }
 
@@ -402,7 +409,7 @@ void RkWidget::RkWidgetImpl::setFont(const RkFont &font)
 void RkWidget::RkWidgetImpl::setPointerShape(Rk::PointerShape shape)
 {
         widgetPointerShape = shape;
-        if (systemWindow)
+        if (isTopWidget())
                 systemWindow->setPointerShape(widgetPointerShape);
 }
 

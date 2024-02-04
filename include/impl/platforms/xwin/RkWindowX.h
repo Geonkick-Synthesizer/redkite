@@ -56,7 +56,7 @@ class RkWindowX {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         void resizeCanvas();
-        const RkCanvasInfo* getCanvasInfo() const;
+        RkCanvasInfo* getCanvasInfo() const;
         void update();
         void setFocus(bool b);
         bool hasFocus() const;
