@@ -100,6 +100,7 @@ RkWindowId RkSystemWindow::id() const
 
 void RkSystemWindow::setSize(const RkSize &size)
 {
+        cacheImage = RkImage(size);
         platformWindow->setSize(size);
 }
 
@@ -157,6 +158,11 @@ RkSystemWindow::getWidgetEvent(const RkEvent *event) const
         case RkEvent::Type::Paint:
                 RK_LOG_DEBUG("RkEvent::Type::Paint");
                 return {topWidget, std::make_unique<RkPaintEvent>()};
+                break;
+        case RkEvent::Type::Resize:
+                RK_LOG_DEBUG("RkEvent::Type::Resize");
+                platformWindow->resizeCanvas();
+                return {topWidget, std::make_unique<RkResizeEvent>()};
                 break;
         default:
                 RK_LOG_DEBUG("unknown event");

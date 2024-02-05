@@ -207,6 +207,9 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 
 void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
+        RK_LOG_DEBUG("x: " << rect.left()
+                     << ", y: " << rect.top() << ", w: " << rect.width()
+                     << ", h: " << rect.height());
         cairo_rectangle(context(), rect.left(), rect.top(), rect.width(), rect.height());
         cairo_set_source_rgba(context(),
                              static_cast<double>(color.red()) / 255,

@@ -27,6 +27,35 @@
 
 #include <vector>
 
+static void setRandomColor(RkWidget* widget)
+{
+        int red = rand() % 151 + 50;     
+        int green = rand() % 151 + 50;
+        int blue = rand() % 151 + 50;
+
+        widget->setBorderColor(red, green, blue);
+        widget->setBackgroundColor(red, green, blue);
+}
+
+static void drawChildren(RkWidget* parent, int l)
+{
+        if (l > 2)
+                return;
+        auto wCh = parent->width() / 10;
+        auto hCh = parent->height() / 10;
+        for (int y = 0; y < parent->height(); y += hCh + 5) {
+                for (int x = 0; x < parent->width(); x += wCh + 5) {
+                        auto child = new RkWidget(parent);
+                        setRandomColor(child);
+                        child->setTitle("Child[" + std::to_string(x) + std::to_string(y) + "] - " + std::to_string(l));
+                        child->setSize(wCh, hCh);
+                        child->setPosition(x, y);
+                        child->show();
+                        drawChildren(child, l + 1);
+                }
+        }
+}
+
 int main(int arc, char **argv)
 {
         RkMain app(arc, argv);
@@ -34,21 +63,15 @@ int main(int arc, char **argv)
         // Create main window.
         auto mainWindow = new RkWidget(app);
         mainWindow->setTitle("Main Window");
-        mainWindow->setSize(400, 500);
+        mainWindow->setSize(800, 600);
         mainWindow->setBackgroundColor(80, 80, 80);
+        drawChildren(mainWindow, 1);
 
-        auto child = new RkWidget(mainWindow);
-        child->setTitle("Child");
-        child->setSize(60, 60);
-        child->setPosition(10, 10);
-        child->setBorderColor(0, 255, 0);
-        child->setBackgroundColor(0, 0, 255);
-        child->show();
-
-        /*int x = 10;
+        /*        int x = 10;
         int y = 10;
         RK_LOG_DEBUG("create childs");
         for (auto i = 0; i < 10; i++) {
+                for (auto j = j < )
                 RK_LOG_DEBUG("create child " << i);
                 auto child = new RkWidget(mainWindow);
                 child->setTitle("Child[" + std::to_string(i) + "] - LEVEL 1");
@@ -58,13 +81,13 @@ int main(int arc, char **argv)
                 child->setBackgroundColor(0, 0, 255);
                 child->show();
 
-                //auto child_l = new RkWidget(child);
-                //  child_l->setTitle("Child[" + std::to_string(i) + "] - LEVEL 2");
-                //  child_l->setPosition(10, 10);
-                //  child_l->setSize(30, 30);
-                //  child_l->setBorderColor(0, 0, 255);
-                //  child_l->setBackgroundColor(255, 0, 0);
-                //  child_l->show();
+                auto child_l = new RkWidget(child);
+                child_l->setTitle("Child[" + std::to_string(i) + "] - LEVEL 2");
+                child_l->setPosition(10, 10);
+                child_l->setSize(30, 30);
+                child_l->setBorderColor(0, 0, 255);
+                child_l->setBackgroundColor(255, 0, 0);
+                child_l->show();
 
                 x += 65;
                 if (x > 650) {

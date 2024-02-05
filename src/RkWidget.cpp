@@ -143,7 +143,7 @@ bool RkWidget::isClose() const
 void RkWidget::setSize(int w, int h)
 {
         w = std::clamp(w, minimumWidth(), maximumWidth());
-        h = std::clamp(w, minimumHeight(), maximumHeight());
+        h = std::clamp(h, minimumHeight(), maximumHeight());
         impl_ptr->setSize(RkSize(w, h));
 }
 

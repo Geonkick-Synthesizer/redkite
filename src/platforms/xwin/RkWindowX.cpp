@@ -249,8 +249,8 @@ const RkColor& RkWindowX::borderColor() const
 void RkWindowX::setBackgroundColor(const RkColor &color)
 {
         winBackgroundColor = color;
-        //if (isWindowCreated())
-        //        XSetWindowBackground(display(), xWindow, winBackgroundColor.argb());
+        if (isWindowCreated())
+                XSetWindowBackground(display(), xWindow, winBackgroundColor.argb());
 }
 
 const RkColor& RkWindowX::background() const

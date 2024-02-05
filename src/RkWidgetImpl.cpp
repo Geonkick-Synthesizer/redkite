@@ -209,6 +209,8 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->hoverEvent(static_cast<RkHoverEvent*>(event));
                 break;
         case RkEvent::Type::Resize:
+                if (isTopWidget())
+                        widgetSize = systemWindow->size();
                 inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
@@ -240,22 +242,22 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
         RkPainter painter(inf_ptr);
-        if (parent())
-                painter.translate(position());
-        RK_LOG_DEBUG("called");
+        painter.translate(position());
         painter.fillRect(rect(), background());
         inf_ptr->paintEvent(event);
         processChildrenEvents(event);
-        if (parent())
-                painter.translate({-position().x(), -position().y()});
+        painter.translate({-position().x(), -position().y()});
 }
 
 void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
 {
+        RK_LOG_DEBUG(title() << ": called");
         for (auto &ch: inf_ptr->children()) {
                 auto widget = dynamic_cast<RkWidget*>(ch);
-                if (widget)
-                        widget->event(event);
+                if (widget) {
+                        RK_LOG_DEBUG("event: " << widget->title());
+                        RK_IMPL_PTR(widget)->event(event);
+                }
         }
 }
 

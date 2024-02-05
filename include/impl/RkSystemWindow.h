@@ -128,6 +128,7 @@ private:
         Rk::PointerShape widgetPointerShape;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
+        RkImage cacheImage;
 };
 
 #endif // RK_SYSTEM_WINDOW_H
