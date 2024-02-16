@@ -153,17 +153,14 @@ void RkEventQueue::RkEventQueueImpl::processSystemEvent(std::unique_ptr<RkEvent>
 
 void RkEventQueue::RkEventQueueImpl::processEvents()
 {
-#ifdef RK_OS_WIN
-#else
-        // Process system windows events.
         if (systemWindow) {
                 auto systemEvents = platformEventQueue->getEvents();
                 for (auto &event: systemEvents) {
-                        auto [widget, widgetEvent] = systemWindow->getWidgetEvent(event.get());
-                        postEvent(widget, std::move(widgetEvent));
+                        auto [widget, widgetEvent] = systemWindow->processEvent(event.get());
+                        if (widget)
+                                postEvent(widget, std::move(widgetEvent));
                 }
         }
-#endif
         /**
          * Move events in a separeted queue for processing
          * because during the processing the execution of some events
@@ -175,11 +172,18 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 std::lock_guard<std::mutex> lock(eventsQueueMutex);
                 queue = std::move(eventsQueue);
         }
-        
+
+        bool repaintSystemWindow = false;
         for (const auto &e: queue) {
-                if (e.first)
+                if (e.first) {
                         RK_IMPL_PTR(e.first)->event(e.second.get());
+                        if (e.second.get()->type() == RkEvent::Type::Paint)
+                                repaintSystemWindow = true;
+                }
         }
+
+        if (repaintSystemWindow)
+                systemWindow->update();
 }
 
 void RkEventQueue::RkEventQueueImpl::processPopups(RkWidget *widget, RkEvent* event)

@@ -26,6 +26,7 @@
 #include "RkPainter.h"
 #include "RkMainImpl.h"
 #include "RkSystemWindow.h"
+#include "RkEventQueueImpl.h"
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
                                      RkMain* mainApp,
@@ -48,6 +49,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
 {
         RK_LOG_DEBUG("called");
         systemWindow = RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
+        setEventQueue(RK_IMPL_PTR(mainApp)->getEventQueue());
+        update();
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
@@ -69,6 +72,8 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
+        setEventQueue(parent->eventQueue());
+        update();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
@@ -89,12 +94,12 @@ RkSystemWindow* RkWidget::RkWidgetImpl::getSystemWindow() const
 RkCanvasInfo* RkWidget::RkWidgetImpl::getCanvasInfo() const
 {
         RK_LOG_DEBUG("called");
-        return systemWindow->getCanvasInfo();
+        return systemWindow->getImage().getCanvasInfo();
 }
 
 void RkWidget::RkWidgetImpl::freeCanvasInfo()
 {
-        systemWindow->freeCanvasInfo();
+        //        systemWindow->freeCanvasInfo();
 }
 
 void RkWidget::RkWidgetImpl::setEventQueue(RkEventQueue *queue)
@@ -241,9 +246,15 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
+        //        std::cout << "RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)" << std::endl;
         RkPainter painter(inf_ptr);
         painter.translate(position());
+        auto pen =  painter.pen();
+        pen.setWidth(1);
+        pen.setColor({0, 255, 0});
+        painter.setPen(pen);
         painter.fillRect(rect(), background());
+        painter.drawRect(rect()/*, background()*/);
         inf_ptr->paintEvent(event);
         processChildrenEvents(event);
         painter.translate({-position().x(), -position().y()});
@@ -342,9 +353,16 @@ RkRect RkWidget::RkWidgetImpl::rect() const
         return RkRect(RkPoint(0, 0), size());
 }
 
-void RkWidget::RkWidgetImpl::update()
+void RkWidget::RkWidgetImpl::update(bool updateChildren)
 {
-        // TODO: implement
+        RK_IMPL_PTR(getEventQueue())->postEvent(inf_ptr, std::move(std::make_unique<RkPaintEvent>()));
+        if (updateChildren) {
+                for (auto &ch: inf_ptr->children()) {
+                        auto widget = dynamic_cast<RkWidget*>(ch);
+                        if (widget)
+                                RK_IMPL_PTR(widget)->update(updateChildren);
+                }
+        }
 }
 
 Rk::Modality RkWidget::RkWidgetImpl::modality() const

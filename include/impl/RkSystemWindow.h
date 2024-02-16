@@ -31,6 +31,7 @@
 #include "RkRect.h"
 #include "RkColor.h"
 #include "RkFont.h"
+#include "RkImage.h"
 
 class RkEvent;
 class RkCloseEvent;
@@ -56,7 +57,7 @@ class RkWindowWin;
 class RkWindowX;
 #endif // GNU/Linux
 
-class RkSystemWindow {
+class RkSystemWindow: public RkCanvas {
 public:
         explicit RkSystemWindow(RkWidget *widget,
                                 const RkNativeWindowInfo *parent);
@@ -65,8 +66,9 @@ public:
         void setTitle(const std::string &title);
         const std::string& title() const;
         const RkNativeWindowInfo* nativeWindowInfo() const;
-        RkCanvasInfo* getCanvasInfo() const;
-        void freeCanvasInfo();
+        RkCanvasInfo* getCanvasInfo() const override;
+        RkImage& getImage();
+        void freeCanvasInfo() override;
         RkWidget* parentWidget() const;
         RkWindowId id() const;
         void setSize(const RkSize &size);
@@ -91,7 +93,7 @@ public:
         Rk::PointerShape pointerShape() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
-        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> getWidgetEvent(const RkEvent *event) const;
+        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> processEvent(const RkEvent *event);
         void event(RkEvent *event);
         void closeEvent(RkCloseEvent *event);
         void keyPressEvent(RkKeyEvent *event);
@@ -128,7 +130,7 @@ private:
         Rk::PointerShape widgetPointerShape;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
-        RkImage cacheImage;
+        RkImage systemWindowImage;
 };
 
 #endif // RK_SYSTEM_WINDOW_H

@@ -41,6 +41,8 @@
 #undef FocusOut
 #endif
 
+#include <RkPainter.h>
+
 RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* parent)
         : isWindowClosed{false}
         , topWidget{widget}
@@ -93,6 +95,11 @@ void RkSystemWindow::freeCanvasInfo()
         platformWindow->freeCanvasInfo();
 }
 
+RkImage& RkSystemWindow::getImage()
+{
+        return systemWindowImage;
+}
+
 RkWindowId RkSystemWindow::id() const
 {
         return platformWindow->id();
@@ -100,8 +107,9 @@ RkWindowId RkSystemWindow::id() const
 
 void RkSystemWindow::setSize(const RkSize &size)
 {
-        cacheImage = RkImage(size);
         platformWindow->setSize(size);
+        systemWindowImage = RkImage(size);
+        systemWindowImage.fill(platformWindow->background());
 }
 
 RkSize RkSystemWindow::size() const
@@ -148,28 +156,35 @@ bool RkSystemWindow::propagateGrabKeyEnabled() const
 }
 
 std::tuple<RkWidget*, std::unique_ptr<RkEvent>>
-RkSystemWindow::getWidgetEvent(const RkEvent *event) const
+RkSystemWindow::processEvent(const RkEvent *event)
 {
         switch(event->type()) {
         case RkEvent::Type::Close:
                 RK_LOG_DEBUG("RkEvent::Type::Close");
                 return {topWidget, std::make_unique<RkCloseEvent>()};
-                break;
         case RkEvent::Type::Paint:
+        {
                 RK_LOG_DEBUG("RkEvent::Type::Paint");
-                return {topWidget, std::make_unique<RkPaintEvent>()};
+                //                std::cout << "RkEvent::Type::Paint: " << systemWindowImage.width() << std::endl;
+                RkPainter painter(this);
+                painter.drawImage(systemWindowImage, 0, 0);
                 break;
+        }
         case RkEvent::Type::Resize:
-                RK_LOG_DEBUG("RkEvent::Type::Resize");
+        {
                 platformWindow->resizeCanvas();
+                systemWindowImage = RkImage(platformWindow->size());
+                systemWindowImage.fill(platformWindow->background());
+                //std::cout << "RkEvent::Type::Resize: " << systemWindowImage.width() << std::endl;
+                RK_IMPL_PTR(topWidget)->update(true);
                 return {topWidget, std::make_unique<RkResizeEvent>()};
-                break;
+        }
         default:
                 RK_LOG_DEBUG("unknown event");
                 break;
         }
 
-        return {nullptr, std::make_unique<RkEvent>()};
+        return {};
 }
 
 void RkSystemWindow::event(RkEvent *event)
@@ -178,8 +193,8 @@ void RkSystemWindow::event(RkEvent *event)
 
 void RkSystemWindow::closeEvent(RkCloseEvent *event)
 {
-        isWindowClosed = true;
-        topWidget->event(event);
+        //        isWindowClosed = true;
+        //        topWidget->event(event);
 }
 
 void RkSystemWindow::keyPressEvent(RkKeyEvent *event)

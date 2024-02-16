@@ -73,7 +73,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         RkRect rect() const;
-        void update();
+        void update(bool updateChildren = false);
         static Rk::WidgetAttribute defaultWidgetAttributes();
         Rk::Modality modality() const;
         void setWidgetAttribute(Rk::WidgetAttribute attribute);

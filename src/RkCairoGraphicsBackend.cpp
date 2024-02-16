@@ -77,6 +77,7 @@ void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
         auto image = cairo_image_surface_create_from_png(file.c_str());
         cairo_set_source_surface(context(), image, x, y);
         cairo_paint(context());
+        cairo_surface_flush(canvas->getCanvasInfo()->cairo_surface);
         cairo_surface_destroy(image);
 }
 
@@ -92,6 +93,7 @@ void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
         if (auto status = cairo_status(context()); status != CAIRO_STATUS_SUCCESS) {
                 RK_LOG_ERROR("cairo_paint: " << static_cast<int>(status));
         }
+        cairo_surface_flush(canvas->getCanvasInfo()->cairo_surface);
 }
 
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)

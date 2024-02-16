@@ -39,12 +39,17 @@ static void setRandomColor(RkWidget* widget)
 
 static void drawChildren(RkWidget* parent, int l)
 {
-        if (l > 2)
+        if (l > 1)
                 return;
         auto wCh = parent->width() / 10;
         auto hCh = parent->height() / 10;
+        std::cout << "parent->width(): " << parent->width() << std::endl;
+        std::cout << "wCh: " << wCh << std::endl;
+        size_t n = 0;
         for (int y = 0; y < parent->height(); y += hCh + 5) {
                 for (int x = 0; x < parent->width(); x += wCh + 5) {
+                        std::cout << "x: " << x << std::endl;
+                        std::cout << "n: " << n++ << std::endl;
                         auto child = new RkWidget(parent);
                         setRandomColor(child);
                         child->setTitle("Child[" + std::to_string(x) + std::to_string(y) + "] - " + std::to_string(l));
@@ -64,7 +69,7 @@ int main(int arc, char **argv)
         auto mainWindow = new RkWidget(app);
         mainWindow->setTitle("Main Window");
         mainWindow->setSize(800, 600);
-        mainWindow->setBackgroundColor(80, 80, 80);
+        //        mainWindow->setBackgroundColor(80, 150, 80);
         drawChildren(mainWindow, 1);
 
         /*        int x = 10;
