@@ -165,6 +165,12 @@ class RkRect {
                 return width() * height();
         }
 
+        constexpr bool contains(const RkPoint &p) const
+        {
+                return p.x() >= rectTopLeft.x() && p.x() <= rectBottomRight.x() &&
+                       p.y() >= rectTopLeft.y() && p.y() <= rectBottomRight.y();
+        }
+
  private:
        RkPoint rectTopLeft;
        RkPoint rectBottomRight;

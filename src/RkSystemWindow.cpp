@@ -143,7 +143,7 @@ void RkSystemWindow::enableGrabKey(bool b)
 
 bool RkSystemWindow::grabKeyEnabled() const
 {
-        return false; 
+        return false;
 }
 
 void RkSystemWindow::propagateGrabKey(bool b)
@@ -170,6 +170,8 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 painter.drawImage(systemWindowImage, 0, 0);
                 break;
         }
+        case RkEvent::Type::MouseButtonPress:
+                return processMouseEvent(static_cast<const RkMouseEvent*>(event));
         case RkEvent::Type::Resize:
         {
                 platformWindow->resizeCanvas();
@@ -184,7 +186,33 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 break;
         }
 
-        return {};
+        return ;
+}
+
+std::tuple<RkWidget*, std::unique_ptr<RkEvent>> RkSystemWindow::processMouseEvent(const RkMouseEvent* event)
+{
+        auto widget = getWidgetByGlobalPoint(topWidget, event->point());
+        auto mouseEvent = std::make_unique<RkMouseEvent>();
+        mouseEvent->setPoint(widget->mapFromGlobal(event->point()));
+        mouseEvent->setButton(event->button());
+        return {widget, std::move(mouseEvent)};
+}
+
+bool RkSystemWindow::containsPoint(RkWidget* widget, const RkPoint &p) const
+{
+        auto globalTopLeft = widget->mapFromGlobal(widget->position());
+        aito globalBottomRight = globalTopLeft + {widget->width(), widget->height()};
+        return RkRect(globalTopLeft, globalBottomRight).contains(p);
+}
+
+RkWidget* RkSystemWindow::getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &p)
+{
+        for (auto &child: widget->children()) {
+                auto childWidget = dynamic_cast<RkWidget*>(child);
+                if (containsPoint(childWidget, p))
+                        return getWidgetByGlobalPoint(childWidget, p);
+        }
+        return widget;
 }
 
 void RkSystemWindow::event(RkEvent *event)

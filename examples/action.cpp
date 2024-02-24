@@ -38,11 +38,11 @@ class Button: public RkWidget {
         RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
 
   protected:
-        void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+        void mouseButtonPressEvent(RkMouseEvent* event) override
         {
                 isToggled = !isToggled;
                 // Post action to be executed by the GUI main thread.
-                eventQueue()->postAction([&](){ toggled(isToggled); });
+                //eventQueue()->postAction([&](){ toggled(isToggled); });
                 // Or just call toggled(isToggled) directly to be
                 // executed by the thread executing this method.
                 // Anyway, mouseButtonPressEvent is executed only by GUI main thread.
@@ -56,7 +56,7 @@ private:
 
 class  PainterExample: public RkWidget {
   public:
-        PainterExample(RkMain *app)
+        PainterExample(RkMain& app)
                 : RkWidget(app)
                 , startDraw{false}
         {
@@ -66,12 +66,13 @@ class  PainterExample: public RkWidget {
                 button->setBackgroundColor(255, 30, 100);
                 RK_ACT_BIND(button, toggled, RK_ACT_ARGS(bool b), this, drawCircle(b));
                 button->show();
+                RK_LOG_DEV_DEBUG("called");
         }
 
         ~PainterExample() = default;
 
   protected:
-        void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
+        void paintEvent(RkPaintEvent* event) override
         {
                 RK_UNUSED(event);
                 RkPainter painter(this);
@@ -85,6 +86,7 @@ class  PainterExample: public RkWidget {
 
         void drawCircle(bool b)
         {
+                RK_LOG_DEV_DEBUG("called");
                 startDraw = b;
                 update();
         }
@@ -97,7 +99,7 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new PainterExample(&app);
+    auto widget = new PainterExample(app);
     widget->setTitle("Painter Example");
     widget->setSize(350, 350);
     widget->show();

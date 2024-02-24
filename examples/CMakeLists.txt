@@ -1,9 +1,10 @@
 set(RK_EXAMPLE_HELLO ON)
 set(RK_EXAMPLE_CHILD ON)
+set(RK_EXAMPLE_PAINTER ON)
+set(RK_EXAMPLE_ACTION ON)
+
 #set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 #set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
-#set(RK_EXAMPLES_SOURCES_PAINTER ${RK_EXAMPLES_PATH}/painter.cpp)
-#set(RK_EXAMPLES_SOURCES_ACTION ${RK_EXAMPLES_PATH}/action.cpp)
 #set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
 #set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
 #set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
@@ -82,28 +83,29 @@ endif(RK_EXAMPLE_LABEL)
 #target_link_libraries(widget_colors ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Painter Exmaple -------
-#add_executable(painter
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_PAINTER})
+if (RK_EXAMPLE_PAINTER)
+    add_executable(painter
+    ${RK_HEADERS}
+    ${RK_EXAMPLES_PATH}/painter.cpp)
 
-#add_dependencies(painter redkite)
-#target_link_libraries(painter redkite)
-#if (CMAKE_SYSTEM_NAME MATCHES Windows)
-# target_link_libraries(painter "-mwindows -lstdc++ -lm -lcairo")
-#else ()
-# target_link_libraries(painter ${RK_LINK_}"-lX11 -lrt -lm -ldl")
-# target_link_libraries(painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-#endif()
-# ------------ Action Exmaple -------
+    add_dependencies(painter redkite)
+    target_link_libraries(painter redkite)
+    if (CMAKE_SYSTEM_NAME MATCHES Windows)
+        target_link_libraries(painter "-mwindows -lstdc++ -lm -lcairo")
+    else ()
+       target_link_libraries(painter "-lX11 -lcairo -lpthread -lrt -lm -ldl")
+    endif()
+endif(RK_EXAMPLE_PAINTER)
 
-#add_executable(action
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_ACTION})
-
-#add_dependencies(action redkite)
-#target_link_libraries(action redkite)
-#target_link_libraries(action "-lX11 -lrt -lm -ldl")
-#target_link_libraries(action ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+# ------------ Action Example -------
+if (RK_EXAMPLE_ACTION)
+   add_executable(action
+    ${RK_HEADERS}
+    ${RK_EXAMPLES_PATH}/action.cpp)
+   add_dependencies(action redkite)
+   target_link_libraries(action redkite)
+   target_link_libraries(action "-lX11 -lcairo -lpthread -lrt -lm -ldl")
+ endif(RK_EXAMPLE_ACTION)
 
 
 # ------------ Dialog example -------

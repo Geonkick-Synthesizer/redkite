@@ -186,7 +186,6 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                RK_LOG_DEBUG("RkEvent::Type::MouseButtonPress: " << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
                 break;
@@ -246,7 +245,6 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
-        //        std::cout << "RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)" << std::endl;
         RkPainter painter(inf_ptr);
         painter.translate(position());
         auto pen =  painter.pen();
@@ -254,7 +252,6 @@ void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
         pen.setColor({0, 255, 0});
         painter.setPen(pen);
         painter.fillRect(rect(), background());
-        painter.drawRect(rect()/*, background()*/);
         inf_ptr->paintEvent(event);
         processChildrenEvents(event);
         painter.translate({-position().x(), -position().y()});

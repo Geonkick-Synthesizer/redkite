@@ -29,7 +29,7 @@
 
 static void setRandomColor(RkWidget* widget)
 {
-        int red = rand() % 151 + 50;     
+        int red = rand() % 151 + 50;
         int green = rand() % 151 + 50;
         int blue = rand() % 151 + 50;
 
@@ -39,7 +39,7 @@ static void setRandomColor(RkWidget* widget)
 
 static void drawChildren(RkWidget* parent, int l)
 {
-        if (l > 1)
+        if (l > 2)
                 return;
         auto wCh = parent->width() / 10;
         auto hCh = parent->height() / 10;

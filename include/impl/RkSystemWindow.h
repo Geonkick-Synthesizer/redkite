@@ -113,6 +113,11 @@ public:
         void focusEvent(RkFocusEvent *event);
         void hoverEvent(RkHoverEvent *event);
 
+protected:
+        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> processMouseEvent(const RkMouseEvent* event);
+        RkWidget* getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &p) const;
+        bool containsPoint(RkWidget* widget, const RkPoint &p) const;
+
 private:
         bool isWindowClosed;
         RkWidget *topWidget;

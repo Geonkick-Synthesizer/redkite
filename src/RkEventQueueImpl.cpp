@@ -257,11 +257,33 @@ void RkEventQueue::RkEventQueueImpl::processTimers()
         }
 }
 
+void RkEventQueue::RkEventQueueImpl::processActions()
+{
+        decltype(actionsQueue) q;
+        {
+                std::lock_guard<std::mutex> lock(actionsQueueMutex);
+                /**
+                 * Moving actions in a separeted queue for processing
+                 * because during the processing the execution of some actions
+                 * may add new actions into the queue and this for
+                 * in some cases can lead to a infinite looping.
+                 */
+                q = std::move(actionsQueue);
+        }
+
+        for (const auto &act: q) {
+                // Do not process actions for objects that were removed from the event queue.
+                if (!act->object() || objectExists(act->object())) {
+                        act->call();
+                }
+        }
+}
+
 void RkEventQueue::RkEventQueueImpl::processQueue()
 {
         // The order is important.
-        //processTimers();
-        //        processActions();
+        processTimers();
+        processActions();
         processEvents();
 }
 

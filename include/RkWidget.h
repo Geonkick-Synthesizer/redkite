@@ -131,9 +131,9 @@ class RkWidget: public RkObject, public RkCanvas {
         bool hasFocus() const;
         void setPointerShape(Rk::PointerShape shape);
         Rk::PointerShape pointerShape() const;
-        bool pointerIsOverWindow() const;
+        bool pointerIsOver() const;
         bool isChild(RkWidget *widget);
-        
+
  protected:
         RK_DECLARE_IMPL_PTR(RkWidget);
         RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl);
