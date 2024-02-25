@@ -68,10 +68,10 @@ class RkButton: public RkWidget {
 
  protected:
         RK_DECLARE_IMPL_PTR(RkButton);
-        virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
-        virtual void mouseButtonReleaseEvent(RkMouseEvent *event) override;
-        virtual void hoverEvent(RkHoverEvent *event) override;
-        virtual void paintEvent(RkPaintEvent *event) override;
+        void mouseButtonPressEvent(RkMouseEvent *event) override;
+        void mouseButtonReleaseEvent(RkMouseEvent *event) override;
+        void hoverEvent(RkHoverEvent *event) override;
+        void paintEvent(RkPaintEvent *event) override;
 
  private:
         RK_DISABLE_COPY(RkButton);

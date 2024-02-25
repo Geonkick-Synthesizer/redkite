@@ -171,9 +171,9 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 break;
         }
         case RkEvent::Type::MouseButtonPress:
-        case RkEvent::Type::MouseButtonRelease:
-        case RkEvent::Type::MouseMove:
-        case RkEvent::Type::MouseDoubleClick:
+                //        case RkEvent::Type::MouseButtonRelease:
+                //        case RkEvent::Type::MouseMove:
+                //        case RkEvent::Type::MouseDoubleClick:
                 return processMouseEvent(static_cast<const RkMouseEvent*>(event));
         case RkEvent::Type::Resize:
         {

@@ -248,7 +248,7 @@ void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
         RkPainter painter(inf_ptr);
         auto globalPosition = inf_ptr->mapToGlobal({0, 0});
         painter.translate(globalPosition);
-        painter.fillRect(RkRect({0, 0}, rect().size()), background());
+        painter.fillRect(rect(), background());
         inf_ptr->paintEvent(event);
         painter.translate({-globalPosition.x(), -globalPosition.y()});
         processChildrenEvents(event);
@@ -342,7 +342,7 @@ const RkColor& RkWidget::RkWidgetImpl::background() const
 
 RkRect RkWidget::RkWidgetImpl::rect() const
 {
-        return RkRect(position(), size());
+        return RkRect({0, 0}, size());
 }
 
 void RkWidget::RkWidgetImpl::update(bool updateChildren)

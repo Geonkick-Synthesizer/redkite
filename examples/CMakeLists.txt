@@ -2,11 +2,11 @@ set(RK_EXAMPLE_HELLO ON)
 set(RK_EXAMPLE_CHILD ON)
 set(RK_EXAMPLE_PAINTER ON)
 set(RK_EXAMPLE_ACTION ON)
+set(RK_EXAMPLE_TIMER ON)
 
 #set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 #set(RK_EXAMPLES_SOURCES_WIDGET_COLORS ${RK_EXAMPLES_PATH}/widget_colors.cpp)
 #set(RK_EXAMPLES_SOURCES_DIALOG ${RK_EXAMPLES_PATH}/dialog.cpp)
-#set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
 #set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 #set(RK_EXAMPLES_SOURCES_LINEEDIT ${RK_EXAMPLES_PATH}/lineedit.cpp)
 
@@ -120,15 +120,14 @@ if (RK_EXAMPLE_ACTION)
 #target_link_libraries(dialog ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Timer example -------
-
-#add_executable(timer
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_TIMER})
-
-#add_dependencies(timer redkite)
-#target_link_libraries(timer redkite)
-#target_link_libraries(timer "-lX11 -lrt -lm -ldl")
-#target_link_libraries(timer ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+if (RK_EXAMPLE_TIMER)
+add_executable(timer
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_PATH}/timer.cpp)
+add_dependencies(timer redkite)
+target_link_libraries(timer redkite)
+target_link_libraries(timer "-lX11 -lcairo -lpthread -lrt -lm -ldl")
+endif(RK_EXAMPLE_TIMER)
 
 # ------------ KeyEvent example -------
 
