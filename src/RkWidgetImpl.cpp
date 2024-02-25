@@ -246,24 +246,19 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
         RkPainter painter(inf_ptr);
-        painter.translate(position());
-        auto pen =  painter.pen();
-        pen.setWidth(1);
-        pen.setColor({0, 255, 0});
-        painter.setPen(pen);
-        painter.fillRect(rect(), background());
+        auto globalPosition = inf_ptr->mapToGlobal({0, 0});
+        painter.translate(globalPosition);
+        painter.fillRect(RkRect({0, 0}, rect().size()), background());
         inf_ptr->paintEvent(event);
+        painter.translate({-globalPosition.x(), -globalPosition.y()});
         processChildrenEvents(event);
-        painter.translate({-position().x(), -position().y()});
 }
 
 void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
 {
-        RK_LOG_DEBUG(title() << ": called");
         for (auto &ch: inf_ptr->children()) {
                 auto widget = dynamic_cast<RkWidget*>(ch);
                 if (widget) {
-                        RK_LOG_DEBUG("event: " << widget->title());
                         RK_IMPL_PTR(widget)->event(event);
                 }
         }
@@ -347,7 +342,7 @@ const RkColor& RkWidget::RkWidgetImpl::background() const
 
 RkRect RkWidget::RkWidgetImpl::rect() const
 {
-        return RkRect(RkPoint(0, 0), size());
+        return RkRect(position(), size());
 }
 
 void RkWidget::RkWidgetImpl::update(bool updateChildren)

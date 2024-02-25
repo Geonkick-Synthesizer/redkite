@@ -2,7 +2,7 @@
  * File name: RkWidget.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor 
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -131,8 +131,10 @@ class RkWidget: public RkObject, public RkCanvas {
         bool hasFocus() const;
         void setPointerShape(Rk::PointerShape shape);
         Rk::PointerShape pointerShape() const;
-        bool pointerIsOver() const;
+        bool pointerIsOverWindow() const;
         bool isChild(RkWidget *widget);
+        RkPoint mapToGlobal(const RkPoint& p) const;
+        RkPoint mapToLocal(const RkPoint& p) const;
 
  protected:
         RK_DECLARE_IMPL_PTR(RkWidget);

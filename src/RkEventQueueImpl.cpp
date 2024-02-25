@@ -157,7 +157,7 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 auto systemEvents = platformEventQueue->getEvents();
                 for (auto &event: systemEvents) {
                         auto [widget, widgetEvent] = systemWindow->processEvent(event.get());
-                        if (widget)
+                        if (widget && widgetEvent)
                                 postEvent(widget, std::move(widgetEvent));
                 }
         }

@@ -28,11 +28,7 @@
 
 class RkPoint {
 public:
-        constexpr RkPoint() : xValue{0}, yValue{0}
-        {
-        }
-
-        constexpr RkPoint(int x, int y) : xValue{x}, yValue{y}
+        constexpr RkPoint(int x  = 0, int y = 0) : xValue{x}, yValue{y}
         {
         }
 

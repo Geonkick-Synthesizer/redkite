@@ -455,6 +455,7 @@ void RkWidget::mouseMoveEvent(RkMouseEvent *event)
 
 void RkWidget::mouseButtonPressEvent(RkMouseEvent *event)
 {
+        RK_LOG_DEV_DEBUG(title() << ": " << event->point().x() << ", y: " << event->point().y());
         RK_UNUSED(event);
 }
 
@@ -599,3 +600,16 @@ bool RkWidget::isChild(RkWidget *widget)
         }
         return false;
 }
+
+RkPoint RkWidget::mapToGlobal(const RkPoint& p) const
+{
+        return impl_ptr->isTopWidget() ? p + position()
+                : p + parentWidget()->mapToGlobal(position());
+}
+
+RkPoint RkWidget::mapToLocal(const RkPoint& p) const
+{
+        return impl_ptr->isTopWidget() ? p - position()
+                : p - parentWidget()->mapToGlobal(position());
+}
+

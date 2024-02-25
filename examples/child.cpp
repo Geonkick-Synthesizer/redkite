@@ -39,21 +39,18 @@ static void setRandomColor(RkWidget* widget)
 
 static void drawChildren(RkWidget* parent, int l)
 {
-        if (l > 2)
+        if (l > 1)
                 return;
         auto wCh = parent->width() / 10;
         auto hCh = parent->height() / 10;
-        std::cout << "parent->width(): " << parent->width() << std::endl;
-        std::cout << "wCh: " << wCh << std::endl;
-        size_t n = 0;
-        for (int y = 0; y < parent->height(); y += hCh + 5) {
-                for (int x = 0; x < parent->width(); x += wCh + 5) {
-                        std::cout << "x: " << x << std::endl;
-                        std::cout << "n: " << n++ << std::endl;
+        for (int y = 0; y < parent->height() -  hCh - 1; y += hCh + 1) {
+                for (int x = 0; x < parent->width() - wCh - 1; x += wCh + 1) {
                         auto child = new RkWidget(parent);
                         setRandomColor(child);
-                        child->setTitle("Child[" + std::to_string(x) + std::to_string(y) + "] - " + std::to_string(l));
+                        child->setTitle("Child[" + std::to_string(x) + ":" + std::to_string(y) + "] - " + std::to_string(l));
                         child->setSize(wCh, hCh);
+                        RK_LOG_DEV_DEBUG("x:" << x);
+                        RK_LOG_DEV_DEBUG("y:" << y);
                         child->setPosition(x, y);
                         child->show();
                         drawChildren(child, l + 1);
@@ -68,9 +65,27 @@ int main(int arc, char **argv)
         // Create main window.
         auto mainWindow = new RkWidget(app);
         mainWindow->setTitle("Main Window");
-        mainWindow->setSize(800, 600);
+        mainWindow->setSize(1500, 900);
+
+        /*        auto child = new RkWidget(mainWindow);
+        child->setTitle("Child - 0");
+        child->setSize(200, 200);
+        child->setPosition(100, 100);
+        child->setBackgroundColor(255, 0, 0);
+        child->show();
+
+        auto child1 = new RkWidget(child);
+        child1->setTitle("Child - 1");
+        child1->setSize(20, 20);
+        child1->setPosition(10, 10);
+        child1->setBackgroundColor(0, 255, 0);
+        child1->show();*/
+
+
+
+
         //        mainWindow->setBackgroundColor(80, 150, 80);
-        drawChildren(mainWindow, 1);
+                drawChildren(mainWindow, 0);
 
         /*        int x = 10;
         int y = 10;

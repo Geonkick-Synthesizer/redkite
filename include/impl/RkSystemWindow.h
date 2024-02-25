@@ -115,8 +115,8 @@ public:
 
 protected:
         std::tuple<RkWidget*, std::unique_ptr<RkEvent>> processMouseEvent(const RkMouseEvent* event);
-        RkWidget* getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &p) const;
-        bool containsPoint(RkWidget* widget, const RkPoint &p) const;
+        RkWidget* getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &globalPoint);
+        bool containsGlobalPoint(RkWidget* widget, const RkPoint &globalPoint) const;
 
 private:
         bool isWindowClosed;

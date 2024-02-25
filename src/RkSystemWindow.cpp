@@ -171,6 +171,9 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 break;
         }
         case RkEvent::Type::MouseButtonPress:
+        case RkEvent::Type::MouseButtonRelease:
+        case RkEvent::Type::MouseMove:
+        case RkEvent::Type::MouseDoubleClick:
                 return processMouseEvent(static_cast<const RkMouseEvent*>(event));
         case RkEvent::Type::Resize:
         {
@@ -186,31 +189,31 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 break;
         }
 
-        return ;
+        return {nullptr, nullptr};
 }
 
 std::tuple<RkWidget*, std::unique_ptr<RkEvent>> RkSystemWindow::processMouseEvent(const RkMouseEvent* event)
 {
         auto widget = getWidgetByGlobalPoint(topWidget, event->point());
         auto mouseEvent = std::make_unique<RkMouseEvent>();
-        mouseEvent->setPoint(widget->mapFromGlobal(event->point()));
+        mouseEvent->setPoint(widget->mapToLocal(event->point()));
         mouseEvent->setButton(event->button());
         return {widget, std::move(mouseEvent)};
 }
 
-bool RkSystemWindow::containsPoint(RkWidget* widget, const RkPoint &p) const
+bool RkSystemWindow::containsGlobalPoint(RkWidget* widget, const RkPoint &globalPoint) const
 {
-        auto globalTopLeft = widget->mapFromGlobal(widget->position());
-        aito globalBottomRight = globalTopLeft + {widget->width(), widget->height()};
-        return RkRect(globalTopLeft, globalBottomRight).contains(p);
+        auto globalTopLeft = widget->mapToGlobal({0, 0});
+        auto globalBottomRight = globalTopLeft + RkPoint(widget->width(), widget->height());
+        return RkRect(globalTopLeft, globalBottomRight).contains(globalPoint);
 }
 
-RkWidget* RkSystemWindow::getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &p)
+RkWidget* RkSystemWindow::getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &globalPoint)
 {
         for (auto &child: widget->children()) {
                 auto childWidget = dynamic_cast<RkWidget*>(child);
-                if (containsPoint(childWidget, p))
-                        return getWidgetByGlobalPoint(childWidget, p);
+                if (childWidget && containsGlobalPoint(childWidget, globalPoint))
+                        return getWidgetByGlobalPoint(childWidget, globalPoint);
         }
         return widget;
 }
