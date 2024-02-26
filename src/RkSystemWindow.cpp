@@ -56,6 +56,7 @@ RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* paren
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
         , hoverWidget{nullptr}
+        , mouseCaptureWidget{nullptr}
 {
         platformWindow->init();
 }
@@ -161,7 +162,7 @@ RkSystemWindow::processEvent(const RkEvent *event)
 {
         if (!topWidget->isShown())
                 return {};
-        
+
         switch(event->type()) {
         case RkEvent::Type::Close:
         {
@@ -203,7 +204,15 @@ RkSystemWindow::processEvent(const RkEvent *event)
 RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseEvent* event)
 {
         WidgetEventList events;
-        auto widget = getWidgetByGlobalPoint(topWidget, event->point());
+        RkWidget *widget = nullptr;
+        if (mouseCaptureWidget)
+                widget = mouseCaptureWidget;
+        else
+                widget = getWidgetByGlobalPoint(topWidget, event->point());
+        
+        if (event->type() == RkEvent::Type::MouseButtonPress)
+                mouseCaptureWidget = widget;
+
         auto mouseEvent = std::make_unique<RkMouseEvent>();
         mouseEvent->setType(event->type());
         mouseEvent->setButton(event->button());
@@ -221,6 +230,10 @@ RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseE
                 events.emplace_back(std::make_pair(widget, std::move(hoverEvent)));
                 hoverWidget = widget;
         }
+
+        if (event->type() == RkEvent::Type::MouseButtonRelease)
+                mouseCaptureWidget = nullptr;
+
         return events;
 }
 

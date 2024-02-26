@@ -138,6 +138,7 @@ private:
         bool isPropagateGrabKey;
         RkImage systemWindowImage;
         RkWidget *hoverWidget;
+        RkWidget *mouseCaptureWidget;
 };
 
 #endif // RK_SYSTEM_WINDOW_H
