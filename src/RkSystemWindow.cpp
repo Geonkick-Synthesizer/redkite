@@ -171,9 +171,9 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 break;
         }
         case RkEvent::Type::MouseButtonPress:
-                //        case RkEvent::Type::MouseButtonRelease:
-                //        case RkEvent::Type::MouseMove:
-                //        case RkEvent::Type::MouseDoubleClick:
+        case RkEvent::Type::MouseButtonRelease:
+        case RkEvent::Type::MouseMove:
+        case RkEvent::Type::MouseDoubleClick:
                 return processMouseEvent(static_cast<const RkMouseEvent*>(event));
         case RkEvent::Type::Resize:
         {
@@ -196,8 +196,9 @@ std::tuple<RkWidget*, std::unique_ptr<RkEvent>> RkSystemWindow::processMouseEven
 {
         auto widget = getWidgetByGlobalPoint(topWidget, event->point());
         auto mouseEvent = std::make_unique<RkMouseEvent>();
-        mouseEvent->setPoint(widget->mapToLocal(event->point()));
+        mouseEvent->setType(event->type());
         mouseEvent->setButton(event->button());
+        mouseEvent->setPoint(widget->mapToLocal(event->point()));
         return {widget, std::move(mouseEvent)};
 }
 

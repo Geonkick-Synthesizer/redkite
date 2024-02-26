@@ -89,9 +89,15 @@ RkEventQueueX::getEvents()
                         event = getButtonPressEvent(&e);
                         break;
                 case ButtonRelease:
-                        event = std::make_unique<RkMouseEvent>();
-                        event->setType(RkEvent::Type::MouseButtonRelease);
+                {
+                        auto mouseEvent = std::make_unique<RkMouseEvent>();
+                        auto buttonEvent = reinterpret_cast<XButtonEvent*>(&e);
+                        mouseEvent->setX(static_cast<double>(buttonEvent->x / scaleFactor));
+                        mouseEvent->setY(static_cast<double>(buttonEvent->y / scaleFactor));
+                        mouseEvent->setType(RkEvent::Type::MouseButtonRelease);
+                        event = std::move(mouseEvent);
                         break;
+                }
                 case MotionNotify:
                         event = getMouseMove(&e);
                         break;
