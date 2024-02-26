@@ -65,6 +65,8 @@ RkSystemWindow* RkEventQueue::RkEventQueueImpl::setTopWidget(RkWidget *widget,
 #else
                 platformEventQueue->setDisplay(systemWindow->nativeWindowInfo()->display);
 #endif
+                addObject(widget);
+                RK_IMPL_PTR(widget)->setSystemWindow(systemWindow.get());
         }
         return systemWindow.get();
 }
@@ -141,8 +143,10 @@ void RkEventQueue::RkEventQueueImpl::removeObjectShortcuts(RkObject *obj)
 
 void RkEventQueue::RkEventQueueImpl::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
-        std::lock_guard<std::mutex> lock(eventsQueueMutex);
-        eventsQueue.push_back({obj, std::move(event)});
+        if (obj && event && objectExists(obj)) {
+                std::lock_guard<std::mutex> lock(eventsQueueMutex);
+                eventsQueue.push_back({obj, std::move(event)});
+        }
 }
 
 void RkEventQueue::RkEventQueueImpl::processSystemEvent(std::unique_ptr<RkEvent> event)
@@ -156,9 +160,11 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
         if (systemWindow) {
                 auto systemEvents = platformEventQueue->getEvents();
                 for (auto &event: systemEvents) {
-                        auto [widget, widgetEvent] = systemWindow->processEvent(event.get());
-                        if (widget && widgetEvent)
-                                postEvent(widget, std::move(widgetEvent));
+                        auto widgetEvents = systemWindow->processEvent(event.get());
+                        for (auto &e: widgetEvents) {
+                                if (e.first && e.first->isShown() && e.second)
+                                        postEvent(e.first, std::move(e.second));
+                        }
                 }
         }
         /**

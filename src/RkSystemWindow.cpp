@@ -55,6 +55,7 @@ RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* paren
         , windowBackground{platformWindow->background()}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
+        , hoverWidget{nullptr}
 {
         platformWindow->init();
 }
@@ -155,17 +156,23 @@ bool RkSystemWindow::propagateGrabKeyEnabled() const
         return false;
 }
 
-std::tuple<RkWidget*, std::unique_ptr<RkEvent>>
+RkSystemWindow::WidgetEventList
 RkSystemWindow::processEvent(const RkEvent *event)
 {
+        if (!topWidget->isShown())
+                return {};
+        
         switch(event->type()) {
         case RkEvent::Type::Close:
+        {
                 RK_LOG_DEBUG("RkEvent::Type::Close");
-                return {topWidget, std::make_unique<RkCloseEvent>()};
+                WidgetEventList events;
+                events.emplace_back(std::make_pair(topWidget, std::make_unique<RkCloseEvent>()));
+                return events;
+        }
         case RkEvent::Type::Paint:
         {
                 RK_LOG_DEBUG("RkEvent::Type::Paint");
-                //                std::cout << "RkEvent::Type::Paint: " << systemWindowImage.width() << std::endl;
                 RkPainter painter(this);
                 painter.drawImage(systemWindowImage, 0, 0);
                 break;
@@ -180,26 +187,41 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 platformWindow->resizeCanvas();
                 systemWindowImage = RkImage(platformWindow->size());
                 systemWindowImage.fill(platformWindow->background());
-                //std::cout << "RkEvent::Type::Resize: " << systemWindowImage.width() << std::endl;
                 RK_IMPL_PTR(topWidget)->update(true);
-                return {topWidget, std::make_unique<RkResizeEvent>()};
+                WidgetEventList events;
+                events.emplace_back(std::make_pair(topWidget, std::make_unique<RkResizeEvent>()));
+                return events;
         }
         default:
                 RK_LOG_DEBUG("unknown event");
                 break;
         }
 
-        return {nullptr, nullptr};
+        return {};
 }
 
-std::tuple<RkWidget*, std::unique_ptr<RkEvent>> RkSystemWindow::processMouseEvent(const RkMouseEvent* event)
+RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseEvent* event)
 {
+        WidgetEventList events;
         auto widget = getWidgetByGlobalPoint(topWidget, event->point());
         auto mouseEvent = std::make_unique<RkMouseEvent>();
         mouseEvent->setType(event->type());
         mouseEvent->setButton(event->button());
         mouseEvent->setPoint(widget->mapToLocal(event->point()));
-        return {widget, std::move(mouseEvent)};
+        events.emplace_back(std::make_pair(widget, std::move(mouseEvent)));
+        if (widget != hoverWidget) {
+                std::unique_ptr<RkHoverEvent> hoverEvent;
+                if (hoverWidget) {
+                        hoverEvent = std::make_unique<RkHoverEvent>();
+                        hoverEvent->setHover(false);
+                        events.emplace_back(std::make_pair(hoverWidget, std::move(hoverEvent)));
+                }
+                hoverEvent = std::make_unique<RkHoverEvent>();
+                hoverEvent->setHover(true);
+                events.emplace_back(std::make_pair(widget, std::move(hoverEvent)));
+                hoverWidget = widget;
+        }
+        return events;
 }
 
 bool RkSystemWindow::containsGlobalPoint(RkWidget* widget, const RkPoint &globalPoint) const
@@ -213,7 +235,8 @@ RkWidget* RkSystemWindow::getWidgetByGlobalPoint(RkWidget *widget, const RkPoint
 {
         for (auto &child: widget->children()) {
                 auto childWidget = dynamic_cast<RkWidget*>(child);
-                if (childWidget && containsGlobalPoint(childWidget, globalPoint))
+                if (childWidget && childWidget->isShown()
+                    && containsGlobalPoint(childWidget, globalPoint))
                         return getWidgetByGlobalPoint(childWidget, globalPoint);
         }
         return widget;

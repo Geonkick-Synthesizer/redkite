@@ -24,7 +24,6 @@
 #include "RkWidgetImpl.h"
 #include "RkEvent.h"
 #include "RkPainter.h"
-#include "RkMainImpl.h"
 #include "RkSystemWindow.h"
 #include "RkEventQueueImpl.h"
 
@@ -48,9 +47,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
-        systemWindow = RK_IMPL_PTR(mainApp)->setTopWidget(inf_ptr, parent);
-        setEventQueue(RK_IMPL_PTR(mainApp)->getEventQueue());
-        update();
 }
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
@@ -72,8 +68,6 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isPropagateGrabKey{true}
 {
         RK_LOG_DEBUG("called");
-        setEventQueue(parent->eventQueue());
-        update();
 }
 
 RkWidget::RkWidgetImpl::~RkWidgetImpl()
@@ -84,6 +78,11 @@ RkWidget::RkWidgetImpl::~RkWidgetImpl()
 bool RkWidget::RkWidgetImpl::isTopWidget() const
 {
         return topWidget;
+}
+
+void RkWidget::RkWidgetImpl::setSystemWindow(RkSystemWindow *window)
+{
+        systemWindow = window;
 }
 
 RkSystemWindow* RkWidget::RkWidgetImpl::getSystemWindow() const

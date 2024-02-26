@@ -59,6 +59,7 @@ class RkWindowX;
 
 class RkSystemWindow: public RkCanvas {
 public:
+        using WidgetEventList = std::vector<std::pair<RkWidget*, std::unique_ptr<RkEvent>>>;
         explicit RkSystemWindow(RkWidget *widget,
                                 const RkNativeWindowInfo *parent);
         virtual ~RkSystemWindow();
@@ -93,7 +94,7 @@ public:
         Rk::PointerShape pointerShape() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
-        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> processEvent(const RkEvent *event);
+        WidgetEventList processEvent(const RkEvent *event);
         void event(RkEvent *event);
         void closeEvent(RkCloseEvent *event);
         void keyPressEvent(RkKeyEvent *event);
@@ -114,7 +115,7 @@ public:
         void hoverEvent(RkHoverEvent *event);
 
 protected:
-        std::tuple<RkWidget*, std::unique_ptr<RkEvent>> processMouseEvent(const RkMouseEvent* event);
+        WidgetEventList processMouseEvent(const RkMouseEvent* event);
         RkWidget* getWidgetByGlobalPoint(RkWidget *widget, const RkPoint &globalPoint);
         bool containsGlobalPoint(RkWidget* widget, const RkPoint &globalPoint) const;
 
@@ -136,6 +137,7 @@ private:
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
         RkImage systemWindowImage;
+        RkWidget *hoverWidget;
 };
 
 #endif // RK_SYSTEM_WINDOW_H

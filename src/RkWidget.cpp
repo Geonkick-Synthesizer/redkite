@@ -27,12 +27,15 @@
 #include "RkWidgetImpl.h"
 #include "RkPlatform.h"
 #include "RkMain.h"
+#include "RkMainImpl.h"
 
 RkWidget::RkWidget(RkMain& mainApp, Rk::WidgetFlags flags)
         : RkObject(nullptr, std::make_unique<RkWidgetImpl>(this, &mainApp, nullptr, flags))
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
+        RK_IMPL_PTR((&mainApp))->setTopWidget(this, nullptr);
+        update();
 }
 
 RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::WidgetFlags flags)
@@ -40,6 +43,8 @@ RkWidget::RkWidget(RkMain& mainApp, const RkNativeWindowInfo &parent, Rk::Widget
         , impl_ptr{static_cast<RkWidgetImpl*>(o_ptr.get())}
 {
         RK_LOG_DEBUG("called: " << this);
+        RK_IMPL_PTR((&mainApp))->setTopWidget(this, &parent);
+        update();
 }
 
 RkWidget::RkWidget(RkWidget *parent, Rk::WidgetFlags flags)
@@ -54,6 +59,7 @@ RkWidget::RkWidget(RkWidget *parent, Rk::WidgetFlags flags)
                 else if (parentWidget() && modality() == Rk::Modality::ModalParent)
                         parentWidget()->disableInput();
         }
+        update();
 }
 
 RkWidget::RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl)
