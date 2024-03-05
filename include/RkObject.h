@@ -51,7 +51,7 @@ class RkObject {
         RK_DECLARE_O_PTR(RkObject);
         explicit RkObject(RkObject *parent, std::unique_ptr<RkObjectImpl> impl);
         void rk__add_observer(std::unique_ptr<RkObserver> observer);
-        const std::vector<std::unique_ptr<RkObserver>>& rk__observers() const;
+        const std::list<std::unique_ptr<RkObserver>>& rk__observers() const;
 
  private:
         void addChild(RkObject *child);

@@ -57,7 +57,7 @@ RkWindowWin::~RkWindowWin()
                 DestroyWindow(windowHandle.id);
 }
 
-Rk::WindowFlags RkWindowWin::flags() const
+Rk::WidgetFlags RkWindowWin::flags() const
 {
         return windowFlags;
 }
@@ -73,7 +73,7 @@ bool RkWindowWin::init()
         auto className = hasParent() ? parentWindowInfo.className : rk_win_api_class_name();
         RK_LOG_DEBUG("className: " << className);
         auto winStyle = hasParent() ? (WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE) : (WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN);
-        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WindowFlags::Popup))
+        if (static_cast<int>(windowFlags) & static_cast<int>(Rk::WidgetFlags::Popup))
                 winStyle = WS_POPUP | WS_CLIPCHILDREN | WS_VISIBLE;
         auto pos = position();
         auto winSize = size();

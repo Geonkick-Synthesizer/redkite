@@ -33,7 +33,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type Release" FORCE)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS} -fvisibility=hidden")
 
@@ -101,6 +101,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkButton.h
+  ${RK_INCLUDE_PATH}/RkSpinBox.h
   ${RK_INCLUDE_PATH}/RkLineEdit.h
   ${RK_INCLUDE_PATH}/RkList.h
   ${RK_INCLUDE_PATH}/RkProgressBar.h
@@ -125,6 +126,7 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkListImpl.h
   ${RK_INCLUDE_PATH}/impl/RkModelImpl.h
   ${RK_INCLUDE_PATH}/impl/RkButtonImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkSpinBoxImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
@@ -171,6 +173,8 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkModelImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
+  ${RK_SRC_PATH}/RkSpinBox.cpp
+  ${RK_SRC_PATH}/RkSpinBoxImpl.cpp
   ${RK_SRC_PATH}/RkButton.cpp
   ${RK_SRC_PATH}/RkButtonImpl.cpp
   ${RK_SRC_PATH}/RkLineEdit.cpp
