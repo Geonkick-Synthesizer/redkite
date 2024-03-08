@@ -2,7 +2,7 @@
  * File name: RkWidgetImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor 
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -123,8 +123,12 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 void RkWidget::RkWidgetImpl::show(bool b)
 {
 	isWidgetShown = b;
-        if (isTopWidget())
+        if (isTopWidget()) {
                 systemWindow->show(isWidgetShown);
+        } else {
+                RK_IMPL_PTR(getEventQueue())->postEvent(parent(), std::move(std::make_unique<RkPaintEvent>()));
+        }
+
 }
 
 bool RkWidget::RkWidgetImpl::isShown() const
@@ -220,6 +224,9 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 	case RkEvent::Type::Show:
 		isWidgetShown = true;
                 inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
+                if (!isTopWidget()) {
+                        RK_IMPL_PTR(getEventQueue())->postEvent(parent(), std::move(std::make_unique<RkPaintEvent>()));
+                }
                 break;
 	case RkEvent::Type::Hide:
 		isWidgetShown = false;
@@ -258,7 +265,7 @@ void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
 {
         for (auto &ch: inf_ptr->children()) {
                 auto widget = dynamic_cast<RkWidget*>(ch);
-                if (widget) {
+                if (widget && widget->isShown()) {
                         RK_IMPL_PTR(widget)->event(event);
                 }
         }

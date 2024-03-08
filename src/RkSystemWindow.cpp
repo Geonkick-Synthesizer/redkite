@@ -210,26 +210,32 @@ RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseE
                 widget = mouseCaptureWidget;
         else
                 widget = getWidgetByGlobalPoint(topWidget, event->point());
-        
+
         if (event->type() == RkEvent::Type::MouseButtonPress)
                 mouseCaptureWidget = widget;
 
-        auto mouseEvent = std::make_unique<RkMouseEvent>();
-        mouseEvent->setType(event->type());
-        mouseEvent->setButton(event->button());
-        mouseEvent->setPoint(widget->mapToLocal(event->point()));
-        events.emplace_back(std::make_pair(widget, std::move(mouseEvent)));
+        if (widget->isShown()) {
+                auto mouseEvent = std::make_unique<RkMouseEvent>();
+                mouseEvent->setType(event->type());
+                mouseEvent->setButton(event->button());
+                mouseEvent->setPoint(widget->mapToLocal(event->point()));
+                events.emplace_back(std::make_pair(widget, std::move(mouseEvent)));
+        }
+
         if (widget != hoverWidget) {
                 std::unique_ptr<RkHoverEvent> hoverEvent;
-                if (hoverWidget) {
+                if (hoverWidget && hoverWidget->isShown()) {
                         hoverEvent = std::make_unique<RkHoverEvent>();
                         hoverEvent->setHover(false);
                         events.emplace_back(std::make_pair(hoverWidget, std::move(hoverEvent)));
                 }
-                hoverEvent = std::make_unique<RkHoverEvent>();
-                hoverEvent->setHover(true);
-                events.emplace_back(std::make_pair(widget, std::move(hoverEvent)));
-                hoverWidget = widget;
+
+                if (widget->isShown()) {
+                        hoverEvent = std::make_unique<RkHoverEvent>();
+                        hoverEvent->setHover(true);
+                        events.emplace_back(std::make_pair(widget, std::move(hoverEvent)));
+                        hoverWidget = widget;
+                }
         }
 
         if (event->type() == RkEvent::Type::MouseButtonRelease)
