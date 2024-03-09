@@ -155,7 +155,8 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
         switch (event->type())
         {
         case RkEvent::Type::Paint:
-                processPaintEvent(static_cast<RkPaintEvent*>(event));
+                if (isVisible())
+                        processPaintEvent(static_cast<RkPaintEvent*>(event));
                 break;
         case RkEvent::Type::KeyPressed:
                 RK_LOG_DEBUG("RkEvent::Type::KeyPressed: " << title());
@@ -244,7 +245,7 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
         if (!name().empty())
-                RK_LOG_DEV_DEBUG("name :" << name());
+                RK_LOG_DEV_DEBUG("name :" << name() << ", visible: " <<  isVisible());
         RkPainter painter(inf_ptr);
         auto globalPosition = inf_ptr->mapToGlobal({0, 0});
         painter.translate(globalPosition);

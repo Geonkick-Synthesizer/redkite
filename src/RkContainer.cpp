@@ -28,7 +28,7 @@ RkContainer::RkContainer(RkWidget *parent, Rk::Orientation orientation)
 	: RkContainerItem(parent, ItemType::ItemContainer)
 	, containerOrientation{orientation}
 	, itemSpacing{0}
-        , isHiddenTakesPlace{false}
+        , isHiddenTakesPlace{true}
 {
 	setSize(parent->size());
 }
