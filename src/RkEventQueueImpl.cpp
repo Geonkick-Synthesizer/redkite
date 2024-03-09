@@ -162,7 +162,7 @@ void RkEventQueue::RkEventQueueImpl::processEvents()
                 for (auto &event: systemEvents) {
                         auto widgetEvents = systemWindow->processEvent(event.get());
                         for (auto &e: widgetEvents) {
-                                if (e.first && e.first->isShown() && e.second)
+                                if (e.first && e.first->isVisible() && e.second)
                                         postEvent(e.first, std::move(e.second));
                         }
                 }

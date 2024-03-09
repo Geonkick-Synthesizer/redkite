@@ -43,7 +43,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetFlags{flags}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
-        , isWidgetShown{false}
+        , isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
@@ -64,7 +64,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetFlags{flags}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
-	, isWidgetShown{false}
+	, isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
 {
@@ -120,20 +120,16 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::defaultWidgetAttributes()
 
 }
 
-void RkWidget::RkWidgetImpl::show(bool b)
+void RkWidget::RkWidgetImpl::setVisible(bool b)
 {
-	isWidgetShown = b;
-        if (isTopWidget()) {
-                systemWindow->show(isWidgetShown);
-        } else {
-                RK_IMPL_PTR(getEventQueue())->postEvent(parent(), std::move(std::make_unique<RkPaintEvent>()));
-        }
-
+	isWidgetVisible = b;
+        if (isTopWidget())
+                systemWindow->show(isWidgetVisible);
 }
 
-bool RkWidget::RkWidgetImpl::isShown() const
+bool RkWidget::RkWidgetImpl::isVisible() const
 {
-	return isWidgetShown;
+	return isWidgetVisible;
 }
 
 void RkWidget::RkWidgetImpl::setTitle(const std::string &title)
@@ -222,14 +218,9 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->resizeEvent(static_cast<RkResizeEvent*>(event));
                 break;
 	case RkEvent::Type::Show:
-		isWidgetShown = true;
                 inf_ptr->showEvent(static_cast<RkShowEvent*>(event));
-                if (!isTopWidget()) {
-                        RK_IMPL_PTR(getEventQueue())->postEvent(parent(), std::move(std::make_unique<RkPaintEvent>()));
-                }
                 break;
 	case RkEvent::Type::Hide:
-		isWidgetShown = false;
                 inf_ptr->hideEvent(static_cast<RkHideEvent*>(event));
                 break;
         case RkEvent::Type::DeleteChild:
@@ -252,6 +243,8 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
 
 void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
 {
+        if (!name().empty())
+                RK_LOG_DEV_DEBUG("name :" << name());
         RkPainter painter(inf_ptr);
         auto globalPosition = inf_ptr->mapToGlobal({0, 0});
         painter.translate(globalPosition);
@@ -265,7 +258,7 @@ void RkWidget::RkWidgetImpl::processChildrenEvents(RkEvent *event)
 {
         for (auto &ch: inf_ptr->children()) {
                 auto widget = dynamic_cast<RkWidget*>(ch);
-                if (widget && widget->isShown()) {
+                if (widget && widget->isVisible()) {
                         RK_IMPL_PTR(widget)->event(event);
                 }
         }
@@ -355,12 +348,16 @@ RkRect RkWidget::RkWidgetImpl::rect() const
 
 void RkWidget::RkWidgetImpl::update(bool updateChildren)
 {
+        if (!isVisible())
+                return;
+
         RK_IMPL_PTR(getEventQueue())->postEvent(inf_ptr, std::move(std::make_unique<RkPaintEvent>()));
         if (updateChildren) {
                 for (auto &ch: inf_ptr->children()) {
                         auto widget = dynamic_cast<RkWidget*>(ch);
-                        if (widget)
+                        if (widget && isVisible()) {
                                 RK_IMPL_PTR(widget)->update(updateChildren);
+                        }
                 }
         }
 }
@@ -462,4 +459,15 @@ bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
 {
         // TODO: implement?
         return false;
+}
+
+bool RkWidget::RkWidgetImpl::isAllAncestorsVisible() const
+{
+        if (isTopWidget())
+                return isVisible();
+
+        if (!RK_IMPL_PTR(dynamic_cast<RkWidget*>(parent()))->isVisible())
+                return false;
+        else
+                return RK_IMPL_PTR(dynamic_cast<RkWidget*>(parent()))->isAllAncestorsVisible();
 }

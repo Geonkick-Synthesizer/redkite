@@ -2,7 +2,7 @@
  * File name: RkWidgetImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor 
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -52,8 +52,8 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         RkSystemWindow* getSystemWindow() const;
         void setEventQueue(RkEventQueue *queue) override;
         Rk::WidgetFlags getWidgetFlags() const;
-        void show(bool b);
-	bool isShown() const;
+        void setVisible(bool b);
+	bool isVisible() const;
         void setTitle(const std::string &title);
         const std::string& title() const;
         bool isClose() const;
@@ -96,6 +96,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
+        bool isAllAncestorsVisible() const;
 
 protected:
         void processPaintEvent(RkPaintEvent* event);
@@ -121,7 +122,7 @@ protected:
         RkColor widgetDrawingColor;
         RkFont widgetFont;
         Rk::PointerShape widgetPointerShape;
-	bool isWidgetShown;
+	bool isWidgetVisible;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
 };

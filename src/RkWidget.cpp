@@ -123,12 +123,7 @@ const std::string& RkWidget::title() const
 
 void RkWidget::show(bool b)
 {
-        impl_ptr->show(b);
-}
-
-bool RkWidget::isShown() const
-{
-	return impl_ptr->isShown();
+        setVisible(b);
 }
 
 void RkWidget::hide()
@@ -616,4 +611,40 @@ RkPoint RkWidget::mapToLocal(const RkPoint& p) const
         return impl_ptr->isTopWidget() ? p - position()
                 : p - parentWidget()->mapToGlobal(position());
 }
+
+void RkWidget::setVisible(bool b)
+{
+        if (b && !impl_ptr->isTopWidget() && !impl_ptr->isAllAncestorsVisible())
+                return;
+
+        impl_ptr->setVisible(b);
+
+        if (!b) {
+                eventQueue()->postEvent(this,
+                                        std::move(std::make_unique<RkHideEvent>()));
+        } else {
+                eventQueue()->postEvent(this,
+                                std::move(std::make_unique<RkShowEvent>()));
+        }
+
+        if (parentWidget() && !b) {
+                eventQueue()->postEvent(parentWidget(),
+                                        std::move(std::make_unique<RkPaintEvent>()));
+        } else {
+                eventQueue()->postEvent(this,
+                                        std::move(std::make_unique<RkPaintEvent>()));
+        }
+
+        for (const auto &ch: children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget)
+                        widget->setVisible(b);
+        }
+}
+
+bool RkWidget::isVisible() const
+{
+        return impl_ptr->isVisible();
+}
+
 

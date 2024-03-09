@@ -161,7 +161,7 @@ bool RkSystemWindow::propagateGrabKeyEnabled() const
 RkSystemWindow::WidgetEventList
 RkSystemWindow::processEvent(const RkEvent *event)
 {
-        if (!topWidget->isShown())
+        if (!topWidget->isVisible())
                 return {};
 
         switch(event->type()) {
@@ -214,7 +214,7 @@ RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseE
         if (event->type() == RkEvent::Type::MouseButtonPress)
                 mouseCaptureWidget = widget;
 
-        if (widget->isShown()) {
+        if (widget->isVisible()) {
                 auto mouseEvent = std::make_unique<RkMouseEvent>();
                 mouseEvent->setType(event->type());
                 mouseEvent->setButton(event->button());
@@ -224,13 +224,13 @@ RkSystemWindow::WidgetEventList RkSystemWindow::processMouseEvent(const RkMouseE
 
         if (widget != hoverWidget) {
                 std::unique_ptr<RkHoverEvent> hoverEvent;
-                if (hoverWidget && hoverWidget->isShown()) {
+                if (hoverWidget && hoverWidget->isVisible()) {
                         hoverEvent = std::make_unique<RkHoverEvent>();
                         hoverEvent->setHover(false);
                         events.emplace_back(std::make_pair(hoverWidget, std::move(hoverEvent)));
                 }
 
-                if (widget->isShown()) {
+                if (widget->isVisible()) {
                         hoverEvent = std::make_unique<RkHoverEvent>();
                         hoverEvent->setHover(true);
                         events.emplace_back(std::make_pair(widget, std::move(hoverEvent)));
@@ -255,7 +255,7 @@ RkWidget* RkSystemWindow::getWidgetByGlobalPoint(RkWidget *widget, const RkPoint
 {
         for (auto &child: widget->children()) {
                 auto childWidget = dynamic_cast<RkWidget*>(child);
-                if (childWidget && childWidget->isShown()
+                if (childWidget && childWidget->isVisible()
                     && containsGlobalPoint(childWidget, globalPoint))
                         return getWidgetByGlobalPoint(childWidget, globalPoint);
         }
