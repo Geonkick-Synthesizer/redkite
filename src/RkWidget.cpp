@@ -616,13 +616,17 @@ RkPoint RkWidget::mapToLocal(const RkPoint& p) const
 
 void RkWidget::setVisible(bool b)
 {
-        // Don't make visible the widgets if it is not top
-        // widget and has at least one anchestor invisible.
-        if (b && !impl_ptr->isTopWidget() && !impl_ptr->isAllAncestorsVisible())
+        if (!name().empty())
+                RK_LOG_DEV_DEBUG(": " << name() << ": called");
+
+        impl_ptr->setExplicitHidden(!b);
+        if (b && parentWidget() && !parentWidget()->isVisible()) {
+                if (!name().empty())
+                        RK_LOG_DEV_DEBUG(": " << name() << ": show ignored");
                 return;
+        }
 
         impl_ptr->setVisible(b);
-
         if (!b) {
                 eventQueue()->postEvent(this,
                                         std::move(std::make_unique<RkHideEvent>()));
@@ -632,7 +636,6 @@ void RkWidget::setVisible(bool b)
         }
 
         if (!b && parentWidget()) {
-                // Make the parent to redraw if one of its children gets invisible.
                 eventQueue()->postEvent(parentWidget(),
                                         std::move(std::make_unique<RkPaintEvent>()));
         } else {
@@ -640,14 +643,9 @@ void RkWidget::setVisible(bool b)
                                         std::move(std::make_unique<RkPaintEvent>()));
         }
 
-        for (const auto &ch: children()) {
-                auto widget = dynamic_cast<RkWidget*>(ch);
-                if (widget) {
-                        if (!name().empty())
-                        RK_LOG_DEV_DEBUG("name" << name() << "b ch: " << b);
-                        widget->setVisible(b);
-                }
-        }
+        RK_IMPL_PTR(this)->setChildrenVisible(b);
+        if (!name().empty())
+                RK_LOG_DEV_DEBUG(": " << name() << ": exit");
 }
 
 bool RkWidget::isVisible() const

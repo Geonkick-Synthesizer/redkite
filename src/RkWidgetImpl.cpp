@@ -43,6 +43,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetFlags{flags}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
+        , isWidgetExplicitHidden{false}
         , isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
@@ -64,6 +65,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , widgetFlags{flags}
         , widgetModality{(static_cast<int>(flags) & static_cast<int>(Rk::WidgetFlags::Dialog)) ? Rk::Modality::ModalTopWidget : Rk::Modality::NonModal}
         , widgetPointerShape{Rk::PointerShape::Arrow}
+        , isWidgetExplicitHidden{false}
 	, isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
@@ -462,13 +464,33 @@ bool RkWidget::RkWidgetImpl::pointerIsOverWindow() const
         return false;
 }
 
-bool RkWidget::RkWidgetImpl::isAllAncestorsVisible() const
+void RkWidget::RkWidgetImpl::setExplicitHidden(bool b)
 {
-        if (isTopWidget())
-                return isVisible();
+        isWidgetExplicitHidden = b;
+}
 
-        if (!RK_IMPL_PTR(dynamic_cast<RkWidget*>(parent()))->isVisible())
-                return false;
-        else
-                return RK_IMPL_PTR(dynamic_cast<RkWidget*>(parent()))->isAllAncestorsVisible();
+bool RkWidget::RkWidgetImpl::isExplicitHidden() const
+{
+        return isWidgetExplicitHidden;
+}
+
+void RkWidget::RkWidgetImpl::setChildrenVisible(bool b)
+
+{
+        if (b && !isVisible())
+                return;
+
+        for (const auto &ch: inf_ptr->children()) {
+                auto widget = dynamic_cast<RkWidget*>(ch);
+                if (widget) {
+                        if (b && RK_IMPL_PTR(widget)->isExplicitHidden())
+                                continue;
+                        RK_IMPL_PTR(widget)->setVisible(b);
+                        RK_IMPL_PTR(widget)->setChildrenVisible(b);
+                        if (!RK_IMPL_PTR(widget)->name().empty())
+                                RK_LOG_DEV_DEBUG(" ch: "
+                                                 << RK_IMPL_PTR(widget)->name()
+                                                 << " : visible: " << b);
+                }
+        }
 }

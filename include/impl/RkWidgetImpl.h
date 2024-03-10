@@ -96,7 +96,9 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
         double scaleFactor() const;
-        bool isAllAncestorsVisible() const;
+        void setExplicitHidden(bool b = true);
+        bool isExplicitHidden() const;
+        void setChildrenVisible(bool b);
 
 protected:
         void processPaintEvent(RkPaintEvent* event);
@@ -122,7 +124,8 @@ protected:
         RkColor widgetDrawingColor;
         RkFont widgetFont;
         Rk::PointerShape widgetPointerShape;
-	bool isWidgetVisible;
+        bool isWidgetExplicitHidden;
+        bool isWidgetVisible;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
 };
