@@ -27,6 +27,7 @@
 #include "RkPlatform.h"
 #include "RkMain.h"
 #include "RkWidgetImpl.h"
+#include "RkEventQueueImpl.h"
 
 #ifdef RK_OS_WIN
 #include "RkWindowWin.h"
@@ -57,6 +58,7 @@ RkSystemWindow::RkSystemWindow(RkWidget *widget, const RkNativeWindowInfo* paren
         , isPropagateGrabKey{true}
         , hoverWidget{nullptr}
         , mouseCaptureWidget{nullptr}
+        , focusWidget{nullptr}
 {
         platformWindow->init();
 }
@@ -192,6 +194,17 @@ RkSystemWindow::processEvent(const RkEvent *event)
                 RK_IMPL_PTR(topWidget)->update(true);
                 WidgetEventList events;
                 events.emplace_back(std::make_pair(topWidget, std::make_unique<RkResizeEvent>()));
+                return events;
+        }
+        case RkEvent::Type::KeyPressed:
+        case RkEvent::Type::KeyReleased:
+        {
+                WidgetEventList events;
+                if (focusWidget) {
+                        auto keyEvent = std::make_unique<RkKeyEvent>();
+                        *keyEvent.get() = *static_cast<const RkKeyEvent*>(event);
+                        events.emplace_back(std::make_pair(focusWidget, std::move(keyEvent)));
+                }
                 return events;
         }
         default:
@@ -421,3 +434,26 @@ double RkSystemWindow::scaleFactor() const
 {
         return 1.0;
 }
+
+void RkSystemWindow::setFocusWidget(RkWidget *widget, bool b)
+{
+        RK_LOG_DEV_DEBUG("widget: " << widget);
+        if (widget != focusWidget) {
+                if (focusWidget) {
+                        auto focusEvent = std::make_unique<RkFocusEvent>(RkEvent::Type::FocusedOut);
+                        RK_IMPL_PTR(focusWidget->eventQueue())->postEvent(focusWidget, std::move(focusEvent));
+                }
+                focusWidget = widget;
+                auto focusType = b ? RkEvent::Type::FocusedIn : RkEvent::Type::FocusedOut;
+                auto focusEvent = std::make_unique<RkFocusEvent>(focusType);
+                RK_IMPL_PTR(focusWidget->eventQueue())->postEvent(focusWidget, std::move(focusEvent));
+                if (!b)
+                        focusWidget = nullptr;
+        }
+}
+
+RkWidget* RkSystemWindow::getFocusWidget() const
+{
+        return focusWidget;
+}
+

@@ -79,7 +79,7 @@ class RkWidget::RkWidgetImpl : public RkObject::RkObjectImpl {
         void setWidgetAttribute(Rk::WidgetAttribute attribute);
         void clearWidgetAttribute(Rk::WidgetAttribute attribute);
         Rk::WidgetAttribute getWidgetAttributes() const;
-        void setFocus(bool b);
+        void setFocus(bool b = true);
         bool hasFocus() const;
         void setTextColor(const RkColor &color);
         const RkColor& textColor() const;
@@ -128,6 +128,7 @@ protected:
         bool isWidgetVisible;
         bool isGrabKeyEnabled;
         bool isPropagateGrabKey;
+        bool widgetHasFocus;
 };
 
 #endif // RK_WIDGET_IMPL_H

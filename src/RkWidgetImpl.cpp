@@ -47,6 +47,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
         , isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
+        , widgetHasFocus{false}
 {
         RK_LOG_DEBUG("called");
 }
@@ -69,6 +70,7 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface,
 	, isWidgetVisible{false}
         , isGrabKeyEnabled{false}
         , isPropagateGrabKey{true}
+        , widgetHasFocus{false}
 {
         RK_LOG_DEBUG("called");
 }
@@ -189,18 +191,26 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 inf_ptr->focusEvent(static_cast<RkFocusEvent*>(event));
                 break;
         case RkEvent::Type::MouseButtonPress:
-                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                if (static_cast<int>(widgetAttributes)
+                    & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)) {
                         inf_ptr->mouseButtonPressEvent(static_cast<RkMouseEvent*>(event));
+                        setFocus();
+                }
                 break;
         case RkEvent::Type::MouseDoubleClick:
                 RK_LOG_DEBUG("RkEvent::Type::MouseDoubleClick:" << title());
-                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                if (static_cast<int>(widgetAttributes)
+                    & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)) {
                         inf_ptr->mouseDoubleClickEvent(static_cast<RkMouseEvent*>(event));
+                        setFocus();
+                }
                 break;
         case RkEvent::Type::MouseButtonRelease:
                 RK_LOG_DEBUG("RkEvent::Type::MouseButtonRelease:" << title());
-                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                if (static_cast<int>(widgetAttributes)
+                    & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled)) {
                         inf_ptr->mouseButtonReleaseEvent(static_cast<RkMouseEvent*>(event));
+                }
                 break;
         case RkEvent::Type::MouseMove:
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
@@ -387,12 +397,14 @@ Rk::WidgetAttribute RkWidget::RkWidgetImpl::getWidgetAttributes() const
 
 void RkWidget::RkWidgetImpl::setFocus(bool b)
 {
-        // TODO: implement?
+        if (RK_IMPL_PTR(getEventQueue()) && RK_IMPL_PTR(getEventQueue())->getSystemWindow())
+                RK_IMPL_PTR(getEventQueue())->getSystemWindow()->setFocusWidget(inf_ptr, b);
 }
 
 bool RkWidget::RkWidgetImpl::hasFocus() const
 {
-        // TODO: implement?
+        if (RK_IMPL_PTR(getEventQueue()) && RK_IMPL_PTR(getEventQueue())->getSystemWindow())
+                return RK_IMPL_PTR(getEventQueue())->getSystemWindow()->getFocusWidget() == inf_ptr;
         return false;
 }
 

@@ -78,6 +78,8 @@ RkWidget::RkWidget(RkWidget *parent, std::unique_ptr<RkWidgetImpl> impl)
 RkWidget::~RkWidget()
 {
         RK_LOG_DEBUG("called: " << this);
+        if (hasFocus())
+                setFocus(false);
         if (parentWidget()) {
                 if (modality() == Rk::Modality::ModalTopWidget) {
                         if (!parentWidget()->isModal()) {
