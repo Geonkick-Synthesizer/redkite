@@ -27,6 +27,7 @@
 #include "Rk.h"
 #include "RkImage.h"
 #include "RkPoint.h"
+#include "RkRealPoint.h"
 #include "RkPen.h"
 #include "RkRect.h"
 #include "RkFont.h"
@@ -49,6 +50,7 @@ class RkPainter {
         void drawLine(const RkPoint &p1, const RkPoint &p2);
         void drawRect(const RkRect &rect);
         void drawPolyline(const std::vector<RkPoint> &points);
+        void drawPolyline(const std::vector<RkRealPoint> &points);
         void fillRect(const RkRect &rect, const RkColor &color);
         void applyAlpha(int alpha);
         const RkPen& pen() const;
@@ -58,6 +60,7 @@ class RkPainter {
         void translate(const RkPoint &offset);
         void rotate(rk_real angle);
         int getTextWidth(const std::string &text) const;
+        void scale(double x, double y);
 
 protected:
         RK_DECLARE_O_PTR(RkPainter);

@@ -25,6 +25,8 @@
 #include "RkCanvasInfo.h"
 #include "RkImageImpl.h"
 #include "RkLog.h"
+#include "RkPoint.h"
+#include "RkRealPoint.h"
 
 #ifdef RK_OS_WIN
 #define _USE_MATH_DEFINES
@@ -207,6 +209,21 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
         cairo_stroke(context());
 }
 
+void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkRealPoint> &points)
+{
+        if (points.empty())
+                return;
+
+        auto ctx = context();
+        cairo_move_to(ctx, points.front().x() + 0.5, points.front().y() + 0.5);
+        for (size_t i = 1; i < points.size(); ++i) {
+                const auto &point = points[i];
+                if (points[i - 1] != point)
+                        cairo_line_to(ctx, point.x() + 0.5, point.y() + 0.5);
+        }
+        cairo_stroke(ctx);
+}
+
 void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
         RK_LOG_DEBUG("x: " << rect.left()
@@ -244,4 +261,9 @@ int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
         cairo_text_extents_t extents;
         cairo_text_extents (context(), text.data(), &extents);
         return extents.x_advance;
+}
+
+void RkCairoGraphicsBackend::scale(double x, double y)
+{
+        cairo_scale(context(), x, y);
 }
