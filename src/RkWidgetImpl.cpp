@@ -228,6 +228,10 @@ void RkWidget::RkWidgetImpl::event(RkEvent *event)
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
                         inf_ptr->mouseMoveEvent(static_cast<RkMouseEvent*>(event));
                 break;
+        case RkEvent::Type::Wheel:
+                if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
+                        inf_ptr->wheelEvent(static_cast<RkWheelEvent*>(event));
+                break;
         case RkEvent::Type::Drop:
                 RK_LOG_DEBUG("RkEvent::Type::Drop:" << title());
                 if (static_cast<int>(widgetAttributes) & static_cast<int>(Rk::WidgetAttribute::MouseInputEnabled))
@@ -272,6 +276,15 @@ void RkWidget::RkWidgetImpl::processPaintEvent(RkPaintEvent* event)
         auto globalPosition = inf_ptr->mapToGlobal({0, 0});
         painter.translate(globalPosition);
         painter.fillRect(rect(), background());
+        if (borderWidth() > 0) {
+                auto tempPen = painter.pen();
+                auto pen = painter.pen();
+                pen.setColor(borderColor());
+                pen.setWidth(borderWidth());
+                painter.setPen(pen);
+                painter.drawRect(rect());
+                painter.setPen(tempPen);
+        }
         inf_ptr->paintEvent(event);
         painter.translate({-globalPosition.x(), -globalPosition.y()});
         processChildrenEvents(event);
