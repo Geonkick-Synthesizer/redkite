@@ -2,7 +2,7 @@
  * File name: RkEvent.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -30,8 +30,8 @@
 class RkCloseEvent;
 class RkKeyEvent;
 class RkMouseEvent;
-class RkWheelEvent;
 class RkMoveEvent;
+class RkWheelEvent;
 class RkResizeEvent;
 class RkPaintEvent;
 class RkShowEvent;
@@ -39,7 +39,7 @@ class RkHideEvent;
 class RkHoverEvent;
 class RkWidget;
 
-class RK_EXPORT RkEvent {
+class RkEvent {
  public:
         enum class Type: int {
                 NoEvent = 0,
@@ -60,9 +60,9 @@ class RK_EXPORT RkEvent {
                 FocusedIn = 15,
                 FocusedOut = 16,
                 Hover = 17,
-                Shortcut = 18,
-                Drop = 19,
-                ScaleFactor = 20
+                Drop = 18,
+                ScaleFactor = 19,
+                Action = 20
       };
 
         explicit RkEvent(Type type = Type::NoEvent)
@@ -92,6 +92,7 @@ class RkKeyEvent: public RkEvent {
                 : RkEvent(type)
                 , keyValue{Rk::Key::Key_None}
                 , keyModifiers{0}
+                , typeShortcut{false}
         {
         }
 
@@ -103,10 +104,13 @@ class RkKeyEvent: public RkEvent {
         Rk::Key key() const { return keyValue; }
         void setModifiers(int mod) { keyModifiers = mod; }
         int modifiers() const { return keyModifiers; }
+        void setShortcut(bool b = true) { typeShortcut = b; }
+        bool isShortcut() const { return typeShortcut; }
 
  private:
         Rk::Key keyValue;
         int keyModifiers;
+        bool typeShortcut;
 };
 
 class RkMouseEvent: public RkEvent {
@@ -129,6 +133,8 @@ class RkMouseEvent: public RkEvent {
       void setX(int x) { mouseCoordinates.setX(x); }
       int y() const { return mouseCoordinates.y(); }
       void setY(int y) { mouseCoordinates.setY(y); }
+      void setPoint(const RkPoint &p) { mouseCoordinates = p; }
+      const RkPoint& point() const { return mouseCoordinates; }
       ButtonType button() const { return buttonType; }
       void setButton(ButtonType type) { buttonType = type; }
 
@@ -155,7 +161,22 @@ class RkDropEvent: public RkEvent {
       std::string filePath;
 };
 
-class RkWheelEvent: public RkEvent {
+class RkWheelEvent: public RkEvent
+{
+public:
+        enum class WheelDirection : int {
+                DirectionNone = 0,
+                DirectionUp   = 1,
+                DirectionDown = 2
+        };
+
+        RkWheelEvent() : RkEvent(Type::Wheel)
+                       , wheelDirection {WheelDirection::DirectionNone} {}
+        void setDirection(WheelDirection val) { wheelDirection = val; }
+        WheelDirection direction() const { return wheelDirection; }
+
+private:
+        WheelDirection wheelDirection;
 };
 
 class RkMoveEvent: public RkEvent {
@@ -169,14 +190,17 @@ public:
 
 class RkPaintEvent: public RkEvent {
  public:
-       RkPaintEvent() : RkEvent(Type::Paint) {
-       }
+       RkPaintEvent() : RkEvent(Type::Paint) {}
 };
 
 class RkShowEvent: public RkEvent {
+public:
+        RkShowEvent() : RkEvent(Type::Show) {}
 };
 
 class RkHideEvent: public RkEvent {
+public:
+        RkHideEvent() : RkEvent(Type::Hide) {}
 };
 
 class RkDeleteChild: public RkEvent {
@@ -221,4 +245,3 @@ class RkScaleFactorEvent: public RkEvent {
 };
 
 #endif // RK_EVENT_H
-

@@ -2,7 +2,7 @@
  * File name: RkWindowX.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -36,14 +36,9 @@ struct RkCanvasInfo;
 
 class RkWindowX {
  public:
-        explicit RkWindowX(const RkNativeWindowInfo *parent,
-                           Rk::WindowFlags flags = Rk::WindowFlags::Widget,
-                           bool isTop = false);
-        explicit RkWindowX(const RkNativeWindowInfo &parent,
-                           Rk::WindowFlags flags = Rk::WindowFlags::Widget,
-                           bool isTop = false);
+        explicit RkWindowX(const RkNativeWindowInfo *parent);
+        explicit RkWindowX(const RkNativeWindowInfo &parent);
         ~RkWindowX();
-        Rk::WindowFlags flags() const;
         bool init();
         void show(bool b);
         const RkNativeWindowInfo* nativeWindowInfo() const;
@@ -61,7 +56,7 @@ class RkWindowX {
         void setBackgroundColor(const RkColor &color);
         const RkColor& background() const;
         void resizeCanvas();
-        const RkCanvasInfo* getCanvasInfo() const;
+        RkCanvasInfo* getCanvasInfo() const;
         void update();
         void setFocus(bool b);
         bool hasFocus() const;
@@ -69,19 +64,18 @@ class RkWindowX {
         bool pointerIsOverWindow() const;
         void setScaleFactor(double factor);
         double getScaleFactor() const;
+	void freeCanvasInfo();
 
  protected:
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
         void createCanvasInfo();
-        void freeCanvasInfo();
 
  private:
         RK_DISABLE_COPY(RkWindowX);
         RK_DISABLE_MOVE(RkWindowX);
         RkNativeWindowInfo parentWindowInfo;
-        Rk::WindowFlags windowFlags;
         Display *xDisplay;
         int screenNumber;
         Window xWindow;
@@ -95,7 +89,6 @@ class RkWindowX {
         std::unique_ptr<RkNativeWindowInfo> windowInfo;
         XVisualInfo visualInfo;
         double scaleFactor;
-        bool isTopWindow;
 };
 
 #endif // RK_WIDGET_XWIN_H

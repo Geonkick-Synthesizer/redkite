@@ -2,7 +2,7 @@
  * File name: rkpng2c.c
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -38,8 +38,8 @@ int main(int argc , char **argv)
                 printf("Redkite GUI toolkit\n");
                 printf("rkpng2c version %s\n", RK_VERSION_STR);
                 printf("Converts a PNG to C array encoded in ARGB32\n");
-                printf("Copyright (C) 2019 Iurie Nistor <iur.nistor@gmail.com>\n");
-                printf("License GPLv2\n");
+                printf("Copyright (C) 2019 Iurie Nistor\n");
+                printf("License GPLv3\n");
                 printf("Usage: rkpng2c <PNG file> <C or C++ file> <array name>\n");
                 return 0;
         }

@@ -2,7 +2,7 @@
  * File name: RkPoint.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -26,48 +26,53 @@
 
 #include "Rk.h"
 
-class RK_EXPORT RkPoint {
- public:
+class RkPoint {
+public:
+        constexpr RkPoint(int x  = 0, int y = 0) : xValue{x}, yValue{y}
+        {
+        }
 
-       constexpr RkPoint() : xValue{0}, yValue{0}
-       {
-       }
+        friend constexpr bool operator==(const RkPoint &p1, const RkPoint &p2)
+        {
+                return p1.xValue == p2.xValue && p1.yValue == p2.yValue;
+        }
 
-       constexpr RkPoint(int x, int y) : xValue{x}, yValue{y}
-       {
-       }
+        friend constexpr bool operator!=(const RkPoint &p1, const RkPoint &p2)
+        {
+                return p1.xValue != p2.xValue || p1.yValue != p2.yValue;
+        }
 
-       friend constexpr bool operator==(const RkPoint &p1, const RkPoint &p2)
-       {
-               return p1.xValue == p2.xValue && p1.yValue == p2.yValue;
-       }
+        friend constexpr RkPoint operator+(const RkPoint &p1, const RkPoint &p2)
+        {
+                return RkPoint(p1.xValue + p2.xValue, p1.yValue + p2.yValue);
+        }
 
-       friend constexpr bool operator!=(const RkPoint &p1, const RkPoint &p2)
-       {
-               return p1.xValue != p2.xValue || p1.yValue != p2.yValue;
-       }
+        friend constexpr RkPoint operator-(const RkPoint &p1, const RkPoint &p2)
+        {
+                return RkPoint(p1.xValue - p2.xValue, p1.yValue - p2.yValue);
+        }
 
-       constexpr int x() const
-       {
-               return xValue;
-       }
+        constexpr int x() const
+        {
+                return xValue;
+        }
 
-       constexpr void setX(int x)
-       {
-               xValue = x;
-       }
+        constexpr void setX(int x)
+        {
+                xValue = x;
+        }
 
-       constexpr int y() const
-       {
-               return yValue;
-       }
+        constexpr int y() const
+        {
+                return yValue;
+        }
 
-       constexpr void setY(int y)
-       {
-               yValue = y;
-       }
+        constexpr void setY(int y)
+        {
+                yValue = y;
+        }
 
- private:
+private:
         int xValue;
         int yValue;
 };

@@ -2,7 +2,7 @@
  * File name: RkLineEdit.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -28,11 +28,10 @@
 #include "RkPainter.h"
 
 RkLineEdit::RkLineEdit(RkWidget *parent, const std::string &text)
-        : RkWidget(parent, std::make_unique<RkLineEdit::RkLineEditImpl>(this, parent, text))
-        , impl_ptr{static_cast<RkLineEdit::RkLineEditImpl*>(o_ptr.get())}
+        : RkWidget(parent, std::make_unique<RkLineEditImpl>(this, parent, text))
+        , impl_ptr{static_cast<RkLineEditImpl*>(o_ptr.get())}
 {
         setPointerShape(Rk::PointerShape::IBeam);
-        propagateGrabKey(false);
         impl_ptr->init();
 }
 
@@ -76,6 +75,7 @@ void RkLineEdit::paintEvent(RkPaintEvent *event)
  */
 void RkLineEdit::keyPressEvent(RkKeyEvent *event)
 {
+        RK_LOG_DEV_DEBUG("called[" << this << "] " << (int)event->key());
         if (!hasFocus())
                 return;
 
@@ -132,6 +132,10 @@ void RkLineEdit::keyPressEvent(RkKeyEvent *event)
         case Rk::Key::Key_Return:
                 action enterPressed();
 		action editingFinished();
+                return;
+        case Rk::Key::Key_Escape:
+                hideCursor();
+                action escapePressed();
                 return;
         case Rk::Key::Key_a:
         case Rk::Key::Key_A:
@@ -210,4 +214,3 @@ void RkLineEdit::moveCursorToEnd()
         impl_ptr->moveCursorToBack();
         update();
 }
-

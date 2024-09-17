@@ -2,7 +2,7 @@
  * File name: RkPainterImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -54,6 +54,7 @@ void RkPainter::RkPainterImpl::drawImage(const std::string &file, int x, int y)
 
 void RkPainter::RkPainterImpl::drawImage(const RkImage &image, int x, int y)
 {
+        RK_LOG_DEBUG("called");
         backendGraphics->drawImage(image, x, y);
 }
 
@@ -73,6 +74,11 @@ void RkPainter::RkPainterImpl::drawRect(const RkRect &rect)
 }
 
 void RkPainter::RkPainterImpl::drawPolyline(const std::vector<RkPoint> &points)
+{
+        backendGraphics->drawPolyLine(points);
+}
+
+void RkPainter::RkPainterImpl::drawPolyline(const std::vector<RkRealPoint> &points)
 {
         backendGraphics->drawPolyLine(points);
 }
@@ -122,4 +128,9 @@ int RkPainter::RkPainterImpl::getTextWidth(const std::string &text) const
 void RkPainter::RkPainterImpl::applyAlpha(int alpha)
 {
         backendGraphics->applyAlpha(alpha);
+}
+
+void RkPainter::RkPainterImpl::scale(double x, double y)
+{
+        backendGraphics->scale(x, y);
 }

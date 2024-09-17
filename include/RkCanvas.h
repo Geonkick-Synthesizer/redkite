@@ -2,7 +2,7 @@
  * File name: RkCanvas.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -26,13 +26,14 @@
 
 #include "Rk.h"
 
-struct RK_EXPORT RkCanvasInfo;
+struct RkCanvasInfo;
 
-class RK_EXPORT RkCanvas {
+class RkCanvas {
  public:
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
-        virtual const RkCanvasInfo* getCanvasInfo() const = 0;
+        virtual RkCanvasInfo* getCanvasInfo() const = 0;
+        virtual void freeCanvasInfo();
 };
 
 #endif // RK_CANVAS_H

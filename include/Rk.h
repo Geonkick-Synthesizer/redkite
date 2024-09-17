@@ -2,7 +2,7 @@
  * File name: Rk.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://iuriepage.wordpress.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -24,10 +24,10 @@
 #ifndef RK_GLOBAL_H
 #define RK_GLOBAL_H
 
-#define RK_VERSION 0x010300
-#define RK_MAJOR   0x01
-#define RK_MINOR   0x03
-#define RK_PATCH   0x01
+#define RK_VERSION 0x020000
+#define RK_MAJOR   0x02
+#define RK_MINOR   0x00
+#define RK_PATCH   0x00
 
 #include <utility>
 #include <memory>
@@ -67,13 +67,21 @@
 #endif
 #endif
 
-#define RK_DECLARE_IMPL(Class) \
-  class Class##Impl; \
-  std::unique_ptr<Class##Impl> o_ptr
+#define RK_DECLARE_O_PTR(Class) \
+          class Class##Impl; \
+      public: \
+          Class##Impl* rkImpl() const { return o_ptr.get(); } \
+      protected: \
+          std::unique_ptr<Class##Impl> o_ptr
 
-#define RK_DELCATE_IMPL_PTR(Class) \
-  class Class##Impl; \
-  Class##Impl *impl_ptr
+#define RK_DECLARE_IMPL_PTR(Class) \
+           class Class##Impl; \
+       public: \
+           Class##Impl* rkImpl() const { return impl_ptr; } \
+       protected: \
+           Class##Impl* impl_ptr
+
+#define RK_IMPL_PTR(obj) obj->rkImpl()
 
 #define RK_DECALRE_INTERFACE_PTR(Class) Class *inf_ptr
 
@@ -113,7 +121,7 @@ namespace Rk {
                 Vertical = 1
         };
 
-        enum class WindowFlags: int {
+        enum class WidgetFlags: int {
                 Widget = 0x00000000,
                 Dialog = 0x00000001,
                 Popup  = 0x00000002
@@ -139,7 +147,7 @@ namespace Rk {
                 CloseInputEnabled = 0x00000004
         };
 
-        enum class Key : int {
+        enum class Key : unsigned int {
                 Key_None        = 0x00000000,
 
                 /**
@@ -446,36 +454,35 @@ namespace Rk {
 #define RK_ARG_TYPE(type, ...) type, ##__VA_ARGS__
 #define RK_ARG_VAL(val, ...) val, ##__VA_ARGS__
 
-#define RK_DECL_ACT(name, prot, type, val) \
-        class rk__observer_##name : public RkObserver { \
+#define RK_DECL_ACT(ObseverName, prot, type, val) \
+        class rk__observer_##ObseverName : public RkObserver { \
         public: \
-                rk__observer_ ##name (RkObject *obj, const std::function<void(type)> &cb) \
+                rk__observer_ ##ObseverName (RkObject *obj, const std::function<void(type)> &cb) \
                         : RkObserver(obj), \
                           observerCallback{cb} {} \
-                rk__observer_##name () = default; \
+                rk__observer_##ObseverName () = default; \
                 std::function<void(type)> observerCallback; \
         }; \
         \
         void prot \
         { \
-                for (const auto& ob: rk__observers()) {                  \
-                        auto observer = dynamic_cast<rk__observer_ ##name *>(ob.get()); \
+                for (const auto& ob: rk__observers()) { \
+                        auto observer = dynamic_cast<rk__observer_ ##ObseverName *>(ob.get()); \
                         if (observer) \
                                 observer->observerCallback(val); \
                 } \
         } \
-        void rk__add_action_cb_##name (RkObject *obj, const std::function<void(type)> &cb) \
+        void rk__add_action_cb_##ObseverName (RkObject *obj, const std::function<void(type)> &cb) \
         { \
-                rk__add_observer(std::make_unique<rk__observer_##name >(obj, cb)); \
+                rk__add_observer(std::make_unique<rk__observer_##ObseverName >(obj, cb)); \
         }
 
 #define RK_ACT_BIND(obj1, act, act_args, obj2, callback) \
-        obj1->rk__add_action_cb_##act (obj2, [=](act_args){ obj2->callback; }); \
+        obj1->rk__add_action_cb_##act (obj2, [=, this](act_args){ obj2->callback; }); \
         obj2->rk__add_bound_object(obj1)
 
-// Bind lamda functions to object actions.
-#define RK_ACT_BINDL(obj1, act, act_args, lamda)   \
-        obj1->rk__add_action_cb_##act (nullptr, lamda)
+#define RK_ACT_BINDL(obj1, act, act_args, ...) \
+    obj1->rk__add_action_cb_##act (nullptr, __VA_ARGS__)
 
 #define action
 

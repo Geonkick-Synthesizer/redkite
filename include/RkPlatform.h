@@ -2,7 +2,7 @@
  * File name: RkPlatform.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -27,15 +27,46 @@
 #include "Rk.h"
 #include "RkLog.h"
 
+#ifdef RK_OS_WIN
+#include <windows.h>
+
+struct RkWindowId {
+        RkWindowId(HWND arg = nullptr) : id{arg} {}
+        HWND id;
+};
+
+class RkNativeWindowInfo {
+ public:
+ RkNativeWindowInfo(HWND arg = nullptr)
+         : window(arg)
+        , instance{}
+        , scaleFactor{1.0}
+        {}
+        ~RkNativeWindowInfo() = default;
+        HWND window;
+        HINSTANCE instance;
+	double scaleFactor;
+        std::string className;
+};
+
+HINSTANCE rk_win_api_instance();
+LPCSTR rk_win_api_class_name();
+RkNativeWindowInfo rk_from_native_win(HWND window, HINSTANCE instance, LPCSTR className);
+RkWindowId rk_id_from_win(HWND window);
+
+#define RK_WIN_MESSAGE_PAINT (WM_USER + 0x0001)
+
+#elif RK_OS_MAC
+#else // X11 as default
 #include <X11/Xlib.h>
 
-struct RK_EXPORT RkWindowId {
+struct RkWindowId {
         Window id;
 };
 
 struct _DndClass;
 
-class RK_EXPORT RkNativeWindowInfo
+class RkNativeWindowInfo
 {
  public:
 
@@ -43,7 +74,7 @@ class RK_EXPORT RkNativeWindowInfo
         display{nullptr}
         , screenNumber{0}
         , window{0}
-        , scaleFactor{1}{}
+        , scaleFactor{1.0}{}
         ~RkNativeWindowInfo() = default;
         Display* display;
         int screenNumber;
@@ -51,9 +82,10 @@ class RK_EXPORT RkNativeWindowInfo
         double scaleFactor;
 };
 
-RkNativeWindowInfo RK_EXPORT rk_from_native_x11(Display* display,
-                                                int screenNumber,
-                                                Window window);
-RkWindowId RK_EXPORT rk_id_from_x11(Window window);
+RkNativeWindowInfo rk_from_native_x11(Display* display,
+                                      int screenNumber,
+                                      Window window);
+RkWindowId rk_id_from_x11(Window window);
 
+#endif // X11
 #endif // RK_PLATFORM_H

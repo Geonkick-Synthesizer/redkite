@@ -2,7 +2,7 @@
  * File name: RkLabelImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -55,15 +55,18 @@ void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 
 void RkLabel::RkLabelImpl::drawLabel()
 {
-        if (labelText.empty() && labelImage.isNull())
+        if (size().isEmpty())
                 return;
 
         RkImage img(size());
         RkPainter painter(&img);
         painter.fillRect(rect(), background());
-        if (!labelImage.isNull())
+        if (!labelImage.isNull()) {
+                RK_LOG_DEBUG("draw image");
                 painter.drawImage(labelImage, 0, 0);
+        }
         if (!labelText.empty()) {
+                RK_LOG_DEBUG("draw text");
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
@@ -74,4 +77,3 @@ void RkLabel::RkLabelImpl::drawLabel()
         RkPainter paint(inf_ptr);
         paint.drawImage(img, 0, 0);
 }
-

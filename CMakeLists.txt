@@ -2,16 +2,22 @@ cmake_minimum_required (VERSION 3.8)
 
 project(redkite VERSION 1.3.1)
 
-option(ENABLE_EXAMPLES "Build examples" ON)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+option(RK_ENABLE_EXAMPLES "Build examples" OFF)
+option(RK_BUILD_TOOLS "Build tools" ON)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
+  add_compile_options(-DCAIRO_WIN32_STATIC_BUILD)
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite is not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
   message(STATUS " Build Redkite for GNU/Linux")
+elseif (CMAKE_SYSTEM_NAME MATCHES FreeBSD)
+  message(STATUS " Build Redkite for FreeBSD")
 else()
   message(FATAL_ERROR "Redkite is not implemented yet for ${CMAKE_SYSTEM_NAME}")
 endif()
@@ -27,9 +33,17 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type Release" FORCE)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-set(CMAKE_C_FLAGS "-Wall ${CMAKE_C_FLAGS} -fvisibility=hidden")
+if (RK_ARCHITECTURE MATCHES x86_64)
+  message(STATUS "set optimisation compiler flags for ${RK_ARCHITECTURE}")
+  set(RK_OPTIMISATION_FLAGS "-O3 -msse -msse2 -mfpmath=sse -funsafe-math-optimizations -fno-math-errno -fno-trapping-math -fomit-frame-pointer")
+else ()
+  message(STATUS "set optimisation compiler flags for ${RK_ARCHITECTURE}")
+  set(RK_OPTIMISATION_FLAGS "-O3 -funsafe-math-optimizations -fno-math-errno -fno-trapping-math -fomit-frame-pointer")
+endif ()
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "-Wall ${RK_OPTIMISATION_FLAGS} ${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+set(CMAKE_C_FLAGS "-Wall ${RK_OPTIMISATION_FLAGS} ${CMAKE_C_FLAGS} -fvisibility=hidden")
 
 if (NOT RK_EXPORT_INTERFACE)
   message(STATUS "don't export Redkite interface")
@@ -57,14 +71,22 @@ endif()
 if (NOT RK_GRAPHICS_BACKEND)
   message(STATUS "use default Cairo graphics backend")
   set(RK_GRAPHICS_BACKEND "Cairo")
-#  find_package(Cairo REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+  find_package(Cairo REQUIRED)
+  if (CAIRO_FOUND)
+    message(STATUS "Cairo library found")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+  else(CAIRO_FOUND)
+    message(FATAL_ERROR "Can't find Cairo library")
+  endif(CAIRO_FOUND)
 elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
-#  find_package(Cairo REQUIRED)
+  find_package(Cairo REQUIRED)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
 endif()
+
+include_directories(${RK_INCLUDE_PATH})
+include_directories(${RK_INCLUDE_PATH}/impl)
 
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
@@ -87,6 +109,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkButton.h
+  ${RK_INCLUDE_PATH}/RkSpinBox.h
   ${RK_INCLUDE_PATH}/RkLineEdit.h
   ${RK_INCLUDE_PATH}/RkList.h
   ${RK_INCLUDE_PATH}/RkProgressBar.h
@@ -98,25 +121,26 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkContainerItem.h
   ${RK_INCLUDE_PATH}/RkContainerWidgetItem.h
   ${RK_INCLUDE_PATH}/RkContainer.h
-  ${RK_INCLUDE_PATH}/RkTransition.h
-  ${RK_INCLUDE_PATH}/RkTab.h)
+  ${RK_INCLUDE_PATH}/RkTransition.h)
 
 set(RK_HEADERS_IMPL
-  ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkObjectImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkMainImpl.h
   ${RK_INCLUDE_PATH}/impl/RkShortcut.h
   ${RK_INCLUDE_PATH}/impl/RkEventQueueImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkSystemWindow.h
   ${RK_INCLUDE_PATH}/impl/RkWidgetImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLabelImpl.h
   ${RK_INCLUDE_PATH}/impl/RkListImpl.h
   ${RK_INCLUDE_PATH}/impl/RkModelImpl.h
   ${RK_INCLUDE_PATH}/impl/RkButtonImpl.h
+  ${RK_INCLUDE_PATH}/impl/RkSpinBoxImpl.h
   ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
   ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
   ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h
-  ${RK_INCLUDE_PATH}/impl/RkTabImpl.h)
+  )
 
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
   set(RK_GRAPHICS_BACKEND_HEADRES
@@ -143,7 +167,9 @@ endif()
 
 set(RK_SOURCES
   ${RK_SRC_PATH}/RkObject.cpp
+  ${RK_SRC_PATH}/RkCanvas.cpp
   ${RK_SRC_PATH}/RkObjectImpl.cpp
+  ${RK_SRC_PATH}/RkSystemWindow.cpp
   ${RK_SRC_PATH}/RkWidget.cpp
   ${RK_SRC_PATH}/RkWidgetImpl.cpp
   ${RK_SRC_PATH}/RkMain.cpp
@@ -155,6 +181,8 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkModelImpl.cpp
   ${RK_SRC_PATH}/RkLabel.cpp
   ${RK_SRC_PATH}/RkLabelImpl.cpp
+  ${RK_SRC_PATH}/RkSpinBox.cpp
+  ${RK_SRC_PATH}/RkSpinBoxImpl.cpp
   ${RK_SRC_PATH}/RkButton.cpp
   ${RK_SRC_PATH}/RkButtonImpl.cpp
   ${RK_SRC_PATH}/RkLineEdit.cpp
@@ -167,9 +195,7 @@ set(RK_SOURCES
   ${RK_SRC_PATH}/RkImage.cpp
   ${RK_SRC_PATH}/RkImageImpl.cpp
   ${RK_SRC_PATH}/RkPainterImpl.cpp
-  ${RK_SRC_PATH}/RkContainer.cpp
-  ${RK_SRC_PATH}/RkTab.cpp
-  ${RK_SRC_PATH}/RkTabImpl.cpp)
+  ${RK_SRC_PATH}/RkContainer.cpp)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   set(RK_SOURCES_PLATFORM
@@ -190,21 +216,16 @@ else() # defaut GNU/Linux
     ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
 endif()
 
-add_definitions(-fPIC)
-include_directories(${RK_INCLUDE_PATH})
-include_directories(${RK_INCLUDE_PATH}/impl)
-
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/win)
 elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/mac)
 # not implemented yet
 else() # defualt GNU/Linux
+add_definitions(-fPIC)
 include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
 endif()
 
-# Redkite is not supposed to be provided as shared library,
-# it must be only as static library for development.
 add_library(redkite STATIC
   ${RK_HEADERS}
   ${RK_HEADERS_IMPL}
@@ -217,14 +238,14 @@ add_library(redkite STATIC
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX})
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
-elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
-# Not implemented
 else()
-  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  install(TARGETS redkite DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
 endif()
 
-add_subdirectory(tools)
-if (ENABLE_EXAMPLES)
-  add_subdirectory(examples)
-endif (ENABLE_EXAMPLES)
+if(RK_BUILD_TOOLS)
+	add_subdirectory(tools)
+endif(RK_BUILD_TOOLS)
+if(RK_ENABLE_EXAMPLES)
+   add_subdirectory(examples)
+endif(RK_ENABLE_EXAMPLES)

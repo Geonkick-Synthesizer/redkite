@@ -2,7 +2,7 @@
  * File name: RkEventQueue.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkEventQueue.h"
 #include "RkEventQueueImpl.h"
+#include "RkAction.h"
 
 RkEventQueue::RkEventQueue()
         : o_ptr{std::make_unique<RkEventQueueImpl>(this)}
@@ -38,30 +38,6 @@ RkEventQueue::~RkEventQueue()
 {
 }
 
-void RkEventQueue::addObject(RkObject *obj)
-{
-        o_ptr->addObject(obj);
-}
-
-void RkEventQueue::addShortcut(RkObject *obj,
-                               Rk::Key key,
-                               Rk::KeyModifiers modifier)
-{
-        o_ptr->addShortcut(obj, key, modifier);
-}
-
-void RkEventQueue::removeShortcut(RkObject *obj,
-                                  Rk::Key key,
-                                  Rk::KeyModifiers modifier)
-{
-        o_ptr->removeShortcut(obj, key, modifier);
-}
-
-void RkEventQueue::removeObject(RkObject *obj)
-{
-        o_ptr->removeObject(obj);
-}
-
 void RkEventQueue::postEvent(RkObject *obj, std::unique_ptr<RkEvent> event)
 {
         o_ptr->postEvent(obj, std::move(event));
@@ -72,82 +48,7 @@ void RkEventQueue::postAction(std::unique_ptr<RkAction> act)
         o_ptr->postAction(std::move(act));
 }
 
-void RkEventQueue::subscribeTimer(RkTimer *timer)
-{
-        if (timer)
-                o_ptr->subscribeTimer(timer);
-}
-
-void RkEventQueue::unsubscribeTimer(RkTimer *timer)
-{
-        if (timer)
-                o_ptr->unsubscribeTimer(timer);
-}
-
-void RkEventQueue::processEvents()
-{
-        o_ptr->processEvents();
-}
-
-void RkEventQueue::processActions()
-{
-        o_ptr->processActions();
-}
-
-void RkEventQueue::processTimers()
-{
-        o_ptr->processTimers();
-}
-
 void RkEventQueue::processQueue()
 {
-#ifdef RK_LOG_DEBUG_LEVEL
-        static int n = 0;
-        if (++n > 10000) {
-                RK_LOG_DEBUG("called");
-                n = 0;
-        }
-#endif // RK_LOG_DEBUG_LEVEL
-        // The order is important.
-        processTimers();
-        processActions();
-        processEvents();
-}
-
-void RkEventQueue::clearObjectEvents(const RkObject *obj)
-{
-        if (obj)
-                o_ptr->clearEvents(obj);
-}
-
-void RkEventQueue::clearObjectActions(const RkObject *act)
-{
-        if (act)
-                o_ptr->clearActions(act);
-}
-
-void RkEventQueue::clearEvents()
-{
-        o_ptr->clearEvents(nullptr);
-}
-
-void RkEventQueue::clearActions()
-{
-        o_ptr->clearActions(nullptr);
-}
-
-void RkEventQueue::clearQueue()
-{
-        clearEvents();
-        clearActions();
-}
-
-RkObject* RkEventQueue::findObjectByName(const std::string &name) const
-{
-        return o_ptr->findObjectByName(name);
-}
-
-void RkEventQueue::setScaleFactor(double factor)
-{
-        o_ptr->setScaleFactor(factor);
+        o_ptr->processQueue();
 }

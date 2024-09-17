@@ -2,7 +2,7 @@
  * File name: RkImage.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -23,6 +23,8 @@
 
 #include "RkImage.h"
 #include "RkImageImpl.h"
+
+#include "RkLog.h"
 
 RkImage::RkImage()
         : o_ptr{std::make_unique<RkImageImpl>(this, 0, 0, nullptr)}
@@ -70,11 +72,6 @@ void RkImage::fill(const RkColor &color)
         o_ptr->fill(color);
 }
 
-const RkCanvasInfo* RkImage::getCanvasInfo() const
-{
-        return o_ptr->getCanvasInfo();
-}
-
 unsigned char* RkImage::data() const
 {
         return o_ptr->data();
@@ -108,4 +105,9 @@ RkSize RkImage::size() const
 bool RkImage::isNull() const
 {
         return o_ptr->isNull();
+}
+
+RkCanvasInfo* RkImage::getCanvasInfo() const
+{
+        return o_ptr->getCanvasInfo();
 }

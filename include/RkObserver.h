@@ -29,13 +29,13 @@
 
 class RkObject;
 
-class RK_EXPORT RkObserver {
+class RkObserver {
  public:
         RkObserver(RkObject *obj = nullptr)
                 : observerObject{obj} { }
         virtual ~RkObserver() = default;
         RkObject *object() { return observerObject; }
-        void setObject(RkObject *obj) { obj = observerObject; }
+        void setObject(RkObject *obj) { observerObject = obj; }
  private:
         RkObject *observerObject;
 };

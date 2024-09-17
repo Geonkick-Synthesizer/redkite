@@ -2,7 +2,7 @@
  * File name: RkObjectImpl.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
+ * Copyright (C) 2020 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -30,18 +30,19 @@ class RkEventQueue;
 
 class RkObject::RkObjectImpl {
  public:
-        explicit RkObjectImpl(RkObject* interface,
+        explicit RkObjectImpl(RkObject* inf,
                               RkObject* parent,
                               Rk::ObjectType type = Rk::ObjectType::Object);
         virtual ~RkObjectImpl();
         void removeChildrens();
         RkObject* parent() const;
         const std::unordered_set<RkObject*>& getChildren() const;
-        void setEventQueue(RkEventQueue *queue);
+        virtual void setEventQueue(RkEventQueue *queue);
         RkEventQueue* getEventQueue() const;
+        virtual void event(RkEvent *event);
         void addObserver(std::unique_ptr<RkObserver> ob);
         void removeObservers(RkObject *obj);
-        const std::vector<std::unique_ptr<RkObserver>>& observers() const;
+        const std::list<std::unique_ptr<RkObserver>>& observers() const;
         void addBoundObject(RkObject *obj);
         void removeBoundObject(RkObject *obj);
         void addChild(RkObject* child);
@@ -56,7 +57,7 @@ class RkObject::RkObjectImpl {
         RkObject *parentObject;
         RkEventQueue *eventQueue;
         std::unordered_set<RkObject*> objectChildren;
-        std::vector<std::unique_ptr<RkObserver>> observersList;
+        std::list<std::unique_ptr<RkObserver>> observersList;
         std::vector<RkObject*> boundObjects;
         std::string objectName;
 };

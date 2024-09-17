@@ -2,7 +2,7 @@
  * File name: RkTimer.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -29,28 +29,28 @@
 
 class RkEventQueue;
 
-class RK_EXPORT RkTimer: public RkObject {
+class RkTimer: public RkObject {
   public:
-        explicit RkTimer(RkObject *parent, int interval = 0);
+        explicit RkTimer(RkObject *parent, long unsigned int interval = 0);
         virtual ~RkTimer();
         RK_DECL_ACT(timeout, timeout(), RK_ARG_TYPE(), RK_ARG_VAL());
         void start();
         void stop();
         bool started() const;
-        long int interval() const;
+        long long unsigned int interval() const;
         void setInterval(int val);
         bool isTimeout() const;
         void callTimeout();
 
  protected:
-        long int getCurrentTime() const;
+        long long unsigned int getCurrentTime() const;
 
  private:
+        long long unsigned int timerInterval;
+        bool timerStarted;
+        long long unsigned int lastTime;
         RK_DISABLE_COPY(RkTimer);
         RK_DISABLE_MOVE(RkTimer);
-        long int timerInterval;
-        bool timerStarted;
-        long int lastTime;
 };
 
 #endif // RK_TIMER_H

@@ -2,7 +2,7 @@
  * File name: RkContainerWidgetItem.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://iuriepage.wordpress.com>
+ * Copyright (C) 2020 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -49,7 +49,7 @@ class RK_EXPORT RkContainerWidgetItem: public RkContainerItem {
         int height() const override { return itemWidget->height(); }
         RkWidget* widget() const { return itemWidget; }
         void hide(bool b) override { return b ? itemWidget->hide() : itemWidget->show(); }
-        bool isHidden() const override { return !itemWidget->isShown(); }
+        bool isHidden() const override { return !itemWidget->isVisible(); }
 
  private:
         RK_DISABLE_COPY(RkContainerWidgetItem);

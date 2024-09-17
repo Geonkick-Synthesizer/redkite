@@ -1,8 +1,8 @@
 /**
- * File name: RkTab.cpp
+ * File name: RkCanvas.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2022 Iurie Nistor
+ * Copyright (C) 2024 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -21,33 +21,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkTab.h"
-#include "RkTabImpl.h"
+#include "RkCanvas.h"
 
-RkTab::RkTab(RkWidget *parent)
-        : RkWidget(parent, std::make_unique<RkTab::RkTabImpl>(this, parent))
-        , impl_ptr{static_cast<RkTab::RkTabImpl*>(o_ptr.get())}
+RkCanvasInfo* RkCanvas::getCanvasInfo() const
 {
-        impl_ptr->initLayout();
-        show();
+        return nullptr;
 }
 
-void RkTab::addTab(RkWidget *tab, const RkImage &tabButton)
+void RkCanvas::freeCanvasInfo()
 {
-        impl_ptr->addTab(tab, tabButton);
-}
-
-RkWidget* RkTab::tab(size_t index) const
-{
-        return impl_ptr->tab(index);
-}
-
-void RkTab::showTab(size_t index)
-{
-        impl_ptr->showTab(index);
-}
-
-void RkTab::showTab(RkWidget *tab)
-{
-        impl_ptr->showTab(tab);
 }

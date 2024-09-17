@@ -1,8 +1,8 @@
 /**
- * File name: RkTimer.h
+ * File name: RkTimer.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -22,24 +22,24 @@
  */
 
 #include "RkTimer.h"
-#include "RkEventQueue.h"
+#include "RkEventQueueImpl.h"
 
 #include <chrono>
 
-RkTimer::RkTimer(RkObject *parent, int interval)
+RkTimer::RkTimer(RkObject *parent, long unsigned int interval)
         : RkObject(parent)
         , timerInterval{interval}
         , timerStarted{false}
-        , lastTime{-1}
+        , lastTime{0}
 {
         if (eventQueue())
-                eventQueue()->subscribeTimer(this);
+                RK_IMPL_PTR(eventQueue())->subscribeTimer(this);
 }
 
 RkTimer::~RkTimer()
 {
         if (eventQueue())
-                eventQueue()->unsubscribeTimer(this);
+                RK_IMPL_PTR(eventQueue())->unsubscribeTimer(this);
 }
 
 void RkTimer::start()
@@ -58,7 +58,7 @@ void RkTimer::stop()
         timerStarted = false;
 }
 
-long int RkTimer::interval() const
+long long unsigned int RkTimer::interval() const
 {
         return timerInterval;
 }
@@ -70,15 +70,16 @@ void RkTimer::setInterval(int val)
 
 bool RkTimer::isTimeout() const
 {
-        if (lastTime < 0 || timerInterval < 0)
+        if (!timerStarted || timerInterval < 0)
                 return false;
 
-        if (getCurrentTime() - lastTime > timerInterval)
+        if (getCurrentTime() - lastTime > timerInterval) {
                 return true;
+        }
         return false;
 }
 
-long int RkTimer::getCurrentTime() const
+long long unsigned int RkTimer::getCurrentTime() const
 {
         return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }

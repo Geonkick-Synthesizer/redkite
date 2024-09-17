@@ -2,7 +2,7 @@
  * File name: RkProgressBar.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -26,7 +26,7 @@
 
 #include "RkWidget.h"
 
-class RK_EXPORT RkProgressBar : public RkWidget {
+class RkProgressBar : public RkWidget {
  public:
     explicit RkProgressBar(RkWidget *parent);
     int beginValue() const;
@@ -42,12 +42,8 @@ class RK_EXPORT RkProgressBar : public RkWidget {
     void setProgressColor(const RkColor &color);
 
  protected:
+    RK_DECLARE_IMPL_PTR(RkProgressBar);
     virtual void paintEvent(RkPaintEvent* event) override;
-
- private:
-    RK_DISABLE_COPY(RkProgressBar);
-    RK_DISABLE_MOVE(RkProgressBar);
-    RK_DELCATE_IMPL_PTR(RkProgressBar);
 };
 
 #endif // RK_PROGRESS_BAR_H

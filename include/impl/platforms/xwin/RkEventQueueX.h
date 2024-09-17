@@ -2,7 +2,7 @@
  * File name: RkQueueX.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -41,8 +41,9 @@ class RkEventQueueX
         bool pending() const;
         void setDisplay(Display *display);
         Display* display() const;
-        std::vector<std::pair<RkWindowId, std::unique_ptr<RkEvent>>> getEvents();
+        std::vector<std::unique_ptr<RkEvent>> getEvents();
         void setScaleFactor(double factor);
+        double getScaleFactor() const;
 
  protected:
         std::unique_ptr<RkEvent> getButtonPressEvent(XEvent *e);

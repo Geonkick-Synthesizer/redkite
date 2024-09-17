@@ -2,7 +2,7 @@
  * File name: RkCairoGraphicsBackend.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://geontime.com)
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -22,27 +22,49 @@
  */
 
 #include "RkCairoGraphicsBackend.h"
-#include "RkCanvas.h"
 #include "RkCanvasInfo.h"
+#include "RkImageImpl.h"
 #include "RkLog.h"
+#include "RkPoint.h"
+#include "RkRealPoint.h"
 
+#ifdef RK_OS_WIN
+#define _USE_MATH_DEFINES
+#include <cmath>
+#else // GNU/Linux
 #include <math.h>
+#endif
 
 RkCairoGraphicsBackend::RkCairoGraphicsBackend(RkCanvas *canvas)
-        : cairoContext{cairo_create(canvas->getCanvasInfo()->cairo_surface)}
+        : canvas {canvas}
 {
-        cairo_set_font_size(context(), 10);
-        cairo_set_line_width (context(), 1);
+        auto canvaseInfo = canvas->getCanvasInfo();
+        if (!canvaseInfo) {
+                RK_LOG_ERROR("can't get canvas info");
+        } else if (!canvaseInfo->cairo_context) {
+                canvaseInfo->cairo_context = cairo_create(canvaseInfo->cairo_surface);
+                if (!canvaseInfo->cairo_context) {
+                        RK_LOG_ERROR("can't create Cairo context");
+                } else {
+                        cairo_set_font_size(context(), 10);
+                        cairo_set_line_width (context(), 1);
+                        RK_LOG_DEBUG("Cairo context created");
+                }
+        } else {
+                RK_LOG_DEBUG("Cairo context already exists");
+        }
 }
 
 cairo_t* RkCairoGraphicsBackend::context() const
 {
-        return cairoContext;
+        return canvas->getCanvasInfo()->cairo_context;
 }
 
 RkCairoGraphicsBackend::~RkCairoGraphicsBackend()
 {
-        cairo_destroy(context());
+#ifdef RK_OS_WIN
+        canvas->freeCanvasInfo();
+#endif // RK_OS_WIN
 }
 
 void RkCairoGraphicsBackend::drawText(const std::string &text, int x, int y)
@@ -56,15 +78,17 @@ void RkCairoGraphicsBackend::drawImage(const std::string &file, int x, int y)
         auto image = cairo_image_surface_create_from_png(file.c_str());
         cairo_set_source_surface(context(), image, x, y);
         cairo_paint(context());
+        cairo_surface_flush(canvas->getCanvasInfo()->cairo_surface);
         cairo_surface_destroy(image);
 }
 
 void RkCairoGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
         cairo_set_source_surface(context(),
-                                 image.getCanvasInfo()->cairo_surface,
+                                 RK_IMPL_PTR((&image))->getCanvasInfo()->cairo_surface,
                                  x, y);
         cairo_paint(context());
+        cairo_surface_flush(canvas->getCanvasInfo()->cairo_surface);
 }
 
 void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
@@ -74,8 +98,7 @@ void RkCairoGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height
                 cairo_arc(context(), p.x(), p.y(), width / 2, 0, 2 * M_PI);
                 cairo_stroke(context());
         } else {
-                // TODO: implemented ellipse.
-                RK_LOG_ERROR("ellipse not implemented yet");
+                RK_LOG_ERROR("ellipse is not implemented yet");
         }
 }
 
@@ -178,6 +201,21 @@ void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
         cairo_stroke(context());
 }
 
+void RkCairoGraphicsBackend::drawPolyLine(const std::vector<RkRealPoint> &points)
+{
+        if (points.empty())
+                return;
+
+        auto ctx = context();
+        cairo_move_to(ctx, points.front().x() + 0.5, points.front().y() + 0.5);
+        for (size_t i = 1; i < points.size(); ++i) {
+                const auto &point = points[i];
+                if (points[i - 1] != point)
+                        cairo_line_to(ctx, point.x() + 0.5, point.y() + 0.5);
+        }
+        cairo_stroke(ctx);
+}
+
 void RkCairoGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
         cairo_rectangle(context(), rect.left(), rect.top(), rect.width(), rect.height());
@@ -212,4 +250,9 @@ int RkCairoGraphicsBackend::getTextWidth(const std::string &text) const
         cairo_text_extents_t extents;
         cairo_text_extents (context(), text.data(), &extents);
         return extents.x_advance;
+}
+
+void RkCairoGraphicsBackend::scale(double x, double y)
+{
+        cairo_scale(context(), x, y);
 }

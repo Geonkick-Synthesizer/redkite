@@ -2,7 +2,7 @@
  * File name: painter.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -23,6 +23,7 @@
 
 #include "RkMain.h"
 #include "RkWidget.h"
+#include "RkButton.h"
 #include "RkPainter.h"
 #include "RkPoint.h"
 #include "RkLog.h"
@@ -32,35 +33,16 @@
 #include "RkTimer.h"
 #include "RkProgressBar.h"
 
-class Button: public RkWidget {
-  public:
-        Button(RkWidget *parent = nullptr)
-                : RkWidget(parent)
-                , isToggled{false} {}
-
-        RK_DECL_ACT(toggled, toggled(bool b), RK_ARG_TYPE(bool), RK_ARG_VAL(b));
-
-  protected:
-        void mouseButtonPressEvent(RkMouseEvent *event) final
-        {
-                isToggled = !isToggled;
-                action toggled(isToggled);
-        }
-
-private:
-        bool isToggled;
-};
-
 class  PainterExample: public RkWidget {
   public:
-        PainterExample(RkMain *app)
+        PainterExample(RkMain &app)
                 : RkWidget(app)
                 , startDraw{false}
                 , timerLabel{nullptr}
                 , myTime{0}
         {
                 setSize(350, 350);
-                auto button = new Button(this);
+                auto button = new RkButton(this);
                 button->setPosition(30, 30);
                 button->setSize({30, 30});
                 button->setBackgroundColor(255, 30, 100);
@@ -79,13 +61,15 @@ class  PainterExample: public RkWidget {
                 timerLabel->setPosition(30, 80);
                 timerLabel->show();
 
-                timer = new RkTimer(this, 1000);
-                RK_ACT_BIND(timer, timeout, RK_ACT_ARGS(), this, onShowTime());
+                timer = std::make_unique<RkTimer>(this, 1000);
+                RK_ACT_BIND(timer.get(), timeout, RK_ACT_ARGS(), this, onShowTime());
                 timer->start();
         }
 
+        ~PainterExample() = default;
+
   protected:
-        void paintEvent(RkPaintEvent *event) final
+        void paintEvent(RkPaintEvent *event) override
         {
                 RK_UNUSED(event);
                 RkPainter painter(this);
@@ -113,7 +97,7 @@ class  PainterExample: public RkWidget {
         bool startDraw;
         RkLabel *timerLabel;
         int myTime;
-        RkTimer* timer;
+        std::unique_ptr<RkTimer> timer;
         RkProgressBar *progressBar;
 };
 
@@ -121,7 +105,7 @@ int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
 
-    auto widget = new PainterExample(&app);
+    auto widget = new PainterExample(app);
     widget->setTitle("Painter Example");
     widget->show();
 

@@ -2,7 +2,7 @@
  * File name: RkLineEdit.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -26,7 +26,7 @@
 
 #include "RkWidget.h"
 
-class RK_EXPORT RkLineEdit : public RkWidget {
+class RkLineEdit : public RkWidget {
  public:
     RkLineEdit(RkWidget *parent, const std::string &text = std::string());
     virtual ~RkLineEdit() = default;
@@ -41,6 +41,10 @@ class RK_EXPORT RkLineEdit : public RkWidget {
                 textEdited(const std::string &text),
                 RK_ARG_TYPE(const std::string&),
                 RK_ARG_VAL(text));
+    RK_DECL_ACT(escapePressed,
+                escapePressed(),
+                RK_ARG_TYPE(),
+                RK_ARG_VAL());
     RK_DECL_ACT(enterPressed,
                 enterPressed(),
                 RK_ARG_TYPE(),
@@ -51,16 +55,17 @@ class RK_EXPORT RkLineEdit : public RkWidget {
                 RK_ARG_VAL());
 
  protected:
+    RK_DECLARE_IMPL_PTR(RkLineEdit);
+
     virtual void paintEvent(RkPaintEvent *event) override;
     virtual void keyPressEvent(RkKeyEvent *event) override;
     virtual void mouseButtonPressEvent(RkMouseEvent *event) override;
     virtual void focusEvent(RkFocusEvent *event) override;
     virtual void resizeEvent(RkResizeEvent* event) override;
 
- private:
+private:
     RK_DISABLE_COPY(RkLineEdit);
     RK_DISABLE_MOVE(RkLineEdit);
-    RK_DELCATE_IMPL_PTR(RkLineEdit);
 };
 
-#endif // RK_LABEL_H
+#endif // RK_LINE_EDIT_H

@@ -2,7 +2,7 @@
  * File name: RkButtonImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2020 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2020 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -95,6 +95,7 @@ void RkButton::RkButtonImpl::drawButton(RkPainter &painter)
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
+                painter.setFont(inf_ptr->font());
                 painter.drawText(inf_ptr->rect(), buttonText);
         }
 }
@@ -119,4 +120,3 @@ void RkButton::RkButtonImpl::updateButtonState()
                         buttonState = RkButton::State::Unpressed;
         }
 }
-

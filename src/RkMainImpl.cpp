@@ -2,7 +2,7 @@
  * File name: RkMainImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor (http://geontime.com)
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -25,23 +25,22 @@
 #include "RkWidget.h"
 #include "RkMainImpl.h"
 #include "RkPlatform.h"
-#include "RkEventQueue.h"
+#include "RkEventQueueImpl.h"
+#include "RkSystemWindow.h"
 
 #include <chrono>
 #include <thread>
 
-RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
-        : inf_ptr{interfaceMain}
-        , topWidget{nullptr}
+RkMain::RkMainImpl::RkMainImpl(RkMain *inf)
+        : inf_ptr{inf}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
         RK_LOG_DEBUG("called");
 }
 
-RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
-        : inf_ptr{interfaceMain}
-        , topWidget{nullptr}
+RkMain::RkMainImpl::RkMainImpl(RkMain *inf, int argc, char **argv)
+        : inf_ptr{inf}
         , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(inf_ptr);
@@ -52,24 +51,19 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
 
 RkMain::RkMainImpl::~RkMainImpl()
 {
-        delete topWidget;
         RK_LOG_DEBUG("called");
 }
 
-bool RkMain::RkMainImpl::setTopLevelWidget(RkWidget* widget)
+RkSystemWindow* RkMain::RkMainImpl::setTopWidget(RkWidget* widget, const RkNativeWindowInfo *parent)
 {
-      if (topWidget || !widget)
-              return false;
-
-      RK_LOG_DEBUG("set top window: " << topWidget);
-      topWidget = widget;
-      eventQueue->addObject(topWidget);
-      return true;
+        return RK_IMPL_PTR(eventQueue)->setTopWidget(widget, parent);
 }
 
-RkWidget* RkMain::RkMainImpl::topLevelWidget(void)
+RkWidget* RkMain::RkMainImpl::topWidget() const
 {
-      return topWidget;
+        if (RK_IMPL_PTR(eventQueue)->getSystemWindow())
+                return RK_IMPL_PTR(eventQueue)->getSystemWindow()->getTopWidget();
+        return nullptr;
 }
 
 RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
@@ -79,8 +73,8 @@ RkEventQueue* RkMain::RkMainImpl::getEventQueue() const
 
 int RkMain::RkMainImpl::exec(bool block)
 {
-        if (!topLevelWidget()) {
-                RK_LOG_ERROR("top window not defined");
+        if (!RK_IMPL_PTR(eventQueue)->getSystemWindow()) {
+                RK_LOG_ERROR("the system window not defined");
 		return 1;
 	}
 
@@ -89,8 +83,10 @@ int RkMain::RkMainImpl::exec(bool block)
         } else {
                 for (; block ;) {
                         eventQueue->processQueue();
-                        if (topWidget->isClose())
+                        if (RK_IMPL_PTR(eventQueue)->getSystemWindow()->isClosed()) {
+                                RK_LOG_DEBUG("exit");
                                 break;
+                        }
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 }
         }

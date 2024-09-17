@@ -2,7 +2,7 @@
  * File name: RkLineEditImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -37,7 +37,7 @@ RkLineEdit::RkLineEditImpl::RkLineEditImpl(RkLineEdit *interface,
     , selectionIndex{0}
     , isSelectionMode{false}
     , cursorTimer{nullptr}
-    , isShowCursor{hasFocus()}
+    , isShowCursor{false}
     , lastCahnges{std::chrono::system_clock::now()}
     , contentsRect{0, 0, 0, 0}
     , beginX{0}
@@ -53,6 +53,7 @@ RkLineEdit::RkLineEditImpl::~RkLineEditImpl()
 void RkLineEdit::RkLineEditImpl::init()
 {
         cursorTimer = new RkTimer(inf_ptr, 800);
+        cursorTimer->setName("RkLineEdit");
         hasFocus() ? showCursor(true) : showCursor(false);
         RK_ACT_BIND(cursorTimer, timeout, RK_ACT_ARGS(), this, onCursorTimeout());
 }
@@ -267,6 +268,7 @@ void RkLineEdit::RkLineEditImpl::deleteSelection()
 void RkLineEdit::RkLineEditImpl::paintEvent(RkPaintEvent *event)
 {
         RK_UNUSED(event);
+        RK_LOG_DEV_DEBUG("called[" << this << "] ");
         if (contentsRect.height() * contentsRect.width() == 0)
                 updateSize();
 
@@ -311,7 +313,9 @@ void RkLineEdit::RkLineEditImpl::paintEvent(RkPaintEvent *event)
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
-                painter.drawText(contentsRect.left() - beginX, contentsRect.top() + (contentsRect.height() - font().size()) / 2 + font().size(), text());
+                painter.drawText(contentsRect.left() - beginX,
+                                 contentsRect.top() + (contentsRect.height()
+                                 - font().size()) / 2 + font().size(), text());
 
                 // Draw cursor.
                 if (!isCursorHidden()) {
@@ -319,7 +323,8 @@ void RkLineEdit::RkLineEditImpl::paintEvent(RkPaintEvent *event)
                         pen.setColor(color());
                         painter.setPen(pen);
                         painter.drawLine(contentsRect.left() + cursorX + 1, contentsRect.top(),
-                                         contentsRect.left() + cursorX + 1, contentsRect.top() + contentsRect.height());
+                                         contentsRect.left() + cursorX + 1,
+                                         contentsRect.top() + contentsRect.height());
                 }
         }
         RkPainter paint(inf_ptr);
@@ -337,4 +342,3 @@ bool RkLineEdit::RkLineEditImpl::hasEditFocus() const
 {
 	return cursorTimer->started();
 }
-

@@ -2,7 +2,7 @@
  * File name: RkCanvasInfo.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -29,10 +29,15 @@
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
 
 #include <cairo/cairo.h>
+#if RK_OS_WIN
+#include <cairo/cairo-win32.h>
+#else // GNU/Linux
 #include <cairo/cairo-xlib.h>
+#endif 
 
 struct RkCanvasInfo {
-        cairo_surface_t* cairo_surface;
+        cairo_surface_t* cairo_surface = nullptr;
+        cairo_t* cairo_context = nullptr;
 };
 #else
 #error No graphics backend defined

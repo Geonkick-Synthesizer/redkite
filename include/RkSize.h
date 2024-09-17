@@ -2,7 +2,7 @@
  * File name: RkSize.h
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor 
  *
  * This file is part of Redkite.
  *
@@ -26,9 +26,8 @@
 
 #include "Rk.h"
 
-class RK_EXPORT RkSize {
+class RkSize {
  public:
-
        constexpr RkSize() : widthValue{0}, heightValue{0}
        {
        }
@@ -45,6 +44,16 @@ class RK_EXPORT RkSize {
        friend constexpr bool operator!=(const RkSize &s1, const RkSize &s2)
        {
                return s1.widthValue != s2.widthValue || s1.heightValue != s2.heightValue;
+       }
+
+       friend constexpr RkSize operator+(const RkSize &s1, const RkSize &s2)
+       {
+                return RkSize(s1.widthValue + s2.widthValue, s1.heightValue + s2.heightValue);
+       }
+
+       friend constexpr RkSize operator-(const RkSize &s1, const RkSize &s2)
+       {
+                return RkSize(s1.widthValue - s2.widthValue, s1.heightValue - s2.heightValue);
        }
 
        constexpr int width() const
@@ -65,6 +74,11 @@ class RK_EXPORT RkSize {
        constexpr void setHeight(int height)
        {
                heightValue = height;
+       }
+
+       constexpr bool isEmpty() const
+       {
+               return widthValue <= 0 || heightValue <= 0;
        }
 
  private:

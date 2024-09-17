@@ -2,7 +2,7 @@
  * File name: RkImageImpl.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -28,19 +28,18 @@
 #error No graphics backend defined.
 #endif
 
-RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
+#include "RkLog.h"
+
+RkImage::RkImageImpl::RkImageImpl(RkImage *inf,
                                   int width,
                                   int height,
                                   const unsigned char *data,
                                   RkImage::Format format)
-        : inf_ptr{interface}
+        : inf_ptr{inf}
         , imageFormat{format}
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
         , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
-#else
-#error No graphics backend defined
-#endif
 {
+        RK_LOG_DEBUG("called");
         RK_UNUSED(inf_ptr);
 }
 
@@ -48,7 +47,7 @@ RkImage::RkImageImpl::~RkImageImpl()
 {
 }
 
-const RkCanvasInfo* RkImage::RkImageImpl::getCanvasInfo() const
+RkCanvasInfo* RkImage::RkImageImpl::getCanvasInfo() const
 {
         if (imageBackendCanvas)
                 return imageBackendCanvas->getCanvasInfo();
@@ -116,4 +115,3 @@ void RkImage::RkImageImpl::fill(const RkColor &color)
         if (imageBackendCanvas)
                 imageBackendCanvas->fill(color);
 }
-

@@ -2,7 +2,7 @@
  * File name: RkLabel.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -29,6 +29,7 @@ RkLabel::RkLabel(RkWidget *parent, const std::string &text)
         : RkWidget(parent, std::make_unique<RkLabel::RkLabelImpl>(this, text, parent))
         , impl_ptr{static_cast<RkLabel::RkLabelImpl*>(o_ptr.get())}
 {
+        RK_LOG_DEBUG("called");
 }
 
 void RkLabel::setText(const std::string &text)
@@ -47,8 +48,8 @@ void RkLabel::setImage(const RkImage &image)
         impl_ptr->setImage(image);
 }
 
-void RkLabel::paintEvent(RkPaintEvent *event)
+void RkLabel::paintEvent([[maybe_unused]]RkPaintEvent *event)
 {
-        RK_UNUSED(event);
+        RK_LOG_DEBUG("called");
         impl_ptr->drawLabel();
 }

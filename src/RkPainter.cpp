@@ -2,7 +2,7 @@
  * File name: RkPainter.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
+ * Copyright (C) 2019 Iurie Nistor
  *
  * This file is part of Redkite.
  *
@@ -23,6 +23,8 @@
 
 #include "RkPainter.h"
 #include "RkPainterImpl.h"
+
+#include <RkLog.h>
 
 RkPainter::RkPainter(RkCanvas *canvas)
         : o_ptr{std::make_unique<RkPainterImpl>(this, canvas)}
@@ -64,6 +66,7 @@ void RkPainter::drawText(const RkRect &rect,
 
 void RkPainter::drawImage(const RkImage &image, int x, int y)
 {
+        RK_LOG_DEBUG("called");
         if (!image.isNull())
                 o_ptr->drawImage(image, x, y);
 }
@@ -98,6 +101,12 @@ void RkPainter::drawRect(const RkRect &rect)
 }
 
 void RkPainter::drawPolyline(const std::vector<RkPoint> &points)
+{
+        if (points.size() > 1)
+                o_ptr->drawPolyline(points);
+}
+
+void RkPainter::drawPolyline(const std::vector<RkRealPoint> &points)
 {
         if (points.size() > 1)
                 o_ptr->drawPolyline(points);
@@ -147,4 +156,9 @@ void RkPainter::rotate(rk_real angle)
 int RkPainter::getTextWidth(const std::string &text) const
 {
         return o_ptr->getTextWidth(text);
+}
+
+void RkPainter::scale(double x, double y)
+{
+        return o_ptr->scale(x, y);
 }
