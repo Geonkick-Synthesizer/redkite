@@ -1,5 +1,5 @@
 /**
- * File name: RkLabel.h
+ * File name: RkTabWidget.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor 
@@ -27,23 +27,20 @@
 #include "RkWidget.h"
 #include "RkImage.h"
 
-class RkLabel : public RkWidget {
+class RkTabWidget : public RkWidget {
  public:
-    explicit RkLabel(RkWidget *parent, const std::string &text = std::string());
-    explicit RkLabel(RkWidget *parent, const RkImage &image);
-    virtual ~RkLabel() = default;
-    void setText(const std::string &text);
-    std::string text() const;
-    void setImage(const std::string &file);
-    void setImage(const RkImage &image);
+    RkTabWidget(RkWidget *parent);
+    virtual ~RkTabWidget() = default;
+    void addTab(RkWidget *page, const RkString *title);
+    void addTab(RkWidget *page, RkWidget *pageControl);
 
  protected:
-    RK_DECLARE_IMPL_PTR(RkLabel);
+    RK_DECLARE_IMPL_PTR(RkTabWidget);
     virtual void paintEvent(RkPaintEvent *event) override;
 
  private:
-    RK_DISABLE_COPY(RkLabel);
-    RK_DISABLE_MOVE(RkLabel);
+    RK_DISABLE_COPY(RkTabWidget);
+    RK_DISABLE_MOVE(RkTabWidget);
 };
 
 #endif // RK_LABEL_H
